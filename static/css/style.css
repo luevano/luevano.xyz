@@ -118,13 +118,6 @@ header {
   padding-left: 0.4em;
 }
 
-/* menubar icons */
-.menubar img {
-  width: 1em;
-  height: 1em;
-  filter: invert(72%) sepia(12%) saturate(719%) hue-rotate(49deg) brightness(98%) contrast(90%);
-}
-
 /* footer */
 footer {
   margin-left: auto;
