@@ -92,7 +92,7 @@ header {
 .menubar ul {
   visibility: hidden;
   position: absolute;
-  padding-top: 0.6em;
+  padding-top: 0.2em;
   padding-bottom: 0.2em;
   margin-left: -2.6em;
   min-width: 2em;
@@ -111,6 +111,7 @@ header {
 /* keep subitmes as list */
 .menubar li ul li{
   float: none;
+  margin-top: 0.4em;
 }
 
 /* separation from icon */
