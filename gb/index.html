@@ -1,104 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<link rel="icon" href="https://static.luevano.xyz/images/gb/gb_icon.svg" />
-	<title>Gameboy</title>
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://static.luevano.xyz/images/gb/gb_icon.svg" />
+  <title>Gameboy</title>
 
-	<script src="https://static.luevano.xyz/scripts/jquery-3.5.1.min.js"></script>
-	<script src="https://static.luevano.xyz/scripts/gb.js"></script>
+  <script src="https://static.luevano.xyz/scripts/jquery-3.5.1.min.js"></script>
+  <script src="https://static.luevano.xyz/scripts/gb.js"></script>
 
-	<link rel="stylesheet" href="https://static.luevano.xyz/css/gb.css">
+  <link rel="stylesheet" href="https://static.luevano.xyz/css/gb.css">
 </head>
 <body>
-	<div class="gameboy">
-	<img class="screen" src="https://gb.luevano.xyz/image" id="game_img"><br><br>
+
+  <header>
+    <a href="https://luevano.xyz/">[HOME]</a>
+  </header>
+
+  <div class="gameboy">
+  <img class="screen" src="https://gb.luevano.xyz/image" id="game_img"><br><br>
 
 
-	<table class="controls">
-		<thead>
-			<tr>
-				<th/>
-				<th/>
-				<th/>
-				<th/>
-				<th/>
-				<th/>
-				<th/>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td/>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/up.png" alt="Up" id="btn_up">
-				</td>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-				<td>
-					<a href="https://gb.luevano.xyz"><img src="https://static.luevano.xyz/images/gb/refresh.png"></a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/left.png" alt="Left" id="btn_left">
-				</td>
-				<td/>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/right.png" alt="Right" id="btn_right">
-				</td>
-				<td/>
-				<td/>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/B.png" alt="B" id="btn_b">
-				</td>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/A.png" alt="A" id="btn_a">
-				</td>
-			</tr>
-			<tr>
-				<td/>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/down.png" alt="Down" id="btn_down">
-				</td>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-			</tr>
-			<tr>
-				<td/>
-				<td/>
-				<td/>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/select.png" alt="Select" id="btn_select">
-				</td>
-				<td>
-					<input type="image" src="https://static.luevano.xyz/images/gb/start.png" alt="Start" id="btn_start">
-				</td>
-				<td/>
-				<td/>
-			</tr>
-			<tr>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-				<td/>
-			</tr>
-		</tbody>
-	</table>
-	</div>
+  <table class="controls">
+    <tbody>
+      <tr>
+        <td/>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/up.png" alt="Up" id="btn_up">
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <a href="https://gb.luevano.xyz"><img src="https://static.luevano.xyz/images/gb/refresh.png"></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/left.png" alt="Left" id="btn_left">
+        </td>
+        <td/>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/right.png" alt="Right" id="btn_right">
+        </td>
+        <td/>
+        <td/>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/B.png" alt="B" id="btn_b">
+        </td>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/A.png" alt="A" id="btn_a">
+        </td>
+      </tr>
+      <tr>
+        <td/>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/down.png" alt="Down" id="btn_down">
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+      </tr>
+      <tr>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/select.png" alt="Select" id="btn_select">
+        </td>
+        <td>
+          <input type="image" src="https://static.luevano.xyz/images/gb/start.png" alt="Start" id="btn_start">
+        </td>
+        <td/>
+        <td/>
+      </tr>
+    </tbody>
+  </table>
+  </div>
 
-	<p>
-		<a href="https://github.com/HFO4/gameboy.live">Gameboy emulator written in Go</a> by <a href="https://github.com/HFO4">Aaron Liu AKA HFO4 on GitHub</a>.<br>
-		Input button images also taken from him.
-	</p>
+  <footer>
+    <a href="https://github.com/HFO4/gameboy.live">Gameboy emulator written in Go</a> by <a href="https://github.com/HFO4">Aaron Liu AKA HFO4 on GitHub</a>.<br>
+    Input button images also taken from him.
+  </footer>
 
 </body>
 </html>
