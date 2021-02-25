@@ -1,0 +1,9 @@
+# List of directories and files to ignore
+# Git specific
+.gitignore
+README.md
+LICENSE
+.git/
+
+# Rsync specific
+.rsyncignore
