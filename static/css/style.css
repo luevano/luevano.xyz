@@ -1,0 +1,161 @@
+:root {
+  /*Polar night*/
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  /*Snow storm*/
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  /*Frost*/
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nord10: #5e81ac;
+  /*Aurora*/
+  --nord11: #bf616a;
+  --nord12: #d08770;
+  --nord13: #ebcb8b;
+  --nord14: #a3be8c;
+  --nord15: #b48ead;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: larger;
+}
+
+html {
+  background: var(--nord3);
+}
+
+body {
+  background: var(--nord0);
+  color: var(--nord4);
+  max-width: 50em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5em;
+  border: 4px outset var(--nord4);
+  text-align: center;
+}
+
+a{
+  text-decoration: none;
+  color: var(--nord15);
+}
+
+a:hover {
+  color: var(--nord10);
+}
+
+h1 {
+  color: var(--nord11);
+}
+
+h2 {
+  color: var(--nord12);
+}
+
+h3 {
+  color: var(--nord13);
+}
+
+/* menu bar (header) */
+header {
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.menubar {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.menubar li {
+  display: block;
+  float: left;
+  min-width: 2em;
+  max-width: 10em;
+  background: var(--nord1);
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+
+.menubar ul {
+  visibility: hidden;
+  position: absolute;
+  padding-top: 0.6em;
+  padding-bottom: 0.2em;
+  margin-left: -2.6em;
+  min-width: 2em;
+  max-width: 10em;
+}
+
+.menubar li:hover {
+  background: var(--nord2);
+  color: var(--nord5);
+}
+
+.menubar li:hover ul {
+  visibility: visible;
+}
+
+/* keep subitmes as list */
+.menubar li ul li{
+  float: none;
+}
+
+/* separation from icon */
+.menubar span {
+  padding-left: 0.4em;
+}
+
+/* menubar icons */
+.menubar img {
+  width: 1em;
+  height: 1em;
+  filter: invert(72%) sepia(12%) saturate(719%) hue-rotate(49deg) brightness(98%) contrast(90%);
+}
+
+/* footer */
+footer {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.footer img {
+  width: 1em;
+  height: 1em;
+  filter: invert(67%) sepia(17%) saturate(1088%) hue-rotate(327deg) brightness(86%) contrast(87%);
+}
+
+/* image gallery */
+div.gallery {
+  margin: 5px;
+  border: 1px solid var(--nord6);
+  float: left;
+  width: 180px;
+}
+
+div.gallery:hover {
+  border: 1px solid var(--nord15);
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
