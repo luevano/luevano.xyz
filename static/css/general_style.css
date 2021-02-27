@@ -1,64 +1,75 @@
 :root {
-  /*Polar night*/
-  --nord0: #2e3440;
-  --nord1: #3b4252;
-  --nord2: #434c5e;
-  --nord3: #4c566a;
-  /*Snow storm*/
-  --nord4: #d8dee9;
-  --nord5: #e5e9f0;
-  --nord6: #eceff4;
-  /*Frost*/
-  --nord7: #8fbcbb;
-  --nord8: #88c0d0;
-  --nord9: #81a1c1;
-  --nord10: #5e81ac;
-  /*Aurora*/
-  --nord11: #bf616a;
-  --nord12: #d08770;
-  --nord13: #ebcb8b;
-  --nord14: #a3be8c;
-  --nord15: #b48ead;
   font-family: Verdana, Geneva, sans-serif;
   font-size: larger;
 }
 
-html {
-  background: var(--nord3);
-}
-
 body {
-  background: var(--nord0);
-  color: var(--nord4);
   max-width: 50em;
   margin-top: 1em;
   margin-bottom: 1em;
   margin-left: auto;
   margin-right: auto;
   padding: 0.5em;
-  border: 4px outset var(--nord4);
   text-align: center;
 }
 
 a{
   text-decoration: none;
-  color: var(--nord15);
 }
 
-a:hover {
-  color: var(--nord10);
+/* switch */
+/* slider container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 2rem;
+  height: 1rem;
 }
 
-h1 {
-  color: var(--nord11);
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-h2 {
-  color: var(--nord12);
+/* slider dimentions */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
-h3 {
-  color: var(--nord13);
+.slider:before {
+  position:absolute;
+  content: "";
+  height: 0.8em;
+  width: 0.8em;
+  left: 0.1em;
+  bottom: 0.1em;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+/* slider movement on click */
+.switch input:checked + .slider:before {
+  -webkit-transform: translateX(0.9em);
+  -ms-transform: translateX(0.9em);
+  transform: translateX(0.9em);
+}
+
+/* slider container */
+.slider.round {
+  border-radius: 1em;
+}
+
+/* slider */
+.slider.round:before {
+  border-radius: 1em;
 }
 
 /* menu bar (header) */
@@ -80,7 +91,6 @@ header {
   float: left;
   min-width: 2em;
   max-width: 10em;
-  background: var(--nord1);
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   padding-left: 0.4em;
@@ -97,11 +107,6 @@ header {
   margin-left: -2.6em;
   min-width: 2em;
   max-width: 10em;
-}
-
-.menubar li:hover {
-  background: var(--nord2);
-  color: var(--nord5);
 }
 
 .menubar li:hover ul {
@@ -126,22 +131,12 @@ footer {
   text-align: center;
 }
 
-.footer img {
-  width: 1em;
-  height: 1em;
-  filter: invert(67%) sepia(17%) saturate(1088%) hue-rotate(327deg) brightness(86%) contrast(87%);
-}
-
-/* image gallery */
+/* image gallery (not really being used rn) */
 div.gallery {
   margin: 5px;
-  border: 1px solid var(--nord6);
+  border: 1px solid;
   float: left;
   width: 180px;
-}
-
-div.gallery:hover {
-  border: 1px solid var(--nord15);
 }
 
 div.gallery img {

@@ -41,7 +41,7 @@ $(document).ready(function (){
 	$('#btn_down').click(function (){
 		input(3);
 	});
-	
+
 	$('#btn_a').click(function (){
 		input(4);
 	});

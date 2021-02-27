@@ -1,0 +1,101 @@
+@import './nordtheme.css';
+
+:root {
+  --bg: var(--color3);
+  --body-bg: var(--color0);
+  --navitem-bg: var(--color1);
+  --navitem-bg-hl: var(--color2);
+
+  --fg: var(--color4);
+  --fg-hl: var(--color5);
+
+  --link: var(--color15);
+  --link-hl: var(--color10);
+  --navitem-link: var(--color8);
+  --navitem-link-hl: var(--color7);
+
+  --fg-acc1: var(--color11);
+  --fg-acc2: var(--color12);
+  --fg-acc3: var(--color13);
+  --fg-acc4: var(--color14);
+  --fg-acc5: var(--color15);
+
+  --switch-bg: var(--color1);
+  --switch-slider: var(--color4);
+  --switch-toggled-bg: var(--color10);
+  --switch-ol: var(--color4);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--body-bg);
+  color: var(--fg);
+  border: 4px outset var(--fg);
+}
+
+a {
+  color: var(--link);
+}
+
+a:hover {
+  color: var(--link-hl);
+}
+
+h1 {
+  color: var(--fg-acc1);
+}
+
+h2 {
+  color: var(--fg-acc2);
+}
+
+h3 {
+  color: var(--fg-acc3);
+}
+
+/* switch */
+.slider {
+  background-color: var(--switch-bg);
+}
+
+.slider:before {
+  background-color: var(--switch-slider);
+}
+
+.switch input:checked + .slider {
+  background-color: var(--switch-toggled-bg);
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 0.1em var(--switch-ol);
+}
+
+/* menu bar (header) */
+.menubar li {
+  background: var(--navitem-bg);
+}
+
+.menubar a {
+  color: var(--navitem-link);
+}
+
+.menubar li:hover {
+  background: var(--navitem-bg-hl);
+  color: var(--fg-hl);
+}
+
+.menubar li:hover > a {
+  color: var(--navitem-link-hl);
+}
+
+/* image gallery (not really being used rn) */
+div.gallery {
+  border: 1px solid var(--fg-hl);
+}
+
+div.gallery:hover {
+  border: var(--fg-acc5);
+}
