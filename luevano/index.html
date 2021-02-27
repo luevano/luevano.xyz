@@ -14,6 +14,14 @@
   </head>
 
   <body>
+    <div id="theme-switcher-container">
+      <i class="fas fa-sun"></i>
+      <label class="switch theme">
+        <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+        <span class="slider round"></span>
+      </label>
+      <i class="fas fa-moon"></i>
+    </div>
 
     <header>
       <ul class="menubar">
@@ -49,49 +57,46 @@
         </li>
       </ul>
       </nav>
+    </header>
 
-      <label class="switch">
-        <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
-        <span class="slider round"></span>
-      </label>
+    <div class="welcome">
+      <h1>
+        Welcome!
+      </h1>
 
-      <div class="welcome">
-        <h1>
-          Welcome!
-        </h1>
+      <p>
+      My name is David Luévano and this is my little piece of internet.
+      </p>
 
-        <p>
-        My name is David Luévano and this is my little piece of internet.
-        </p>
+      <p>
+      I plan on doing all sort of stuff here, including a <a href="https://blog.luevano.xyz/">blog</a> and stuff like an interactive <a href="https://gb.luevano.xyz/">gameboy</a> where everyone who participates plays together (think "twitch plays pokemon" and more recently "twitter plays pokemon").
+      </p>
 
-        <p>
-        I plan on doing all sort of stuff here, including a <a href="https://blog.luevano.xyz/">blog</a> and stuff like an interactive <a href="https://gb.luevano.xyz/">gameboy</a> where everyone who participates plays together (think "twitch plays pokemon" and more recently "twitter plays pokemon").
-        </p>
+      <p>
+      But for now, this place is under construction (as you may notice from most links being broken).<br/>
 
-        <p>
-        But for now, this place is under construction (as you may notice from most links being broken).<br/>
+      <img src="https://static.luevano.xyz/images/gifs/worker1.gif" alt="Under construction">
+      </p>
+    </div>
 
-        <img src="https://static.luevano.xyz/images/gifs/worker1.gif" alt="Under construction">
-        </p>
-      </div>
+    <footer class="footer">
+      <i class="fas fa-envelope" alt="Email"></i>
+      Email
+      <a href="mailto:david@luevano.xyz">
+        david@luevano.xyz
+      </a>
+      <br>
 
-      <footer class="footer">
-        <i class="fas fa-envelope" alt="Email"></i>
-        Email
-        <a href="mailto:david@luevano.xyz">
-          david@luevano.xyz
-        </a>
-        <br>
+      <i class="fas fa-rss" alt="RSS"></i>
+      RSS
+      <a href="https://blog.luevano.xyz/rss.xml">
+        https://blog.luevano.xyz/rss.xml
+      </a>
+      <br>
 
-        <i class="fas fa-rss" alt="RSS"></i>
-        RSS
-        <a href="https://blog.luevano.xyz/rss.xml">
-          https://blog.luevano.xyz/rss.xml
-        </a>
-        <br>
-
-        <i class="fas fa-donate" alt="Donate"></i>
-        <a href="https://luevano.xyz/donate">Donate</a>
-        <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
-      </footer>
+      <i class="fas fa-donate" alt="Donate"></i>
+      <a href="https://luevano.xyz/donate">Donate</a>
+      <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
+    </footer>
   </body>
+</html>
