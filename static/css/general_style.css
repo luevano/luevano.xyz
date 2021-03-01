@@ -10,7 +10,8 @@ body {
   margin-left: auto;
   margin-right: auto;
   padding: 0.5em;
-  text-align: center;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 a{
@@ -144,6 +145,11 @@ footer {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+/* images */
+img {
+  max-width: 35vw;
 }
 
 /* image gallery (not really being used rn) */
