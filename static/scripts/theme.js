@@ -6,20 +6,23 @@ window.onload = () => {
 
   if(theme == null){
     local_storage.setItem('theme', 'dark');
-  }
-
-  if(theme == 'dark'){
     switch_theme.checked = true;
   }
   else{
-    switch_theme.checked = false;
+    if(theme == 'dark'){
+      switch_theme.checked = true;
+    }
+    else{
+      switch_theme.checked = false;
 
-    let theme = document.getElementById('theme-css');
-    let href = theme.getAttribute('href');
+      let theme = document.getElementById('theme-css');
+      let href = theme.getAttribute('href');
 
-    href = href.replace('dark.css', 'light.css');
-    theme.setAttribute('href', href);
+      href = href.replace('dark.css', 'light.css');
+      theme.setAttribute('href', href);
+    }
   }
+
 }
 
 function setTheme(){

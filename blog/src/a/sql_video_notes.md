@@ -1,4 +1,4 @@
-# SQL tutorial videos notes
+# SQL tutorial video notes
 
 I was requested to make summaries of videos about SQL, these are the notes (mostly this is a transcription of what I found useful). The videos in question are: [SQL Tutorial - Full Database Course for Beginners](https://www.youtube.com/watch?v=HXV3zeQKqGY), [MySQL Tutorial for Beginners [Full Course]](https://www.youtube.com/watch?v=7S_tz1z_5bA) and [Advanced SQL course | SQL tutorial advanced](https://www.youtube.com/watch?v=2Fn0WAyZV0E). Also, some notes were taken from [w3schools.com's SQL Tutorial](https://www.w3schools.com/sql/) and [MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/).
 
