@@ -1,6 +1,6 @@
 # Shell scripting tutorial video notes
 
-Another summary, this time about shell scripting in general. And just like with the [Linux notes](https://blog.luevano.xyz/a/linux_video_notes.html), I also did most of the notes myself or with resources outside the video. The videos in question are: [The Bad Tutorials (YT): Shell Scripting Tutorials](https://www.youtube.com/playlist?list=PL7B7FA4E693D8E790) and [Automation with SCripting (YT): Complete Shell Scripting Tutorials](https://www.youtube.com/playlist?list=PL2qzCKTbjutJRM7K_hhNyvf8sfGCLklXw). Also, some notes were taken from [tutorialspoint: UNIX / LINUX Tutorial](https://www.tutorialspoint.com/unix/index.htm) and general googling.
+Another summary, this time about shell scripting in general. And just like with the [Linux notes](https://blog.luevano.xyz/a/linux_video_notes), I also did most of the notes myself or with resources outside the video. The videos in question are: [The Bad Tutorials (YT): Shell Scripting Tutorials](https://www.youtube.com/playlist?list=PL7B7FA4E693D8E790) and [Automation with SCripting (YT): Complete Shell Scripting Tutorials](https://www.youtube.com/playlist?list=PL2qzCKTbjutJRM7K_hhNyvf8sfGCLklXw). Also, some notes were taken from [tutorialspoint: UNIX / LINUX Tutorial](https://www.tutorialspoint.com/unix/index.htm) and general googling.
 
 ## Basic concepts
 
