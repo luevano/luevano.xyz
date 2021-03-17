@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fa/css/all.min.css">
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/dark.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/general_style.css">
+
+    <link rel="icon" href="https://static.luevano.xyz/fa/svgs/solid/dragon.svg">
+    <meta charset="utf-8">
+
+    <title>Luévano's Blog</title>
+  </head>
+
+  <body>
+    <div id="theme-switcher-container">
+      <i class="fas fa-sun"></i>
+      <label class="switch theme">
+        <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+        <span class="slider round"></span>
+      </label>
+      <i class="fas fa-moon"></i>
+    </div>
+
+    <header>
+      <ul class="menubar">
+        <li>
+          <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+        </li>
+
+        <li>
+          <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+        </li>
+
+        <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+          <ul>
+            <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+            <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+            <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+          </ul>
+        </li>
+
+        <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+          <ul>
+            <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="https://luevano.xyz/donate"><i class="fas fa-donate" alt="Donate"></i><span>Donate</span></a>
+          <ul>
+            <li><a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i><span>Paypal</span></a></li>
+          </ul>
+        </li>
+      </ul>
+      </nav>
+    </header>
+<h1>SQL tutorial video notes</h1>
+
+<p>I was requested to make summaries of videos about SQL, these are the notes (mostly this is a transcription of what I found useful). The videos in question are: <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY">SQL Tutorial - Full Database Course for Beginners</a>, <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA">MySQL Tutorial for Beginners [Full Course]</a> and <a href="https://www.youtube.com/watch?v=2Fn0WAyZV0E">Advanced SQL course | SQL tutorial advanced</a>. Also, some notes were taken from <a href="https://www.w3schools.com/sql/">w3schools.com's SQL Tutorial</a> and <a href="https://dev.mysql.com/doc/refman/8.0/en/">MySQL 8.0 Reference Manual</a>.</p>
+
+<h2>What is a database (DB)?</h2>
+
+<p>Any collection of related information, such as a phone book, a shopping list, Facebook's user base, etc.. It can be stored in different ways: on paper, on a computer, in your mind, etc..</p>
+
+<h3>Database Management Systems (DBMS)</h3>
+
+<p>A special software program that helps users create and maintain a database that makes it easy to manage large amounts of information, handles security, backups and can connect to programming languages for automation.</p>
+
+<h3>CRUD</h3>
+
+<p>The four main operations that a DBMS will do: create, read, update and delete.</p>
+
+<h3>Two types of databases</h3>
+
+<ul>
+<li>Relational (SQL)
+
+<ul>
+<li>Organize data into one or more tables.</li>
+<li>Each table has columns and rows.</li>
+<li>A unique key identifies each row.</li>
+</ul></li>
+<li>Non-relational (noSQL/not just SQL)
+
+<ul>
+<li>Key-value stores.</li>
+<li>Documents (JSON, XML, etc).</li>
+<li>Graphs.</li>
+<li>Flexible tables.</li>
+</ul></li>
+</ul>
+
+<h4>Relational databases (RDB) (SQL)</h4>
+
+<p>When we want to create a RDB we need a Relational Database Management System (RDBMS) that uses Structured Query Language (SQL) which is a standardized language for interacting with RDBMS and it's used to perform CRUD operations (and other administrative tasks).</p>
+
+<h4>Non-relational databases (NRDB) (noSQL/not just SQL)</h4>
+
+<p>Anything that's not relational, stores data in anything but static tables. Could be a document (JSON, XML, etc.), graph (relational nodes), key-value hash (strings, json, etc.), etc.</p>
+
+<p>NRDB also require a Non-Relational Database Management System (NRDBMS) to maintain a database. But it doesn't have a standardized language for performing CRUD and administrative operations like how RDB have.</p>
+
+<h3>Database queries</h3>
+
+<p>A DB query is a request that is made to the (R/NR)DBMS for a specific information. A google search is a query, for example.</p>
+
+<h2>Tables and keys</h2>
+
+<p>A table is composed of columns, rows and a primary key. The primary key is unique and identifies one specific row. Columns and rows are trivial, a column identifies a field and has a specific data type (name, email, birth) and a row identifies a table entry (person that contains a name, email and birth).</p>
+
+<p>Also, there are foreign keys, it's purpose is to relate to another database table; this foreign key is unique in it's own table, but can be repeated where you use it as a foreign key.</p>
+
+<p>It's possible to use the same table keys as foreign keys to make relations inside the same table.</p>
+
+<h2>SQL basics</h2>
+
+<p>It's actually a hybrid language, basically 4 types of languages in one:</p>
+
+<ul>
+<li>Data Query Language (DQL)
+
+<ul>
+<li>Used to query the database for information.</li>
+<li>Get information that is already stored there.</li>
+</ul></li>
+<li>Data Definition Language (DDL)
+
+<ul>
+<li>Used for defining database schemas.</li>
+</ul></li>
+<li>Data Control Language (DCL)
+
+<ul>
+<li>Used for controlling access to the data in the database.</li>
+<li>User and permissions management.</li>
+</ul></li>
+<li>Data Manipulation Language (DML)
+
+<ul>
+<li>Used for inserting, updating and deleting data from a database.</li>
+</ul></li>
+</ul>
+
+<h3>Queries</h3>
+
+<p>A set of instructions given to the RDBMS (written in SQL) that tell the RDBMS what information you want it to retrieve. Instead of getting the whole database, retrieve only a bit of information that you need.</p>
+
+<p>Also, SQL keywords can be either lower or upper case, but it's <strong>convention to use upper case</strong>. And <strong>queries are ended by a semi-colon</strong>.</p>
+
+<h4>Data types</h4>
+
+<p>Just some SQL data types (for more: <a href="https://dev.mysql.com/doc/refman/8.0/en/data-types.html">MySQL 8.0 Reference Manual: Chapter 11 Data Types</a>, the notation is <code>DATATYPE(SIZE(,SIZE))</code>:</p>
+
+<ul>
+<li><code>INT</code>: integer numbers.</li>
+<li><code>DECIMAL(M,N)</code>: decimal numbers.</li>
+<li><code>VARCHAR(N)</code>: string of text of length N.</li>
+<li><code>BLOB</code>: Binary Large Object, stores large data.</li>
+<li><code>DATE</code>: YYYY-MM-DD.</li>
+<li><code>TIMESTAMP</code>: YYYY-MM-DD HH:MM:SS.</li>
+</ul>
+
+<h4>Basic management of tables</h4>
+
+<p>To <strong>create a table</strong>, the basic syntax is <code>CREATE TABLE tablename (column1 datatype constraint, column2 datatype constraint, ...)</code>, where a constraint could be (for more: <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">MySQL 8.0 Reference Manual: 13.1.20 CREATE TABLE Statement</a>):</p>
+
+<ul>
+<li><code>NOT NULL</code>: can't have a <code>NULL</code> value.</li>
+<li><code>UNIQUE</code>: all values are unique.</li>
+<li><code>PRIMARY KEY</code>: uniquely identifies each row.</li>
+<li><code>FOREIGN KEY</code>: uniquely identifies a row in another table.</li>
+<li><code>CHECK expresion</code>: satisfy a special condition (<code>expresion</code>).</li>
+<li><code>DEFAULT value</code>: if no value is specified use value <code>value</code>.</li>
+<li><code>INDEX</code>: to create and retrieve data from the database very quickly.</li>
+</ul>
+
+<p>Get the <strong>table structure</strong> with <code>DESCRIBE tablename</code> and delete it with <code>DROP TABLE tablename</code>. <strong>Add columns</strong> to the table with <code>ALTER TABLE tablename ADD column DATATYPE(N,M)</code>, similar syntax to <strong>delete a specific column</strong> <code>ALTER TABLE tablename DRORP COLUMN column</code>.</p>
+
+<p><strong>Add entries</strong> to the table with <code>INSERT INTO tablename VALUES(value1, value2, ...)</code> where all the fields must be specified, or <code>INSERT INTO tablename(column1, column2) VALUES(value1, value2)</code> to just add some fields to the new entry. While at it, (all) the table content can be fetched with <code>SELECT * FROM tablename</code>.</p>
+
+<p>Basic <strong>Updating of entries</strong> with <code>UPDATE tablename SET expression1 WHERE expression2</code>, where <code>expression1</code> could be <code>column = value2</code> and <code>expression2</code> could be <code>column = value1</code>, meaning that the value of <code>column</code> will be changed from <code>value1</code> to <code>value2</code>. Note that the expressions are not limited by <code>column = value</code>, and that the <code>column</code> has to be the same, it would be any expression. Also, this is really extensive as <code>SET</code> can set multiple variables and <code>WHERE</code> take more than one condition by chaining conditions with <code>AND</code>, <code>OR</code> and <code>NOT</code> keywords, for example.</p>
+
+<h5>ON DELETE statement</h5>
+
+<p>When an entry needs to be updated somehow based on a modification on a foreign key. If two tables are related to each other, if something is deleted on one end, update the other end in some way.</p>
+
+<p>For example on creation of a table, on the specification of a foreign key: <code>CREATE TABLE tablename (..., FOREIGN KEY(column) REFERENCES othertable(othertablecolumn) ON DELETE something)</code>. That something could be <code>SET NULL</code>, <code>CASCADE</code>, etc..</p>
+
+<h4>SELECT queries</h4>
+
+<p>Instead of doing <code>SELECT * FROM tablename</code>, which gets all the data from a table, more complex <code>SELECT</code> queries can be implemented, such as <code>SELECT column FROM tablename</code> to only get all data from one column of the table. Append <code>LIMIT N</code> to limit the query to <code>N</code> entries. Append <code>WHERE condition</code> to meet a custom condition.</p>
+
+<p>Other statements that can be used in conjunction with <code>SELECT</code> are <code>ORDER BY column ASC|DESC</code>, <code>SELECT DISTINCT</code>, <code>MIN(column)</code>, <code>MAX(column)</code>, <code>COUNT(column)</code>, <code>AVG(column)</code>, <code>SUM(column)</code>, <code>LIKE</code> and more. For more, visit <a href="https://dev.mysql.com/doc/refman/8.0/en/select.html">MySQL 8.0 Reference Manual: 13.2.10 SELECT Statement</a>.</p>
+
+<p>MySQL uses regular expressions (regex) like pattern matching, some wildcards that can be used with the <code>LIKE</code> statement are:</p>
+
+<ul>
+<li><code>%</code>: zero or more characters.</li>
+<li><code>_</code>: a single character.</li>
+<li><code>[]</code>: any single character within the brackets.</li>
+<li><code>^</code>: any character not in the brackets.</li>
+<li><code>-</code>: a range of characters.</li>
+</ul>
+
+<p>An extended regex can be used with the statement <code>REGEX_LIKE(expression)</code>; <code>REGEXP</code> and <code>RLIKE</code> are synonyms for <code>REGEX_LIKE</code>. For more: <a href="https://dev.mysql.com/doc/refman/8.0/en/pattern-matching.html">MySQL 8.0 Reference Manual: 3.3.4.7 Pattern Matching</a>.</p>
+
+<h4>Unions</h4>
+
+<p>A specialized SQL operator that is used to combine multiple <code>SELECT</code> statements into one. The basic syntax is <code>SELECT ... UNION SELECT ...</code>, where <code>...</code> is a whole <code>SELECT</code> statement; there can be any amount of unions. There are some rules that apply when doing unions, such as having the same amount of columns on both statements and being of the same data type.</p>
+
+<h4>Joins</h4>
+
+<p>Used to combine rows from two or more tables based on a related column between them. Basic syntax is <code>SELECT table1.column1, ..., table2.column1, ... FROM table(1|2) JOIN table(1|2) ON table1.common_column = table2.common_column</code>, where the table specified in the <code>FROM</code> statement is called the &#8220;left&#8221; table, where the one in the <code>JOIN</code> statement is the &#8220;right&#8221; table. For more: <a href="https://dev.mysql.com/doc/refman/8.0/en/join.html">MySQL 8.0 Reference Manual: 13.2.10.2 JOIN Clause</a>.</p>
+
+<p>There are different types of SQL JOINs:</p>
+
+<ul>
+<li><code>(INNER) JOIN</code>: returns records that have matching values in both tables.</li>
+<li><code>LEFT (OUTER) JOIN</code>: returns all records from the left table, and the matched records from the right table.</li>
+<li><code>RIGHT (OUTER) JOIN</code>: returns all records from the right table, and the matched records from the left table.</li>
+<li><code>FULL (OUTER) JOIN</code>: returns all records when there is a match in either left or right table.</li>
+</ul>
+
+<p><img src="https://static.luevano.xyz/images/b/notes/sql/img_innerjoin.gif" alt="INNER JOIN" />
+<img src="https://static.luevano.xyz/images/b/notes/sql/img_leftjoin.gif" alt="LEFT JOIN" />
+<img src="https://static.luevano.xyz/images/b/notes/sql/img_rightjoin.gif" alt="RIGHT JOIN" />
+<img src="https://static.luevano.xyz/images/b/notes/sql/img_fulljoin.gif" alt="FULL OUTER JOIN" /></p>
+
+<h4>Nested queries</h4>
+
+<p>A query composed of multiple select statements to get a specific piece of information. This is self explanatory, you do a <code>SELECT</code> query somewhere inside another one, for example <code>SELECT ... IN (SELECT ...)</code>, where the nesting is occurring inside the parenthesis after the <code>IN</code> statement.</p>
+
+<p>A nesting isn't constrained to the <code>IN</code> statement, it can appear anywhere, for example in a <code>WHERE</code> statement: <code>SELECT ... WHERE something = (SELECT ...)</code>.</p>
+
+<h4>Triggers</h4>
+
+<p>A block of SQL code that will define a certain action that will happen when a specific operation is performed on the database. It is <strong>recommended to change the <code>DELIMITER</code> temporarily from semi-colon to something else</strong> (since we need to use semi-colon to end the trigger) while the trigger is created. The basic syntax is <code>CREATE TRIGGER trigername triggertime triggerevent ON tablename FOR EACH ROW triggerorder triggerbody</code>. For more: <a href="https://dev.mysql.com/doc/refman/8.0/en/create-trigger.html">MySQL 8.0 Reference Manual: 13.1.22 CREATE TRIGGER Statement</a> and <a href="https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html">MySQL 8.0 Reference Manual: 25.3.1 Trigger Syntax and Examples</a>.</p>
+
+<h4>Entity Relationship Diagrams (ERD)</h4>
+
+<p>When designing a database it's important to define a <strong>database schema</strong> which is just a definition of all the different tables and their attributes that are going to live inside the database. So, basically, an ERD diagram is a diagram that consists of text, symbols and shapes that are combined to create a relationship model.</p>
+
+<p>The diagram consists of:</p>
+
+<ul>
+<li><strong>Entity</strong>: a square with the name of the entity inside it.</li>
+<li><strong>Attributes</strong>: ovals with the name of the attributes inside it; an attribute defines specific pieces of information about an entity (columns).</li>
+<li><strong>Primary key</strong>: same as with attributes but with name underlined; the primary key uniquely identifies the entity.</li>
+<li><strong>Composite attribute</strong>: an attribute that consists on one or more (sub-)attributes.</li>
+<li><strong>Multi-valued attribute</strong>: oval with another oval inside it and the name of the attribute.</li>
+<li><strong>Derived attribute</strong>: dotted oval; this attribute can be derived from other attributes from the entity.</li>
+<li><strong>Relationship</strong>: a diamond with the relationship name in it, for the connections a single line (partial participation) or a doubled line (total participation); it denotes how two or more attributes are related to each other; all members must participate in the relationship.</li>
+<li><strong>Relationship attribute</strong>: denoted like a normal attribute, but it's child of a relationship; it defines what attributes exists because of the relationship, it's not stored in any of the entities related, but on the relationship object itself.</li>
+<li><strong>Relationship cardinality</strong>: denoted with a number on the line connecting the relationship to the entity; detones the number of instances of an entity from a relation that can be associated with the relation.</li>
+<li><strong>Weak entity</strong>: rectangle inside a rectangle with its name inside; it cannot be uniquely identified by its attributes alone.</li>
+<li><strong>Weak entity's primary key</strong>: oval with its text underlined, but the line is dotted.</li>
+<li><strong>Identifying relationship</strong>: a diamond inside a diamond with its name inside; a relationship that serves to uniquely identify the weak entity.</li>
+</ul>
+
+<p><img src="https://static.luevano.xyz/images/b/notes/sql/erd_example.png" alt="ERD example taken from wikipedia" /></p>
+
+<div class=timestamp>
+<hr>
+<p>Created: Tue, Mar 02, 2021 @ 07:35 MST</p>
+</div>
+    <footer class="footer">
+      <i class="fas fa-envelope" alt="Email"></i>
+      Email
+      <a href="mailto:david@luevano.xyz">
+        david@luevano.xyz
+      </a>
+      <br>
+
+      <i class="fas fa-rss" alt="RSS"></i>
+      RSS
+      <a href="https://blog.luevano.xyz/rss.xml">
+        https://blog.luevano.xyz/rss.xml
+      </a>
+      <br>
+
+      <i class="fas fa-donate" alt="Donate"></i>
+      <a href="https://luevano.xyz/donate">Donate</a>
+      <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fa/css/all.min.css">
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/dark.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/general_style.css">
+
+    <link rel="icon" href="https://static.luevano.xyz/fa/svgs/solid/dragon.svg">
+    <meta charset="utf-8">
+
+    <title>Luévano's Blog</title>
+  </head>
+
+  <body>
+    <div id="theme-switcher-container">
+      <i class="fas fa-sun"></i>
+      <label class="switch theme">
+        <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+        <span class="slider round"></span>
+      </label>
+      <i class="fas fa-moon"></i>
+    </div>
+
+    <header>
+      <ul class="menubar">
+        <li>
+          <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+        </li>
+
+        <li>
+          <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+        </li>
+
+        <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+          <ul>
+            <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+            <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+            <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+          </ul>
+        </li>
+
+        <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+          <ul>
+            <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="https://luevano.xyz/donate"><i class="fas fa-donate" alt="Donate"></i><span>Donate</span></a>
+          <ul>
+            <li><a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i><span>Paypal</span></a></li>
+          </ul>
+        </li>
+      </ul>
+      </nav>
+    </header>
+<h1>Así es raza, el blog ya tiene timestamps</h1>
+
+<p>Pues eso, esta entrada es sólo para tirar update sobre mi <a href="https://blog.luevano.xyz/a/first_blog_post.html">primer post</a>. Ya modifiqué el <code>ssg</code> lo suficiente como para que maneje los <em>timestamps</em>, y ya estoy más familiarizado con este script entonces ya lo podré extender más, pero por ahora las entradas ya tienen su fecha de creación (y modificación en dado caso) al final y en el índice ya están organizados por fecha, que por ahora está algo simple pero está sencillo de extender.</p>
+
+<p>Ya lo único que queda es cambiar un poco el formato del blog (y de la página en general), porque en un momento de desesperación puse todo el texto en justificado y pues no se ve chido siempre, entonces queda corregir eso. <em>Y aunque me tomó más tiempo del que quisiera, así nomás quedó, diría un cierto personaje.</em></p>
+
+<p>El <code>ssg</code> modificado está en mis <a href="https://git.luevano.xyz/.dots">dotfiles</a> (o directamente <a href="https://git.luevano.xyz/.dots/tree/.local/bin/ssg">aquí</a>).</p>
+
+<p>Por último, también quité las extensiones <code>.html</code> de las URLs, porque se veía bien pitero, pero igual los links con <code>.html</code> al final redirigen a su link sin <code>.html</code>, así que no hay rollo alguno.</p>
+
+<div class=timestamp>
+<hr>
+<p>Created: Mon, Mar 15, 2021 @ 19:43 MST; modified: Mon, Mar 15, 2021 @ 19:46 MST</p>
+</div>
+    <footer class="footer">
+      <i class="fas fa-envelope" alt="Email"></i>
+      Email
+      <a href="mailto:david@luevano.xyz">
+        david@luevano.xyz
+      </a>
+      <br>
+
+      <i class="fas fa-rss" alt="RSS"></i>
+      RSS
+      <a href="https://blog.luevano.xyz/rss.xml">
+        https://blog.luevano.xyz/rss.xml
+      </a>
+      <br>
+
+      <i class="fas fa-donate" alt="Donate"></i>
+      <a href="https://luevano.xyz/donate">Donate</a>
+      <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
+    </footer>
+  </body>
+</html>
