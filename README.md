@@ -4,7 +4,7 @@ This is my website repo, where I (of course) keep track of everything I do.
 
 This is only for version control, the way I "push" the content to my website is through a rsync command.
 
-I shouldn't keep tracking of font awesome's stuff, but the files are really small, so I have no problem.
+I shouldn't keep tracking of font awesome's stuff (or highligh.js'), but the files are really small, so I have no problem.
 
 ## Blog (blog.luevano.xyz)
 
@@ -17,6 +17,11 @@ Thanks to [Aaron Liu (HFO4)](https://github.com/HFO4) the author of [gameboy.liv
 ## Static (static.luevano.xyz)
 
 I also have a subdomain to keep all static content, just general stuff I use throughout my website.
+
+Along my own stuff I also host:
+
+* [Font Awesome (Free)](https://fontawesome.com/)
+* [highligh.js](https://highlightjs.org/)
 
 ## Git (git.luevano.xyz)
 
