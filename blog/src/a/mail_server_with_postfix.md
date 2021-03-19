@@ -2,7 +2,7 @@
 
 The entry is going to be long because it's a *tedious* process. This is also based on [Luke Smith's script](https://github.com/LukeSmithxyz/emailwiz), but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; also I'm going to be writing a script that does everything in one go, that will be hosted in [here](https://git.luevano.xyz/server_scripts.git).
 
-This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL.
+This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL. And note that most if not all commands executed here are run with root privileges.
 
 ## Prerequisites
 
@@ -72,7 +72,6 @@ Pre-configuration to work seamlessly with `dovecot` and `opendkim`:
 myhostname = {yourdomainname}
 mydomain = localdomain
 mydestination = $myhostname, localhost.$mydomain, localhost
-inet_interfaces = $myhostname, localhost
 
 milter_default_action = accept
 milter_protocol = 6
@@ -124,6 +123,13 @@ Now, I ran into some problems with postfix, one being [smtps: Servname not suppo
 ```conf
 smtps 465/tcp
 smtps 465/udp
+```
+
+At this point you're done configuring `postfix` and you can already start/enable the service:
+
+```sh
+systemctl start postfix
+systemctl enable postfix
 ```
 
 ## Dovecot
