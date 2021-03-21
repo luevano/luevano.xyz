@@ -61,7 +61,7 @@
       </ul>
       </nav>
     </header>
-<h1>Create a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
+<h1>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
 
 <p>The entry is going to be long because it's a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith's script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; also I'm going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
 
@@ -106,7 +106,7 @@
 
 <p>Certificates and ciphers to use for authentication and security:</p>
 
-<pre><code class="language-conf">smtpd_tls_key_file = {yourcertdir}/privkey.pem
+<pre><code class="language-apache">smtpd_tls_key_file = {yourcertdir}/privkey.pem
 smtpd_tls_cert_file = {yourcertdir}/fullchain.pem
 smtpd_use_tls = yes
 smtpd_tls_auth_only = yes
@@ -130,7 +130,7 @@ smtpd_relay_restrictions = permit_sasl_authenticated, permit_mynetworks, defer_u
 
 <p>Also, for the <em>connection</em> with <code>dovecot</code>, append the next few lines (telling postfix that <code>dovecot</code> will use user/password for authentication):</p>
 
-<pre><code class="language-conf">smtpd_sasl_auth_enable = yes
+<pre><code class="language-apache">smtpd_sasl_auth_enable = yes
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 smtpd_sasl_security_options = noanonymous, noplaintext
@@ -139,12 +139,12 @@ smtpd_sasl_tls_security_options = noanonymous
 
 <p>Specify the mailbox home (this is going to be a directory inside your user's home):</p>
 
-<pre><code class="language-conf">home_mailbox = Mail/Inbox/
+<pre><code class="language-apache">home_mailbox = Mail/Inbox/
 </code></pre>
 
 <p>Pre-configuration to work seamlessly with <code>dovecot</code> and <code>opendkim</code>:</p>
 
-<pre><code class="language-conf">myhostname = {yourdomainname}
+<pre><code class="language-apache">myhostname = {yourdomainname}
 mydomain = localdomain
 mydestination = $myhostname, localhost.$mydomain, localhost
 
@@ -159,12 +159,12 @@ mailbox_command = /usr/lib/dovecot/deliver
 
 <p>Lastly, if you don't want the sender's IP and user agent (application used to send the mail), add the following line:</p>
 
-<pre><code class="language-conf">smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
+<pre><code class="language-apache">smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
 </code></pre>
 
 <p>And create the <code>/etc/postfix/smtp_header_checks</code> file with the following content:</p>
 
-<pre><code class="language-conf">/^Received: .*/     IGNORE
+<pre><code class="language-coffee">/^Received: .*/     IGNORE
 /^User-Agent: .*/   IGNORE
 </code></pre>
 
@@ -174,7 +174,7 @@ mailbox_command = /usr/lib/dovecot/deliver
 
 <p>Lastly, append the following lines to complete postfix setup and pre-configure for <code>spamassassin</code>.</p>
 
-<pre><code class="language-conf">smtp unix - - n - - smtp
+<pre><code class="language-txt">smtp unix - - n - - smtp
 smtp inet n - y - - smtpd
     -o content_filter=spamassassin
 submission inet n - y - - smtpd
@@ -192,7 +192,7 @@ spamassassin unix - n n - - pipe
 
 <p>Now, I ran into some problems with postfix, one being <a href="https://www.faqforge.com/linux/fix-for-opensuse-error-postfixmaster-fatal-0-0-0-0smtps-servname-not-supported-for-ai_socktype/">smtps: Servname not supported for ai_socktype</a>, to fix it, as <em>Till</em> posted in that site, edit <code>/etc/services</code> and add:</p>
 
-<pre><code class="language-conf">smtps 465/tcp
+<pre><code class="language-apache">smtps 465/tcp
 smtps 465/udp
 </code></pre>
 
@@ -228,7 +228,7 @@ cp -r /usr/share/doc/dovecot/example-config/conf.d /etc/dovecot
 
 <p>I'm working with an empty <code>dovecot.conf</code> file. Add the following lines for SSL and login configuration (also replace <code>{yourcertdir}</code> with the same certificate directory described in the Postfix section above, note that the <code>&#60;</code> is required):</p>
 
-<pre><code class="language-conf">ssl = required
+<pre><code class="language-apache">ssl = required
 ssl_cert = &#60;{yourcertdir}/fullchain.pem
 ssl_key = &#60;{yourcertdir}/privkey.pem
 ssl_min_protocol = TLSv1.2
@@ -248,7 +248,7 @@ protocols = $protocols imap
 
 <p>After that, the next lines define what a &#8220;valid user is&#8221; (really just sets the database for users and passwords to be the local users with their password):</p>
 
-<pre><code class="language-conf">userdb {
+<pre><code class="language-apache">userdb {
     driver = passwd
 }
 
@@ -259,7 +259,7 @@ passdb {
 
 <p>Next, comes the mail directory structure (has to match the one described in the Postfix section). Here, the <code>LAYOUT</code> option is important so the boxes are <code>.Sent</code> instead of <code>Sent</code>. Add the next lines (plus any you like):</p>
 
-<pre><code class="language-conf">mail_location = maildir:~/Mail:INBOX=~/Mail/Inbox:LAYOUT=fs
+<pre><code class="language-apache">mail_location = maildir:~/Mail:INBOX=~/Mail/Inbox:LAYOUT=fs
 namespace inbox {
     inbox = yes
 
@@ -291,7 +291,7 @@ namespace inbox {
 
 <p>Also include this so Postfix can use Dovecot's authentication system:</p>
 
-<pre><code class="language-conf">service auth {
+<pre><code class="language-apache">service auth {
     unix_listener /var/spool/postfix/private/auth {
         mode = 0660
         user = postfix
@@ -302,7 +302,7 @@ namespace inbox {
 
 <p>Lastly (for <code>dovecot</code> at least), the plugin configuration for <code>sieve</code> (<code>pigeonhole</code>):</p>
 
-<pre><code class="language-conf">protocol lda {
+<pre><code class="language-apache">protocol lda {
     mail_plugins = $mail_plugins sieve
 }
 
@@ -324,7 +324,7 @@ plugin {
 
 <p>And create the file <code>default.sieve</code> inside that just created folder with the content:</p>
 
-<pre><code class="language-conf">require ["fileinto", "mailbox"];
+<pre><code class="language-nginx">require ["fileinto", "mailbox"];
 if header :contains "X-Spam-Flag" "YES" {
     fileinto "Junk";
 }
@@ -345,7 +345,7 @@ chown -R vmail:vmail /var/lib/dovecot
 
 <p>Next, add the following lines to <code>/etc/pam.d/dovecot</code> if not already present (shouldn't be there if you've been following these notes):</p>
 
-<pre><code class="language-conf">auth required pam_unix.so nullok
+<pre><code class="language-txt">auth required pam_unix.so nullok
 account required pam_unix.so
 </code></pre>
 
@@ -371,27 +371,27 @@ systemctl enable dovecot.service
 
 <p>Where you need to change <code>{yourdomain}</code> and <code>{yoursubdomain}</code> (doesn't really need to be the sub-domain, could be anything that describes your key) accordingly, for me it's <code>luevano.xyz</code> and <code>mail</code>, respectively. After that, we need to create some files inside the <code>/etc/opendkim</code> directory. First, create the file <code>KeyTable</code> with the content:</p>
 
-<pre><code class="language-conf">{yoursubdomain}._domainkey.{yourdomain} {yourdomain}:{yoursubdomain}:/etc/opendkim/{yoursubdomain}.private
+<pre><code class="language-txt">{yoursubdomain}._domainkey.{yourdomain} {yourdomain}:{yoursubdomain}:/etc/opendkim/{yoursubdomain}.private
 </code></pre>
 
 <p>So, for me it would be:</p>
 
-<pre><code class="language-conf">mail._domainkey.luevano.xyz luevano.xyz:mail:/etc/opendkim/mail.private
+<pre><code class="language-txt">mail._domainkey.luevano.xyz luevano.xyz:mail:/etc/opendkim/mail.private
 </code></pre>
 
 <p>Next, create the file <code>SigningTable</code> with the content:</p>
 
-<pre><code class="language-conf">*@{yourdomain} {yoursubdomain}._domainkey.{yourdomain}
+<pre><code class="language-txt">*@{yourdomain} {yoursubdomain}._domainkey.{yourdomain}
 </code></pre>
 
 <p>Again, for me it would be:</p>
 
-<pre><code class="language-conf">*@luevano.xyz mail._domainkey.luevano.xyz
+<pre><code class="language-txt">*@luevano.xyz mail._domainkey.luevano.xyz
 </code></pre>
 
 <p>And, lastly create the file <code>TrustedHosts</code> with the content:</p>
 
-<pre><code class="language-conf">127.0.0.1
+<pre><code class="language-txt">127.0.0.1
 ::1
 10.1.0.0/16
 1.2.3.4/24
@@ -404,7 +404,7 @@ localhost
 
 <p>Next, edit <code>/etc/opendkim/opendkim.conf</code> to reflect the changes (or rather, additions) of these files, as well as some other configuration. You can look up the example configuration file located at <code>/usr/share/doc/opendkim/opendkim.conf.sample</code>, but I'm creating a blank one with the contents:</p>
 
-<pre><code class="language-conf">Domain {yourdomain}
+<pre><code class="language-apache">Domain {yourdomain}
 Selector {yoursubdomain}
 
 Syslog Yes
@@ -416,7 +416,7 @@ Socket inet:8891@localhost
 
 <p>Now, change the permissions for all the files inside <code>/etc/opendkim</code>:</p>
 
-<pre><code class="language-conf">chown -R root:opendkim /etc/opendkim
+<pre><code class="language-sh">chown -R root:opendkim /etc/opendkim
 chmod g+r /etc/postfix/dkim/*
 </code></pre>
 
@@ -474,7 +474,7 @@ sudo -u spamd sa-compile
 
 <p>And since this should be run periodically, create the service <code>spamassassin-update.service</code> under <code>/etc/systemd/system</code> with the following content:</p>
 
-<pre><code class="language-conf">[Unit]
+<pre><code class="language-ini">[Unit]
 Description=SpamAssassin housekeeping
 After=network.target
 
@@ -491,7 +491,7 @@ ExecStart=/usr/bin/systemctl -q --no-block try-restart spamassassin.service
 
 <p>And you could also execute <code>sa-learn</code> to train <code>spamassassin</code>'s bayes filter, but this works for me. Then create the timer <code>spamassassin-update.timer</code> under the same directory, with the content:</p>
 
-<pre><code class="language-conf">[Unit]
+<pre><code class="language-ini">[Unit]
 Description=SpamAssassin housekeeping
 
 [Timer]
@@ -510,7 +510,7 @@ systemctl enable spamassassin-update.timer
 
 <p>Next, you may want to edit the <code>spamassassin</code> service before starting and enabling it, because by default, it could <a href="https://rimuhosting.com/howto/memory.jsp">spawn a lot of &#8220;childs&#8221;</a> eating a lot of resources and you really only need one child. Append <code>--max-children=1</code> to the line <code>ExecStart=...</code> in <code>/usr/bin/systemd/system/spamassassin.service</code>:</p>
 
-<pre><code class="language-conf">...
+<pre><code class="language-ini">...
 ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/spamd.sock --listen=localhost --max-children=1
 ...
 </code></pre>
@@ -551,7 +551,7 @@ systemctl enable spamassassin.service
 
 <div class=timestamp>
 <hr>
-<p>Created: Sat, Mar 20, 2021 @ 02:23 MST</p>
+<p>Created: Sat, Mar 20, 2021 @ 02:54 MST; modified: Sat, Mar 20, 2021 @ 03:06 MST</p>
 </div>
     <footer class="footer">
       <i class="fas fa-envelope" alt="Email"></i>

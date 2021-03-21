@@ -1,4 +1,4 @@
-# Create a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM
+# Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM
 
 The entry is going to be long because it's a *tedious* process. This is also based on [Luke Smith's script](https://github.com/LukeSmithxyz/emailwiz), but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; also I'm going to be writing a script that does everything in one go (for Arch Linux), that will be hosted [here](https://git.luevano.xyz/server_scripts.git).
 
@@ -12,9 +12,9 @@ Basically the same as with the [website with Nginx and Certbot](https://blog.lue
 
 * A domain name. Got mine on [Epik](https://www.epik.com/?affid=da5ne9ru4) (affiliate link, btw).
 	* Later we'll be adding some **MX**  and **TXT** records.
-	* You also need a **CNAME** for "mail" and (optionally) "www.mail", or whatever you want to call the sub-domains (although the [RFC 2181](https://tools.ietf.org/html/rfc2181#section-10.3) states that it NEEDS to be an **A** record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on `nginx` and `certbot`).
+	* You also need a **CNAME** for "mail" and (optionally) "www.mail", or whatever you want to call the sub-domains (although the [RFC 2181](https://tools.ietf.org/html/rfc2181#section-10.3) states that it NEEDS to be an **A** record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on `nginx` and `certbot`) with `certbot` (just create a `mail.conf` for `nginx`, similar to how we created it in the website entry).
 * A VPS or somewhere else to host. I'm using [Vultr](https://www.vultr.com/?ref=8732849) (also an affiliate link).
-	* Also `ssh` configured.
+	* `ssh` configured.
 	* Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall (I use `ufw`).
 	* With `nginx` and `certbot` setup and running.
 
@@ -36,7 +36,7 @@ Now, first locate where your website cert is, mine is at the default location `/
 
 Certificates and ciphers to use for authentication and security:
 
-```conf
+```apache
 smtpd_tls_key_file = {yourcertdir}/privkey.pem
 smtpd_tls_cert_file = {yourcertdir}/fullchain.pem
 smtpd_use_tls = yes
@@ -61,7 +61,7 @@ smtpd_relay_restrictions = permit_sasl_authenticated, permit_mynetworks, defer_u
 
 Also, for the *connection* with `dovecot`, append the next few lines (telling postfix that `dovecot` will use user/password for authentication):
 
-```conf
+```apache
 smtpd_sasl_auth_enable = yes
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
@@ -71,13 +71,13 @@ smtpd_sasl_tls_security_options = noanonymous
 
 Specify the mailbox home (this is going to be a directory inside your user's home):
 
-```conf
+```apache
 home_mailbox = Mail/Inbox/
 ```
 
 Pre-configuration to work seamlessly with `dovecot` and `opendkim`:
 
-```conf
+```apache
 myhostname = {yourdomainname}
 mydomain = localdomain
 mydestination = $myhostname, localhost.$mydomain, localhost
@@ -93,13 +93,13 @@ Where `{yourdomainname}` is `luevano.xyz` in my case, or if you have `localhost`
 
 Lastly, if you don't want the sender's IP and user agent (application used to send the mail), add the following line:
 
-```conf
+```apache
 smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
 ```
 
 And create the `/etc/postfix/smtp_header_checks` file with the following content:
 
-```conf
+```coffee
 /^Received: .*/		IGNORE
 /^User-Agent: .*/	IGNORE
 ```
@@ -110,7 +110,7 @@ First look up lines (they're uncommented) `smtp inet n - n - - smtpd`, `smtp uni
 
 Lastly, append the following lines to complete postfix setup and pre-configure for `spamassassin`.
 
-```conf
+```txt
 smtp unix - - n - - smtp
 smtp inet n - y - - smtpd
 	-o content_filter=spamassassin
@@ -129,7 +129,7 @@ spamassassin unix - n n - - pipe
 
 Now, I ran into some problems with postfix, one being [smtps: Servname not supported for ai_socktype](https://www.faqforge.com/linux/fix-for-opensuse-error-postfixmaster-fatal-0-0-0-0smtps-servname-not-supported-for-ai_socktype/), to fix it, as *Till* posted in that site, edit `/etc/services` and add:
 
-```conf
+```apache
 smtps 465/tcp
 smtps 465/udp
 ```
@@ -170,7 +170,7 @@ As Luke stated, `dovecot` comes with a lot of "modules" (under `/etc/dovecot/con
 
 I'm working with an empty `dovecot.conf` file. Add the following lines for SSL and login configuration (also replace `{yourcertdir}` with the same certificate directory described in the Postfix section above, note that the `<` is required):
 
-```conf
+```apache
 ssl = required
 ssl_cert = <{yourcertdir}/fullchain.pem
 ssl_key = <{yourcertdir}/privkey.pem
@@ -192,7 +192,7 @@ openssl dhparam -out /etc/dovecot/dh.pem 4096
 
 After that, the next lines define what a "valid user is" (really just sets the database for users and passwords to be the local users with their password):
 
-```conf
+```apache
 userdb {
 	driver = passwd
 }
@@ -204,7 +204,7 @@ passdb {
 
 Next, comes the mail directory structure (has to match the one described in the Postfix section). Here, the `LAYOUT` option is important so the boxes are `.Sent` instead of `Sent`. Add the next lines (plus any you like):
 
-```conf
+```apache
 mail_location = maildir:~/Mail:INBOX=~/Mail/Inbox:LAYOUT=fs
 namespace inbox {
 	inbox = yes
@@ -237,7 +237,7 @@ namespace inbox {
 
 Also include this so Postfix can use Dovecot's authentication system:
 
-```conf
+```apache
 service auth {
 	unix_listener /var/spool/postfix/private/auth {
 		mode = 0660
@@ -249,7 +249,7 @@ service auth {
 
 Lastly (for `dovecot` at least), the plugin configuration for `sieve` (`pigeonhole`):
 
-```conf
+```apache
 protocol lda {
 	mail_plugins = $mail_plugins sieve
 }
@@ -273,7 +273,7 @@ mkdir -p /var/lib/dovecot/sieve
 
 And create the file `default.sieve` inside that just created folder with the content:
 
-```conf
+```nginx
 require ["fileinto", "mailbox"];
 if header :contains "X-Spam-Flag" "YES" {
 	fileinto "Junk";
@@ -297,7 +297,7 @@ To compile the configuration file (a `default.svbin` file will be created next t
 
 Next, add the following lines to `/etc/pam.d/dovecot` if not already present (shouldn't be there if you've been following these notes):
 
-```conf
+```txt
 auth required pam_unix.so nullok
 account required pam_unix.so
 ```
@@ -327,31 +327,31 @@ opendkim-genkey -D /etc/opendkim -d {yourdomain} -s {yoursubdomain} -r -b 2048
 
 Where you need to change `{yourdomain}` and `{yoursubdomain}` (doesn't really need to be the sub-domain, could be anything that describes your key) accordingly, for me it's `luevano.xyz` and `mail`, respectively. After that, we need to create some files inside the `/etc/opendkim` directory. First, create the file `KeyTable` with the content:
 
-```conf
+```txt
 {yoursubdomain}._domainkey.{yourdomain} {yourdomain}:{yoursubdomain}:/etc/opendkim/{yoursubdomain}.private
 ```
 
 So, for me it would be:
 
-```conf
+```txt
 mail._domainkey.luevano.xyz luevano.xyz:mail:/etc/opendkim/mail.private
 ```
 
 Next, create the file `SigningTable` with the content:
 
-```conf
+```txt
 *@{yourdomain} {yoursubdomain}._domainkey.{yourdomain}
 ```
 
 Again, for me it would be:
 
-```conf
+```txt
 *@luevano.xyz mail._domainkey.luevano.xyz
 ```
 
 And, lastly create the file `TrustedHosts` with the content:
 
-```conf
+```txt
 127.0.0.1
 ::1
 10.1.0.0/16
@@ -365,7 +365,7 @@ And more, make sure to include your server IP and something like `subdomain.doma
 
 Next, edit `/etc/opendkim/opendkim.conf` to reflect the changes (or rather, additions) of these files, as well as some other configuration. You can look up the example configuration file located at `/usr/share/doc/opendkim/opendkim.conf.sample`, but I'm creating a blank one with the contents:
 
-```conf
+```apache
 Domain {yourdomain}
 Selector {yoursubdomain}
 
@@ -378,7 +378,7 @@ Socket inet:8891@localhost
 
 Now, change the permissions for all the files inside `/etc/opendkim`:
 
-```conf
+```sh
 chown -R root:opendkim /etc/opendkim
 chmod g+r /etc/postfix/dkim/*
 ```
@@ -439,7 +439,7 @@ sudo -u spamd sa-compile
 
 And since this should be run periodically, create the service `spamassassin-update.service` under `/etc/systemd/system` with the following content:
 
-```conf
+```ini
 [Unit]
 Description=SpamAssassin housekeeping
 After=network.target
@@ -457,7 +457,7 @@ ExecStart=/usr/bin/systemctl -q --no-block try-restart spamassassin.service
 
 And you could also execute `sa-learn` to train `spamassassin`'s bayes filter, but this works for me. Then create the timer `spamassassin-update.timer` under the same directory, with the content:
 
-```conf
+```ini
 [Unit]
 Description=SpamAssassin housekeeping
 
@@ -478,7 +478,7 @@ systemctl enable spamassassin-update.timer
 
 Next, you may want to edit the `spamassassin` service before starting and enabling it, because by default, it could [spawn a lot of "childs"](https://rimuhosting.com/howto/memory.jsp) eating a lot of resources and you really only need one child. Append `--max-children=1` to the line `ExecStart=...` in `/usr/bin/systemd/system/spamassassin.service`:
 
-```conf
+```ini
 ...
 ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/spamd.sock --listen=localhost --max-children=1
 ...
