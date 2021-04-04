@@ -3,7 +3,7 @@ var newImage;
 window.onload = function (){
 	reimg = document.getElementById('game_img');
 	setInterval(function (){
-		reimg.src = 'https://gb.luevano.xyz/image?r=' + Math.random();
+		reimg.src = 'https://gb.ezclap.xyz/image?r=' + Math.random();
 	}, 1000)
 }
 
@@ -11,7 +11,7 @@ function input(button){
 
 	if(typeof button == 'number'){
 		$.ajax({
-			url: 'https://gb.luevano.xyz/control?button=' + button + '&callback=https://gb.luevano.xyz',
+			url: 'https://gb.ezclap.xyz/control?button=' + button + '&callback=https://gb.luevano.xyz',
 			type: 'GET',
 			complete: function(xhr){
 				let statusCode = xhr.status;

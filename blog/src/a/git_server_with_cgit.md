@@ -1,6 +1,6 @@
-# Create a git server with cgit (nginx)
+# Create a git server and setup cgit web app (on Nginx)
 
-My git server is all I need to setup up to actually *kill* my other server (I've been moving from servers on these last 2-3 blog entries), that's why I'm already doing this entry. I'm basically following [git's guide on setting up a server](https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server) plus some specific stuff for (btw i use) Arch Linux ([Arch Linux Wiki: Git server](https://wiki.archlinux.org/index.php/Git_server#Web_interfaces) and [Step by step guide on setting up git server in arch linux (pushable)](https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/)).
+My git server is all I need to setup to actually *kill* my other server (I've been moving from servers on these last 2-3 blog entries), that's why I'm already doing this entry. I'm basically following [git's guide on setting up a server](https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server) plus some specific stuff for (btw i use) Arch Linux ([Arch Linux Wiki: Git server](https://wiki.archlinux.org/index.php/Git_server#Web_interfaces) and [Step by step guide on setting up git server in arch linux (pushable)](https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/)).
 
 Note that this is mostly for personal use, so there's no user/authentication control other than that of SSH. Also, most if not all commands here are run as root.
 
@@ -70,8 +70,8 @@ systemctl enable git-daemon.socket
 You're basically done. Now you should be able to push/pull repositories to your server... except, you haven't created any repository in your server, that's right, they're not created automatically when trying to push. To do so, you have to do the following sequence (assuming you're "`cd`'ed" into the `/home/git` directory):
 
 ```sh
-mkdir {project_name}.git
-cd {project_name}.git
+mkdir {repo_name}.git
+cd {repo_name}.git
 ```
 
 Those two lines above will need to be run each time you want to add a new repository to your server (yeah, kinda lame... although there are options to "automate" this, I like it this way).
@@ -120,7 +120,7 @@ Where the `server_name` line depends on you, I have mine setup to `git.luevano.x
 
 Now, all that's left is to configure `cgit`. Create the configuration file `/etc/cgitrc` with the following content (my personal options, pretty much the default):
 
-```
+```apache
 css=/cgit.css
 source-filter=/usr/lib/cgit/filters/syntax-highlighting-edited.sh
 logo=/cgit.png
@@ -139,7 +139,7 @@ repo.desc={short_description}
 
 Where you can uncomment the `robots` line to let web crawlers (like Google's) to index your `git` web app. And at the end keep all your repositories (the ones you want to make public), for example for my [*dotfiles*](https://git.luevano.xyz/.dots) I have:
 
-```
+```apache
 ...
 repo.url=.dots
 repo.path=/home/git/.dots.git

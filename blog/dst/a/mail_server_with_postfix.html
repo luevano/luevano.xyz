@@ -78,12 +78,12 @@
 
 <ul>
 <li>Later we'll be adding some <strong>MX</strong>  and <strong>TXT</strong> records.</li>
-<li>You also need a <strong>CNAME</strong> for &#8220;mail&#8221; and (optionally) &#8220;www.mail&#8221;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on <code>nginx</code> and <code>certbot</code>).</li>
+<li>You also need a <strong>CNAME</strong> for &#8220;mail&#8221; and (optionally) &#8220;www.mail&#8221;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on <code>nginx</code> and <code>certbot</code>) with <code>certbot</code> (just create a <code>mail.conf</code> for <code>nginx</code>, similar to how we created it in the website entry).</li>
 </ul></li>
 <li>A VPS or somewhere else to host. I'm using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).
 
 <ul>
-<li>Also <code>ssh</code> configured.</li>
+<li><code>ssh</code> configured.</li>
 <li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall (I use <code>ufw</code>).</li>
 <li>With <code>nginx</code> and <code>certbot</code> setup and running.</li>
 </ul></li>
@@ -551,7 +551,7 @@ systemctl enable spamassassin.service
 
 <div class=timestamp>
 <hr>
-<p>Created: Sat, Mar 20, 2021 @ 02:54 MST; modified: Sat, Mar 20, 2021 @ 03:06 MST</p>
+<p>Created: Sat, Mar 20, 2021 @ 02:54 MST; modified: Sat, Mar 20, 2021 @ 21:05 MST</p>
 </div>
     <footer class="footer">
       <i class="fas fa-envelope" alt="Email"></i>
