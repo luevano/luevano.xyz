@@ -1,0 +1,156 @@
+:root {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: larger;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  display: grid;
+
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+  grid-template-rows: 3em auto auto;
+  grid-template-columns: auto;
+}
+
+body > header {
+  grid-area: header;
+}
+
+body > footer {
+  grid-area: footer;
+}
+
+main {
+  grid-area: main;
+}
+
+a{
+  text-decoration: none;
+}
+
+body > header, body > footer, main {
+  justify-self: center;
+  width: clamp(45ch, 50%, 75ch);
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+
+/* nav bar / header */
+body > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+nav li {
+  display: block;
+  float: left;
+  min-width: 2em;
+  max-width: 10em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+
+nav > ul > li > ul {
+  visibility: hidden;
+  position: absolute;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+}
+
+nav > ul > li:hover > ul {
+  visibility: visible;
+}
+
+nav > ul > li > ul > li {
+  float: none;
+  margin-top: 0.4em;
+}
+
+nav span {
+  padding-left: 0.4em;
+}
+
+
+/* footer */
+body > footer {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+
+/* theme swticher */
+.switch {
+  position: relative;
+  top: 0.2em;
+  display: inline-block;
+  width: 2em;
+  height: 1em;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch input:checked + .slider:before {
+  -webkit-transform: translateX(0.9em);
+  -ms-transform: translateX(0.9em);
+  transform: translateX(0.9em);
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position:absolute;
+  content: "";
+  height: 0.8em;
+  width: 0.8em;
+  left: 0.1em;
+  bottom: 0.1em;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider.round {
+  border-radius: 1em;
+}
+
+.slider.round:before {
+  border-radius: 1em;
+}

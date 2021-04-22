@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
-
-    <link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/solarized-dark.min.css">
-    <script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
-    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
-    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fa/css/all.min.css">
-    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/dark.css">
-    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/general_style.css">
-
-    <link rel="icon" href="https://static.luevano.xyz/fa/svgs/solid/dragon.svg">
+    <base href="https://static.luevano.xyz/">
     <meta charset="utf-8">
-
     <title>Luévano's Blog</title>
+    <link rel="icon" href="fa/svgs/solid/dragon.svg">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fa/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
   </head>
 
   <body>
-    <div id="theme-switcher-container">
-      <i class="fas fa-sun"></i>
-      <label class="switch theme">
-        <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
-        <span class="slider round"></span>
-      </label>
-      <i class="fas fa-moon"></i>
-    </div>
-
     <header>
-      <ul class="menubar">
-        <li>
-          <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
-        </li>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
 
-        <li>
-          <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
-        </li>
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
 
-        <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
-          <ul>
-            <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
 
-            <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
 
-            <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
-          </ul>
-        </li>
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
 
-        <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
-          <ul>
-            <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="https://luevano.xyz/donate"><i class="fas fa-donate" alt="Donate"></i><span>Donate</span></a>
-          <ul>
-            <li><a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i><span>Paypal</span></a></li>
-          </ul>
-        </li>
-      </ul>
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
       </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
     </header>
+
+    <main>

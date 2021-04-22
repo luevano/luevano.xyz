@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
-
-    <link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/solarized-dark.min.css">
-    <script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
-    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
-    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fa/css/all.min.css">
-    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/dark.css">
-    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/general_style.css">
-
-    <link rel="icon" href="https://static.luevano.xyz/fa/svgs/solid/dragon.svg">
+    <base href="https://static.luevano.xyz/">
     <meta charset="utf-8">
-
     <title>Luévano's Blog</title>
+    <link rel="icon" href="fa/svgs/solid/dragon.svg">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fa/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
   </head>
 
   <body>
-    <div id="theme-switcher-container">
-      <i class="fas fa-sun"></i>
-      <label class="switch theme">
-        <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
-        <span class="slider round"></span>
-      </label>
-      <i class="fas fa-moon"></i>
-    </div>
-
     <header>
-      <ul class="menubar">
-        <li>
-          <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
-        </li>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
 
-        <li>
-          <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
-        </li>
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
 
-        <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
-          <ul>
-            <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
 
-            <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
 
-            <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
-          </ul>
-        </li>
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
 
-        <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
-          <ul>
-            <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="https://luevano.xyz/donate"><i class="fas fa-donate" alt="Donate"></i><span>Donate</span></a>
-          <ul>
-            <li><a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i><span>Paypal</span></a></li>
-          </ul>
-        </li>
-      </ul>
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
       </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
     </header>
+
+    <main>
 <h1>Create a git server and setup cgit web app (on Nginx)</h1>
 
 <p>My git server is all I need to setup to actually <em>kill</em> my other server (I've been moving from servers on these last 2-3 blog entries), that's why I'm already doing this entry. I'm basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git's guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
@@ -215,7 +215,9 @@ repo.desc=These are my personal dotfiles.
 <hr>
 <p>Created: Sat, Mar 20, 2021 @ 22:58 MST; modified: Sun, Mar 21, 2021 @ 12:00 MST</p>
 </div>
-    <footer class="footer">
+    </main>
+
+    <footer>
       <i class="fas fa-envelope" alt="Email"></i>
       Email
       <a href="mailto:david@luevano.xyz">
