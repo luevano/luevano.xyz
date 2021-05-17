@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="https://static.luevano.xyz/">
+    <meta charset="utf-8">
+    <title>Luévano's Blog</title>
+    <link rel="icon" href="fa/svgs/solid/dragon.svg">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fa/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <main>
+<h1>Create a website with Nginx and Certbot</h1>
+
+<p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke's video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I'm configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
+
+<p>As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linux distro, and I'm doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
+
+<h2>Prerequisites</h2>
+
+<p>You will need two things:</p>
+
+<ul>
+<li>A domain name (duh!). I got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).
+
+<ul>
+<li>With the corresponding <strong>A</strong> and <strong>AAA</strong> records pointing to the VPS&#8217; IPs (&#8220;A&#8221; record points to the ipv4 address and &#8220;AAA&#8221; to the ipv6, basically). I have three records for each type: empty one, &#8220;www&#8221; and &#8220;*&#8221; for a wildcard, that way &#8220;domain.name&#8221;, &#8220;www.domain.name&#8221;, &#8220;anythingelse.domain.name&#8221; point to the same VPS (meaning that you can have several VPS for different sub-domains).</li>
+</ul></li>
+<li>A VPS or somewhere else to host it. I'm using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).
+
+<ul>
+<li>With <code>ssh</code> already configured both on the local machine and on the remote machine.</li>
+<li>Firewall already configured to allow ports 80 (HTTP) and 443 (HTTPS). I use <code>ufw</code> so it's just a matter of doing <code>ufw allow 80,443/tcp</code> as root and you're golden.</li>
+<li><code>cron</code> installed if you follow along (you could use <code>systemd</code> timers, or some other method you prefer to automate running commands every X time).</li>
+</ul></li>
+</ul>
+
+<h2>Nginx</h2>
+
+<p>You have two options: <code>nginx</code> and <code>nginx-mainline</code>. I prefer <code>nginx-mainline</code> because it's the &#8220;up to date&#8221; package even though <code>nginx</code> is labeled to be the &#8220;stable&#8221; version. Install the package and enable/start the service:</p>
+
+<pre><code class="language-sh">pacman -S nginx-mainline
+systemctl enable nginx.service
+systemctl start nginx.service
+</code></pre>
+
+<p>And that's it, at this point you can already look at the default initial page of nginx if you enter the ip of your server in a web browser. You should see something like this:</p>
+
+<p><img src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png" alt="Nginx welcome page" /></p>
+
+<p>As stated in the welcome page, configuration is needed, head to the directory of nginx:</p>
+
+<pre><code class="language-sh">cd /etc/nginx
+</code></pre>
+
+<p>Here you have several files, the important one is <code>nginx.conf</code>, which as its name implies, contains general configuration of the web server. If you peek into the file, you will see that it contains around 120 lines, most of which are commented out and contains the welcome page server block. While you can configure a website in this file, it's common practice to do it on a separate file (so you can scale really easily if needed for mor websites or sub-domains).</p>
+
+<p>Inside the <code>nginx.conf</code> file, delete the <code>server</code> blocks and add the lines <code>include sites-enabled/*;</code> (to look into individual server configuration files) and <code>types_hash_max_size 4096;</code> (to get rid of an ugly warning that will keep appearing) somewhere inside the <code>http</code> block. The final <code>nginx.conf</code> file would look something like (ignoring the comments just for clarity, but you can keep them as side notes):</p>
+
+<pre><code class="language-nginx">worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include sites-enabled/*;
+    include mime.types;
+    default_type application/octet-stream;
+
+    sendfile on;
+
+    keepalive_timeout 65;
+
+    types_hash_max_size 4096;
+}
+</code></pre>
+
+<p>Next, inside the directory <code>/etc/nginx/</code> create the <code>sites-available</code> and <code>sites-enabled</code>, and go into the <code>sites-available</code> one:</p>
+
+<pre><code class="language-sh">mkdir sites-available
+mkdir sites-enabled
+cd sites-available
+</code></pre>
+
+<p>Here, create a new <code>.conf</code> file for your website and add the following lines (this is just the sample content more or less):</p>
+
+<pre><code class="language-nginx">server {
+    listen 80;
+    listen [::]:80;
+
+    root /path/to/root/directory;
+    server_name domain.name another.domain.name;
+    index index.html anotherindex.otherextension;
+
+    location /{
+        try_files $uri $uri/ =404;
+    }
+}
+</code></pre>
+
+<p>Note several things:</p>
+
+<ul>
+<li><code>listen</code>: we're telling nginx which port to listen to (ipv4 and ipv6, respectively).</li>
+<li><code>root</code>: the root directory of where the website files (<code>.html</code>, <code>.css</code>, <code>.js</code>, etc. files) are located. I followed Luke's directory path <code>/var/www/some_folder</code>.</li>
+<li><code>server_name</code>: the actual domain to &#8220;listen&#8221; to (for my website it is: <code>server_name luevano.xyz www.luevano.xyz</code>; and for this blog is: <code>server_name blog.luevano.xyz www.blog.luevano.xyz</code>).</li>
+<li><code>index</code>: what file to serve as the index (could be any <code>.html</code>, <code>.htm</code>, <code>.php</code>, etc. file) when just entering the website.</li>
+<li><code>location</code>: used in case of different configurations across different URL paths.
+
+<ul>
+<li><code>try_files</code>: tells what files to look for, don't look into this too much for now.</li>
+</ul></li>
+</ul>
+
+<p>Then, make a symbolic from this config file to the <code>sites-enabled</code> directory:</p>
+
+<pre><code class="language-sh">ln -s /etc/nginx/sites-available/your_config_file.conf /etc/nginx/sites-enabled
+</code></pre>
+
+<p>This is so the <code>nginx.conf</code> file can look up the newly created server config. With this method of having each server configuration file separate you can easily &#8220;deactivate&#8221; any website by just deleting the symbolic link in <code>sites-enabled</code> and you're good, or just add new configuration files and keep everything nice and tidy.</p>
+
+<p>All you have to do now is restart (or enable and start if you haven't already) the nginx service (and optionally test the configuration):</p>
+
+<pre><code class="language-sh">nginx -t
+systemctl restart nginx
+</code></pre>
+
+<p>If everything goes correctly, you can now go to your website by typing &#8220;domain.name&#8221; on a web browser. But you will see a &#8220;404 Not Found&#8221; page like the following (maybe with different nginx version):</p>
+
+<p><img src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png" alt="Nginx 404 page" /></p>
+
+<p>That's no problem, because it means that the web server it's actually working. Just add an <code>index.html</code> file with something simple to see it in action. If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>
+
+<p>I like to remove the <code>.html</code> and trailing <code>/</code> on the URLs of my website, for that you need to add the following <code>rewrite</code> lines and modify the <code>try_files</code> line (for more: <a href="https://www.seancdavis.com/blog/remove-html-extension-and-trailing-slash-in-nginx-config/">Sean C. Davis: Remove HTML Extension And Trailing Slash In Nginx Config</a>):</p>
+
+<pre><code class="language-nginx">server {
+    ...
+    rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+    rewrite ^/(.*)/$ /$1 permanent;
+    ...
+    try_files $uri/index.html $uri.html $uri/ $uri =404;
+    ...
+</code></pre>
+
+<p>For more: <a href="https://wiki.archlinux.org/index.php/nginx">Arch Linux Wiki: nginx</a>.</p>
+
+<h2>Certbot</h2>
+
+<p>The only &#8220;bad&#8221; (bloated) thing about certbot, is that it uses <code>python</code>, but for me it doesn't matter too much. You may want to look up another alternative if you prefer. Install the packages <code>certbot</code> and <code>certbot-nginx</code>:</p>
+
+<pre><code class="language-sh">pacman -S certbot certbot-nginx
+</code></pre>
+
+<p>After that, all you have to do now is run <code>certbot</code> and follow the instructions given by the tool:</p>
+
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+
+<p>It will ask you for some information, for you to accept some agreements and the names to activate https for. Also, you will want to &#8220;say yes&#8221; to the redirection from http to https. And that's it, you can now go to your website and see that you have https active.</p>
+
+<p>Now, the certificate given by <code>certbot</code> expires every 3 months or something like that, so you want to renew this certificate every once in a while. Using <code>cron</code>, you can do this by running:</p>
+
+<pre><code class="language-sh">crontab -e
+</code></pre>
+
+<p>And a file will be opened where you need to add a new rule for certbot, just append the line: <code>1 1 1 * * certbot renew</code> (renew on the first day of every month) and you're good. Alternatively use <code>systemd</code> timers as stated in the <a href="https://wiki.archlinux.org/index.php/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
+
+<p>For more: <a href="https://wiki.archlinux.org/index.php/Certbot">Arch Linux Wiki: Certbot</a>.</p>
+
+<p>That's it, you now have a website with SSL certificate.</p>
+
+<div class=timestamp>
+<hr>
+<p>Created: Thu, Mar 18, 2021 @ 19:58 MST</p>
+</div>
+    </main>
+
+    <footer>
+      <i class="fas fa-envelope" alt="Email"></i>
+      Email
+      <a href="mailto:david@luevano.xyz">
+        david@luevano.xyz
+      </a>
+      <br>
+
+      <i class="fas fa-rss" alt="RSS"></i>
+      RSS
+      <a href="https://blog.luevano.xyz/rss.xml">
+        https://blog.luevano.xyz/rss.xml
+      </a>
+      <br>
+
+      <i class="fas fa-donate" alt="Donate"></i>
+      <a href="https://luevano.xyz/donate">Donate</a>
+      <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
+    </footer>
+  </body>
+</html>

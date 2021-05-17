@@ -1,4 +1,12 @@
-# Create a git server and setup cgit web app (on Nginx)
+title: Create a git server and setup cgit web app (on Nginx)
+author: David Luévano
+lang: en
+summary: How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.
+tags: git
+	nginx
+	tools
+	tutorial
+	english
 
 My git server is all I need to setup to actually *kill* my other server (I've been moving from servers on these last 2-3 blog entries), that's why I'm already doing this entry. I'm basically following [git's guide on setting up a server](https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server) plus some specific stuff for (btw i use) Arch Linux ([Arch Linux Wiki: Git server](https://wiki.archlinux.org/index.php/Git_server#Web_interfaces) and [Step by step guide on setting up git server in arch linux (pushable)](https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/)).
 

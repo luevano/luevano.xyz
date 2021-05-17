@@ -1,4 +1,11 @@
-# Create a website with Nginx and Certbot
+title: Create a website with Nginx and Certbot
+author: David Luévano
+lang: en
+summary: How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics.
+tags: nginx
+	tools
+	tutorial
+	english
 
 These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from [Luke's video](https://www.youtube.com/watch?v=OWAqilIVNgE) and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I'm configuring the web server again on a new VPS instance, so this is going to be fresh.
 

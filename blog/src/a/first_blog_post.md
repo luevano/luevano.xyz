@@ -1,4 +1,11 @@
-# This is the first blog post, just for testing purposes
+title: This is the first blog post, just for testing purposes
+author: David Luévano
+lang: en
+summary: Just my first blog post where I state what tools I'm using to build this blog.
+tags: short
+	update
+	tools
+	english
 
 I'm making this post just to figure out how [`ssg5`](https://www.romanzolotarev.com/ssg.html) and [`lowdown`](https://kristaps.bsd.lv/lowdown/) are supposed to work (and eventually also [`rssg`](https://www.romanzolotarev.com/rssg.html)).
 

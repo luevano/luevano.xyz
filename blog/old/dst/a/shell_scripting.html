@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="https://static.luevano.xyz/">
+    <meta charset="utf-8">
+    <title>Luévano's Blog</title>
+    <link rel="icon" href="fa/svgs/solid/dragon.svg">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fa/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <main>
+<h1>Shell scripting tutorial video notes</h1>
+
+<p>Another summary, this time about shell scripting in general. And just like with the <a href="https://blog.luevano.xyz/a/linux_video_notes">Linux notes</a>, I also did most of the notes myself or with resources outside the video. The videos in question are: <a href="https://www.youtube.com/playlist?list=PL7B7FA4E693D8E790">The Bad Tutorials (YT): Shell Scripting Tutorials</a> and <a href="https://www.youtube.com/playlist?list=PL2qzCKTbjutJRM7K_hhNyvf8sfGCLklXw">Automation with SCripting (YT): Complete Shell Scripting Tutorials</a>. Also, some notes were taken from <a href="https://www.tutorialspoint.com/unix/index.htm">tutorialspoint: UNIX / LINUX Tutorial</a> and general googling.</p>
+
+<h2>Basic concepts</h2>
+
+<p>A <strong>shell</strong> it's an <strong>interface</strong> between the user and the <strong>kernel</strong>. While the kernel it's the layer that interacts between the shell and the <strong>hardware</strong>. And you access the shell either via a <strong>terminal</strong>, or executing a <strong>shell script</strong>. Note that if you're using a GUI environment, you need a <strong>terminal emulator</strong> to actually use a terminal (most Linux distros come with everything needed, so no need to worry).</p>
+
+<p>When using a terminal a blank screen with some text and a cursor that shows you where to type will appear and depending on the shell being used (<code>sh</code>, <code>dash</code>, <code>ksh</code>, <code>bash</code>, <code>zsh</code>, <code>fish</code>, etc.) the <strong>prompt</strong> will be different. The most common one being of the form <code>user@host:~$</code>, which tells that the <code>user</code> is using <code>host</code> machine and the current working directory is <code>~</code> (can be <code>/any/path/</code> too), and lastly, the <code>$</code> shows the current privileges of the shell/user using the shell (a <code>$</code> for normal user and <code>#</code> for root access).</p>
+
+<p>To clear the screen use command <code>clear</code> or simply do <code>Ctrl + l</code> (most terminals let you do this) and to cancel or create a new prompt do <code>Ctrl + c</code>, this also cancels any running program that's using the terminal (typing <code>q</code> when a program is running also stops the process, sometimes).</p>
+
+<p>Also there are <strong>POSIX</strong> (portable operating system interface) compliant shells like <code>sh</code>, <code>dash</code>, <code>ksh</code>, etc., that have a standard syntax and are portable to any Unix system. Non POSIX compliant shells (or not necessary fully POSIX compliant) are <code>bash</code>, <code>zsh</code>, <code>fish</code>, etc., that provide a more modern syntax but lack speed on executing scripts.</p>
+
+<h3>Common commands/programs</h3>
+
+<p>A list of common commands or programs with a short description (for more, do <code>man command</code> or <code>command -h</code> or <code>command --help</code>):</p>
+
+<ul>
+<li><strong><code>man</code>: an interface to the system reference manuals.</strong></li>
+<li><code>pwd</code>: print name of current/working directory.</li>
+<li><code>cd</code>: change the working directory.</li>
+<li><code>ls</code>: list directory contents.</li>
+<li><code>echo</code>: display a line of text. Also, see <strong>escape sequences</strong> (<a href="https://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html">Bash Prompt HOWTO: Chapter 2. Bash and Bash Prompts: 2.5. Bash Prompt Escape Sequences</a>).</li>
+<li><code>mkdir</code>: make directories.</li>
+<li><code>touch</code>: change file timestamps (if no file exists, creates a new blank one).</li>
+<li><code>cat</code>: concatenate files and print on the standard output.</li>
+<li><code>mv</code>: move (rename) files.</li>
+<li><code>rm</code>: remove files or directories.</li>
+<li><code>rmdir</code>: remove empty directories.</li>
+<li><code>cp</code>: copy files and directories.</li>
+<li><code>ln</code>: make links between files (hard or soft, also known as symbolic).</li>
+<li><code>umask</code>: get or set the file mode creation mask.</li>
+<li><code>chmod</code>: change file mode bits (change file permissions).</li>
+<li><code>chown</code>: change file owner and group.</li>
+<li><code>wc</code>: print newline, word, and byte counts for each file.</li>
+<li><code>file</code>: determine file type.</li>
+<li><code>sort</code>: sort lines of text files.</li>
+<li><code>cut</code>: remove sections from each line of files.</li>
+<li><code>dd</code>: convert and copy a file (mostly used to make bootable USBs).</li>
+<li><code>compress</code>: compress data.</li>
+<li><code>gzip</code>, <code>gunzip</code>, <code>zcat</code>: compress or expand files.</li>
+<li><code>uname</code>: print system information.</li>
+<li><code>cal</code>: display a calendar.</li>
+<li><code>date</code>: print or set the system date and time.</li>
+<li><code>read</code>: read from standard input into shell variables (also used to read from a file).</li>
+<li><code>tr</code>: translate or delete characters.</li>
+<li><code>readonly</code>: set the readonly attribute for variables.</li>
+<li><code>set</code>: set or unset options and positional parameters.</li>
+<li><code>unset</code>: unset values and attributes of variables and functions.</li>
+<li><code>expr</code>: evaluate expressions.</li>
+<li><code>tput</code>, <code>reset</code>: initialize a terminal or query terminfo database (used for more complex terminal output).</li>
+<li><code>grep</code>, <code>egrep</code>, <code>fgrep</code>: print lines that match patterns (usually used to find text in a file or some text).</li>
+<li><code>sleep</code>: delay for a specified amount of time.</li>
+<li><code>break</code>: exit from for, while, or until loop.</li>
+<li><code>continue</code>: continue for, while, or until loop.</li>
+<li><code>logname</code>: print user's login name.</li>
+<li><code>write</code>: send a message to another user.</li>
+<li><code>mesg</code>: display (or do not display) messages from other users.</li>
+<li><code>return</code>: return from a function or dot script.</li>
+<li><code>exit</code>: cause the sell to exit.</li>
+</ul>
+
+<p>And some special &#8220;commands&#8221; or &#8220;operators&#8221; (for more: <a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">gnu: 3.6 Redirections</a>):</p>
+
+<ul>
+<li><code>|</code> (pipe): used between two commands and the output from the command from the left serves as input to the command from the right.</li>
+<li><code>&#62;</code>: redirects output to a file, overwriting the file (or creating a new file).</li>
+<li><code>&#62;&#62;</code>: redirects output to a file, appending to the file (or creating a new file).</li>
+</ul>
+
+<h2>Shell scripting</h2>
+
+<p>A shell script is nothing more but a file that contains commands in it; they're executed in the same order they are present in the file. A shell script file is usually terminated with a <code>.sh</code> extension, independently of the shell being used, but it's not 100% necessary as in Unix systems, an extension mean nothing, other than distinction (visually) between files. Then one can just have an extension-less file as a script. <strong>The script must have execution permissions (<code>chmod +x file</code>)</strong>, unless <code>shell script</code> is executed in the terminal, where <code>shell</code> could be <code>sh</code>, <code>bash</code>, etc. <strong>Comments</strong> are created by prepending <code>#</code> to whatever the text should be a comment.</p>
+
+<p>It's common practice to have the first line as a <strong>she-bang</strong> (<code>#!</code>), which is just a comment telling the interpreter which shell to execute the script with (usable when having the script in your <strong>PATH</strong> so you only call the name of the script like any other command/program). A she-bang has the syntax <code>#!/path/to/shell some_other_options</code>, the most common she-bangs being: <code>#!/bin/sh</code>, <code>#!/bin/bash</code>, <code>#!/usr/bin/python</code>, etc.</p>
+
+<p>Also, some people argue that you shouldn't use absolute paths, since not all Unix operating systems have the same directory structure, or not all programs are going to be installed in the same folder. So a portable she-bang can be made by prepending <code>/usr/bin/env</code> and the specify the program to run, for example: <code>#!/usr/bin/env bash</code>.</p>
+
+<p>Like always&#8230; the basic &#8220;Hello, world!&#8221; script:</p>
+
+<pre><code class="language-sh">#!/bin/sh
+echo "Hello, world!"
+</code></pre>
+
+<p>Three ways of executing this script (assuming the file name is <code>hw</code>):</p>
+
+<ol start="1">
+<li>Type in terminal <code>sh hw</code>.</li>
+<li>Type in terminal <code>./hw</code>. Requires the file to have execute permissions.</li>
+<li>Type in terminal <code>hw</code>. Requires the file to have execute permissions. Requires the file to be in your PATH.</li>
+</ol>
+
+<h3>Variables</h3>
+
+<p>Variables are case sensitive, meaning that <code>my_var</code> and <code>MY_VAR</code> are different and a variable name can only contain letters and numbers (<code>a-z</code>, <code>A-Z</code> and <code>0-9</code>) or the underscore character <code>_</code>. Can't contain a space. Variables are called by prepending <code>$</code> to the variable name.</p>
+
+<p>Like in most programming languages, there are some reserved words like <code>if</code>, <code>select</code>, <code>then</code>, <code>until</code>, <code>while</code>, etc., that can't be used as variables or as values of variables. For more: <a href="https://www.gnu.org/software/bash/manual/html_node/Reserved-Word-Index.html">D.2 Index of Shell Reserved Words</a>.</p>
+
+<p>There is no need to specify a variable type. Anything surrounded by <code>"</code> will be treated as text. You can use booleans, numbers, text and arrays (the implementation of arrays depends on the shell being used). Make a variable readonly by calling <code>readonly variable_name</code>. Basic syntax:</p>
+
+<ul>
+<li>Text variables: <code>var="my var"</code>.</li>
+<li>Numeric variables: <code>var=123</code>.</li>
+<li>Boolean variables: <code>var=true</code> and <code>var=false</code>.</li>
+<li>Arrays (assuming <code>bash</code> is the shell):
+
+<ul>
+<li><code>var[0]=value1</code>, <code>var[...]=...</code>, <code>var[n]=valuen</code>, etc.</li>
+<li><code>var=(value1 ... valuen)</code></li>
+<li>Access single values with <code>${var[index]}</code> and all values with <code>${var[*]}</code> or <code>${var[@]}</code>.</li>
+</ul></li>
+</ul>
+
+<p>There are special variables (for more. <a href="https://www.tutorialspoint.com/unix/unix-special-variables.htm">tutorialspoint: Unix / Linux - Special Variables</a>):</p>
+
+<ul>
+<li><code>$</code>: represents the process ID number, or PID, of the current shell.</li>
+<li><code>0</code>: the filename of the current script.</li>
+<li><code>n</code>: where <code>n</code> can be any whole number, correspond to arguments passed to the script (<code>command arg1 arg2 arg3 argn</code>).</li>
+<li><code>#:</code> number of arguments supplied to the script.</li>
+<li><code>*:</code> all the arguments are double quoted.</li>
+<li><code>@:</code> all the arguments are individually double quoted.</li>
+<li><code>?:</code> exit status of the last command executed.</li>
+<li><code>!:</code> process number of the last background command.</li>
+</ul>
+
+<p>When calling a script, you can pass optional (or required) positional arguments like: <code>command arg1 arg2 arg3 argn</code>.</p>
+
+<p>Note that a variable can also take the output of another command, one common way to do this is using <code>$(command)</code> or <code>`command`</code>, for example: <code>var="$(echo 'this is a command being executed inside the definition of a variable')"</code> which, since the <code>echo</code> command is being run, <code>var="this is a command being executed inside the definition of a variable"</code>, which doesn't seem like much, but there could be any command inside <code>$()</code> or <code>`command`</code>. Note that this is not special to defining variables, could also be used as arguments of another command.</p>
+
+<h4>Internal Field Separator (IFS)</h4>
+
+<p>This is used by the shell to determine how to do word splitting (how to recognize word boundaries). The default value for <code>IFS</code> consists of whitespace characters (space, tab and newline). This value can ve overridden by setting the variable <code>IFS</code> to something like, for example, <code>:</code>.</p>
+
+<h3>Conditionals</h3>
+
+<h4>Exit status</h4>
+
+<p>Any command being run has an exit status, either <code>0</code> or <code>1</code>, if the command has been executed successfully or otherwise (an error), respectively.</p>
+
+<h4><code>if</code> statement</h4>
+
+<p>Pretty similar to other programming languages, evaluates an expression to a <code>true</code> or <code>false</code> and executes code as specified. <code>if</code> statements can be nested, and follow normal rules of logical operations. Basic syntax is:</p>
+
+<pre><code class="language-sh">#!/bin/sh
+if expression
+then
+do_something
+elif another_expression
+then
+do_another_thing
+else
+do_something_else
+fi
+</code></pre>
+
+<p>The expression is usually wrapped around <code>[]</code> or <code>[[]]</code>, the first being POSIX compliant and the second <code>bash</code>-specific (and other shells).</p>
+
+<p>Also, some <strong>operators</strong> to compare things use <code>==</code> for &#8220;equals&#8221; and <code>&#62;</code> for &#8220;greater than&#8221;, for example; while in a POSIX compliant shell, <code>=</code> for &#8220;equals&#8221; and <code>-gt</code> for &#8220;greater than&#8221; has to be used. For more operators: <a href="https://www.tutorialspoint.com/unix/unix-basic-operators.htm">tutorialspoint: Unix / Linux - Shell Basic Operators</a> (this also covers <strong>logical operators</strong> and <strong>file test operators</strong>).</p>
+
+<h3>Case statement</h3>
+
+<p>A common good alternative to multilevel <code>if</code> statements, enables you to match several values against one variable. Basic syntax is:</p>
+
+<pre><code class="language-sh">case $var in
+    pattern1)
+        do_something1
+        ;;
+    pattern2)
+        subpattern1)
+            do_subsomething1
+            ;;
+        subpattern2)
+            do_subsomething2
+            ;;
+        *)
+    pattern3|pattern4|...|patternN)
+        do_something3
+        ;;
+    patternM)
+        do_somethingM
+        ;;
+    *)
+        do_something_default
+        ;;
+esac
+</code></pre>
+
+<p>Where the <code>*</code> pattern is not necessary but serves the same purpose as a &#8220;default&#8221; case.</p>
+
+<h3>Loops</h3>
+
+<p>Loops enable execution of a set of commands repeatedly. Loops, naturally, can be nested. <code>expression</code> here (in the basic syntax examples) work the same as mentioned in the &#8220;<code>if</code> statement&#8221; section. For more: <a href="https://www.tutorialspoint.com/unix/unix-shell-loops.htm">tutorialspoint: Unix / Linux - Shell Loop Types</a>.</p>
+
+<h4>Loop control</h4>
+
+<p>Similar than other programming languages, there are loop controls to interrupt or continue a loop:</p>
+
+<pre><code>* `break` statement.
+* `continue` statement.
+</code></pre>
+
+<p>These statements accept an argument that specify from which loop to exit/continue.</p>
+
+<h4><code>while</code> loop</h4>
+
+<p>Enables to execute a set of commands repeatedly until some condition occurs. Basic syntax:</p>
+
+<pre><code class="language-sh">#!/bin/sh
+while expression
+do
+    do_something
+done
+</code></pre>
+
+<h4><code>until</code> loop</h4>
+
+<p>Similar to the <code>while</code> loop, the difference is that the <code>while</code> loop is executed as long as a condition is true, but the <code>until</code> loop&#8230; until a condition is true. Basic syntax (similar to <code>while</code> loop):</p>
+
+<pre><code class="language-sh">#!/bin/sh
+until expression
+do
+    do_something
+done
+</code></pre>
+
+<h4><code>for</code> loop</h4>
+
+<p>Operates on lists of items. It repeats a set of commands for every item in a list. Basic syntax:</p>
+
+<pre><code class="language-sh">#!/bin/sh
+for var in word1 word2 ... wordN
+do
+    do_something_with_var
+done
+</code></pre>
+
+<p>Where <code>var</code> is the current value (<code>word1</code>, <code>word2</code>, etc.) in the loop and the expression after <code>for</code> can refer to an array, or the output of a command that outputs a list of things, etc.</p>
+
+<h4><code>select</code> loop</h4>
+
+<p>Provides an easy way to create a numbered menu from which users can select options. Basic syntax (similar to <code>for</code> loop):</p>
+
+<pre><code class="language-sh">select var in word1 word2 ... wordN
+do
+    do_something_with_var
+done
+</code></pre>
+
+<h3>Meta characters</h3>
+
+<p>Meta characters are used to execute several commands on a single line (depending on what it's needed). The most used meta characters to accomplish this are semi-colon <code>;</code>, double ampersand <code>&#38;&#38;</code> and double &#8220;pipe&#8221; <code>||</code>.</p>
+
+<ul>
+<li><code>;</code>: is used to finish one command (similar to some programming languages), after the command on the left of <code>;</code> is finished (whatever the exit code is), the command on the right will be executed.</li>
+<li><code>&#38;&#38;</code>: similar to <code>;</code>, but only if the command on the left exits with code <code>0</code> (success).</li>
+<li><code>||</code>: similar to <code>&#38;&#38;</code>, but for exit code <code>1</code>(error).</li>
+</ul>
+
+<h3>Functions</h3>
+
+<p>Enable to break down the overall functionality of a script into smaller, logical subsections, which can then be called upon to perform their individual tasks when needed (like in any other programming language&#8230;). For more: <a href="https://www.tutorialspoint.com/unix/unix-shell-functions.htm">tutorialspoint: Unix / Linux - Shell Functions</a>. Basic syntax:</p>
+
+<pre><code class="language-sh">#!/bin/sh
+function_name () {
+    do_something
+}
+</code></pre>
+
+<p>Functions can also take arguments and can access their individual arguments (each function will have a different &#8220;storage&#8221; for their arguments). Functions can also be nested. Here <code>exit</code> will not only will finish the function code, but also the shell script that called it, instead use <code>return</code> plus an exit code to just exit the function.</p>
+
+<div class=timestamp>
+<hr>
+<p>Created: Sat, Mar 13, 2021 @ 22:57 MST</p>
+</div>
+    </main>
+
+    <footer>
+      <i class="fas fa-envelope" alt="Email"></i>
+      Email
+      <a href="mailto:david@luevano.xyz">
+        david@luevano.xyz
+      </a>
+      <br>
+
+      <i class="fas fa-rss" alt="RSS"></i>
+      RSS
+      <a href="https://blog.luevano.xyz/rss.xml">
+        https://blog.luevano.xyz/rss.xml
+      </a>
+      <br>
+
+      <i class="fas fa-donate" alt="Donate"></i>
+      <a href="https://luevano.xyz/donate">Donate</a>
+      <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
+    </footer>
+  </body>
+</html>

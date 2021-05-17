@@ -1,4 +1,10 @@
-# Linux tutorial video notes
+title: Linux tutorial video notes
+author: David Luévano
+lang: en
+summary: Notes of videos about basic Linux terms, usage and commands, as requested by a mentor of mine.
+tags: linux
+	notes
+	english
 
 I was requested to make a summary of a video about basic Linux stuff (like the [SQL tutorial video notes](https://blog.luevano.xyz/a/sql_video_notes)); this time, I did most of the notes depending on the topic since I'm familiar with most of the stuff presented in the video. The video in question is: [The Complete Linux Course: Beginner to Power User!](https://www.youtube.com/watch?v=wBp0Rb-ZJak). Also, some notes were taken from [Arch Linux Wiki](https://wiki.archlinux.org/) since it's got pretty decent documentation, and, of course, general googling.
 

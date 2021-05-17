@@ -1,9 +1,8 @@
-1615856381 1616720565 ./index.md
-1616122695 0 ./a/website_with_nginx.md
-1616306327 1616353229 ./a/git_server_with_cgit.md
-1615862784 0 ./a/el_blog_ya_tiene_timestamps.md
-1615701454 0 ./a/shell_scripting.md
-1614695711 0 ./a/sql_video_notes.md
-1614431313 0 ./a/first_blog_post.md
-1615701443 0 ./a/linux_video_notes.md
-1616234086 1616299559 ./a/mail_server_with_postfix.md
+a/website_with_nginx.md 1616122695.085315 1621285471.8891973 english,nginx,tools,tutorial
+a/git_server_with_cgit.md 1616353229.8983006 1621285438.032046 english,git,nginx,tools,tutorial
+a/el_blog_ya_tiene_timestamps.md 1615862784.9032707 1621284818.4731243 short,spanish,tools,update
+a/shell_scripting.md 1615701454.6499224 1621285107.2972999 english,linux,notes,scripting,shell
+a/sql_video_notes.md 1614695711.6048582 1621285193.115201 english,notes,sql
+a/first_blog_post.md 1614431313.2090824 1621284833.6700118 english,short,tools,update
+a/linux_video_notes.md 1615701443.6397786 1621285146.314528 english,linux,notes
+a/mail_server_with_postfix.md 1616299559.6570284 1621285463.4990773 english,mail,server,tools,tutorial

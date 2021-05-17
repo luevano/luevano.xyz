@@ -1,4 +1,11 @@
-# Así es raza, el blog ya tiene timestamps
+title: Así es raza, el blog ya tiene timestamps
+author: David Luévano
+lang: es
+summary: Actualización en el estado del blog y el sistema usado para crearlo.
+tags: short
+	update
+	tools
+	spanish
 
 Pues eso, esta entrada es sólo para tirar update sobre mi [primer post](https://blog.luevano.xyz/a/first_blog_post.html). Ya modifiqué el `ssg` lo suficiente como para que maneje los *timestamps*, y ya estoy más familiarizado con este script entonces ya lo podré extender más, pero por ahora las entradas ya tienen su fecha de creación (y modificación en dado caso) al final y en el índice ya están organizados por fecha, que por ahora está algo simple pero está sencillo de extender.
 

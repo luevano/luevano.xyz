@@ -3,7 +3,7 @@
   <head>
     <base href="https://static.luevano.xyz/">
     <meta charset="utf-8">
-    <title>Luévano's Blog</title>
+    <title>Linux tutorial video notes -- Luévano's Blog</title>
     <link rel="icon" href="fa/svgs/solid/dragon.svg">
 
     <!-- general style -->
@@ -62,64 +62,50 @@
 
     <main>
 <h1>Linux tutorial video notes</h1>
-
-<p>I was requested to make a summary of a video about basic Linux stuff (like the <a href="https://blog.luevano.xyz/a/sql_video_notes">SQL tutorial video notes</a>); this time, I did most of the notes depending on the topic since I'm familiar with most of the stuff presented in the video. The video in question is: <a href="https://www.youtube.com/watch?v=wBp0Rb-ZJak">The Complete Linux Course: Beginner to Power User!</a>. Also, some notes were taken from <a href="https://wiki.archlinux.org/">Arch Linux Wiki</a> since it's got pretty decent documentation, and, of course, general googling.</p>
-
-<h2>(Basic) commands</h2>
-
+<p>I was requested to make a summary of a video about basic Linux stuff (like the <a href="https://blog.luevano.xyz/a/sql_video_notes">SQL tutorial video notes</a>); this time, I did most of the notes depending on the topic since I&rsquo;m familiar with most of the stuff presented in the video. The video in question is: <a href="https://www.youtube.com/watch?v=wBp0Rb-ZJak">The Complete Linux Course: Beginner to Power User!</a>. Also, some notes were taken from <a href="https://wiki.archlinux.org/">Arch Linux Wiki</a> since it&rsquo;s got pretty decent documentation, and, of course, general googling.</p>
+<h2 id="basic-commands">(Basic) commands</h2>
 <p>A list of basic commands and small explanation (note that options are started with either <code>-</code> or <code>--</code>, depending on the program, but most of the time <code>-</code> is used for letter options and <code>--</code> for word options, <code>-l</code> vs <code>--list</code> for example):</p>
-
 <ul>
-<li><code>pwd</code>: &#8220;print working directory&#8221;, full <strong>absolute</strong> path to the current directory.</li>
-<li><code>cd</code>: &#8220;change directory&#8221;, followed by the absolute or relative path of the directory to change to.
-
-<ul>
+<li><code>pwd</code>: &ldquo;print working directory&rdquo;, full <strong>absolute</strong> path to the current directory.</li>
+<li><code>cd</code>: &ldquo;change directory&rdquo;, followed by the absolute or relative path of the directory to change to.<ul>
 <li>Absolute path is started with <code>/</code>, while a relative path is started with <code>./</code> or just the name of the folder.</li>
 <li>Use <code>..</code> (two dots) to go up one directory.</li>
 <li>An abbreviation of <code>/home/username</code> is <code>~</code> (tilde).</li>
-</ul></li>
-<li><code>ls</code>: &#8220;list&#8221; files and directories in current directory, or specify a directory from which to show the list after typing <code>ls</code>. Has many options, the most common ones being:
-
-<ul>
+</ul>
+</li>
+<li><code>ls</code>: &ldquo;list&rdquo; files and directories in current directory, or specify a directory from which to show the list after typing <code>ls</code>. Has many options, the most common ones being:<ul>
 <li><code>l</code>: use long listing format.</li>
 <li><code>r</code> or <code>reverse</code>: reverse order while sorting.</li>
 <li><code>s</code>: sort by file size, largest first.</li>
 <li><code>a</code> or <code>all</code>: do not ignore entries starting with <code>.</code>.</li>
-</ul></li>
-<li><code>mkdir</code>: &#8220;make directory&#8221;, create a new directory with specified name.</li>
+</ul>
+</li>
+<li><code>mkdir</code>: &ldquo;make directory&rdquo;, create a new directory with specified name.</li>
 <li><code>touch</code>: create new (empty) files.</li>
-<li><code>cp</code>: &#8220;copy&#8221; files or directories (using option <code>r</code> for recursive). Requires file/directory to copy and destination, separated by space.</li>
-<li><code>mv</code>: &#8220;move&#8221; files or directories, also requires file/directory to copy and destination, separated by space. This is also used to <strong>rename</strong> files/directories.</li>
-<li><code>rm</code>: &#8220;remove&#8221;, followed by a file to remove it.</li>
-<li><code>rmdir</code>: &#8220;remove empty directory&#8221;, followed by a directory to remove it. If the directory is not empty, use <code>rm -r</code> on the directory (&#8220;remove recursive&#8221;).</li>
-<li><code>su</code>: &#8220;switch user&#8221;, by default to <strong>root</strong> user, but another one can be specified.</li>
-<li><code>sudo</code>: &#8220;switch user, do&#8221;, similar to <code>su</code>, but only to execute a command as <strong>root</strong> or the specified user.</li>
+<li><code>cp</code>: &ldquo;copy&rdquo; files or directories (using option <code>r</code> for recursive). Requires file/directory to copy and destination, separated by space.</li>
+<li><code>mv</code>: &ldquo;move&rdquo; files or directories, also requires file/directory to copy and destination, separated by space. This is also used to <strong>rename</strong> files/directories.</li>
+<li><code>rm</code>: &ldquo;remove&rdquo;, followed by a file to remove it.</li>
+<li><code>rmdir</code>: &ldquo;remove empty directory&rdquo;, followed by a directory to remove it. If the directory is not empty, use <code>rm -r</code> on the directory (&ldquo;remove recursive&rdquo;).</li>
+<li><code>su</code>: &ldquo;switch user&rdquo;, by default to <strong>root</strong> user, but another one can be specified.</li>
+<li><code>sudo</code>: &ldquo;switch user, do&rdquo;, similar to <code>su</code>, but only to execute a command as <strong>root</strong> or the specified user.</li>
 <li><code>clear</code>: clear the terminal window, a (common) keyboard shortcut is <code>Ctrl + l</code>.</li>
 <li><code>find</code>: search for files/directories matching a pattern or all contents of a directory (using <code>.</code>).</li>
-<li><code>grep</code>: comes from the <code>ed</code> command &#8220;g/re/p&#8221;, for searching plain-text for lines that match a regular expression (regex).</li>
-<li><code>top</code>: a task manager program, shows currently running commands and gives important info such as PID (process ID), user who is running that command, command name, cpu and ram usage, etc.. Some useful commands to manage programs running are:
-
-<ul>
+<li><code>grep</code>: comes from the <code>ed</code> command &ldquo;g/re/p&rdquo;, for searching plain-text for lines that match a regular expression (regex).</li>
+<li><code>top</code>: a task manager program, shows currently running commands and gives important info such as PID (process ID), user who is running that command, command name, cpu and ram usage, etc.. Some useful commands to manage programs running are:<ul>
 <li><code>pgrep</code>: get the PID of a running process, or a list in chronological order.</li>
 <li><code>kill</code> or <code>pkill</code>: kill a running process either by PID or by name.</li>
 <li><code>killall</code>: similar to <code>pkill</code>.</li>
-</ul></li>
-<li><code>ssh</code>: &#8220;secure shell&#8221; is a remote login client used to connect into a remote machine and executing commands remotely, basically taking control of the remote machine. Widely used when managing servers.</li>
-<li><code>ftp</code> or <code>sftp</code>: &#8220;(secure) file transfer protocol&#8221; used to transfer files from one machine to another one (usually a server). It's recommended to use <code>sftp</code> instead of <code>ftp</code> because anyone can look through the packages if it's not secured (encrypted).</li>
 </ul>
-
+</li>
+<li><code>ssh</code>: &ldquo;secure shell&rdquo; is a remote login client used to connect into a remote machine and executing commands remotely, basically taking control of the remote machine. Widely used when managing servers.</li>
+<li><code>ftp</code> or <code>sftp</code>: &ldquo;(secure) file transfer protocol&rdquo; used to transfer files from one machine to another one (usually a server). It&rsquo;s recommended to use <code>sftp</code> instead of <code>ftp</code> because anyone can look through the packages if it&rsquo;s not secured (encrypted).</li>
+</ul>
 <p>And in general, to see the options supported by almost any command, use <code>command -h</code> or <code>command --help</code>, for a quick explanation. <strong>IMPORTANT</strong>: Most programs have <strong>man (manual) pages</strong>; to access them do <code>man command</code>, this is a very powerful tool to use.</p>
-
-<p>Commands can be redirected to other commands (the output), which is powerful to create mini scripts or to achieve a goal in a single command. Most of the time the redirection can be done with the special characters <code>&#62;</code>, <code>&#60;</code> and most powerful, the <code>|</code> (pipe). Also, some commands accept an option to execute another command, but this depends on a command to command basis (<code>exec</code> option for <code>find</code>, for example).</p>
-
+<p>Commands can be redirected to other commands (the output), which is powerful to create mini scripts or to achieve a goal in a single command. Most of the time the redirection can be done with the special characters <code>&gt;</code>, <code>&lt;</code> and most powerful, the <code>|</code> (pipe). Also, some commands accept an option to execute another command, but this depends on a command to command basis (<code>exec</code> option for <code>find</code>, for example).</p>
 <p><strong>Most terminal programs accept <code>Ctrl-c</code> or just <code>q</code> to exit the program.</strong></p>
-
-<h2>File permissions and ownership</h2>
-
+<h2 id="file-permissions-and-ownership">File permissions and ownership</h2>
 <p>When listing files with <code>ls -l</code>, an output with file attributes (permissions) and ownership is shown, such as <code>drwxr-xr-x 2 user group 4096 Jul 5 21:03 Desktop</code>, where the first part are the attributes, and <code>user</code> and <code>group</code> the ownership info (all other info is irrelevant for now).</p>
-
 <p>File attributes (<code>drwxr-xr-x</code> in the example above) are specified by 10 (sometimes 11) characters, and can be break into 4 parts (or 5):</p>
-
 <ul>
 <li>The first character is just the file type, typically <code>d</code> for directories or just <code>-</code> for files. There is <code>l</code> too, which is for <strong>symlinks</strong>.</li>
 <li>The next 3 characters represent the permissions that the <strong>owner</strong> has over the file.</li>
@@ -127,50 +113,34 @@
 <li>Next 3 the permissions everyone else (<strong>others</strong>) have over the file.</li>
 <li>An optional <code>+</code> character that specifies whether an alternate access method applies to the file. When the character is a space, there is no alterante access method.</li>
 </ul>
-
 <p>Each of the three permission triads (<code>rwx</code>) can be:</p>
-
 <ul>
-<li><code>-</code> or <code>r</code>, for the first character, if the file can be <strong>read</strong> or directory's content can be shown.</li>
-<li><code>-</code> or <code>w</code>, for the second character, if the file can be <strong>modified</strong> or the directory's content can be modified (create new files or folders or rename existing files or folders).</li>
+<li><code>-</code> or <code>r</code>, for the first character, if the file can be <strong>read</strong> or directory&rsquo;s content can be shown.</li>
+<li><code>-</code> or <code>w</code>, for the second character, if the file can be <strong>modified</strong> or the directory&rsquo;s content can be modified (create new files or folders or rename existing files or folders).</li>
 <li><code>-</code> or <code>x</code>, for the third character, if the file can be <strong>executed</strong> or the directory can be <strong>accessed</strong> with <code>cd</code>. Other characters can be present, like <code>s</code>, <code>S</code>, <code>t</code> and <code>T</code> (for more: <a href="https://wiki.archlinux.org/index.php/File_permissions_and_attributes">Arch Linux Wiki: File permissions and attributes</a>).</li>
 </ul>
-
 <p>To change attributes or ownership use <code>chmod</code> and <code>chown</code>, respectively.</p>
-
-<h2>Services</h2>
-
+<h2 id="services">Services</h2>
 <p>Special type of linux process (think of a program or set of programs that run in the background waiting to be used, or doing essential tasks). There are many ways to manage (start, stop, restart, enable, disable, etc.) services, the most common way (if using <code>systemd</code>) is to just use <code>systemctl</code>. Basic usage of <code>systemctl</code> is <code>systemctl verb service</code>, where <code>verb</code> could be <code>start</code>, <code>enable</code>, <code>stop</code>, <code>disable</code>, <code>restart</code>, etc. Also, to get a general system status run <code>systemctl status</code> or just <code>systemctl</code> for a list of running <strong>units</strong> (a unit is an instance of a service, or a mount point or even a device or a socket). For more: <a href="https://wiki.archlinux.org/index.php/systemd">Arch Linux Wiki: systemd</a>.</p>
-
 <p><code>systemd</code> also provides a way to do tasks based on a <strong>timer</strong>, where you can schedule from the second to the year. One could also use <code>cron</code> (using <code>crontab</code> with option <code>e</code>) to do this. These timers provide support for calendar time events, monotonic time events, and can be run asynchronously.</p>
-
-<h2>User and group management</h2>
-
+<h2 id="user-and-group-management">User and group management</h2>
 <p>Most mainstream linux distributions come with a Graphic User Interface (GUI) to manage users and groups on the system. For a Command-Line Interface (CLI) just use <code>useradd</code> (with <code>passwd</code> to create a password for a given user) and <code>groupadd</code>. Also, other useful commands are <code>usermod</code>, <code>userdel</code>, <code>groups</code>, <code>gpasswd</code>, <code>groupdel</code> and more, each used for a basic management of users/groups like modification, deletion, listing (of all existing users/groups), etc.. For more: <a href="https://wiki.archlinux.org/index.php/users_and_groups">Arch Linux Wiki: Users and groups</a>.</p>
-
-<h2>Networking</h2>
-
-<h3>Hosts file</h3>
-
-<p>Located at <code>/etc/hosts</code>, serves as a translator from <strong>hostname</strong> (web addresses or URLs) into IP addresses (think of DNS records), meaning that any URL can be overridden to make it point to whatever IP address it's specified (only locally on the machine affected). The syntax of the file is pretty simple: first column for IP, second for hostname (URL) and third+ for aliases.</p>
-
-<h3>(Some) commands</h3>
-
+<h2 id="networking">Networking</h2>
+<h3 id="hosts-file">Hosts file</h3>
+<p>Located at <code>/etc/hosts</code>, serves as a translator from <strong>hostname</strong> (web addresses or URLs) into IP addresses (think of DNS records), meaning that any URL can be overridden to make it point to whatever IP address it&rsquo;s specified (only locally on the machine affected). The syntax of the file is pretty simple: first column for IP, second for hostname (URL) and third+ for aliases.</p>
+<h3 id="some-commands">(Some) commands</h3>
 <p>These commands serve the sole purpose of showing information about the network and stuff related to it:</p>
-
 <ul>
 <li><code>ping</code>: gives information about latency to a given ip/domain.</li>
 <li><code>ifconfig</code>: gives similar information to <code>ipconfig</code> on windows, general info of physical network devices with their addresses and properties. An alternative could be <code>ip addr</code>, depending on the linux distribution being used and programs installed.</li>
-<li><code>tcpdump</code>: &#8220;transmission control protocol dump&#8221; gives information on all &#8220;packets&#8221; being sent and received through the network.</li>
-<li><code>netstat</code>: &#8220;network statistics&#8221; general statistics about network devices usage, display connections to the machine and more.</li>
+<li><code>tcpdump</code>: &ldquo;transmission control protocol dump&rdquo; gives information on all &ldquo;packets&rdquo; being sent and received through the network.</li>
+<li><code>netstat</code>: &ldquo;network statistics&rdquo; general statistics about network devices usage, display connections to the machine and more.</li>
 <li><code>traceroute</code>: shows the route that the packets go through (how the packets jump from one server to another one) when trying to access an IP (or, for example, a website).</li>
-<li><code>nmap</code>: &#8220;network mapper&#8221; explore network available hosts, opened ports, reverse DNS names, can guess the operating system of the device, it's type, MAC address and more.</li>
-</ul>
-
-<div class=timestamp>
-<hr>
-<p>Created: Sat, Mar 13, 2021 @ 22:57 MST</p>
-</div>
+<li><code>nmap</code>: &ldquo;network mapper&rdquo; explore network available hosts, opened ports, reverse DNS names, can guess the operating system of the device, it&rsquo;s type, MAC address and more.</li>
+</ul>  <p>Tags: 
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@linux.html">linux</a>, <a href="https://blog.luevano.xyz/tag/@notes.html">notes</a></p>
+<p>By: David Luévano</p>
+<p>Created: Sun, 14 Mar, 2021 @ 05:57 UTC, edited: Mon, 17 May, 2021 @ 20:59 UTC</p>
     </main>
 
     <footer>
@@ -189,7 +159,7 @@
       <br>
 
       <i class="fas fa-donate" alt="Donate"></i>
-      <a href="https://luevano.xyz/donate">Donate</a>
+      <a href="https://luevano.xyz/donate.html">Donate</a>
       <a href="https://paypal.me/dlvna"><i class="fab fa-paypal" alt="Paypal"></i></a>
     </footer>
   </body>
