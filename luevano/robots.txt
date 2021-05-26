@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://luevano.xyz/sitemap-index.xml
+Sitemap: https://luevano.xyz/sitemap.xml
