@@ -6,7 +6,6 @@ tags: short
 	update
 	tools
 	english
-	pyssg
 
 So, I was tired of working with `ssg` (and then `sbg` which was a modified version of `ssg` that I "wrote"), for one general reason: not being able to extend it as I would like; and not just dumb little stuff, I wanted to be able to have more control, to add tags (which another tool that I found does: `blogit`), and even more in a future.
 
