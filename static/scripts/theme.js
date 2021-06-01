@@ -16,14 +16,19 @@ window.onload = () => {
       switch_theme.checked = false;
 
       let theme = document.getElementById('theme-css');
-      let code_theme = document.getElementById('code-theme-css');
-      let href = theme.getAttribute('href');
-      let code_href = code_theme.getAttribute('href');
 
+      let href = theme.getAttribute('href');
       href = href.replace('dark.css', 'light.css');
-      code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
       theme.setAttribute('href', href);
-      code_theme.setAttribute('href', code_href);
+
+      let code_theme = document.getElementById('code-theme-css');
+
+      let code_href;
+      if (code_theme !== null){
+        code_href = code_theme.getAttribute('href');
+        code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
+        code_theme.setAttribute('href', code_href);
+      }
     }
   }
 
@@ -43,23 +48,33 @@ function setTheme(){
 // toggles between both themes, and then calls set theme to actually set it persistently.
 function toggleTheme(){
   let theme = document.getElementById('theme-css');
-  let code_theme = document.getElementById('code-theme-css');
   let href = theme.getAttribute('href');
-  let code_href = code_theme.getAttribute('href');
+
+  let code_theme = document.getElementById('code-theme-css');
+  let code_href;
+  if (code_theme !== null){
+    code_href = code_theme.getAttribute('href');
+  }
 
   if(href.endsWith('dark.css')){
     href = href.replace('dark.css', 'light.css');
-    code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
+    if (code_theme !== null){
+      code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
+    }
   }
   else if (href.endsWith('light.css')){
     href = href.replace('light.css', 'dark.css');
-    code_href = code_href.replace('solarized-light.min.css', 'solarized-dark.min.css');
+    if (code_theme !== null){
+      code_href = code_href.replace('solarized-light.min.css', 'solarized-dark.min.css');
+    }
   }
   else{
     console.log('Wrong replacement.');
   }
 
   theme.setAttribute('href', href);
-  code_theme.setAttribute('href', code_href);
+  if (code_theme !== null){
+    code_theme.setAttribute('href', code_href);
+  }
   setTheme();
 }
