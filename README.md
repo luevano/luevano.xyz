@@ -16,7 +16,7 @@ I also have a subdomain to keep all static content, just general stuff I use thr
 
 Along my own stuff I also host:
 
-* [Font Awesome (Free)](https://fontawesome.com/)
+* [Font Awesome (Free)](https://fontawesome.com/) **Note that I edited `all.css` and `all.min.css` to make it compatible with Fork Awesome (Also, Fork Awesome has to be included before Font Awesome).**
 * [Fork Awesome](https://forkaweso.me/Fork-Awesome/)
 * [highligh.js](https://highlightjs.org/)
 
