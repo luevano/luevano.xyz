@@ -1,4 +1,6 @@
 {%extends "base.html"%}
+{%block html_lang%}en{%endblock html_lang%}
+{%block head_title%}Index{%endblock head_title%}
 {%block content%}
   <h1>Index -- {{site_title}}</h1>
 
@@ -10,25 +12,10 @@
   Get the RSS feed: <a target="_blank" href="{{site_base_url}}/rss.xml">{{site_base_url}}/rss.xml</a>
   </p>
 
-  <div class="article-tags">
-    <p>Tags:
-    {%for t in all_tags%}
-      <a href="{{t[1]}}">{{t[0]}}</a>{{", " if not loop.last else ""}}
-    {%endfor%}
-    </p>
-  </div>
+  {%import "tag_list.html" as tag_list%}
+  {{tag_list.print(all_tags)}}
 
-  <h2>Articles</h2>
-  <ul>
-    {%for p in all_pages%}
-      {%if loop.previtem%}
-        {%if loop.previtem.cdate_list_sep !=p.cdate_list_sep%}
-          <h3>{{p.cdate_list_sep}}</h3>
-        {%endif%}
-      {%else%}
-        <h3>{{p.cdate_list_sep}}</h3>
-      {%endif%}
-      <li>{{p.cdate_list}} - <a href="{{p.url}}">{{p.title}}</a></li>
-    {%endfor%}
-  </ul>
+  {%import "page_list.html" as page_list%}
+  {{page_list.print(all_pages)}}
+
 {%endblock content%}

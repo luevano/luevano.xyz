@@ -1,4 +1,6 @@
 {%extends "base.html"%}
+{%block html_lang%}{{page.lang}}{%endblock html_lang%}
+{%block head_title%}{{page.title}}{%endblock head_title%}
 {%block content%}
   <h1>{{page.title}}</h1>
 
@@ -11,12 +13,7 @@
     {%if page.mdate is not none%}
       <p>Modified: {{page.mdate}}</p>
     {%endif%}
-    <div class="article-tags">
-      <p>Tags:
-      {%for t in page.tags%}
-        <a href="{{t[1]}}">{{t[0]}}</a>{{", " if not loop.last else ""}}
-      {%endfor%}
-      </p>
-    </div>
+    {%import "tag_list.html" as tag_list%}
+    {{tag_list.print(page.tags)}}
   </div>
 {%endblock content%}

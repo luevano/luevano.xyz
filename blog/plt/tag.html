@@ -1,18 +1,10 @@
 {%extends "base.html"%}
+{%block html_lang%}en{%endblock html_lang%}
+{%block head_title%}Posts filtered by {{tag[0]}}{%endblock head_title%}
 {%block content%}
   <h1>Posts filtered by {{tag[0]}}</h1>
 
-  <h2>Articles</h2>
-  <ul>
-    {%for p in tag_pages%}
-      {%if loop.previtem%}
-        {%if loop.previtem.cdate_list_sep !=p.cdate_list_sep%}
-          <h3>{{p.cdate_list_sep}}</h3>
-        {%endif%}
-      {%else%}
-        <h3>{{p.cdate_list_sep}}</h3>
-      {%endif%}
-      <li>{{p.cdate_list}} - <a href="{{p.url}}">{{p.title}}</a></li>
-    {%endfor%}
-  </ul>
+  {%import "page_list.html" as page_list%}
+  {{page_list.print(tag_pages)}}
+
 {%endblock content%}

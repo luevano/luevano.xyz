@@ -1,20 +1,10 @@
 <!DOCTYPE html>
-{%if page is defined%}
-<html lang="{{page.lang}}">
-{%else%}
-<html lang="en">
-{%endif%}
+<html lang="{%block html_lang%}{%endblock html_lang%}">
   <head>
     <base href="{{site_base_static_url}}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {%if page is defined%}
-      <title>{{page.title}} -- {{site_title}}</title>
-    {%elif tag is defined%}
-      <title>Posts filtered by {{tag[0]}} -- {{site_title}}</title>
-    {%else%}
-      <title>Index -- {{site_title}}</title>
-    {%endif%}
+    <title>{%block head_title%}{%endblock head_title%} -- {{site_title}}</title>
     <link rel="alternate" type="application/rss+xml" href="{{site_base_url}}/rss.xml" title="{{site_title}} RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
