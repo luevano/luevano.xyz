@@ -1,6 +1,16 @@
 {%extends "base.html"%}
 {%block html_lang%}{{page.lang}}{%endblock html_lang%}
 {%block head_title%}{{page.title}}{%endblock head_title%}
+{%block head_description%}{{page.summary}}{%endblock head_description%}
+{%block head_og%}
+  <meta property="og:title" content="{{page.title}} -- {{config.title}}"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="{{page.url}}"/>
+  <meta property="og:image" content="{{page.image_url}}"/>
+  <meta property="og:description" content="{{page.summary}}"/>
+  <meta property="og:locale" content="{{page.lang}}"/>
+  <meta property="og:site_name" content="{{config.title}}"/>
+{%endblock head_og%}
 {%block content%}
   <h1>{{page.title}}</h1>
 
