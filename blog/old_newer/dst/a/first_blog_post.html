@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="https://static.luevano.xyz/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>This is the first blog post, just for testing purposes -- Luévano's Blog</title>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <main>
+<h1>This is the first blog post, just for testing purposes</h1>
+<p>I&rsquo;m making this post just to figure out how <a href="https://www.romanzolotarev.com/ssg.html"><code>ssg5</code></a> and <a href="https://kristaps.bsd.lv/lowdown/"><code>lowdown</code></a> are supposed to work (and eventually also <a href="https://www.romanzolotarev.com/rssg.html"><code>rssg</code></a>).</p>
+<p>At the moment, I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> (and there&rsquo;s also the problem with the ordering of the entries&hellip;). And all of this just because I didn&rsquo;t want to use <a href="https://github.com/LukeSmithxyz/lb">Luke&rsquo;s</a> solution (don&rsquo;t really like that much how he handles the scripts&hellip; <em>but they just work</em>).</p>
+<p>Hopefully, for tomorrow all of this will be sorted out and I&rsquo;ll have a working blog system.</p>
+<hr>
+<div class="article-info">
+<p>By: David Luévano</p>
+<p>Created: Sat, Feb 27, 2021 @ 13:08 UTC</p>
+<p>Edited: Mon, May 17, 2021 @ 20:53 UTC</p>
+<div class="article-tags">
+  <p>Tags: 
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a></p>
+</div>
+
+</div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="fal fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>

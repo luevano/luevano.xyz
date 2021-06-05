@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <base href="https://static.luevano.xyz/">
+    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luévano's Blog</title>
+      <title>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luévano's Blog</title>
     <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
@@ -64,8 +64,9 @@
     </header>
 
     <main>
-<h1>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
-<p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
+  <h1>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
+
+  <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
 <p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL. And note that most if not all commands executed here are run with root privileges.</p>
 <p>More in depth configuration is detailed in the Arch Wiki for each package used here.</p>
 <h2 id="prerequisites">Prerequisites</h2>
@@ -427,17 +428,21 @@ systemctl enable spamassassin.service
 <p><img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png"></p>
 <p>(Yes, I blurred a lot in the picture just to be sure, either way what&rsquo;s important is the list on the bottom part of the image)</p>
 <p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you have my info down below.</p>
-<hr>
-<div class="article-info">
-<p>By: David Luévano</p>
-<p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
-<p>Edited: Mon, May 17, 2021 @ 21:04 UTC</p>
-<div class="article-tags">
-  <p>Tags: 
-<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@mail.html">mail</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a></p>
-</div>
 
-</div>
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
+      <p>Modified: Fri, Jun 04, 2021 @ 07:59 UTC</p>
+    <div class="article-tags">
+      <p>Tags:
+        <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, 
+        <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, 
+        <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, 
+        <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>
+      </p>
+    </div>
+  </div>
     </main>
 
     <footer>

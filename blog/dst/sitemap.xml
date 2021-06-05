@@ -3,6 +3,12 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
+      <loc>https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html</loc>
+      <lastmod>2021-06-04</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/a/new_blogging_system.html</loc>
       <lastmod>2021-05-28</lastmod>
       <changefreq>weekly</changefreq>
@@ -10,19 +16,19 @@
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/git_server_with_cgit.html</loc>
-      <lastmod>2021-05-17</lastmod>
+      <lastmod>2021-06-04</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/mail_server_with_postfix.html</loc>
-      <lastmod>2021-05-17</lastmod>
+      <lastmod>2021-06-04</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/website_with_nginx.html</loc>
-      <lastmod>2021-05-17</lastmod>
+      <lastmod>2021-06-04</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
@@ -33,20 +39,20 @@
       <priority>1.0</priority>
     </url>
     <url>
-      <loc>https://blog.luevano.xyz/a/shell_scripting.html</loc>
-      <lastmod>2021-05-17</lastmod>
+      <loc>https://blog.luevano.xyz/a/shell_scripting_video_notes.html</loc>
+      <lastmod>2021-06-04</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/linux_video_notes.html</loc>
-      <lastmod>2021-05-17</lastmod>
+      <lastmod>2021-06-04</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/sql_video_notes.html</loc>
-      <lastmod>2021-05-17</lastmod>
+      <lastmod>2021-06-04</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
@@ -56,95 +62,53 @@
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
+
     <url>
       <loc>https://blog.luevano.xyz/tag/@english.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@git.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@linux.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@mail.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@nginx.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@notes.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@scripting.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@server.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@shell.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@short.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@spanish.html</loc>
-      <lastmod>2021-06-01</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@sql.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@tools.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@tutorial.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@update.html</loc>
-      <lastmod>2021-06-01</lastmod>
+      <lastmod>2021-06-05</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
-
 </urlset>

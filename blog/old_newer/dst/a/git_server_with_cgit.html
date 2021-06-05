@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="https://static.luevano.xyz/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create a git server and setup cgit web app (on Nginx) -- Luévano's Blog</title>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <main>
+<h1>Create a git server and setup cgit web app (on Nginx)</h1>
+<p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
+<p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of SSH. Also, most if not all commands here are run as root.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>I might get tired of saying this (it&rsquo;s just copy paste, basically)&hellip; but similar as before (check my <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> and <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> entries):</p>
+<ul>
+<li>(This time, optional) A domain name if you want to have a &ldquo;front end&rdquo; to show your repositories. Got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
+<li>With a <strong>CNAME</strong> for &ldquo;git&rdquo; and (optionally) &ldquo;www.git&rdquo;, or some other name for your sub-domains.</li>
+</ul>
+</li>
+<li>A VPS or somewhere else to host. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).<ul>
+<li><code>ssh</code> configured.</li>
+<li>(Optionally, if doing the domain name thingy) With <code>nginx</code> and <code>certbot</code> setup and running.</li>
+<li>Of course, <code>git</code> already installed (it should be a must have always).</li>
+</ul>
+</li>
+</ul>
+<h2 id="git-server">git server</h2>
+<p>If not installed already, install the <code>git</code> package:</p>
+<pre><code class="language-sh">pacman -S git
+</code></pre>
+<p>On Arch Linux, when you install the <code>git</code> package, a <code>git</code> user is automatically created, so all you have to do is decide where you want to store the repositories, for me, I like them to be on <code>/home/git</code> like if <code>git</code> was a &ldquo;normal&rdquo; user. So, create the <code>git</code> folder (with corresponding permissions) under <code>/home</code> and set the <code>git</code> user&rsquo;s home to <code>/home/git</code>:</p>
+<pre><code class="language-sh">mkdir /home/git
+chown git:git /home/git
+usermod -d /home/git git
+</code></pre>
+<p>Also, the <code>git</code> user is &ldquo;expired&rdquo; by default and will be locked (needs a password), change that with:</p>
+<pre><code class="language-sh">chage -E -1 git
+passwd git
+</code></pre>
+<p>Give it a strong one and remember to use <code>PasswordAuthentication no</code> for <code>ssh</code> (as you should). Create the <code>.ssh/authorized_keys</code> for the <code>git</code> user and set the permissions accordingly:</p>
+<pre><code class="language-sh">mkdir /home/git/.ssh
+chmod 700 /home/git/.ssh
+touch /home/git/.ssh/authorized_keys
+chmod 600 /home/git/.ssh/authorized_keys
+chown -R git:git /home/git
+</code></pre>
+<p>Now is a good idea to copy over your local SSH public keys to this file, to be able to push/pull to the repositories. Do it by either manually copying it or using <code>ssh</code>&lsquo;s built in <code>ssh-copy-id</code> (for that you may want to check your <code>ssh</code> configuration in case you don&rsquo;t let people access your server with user/password).</p>
+<p>Next, and almost finally, we need to edit the <code>git-daemon</code> service, located at <code>/usr/lib/systemd/system/</code> (called <code>git-daemon@.service</code>):</p>
+<pre><code class="language-ini">...
+ExecStart=-/usr/lib/git-core/git-daemon --inetd --export-all --base-path=/home/git --enable=receive-pack
+...
+</code></pre>
+<p>I just appended <code>--enable=receive-pack</code> and note that I also changed the <code>--base-path</code> to reflect where I want to serve my repositories from (has to match what you set when changing <code>git</code> user&rsquo;s home).</p>
+<p>Now, go ahead and start and enable the <code>git-daemon</code> socket:</p>
+<pre><code class="language-sh">systemctl start git-daemon.socket
+systemctl enable git-daemon.socket
+</code></pre>
+<p>You&rsquo;re basically done. Now you should be able to push/pull repositories to your server&hellip; except, you haven&rsquo;t created any repository in your server, that&rsquo;s right, they&rsquo;re not created automatically when trying to push. To do so, you have to do the following sequence (assuming you&rsquo;re &ldquo;<code>cd</code>&lsquo;ed&rdquo; into the <code>/home/git</code> directory):</p>
+<pre><code class="language-sh">mkdir {repo_name}.git
+cd {repo_name}.git
+</code></pre>
+<p>Those two lines above will need to be run each time you want to add a new repository to your server (yeah, kinda lame&hellip; although there are options to &ldquo;automate&rdquo; this, I like it this way).</p>
+<p>After that you can already push/pull to your repository. I have my repositories (locally) set up so I can push to more than one remote at the same time (my server, GitHub, GitLab, etc.), which is detailed <a href="https://gist.github.com/rvl/c3f156e117e22a25f242">here</a>.</p>
+<h2 id="cgit">cgit</h2>
+<p>This bit is optional if you only wanted a git server (really easy to set up), this is so you can have a web application. This is basically a copy paste of <a href="https://wiki.archlinux.org/index.php/Cgit#Nginx">Arch Linux Wiki: Cgit</a> so you can go there and get more in-depth configurations.</p>
+<p>Install the <code>cgit</code> and <code>fcgiwrap</code> packages:</p>
+<pre><code class="language-sh">pacman -S cgit fcgiwrap
+</code></pre>
+<p>Now, just start and enable the <code>fcgiwrap</code> socket:</p>
+<pre><code class="language-sh">systemctl start fcgiwrap.socket
+systemctl enable fcgiwrap.socket
+</code></pre>
+<p>Next, the way I configure <code>nginx</code> is creating a separate file <code>{module}.conf</code> (<code>git.conf</code> in this case) under <code>/etc/nginx/sites-available</code> and create a symlink to <code>/etc/nginx/sites-enabled</code> as stated in my <a href="https://blog.luevano.xyz/a/website_with_nginx.html"><code>nginx</code> setup entry</a>. Add the following lines to your <code>git.conf</code> file:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    listen [::]:80;
+    root /usr/share/webapps/cgit;
+    server_name {yoursubdomain}.{yourdomain};
+    try_files $uri @cgit;
+
+    location @cgit {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/cgit.cgi;
+        fastcgi_param PATH_INFO $uri;
+        fastcgi_param QUERY_STRING $args;
+        fastcgi_param HTTP_HOST $server_name;
+        fastcgi_pass unix:/run/fcgiwrap.sock;
+    }
+}
+</code></pre>
+<p>Where the <code>server_name</code> line depends on you, I have mine setup to <code>git.luevano.xyz</code> and <code>www.git.luevano.xyz</code>. Optionally run <code>certbot --nginx</code> to get a certificate for those domains if you don&rsquo;t have already.</p>
+<p>Now, all that&rsquo;s left is to configure <code>cgit</code>. Create the configuration file <code>/etc/cgitrc</code> with the following content (my personal options, pretty much the default):</p>
+<pre><code class="language-apache">css=/cgit.css
+source-filter=/usr/lib/cgit/filters/syntax-highlighting-edited.sh
+logo=/cgit.png
+
+enable-http-clone=1
+# robots=noindex, nofollow
+virtual-root=/
+
+repo.url={url}
+repo.path={dir_path}
+repo.owner={owner}
+repo.desc={short_description}
+
+...
+</code></pre>
+<p>Where you can uncomment the <code>robots</code> line to let web crawlers (like Google&rsquo;s) to index your <code>git</code> web app. And at the end keep all your repositories (the ones you want to make public), for example for my <a href="https://git.luevano.xyz/.dots"><em>dotfiles</em></a> I have:</p>
+<pre><code class="language-apache">...
+repo.url=.dots
+repo.path=/home/git/.dots.git
+repo.owner=luevano
+repo.desc=These are my personal dotfiles.
+...
+</code></pre>
+<p>Otherwise you could let <code>cgit</code> to automatically detect your repositories (you have to be careful if you want to keep &ldquo;private&rdquo; repos) using the option <code>scan-path</code> and setup <code>.git/description</code> for each repository. I will add more to my actual configuration, but for now it is useful as it is. For more, you can check <a href="https://man.archlinux.org/man/cgitrc.5">cgitrc(5)</a>.</p>
+<p>Finally, if you want further support for highlighting, other compressed snapshots or support for markdown, checkout the optional dependencies for <code>cgit</code> and also the Arch Wiki goes in detail on how to setup highlighting with two different packages.</p>
+<hr>
+<div class="article-info">
+<p>By: David Luévano</p>
+<p>Created: Sun, Mar 21, 2021 @ 19:00 UTC</p>
+<p>Edited: Fri, Jun 04, 2021 @ 07:59 UTC</p>
+<div class="article-tags">
+  <p>Tags: 
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a></p>
+</div>
+
+</div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="fal fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>

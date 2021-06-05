@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <base href="https://static.luevano.xyz/">
+    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create a website with Nginx and Certbot -- Luévano's Blog</title>
+      <title>Create a website with Nginx and Certbot -- Luévano's Blog</title>
     <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
@@ -64,8 +64,9 @@
     </header>
 
     <main>
-<h1>Create a website with Nginx and Certbot</h1>
-<p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke&rsquo;s video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I&rsquo;m configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
+  <h1>Create a website with Nginx and Certbot</h1>
+
+  <p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke&rsquo;s video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I&rsquo;m configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
 <p>As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linux distro, and I&rsquo;m doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>You will need two things:</p>
@@ -177,17 +178,21 @@ systemctl restart nginx
 <p>And a file will be opened where you need to add a new rule for certbot, just append the line: <code>1 1 1 * * certbot renew</code> (renew on the first day of every month) and you&rsquo;re good. Alternatively use <code>systemd</code> timers as stated in the <a href="https://wiki.archlinux.org/index.php/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
 <p>For more: <a href="https://wiki.archlinux.org/index.php/Certbot">Arch Linux Wiki: Certbot</a>.</p>
 <p>That&rsquo;s it, you now have a website with SSL certificate.</p>
-<hr>
-<div class="article-info">
-<p>By: David Luévano</p>
-<p>Created: Fri, Mar 19, 2021 @ 02:58 UTC</p>
-<p>Edited: Mon, May 17, 2021 @ 21:04 UTC</p>
-<div class="article-tags">
-  <p>Tags: 
-<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@nginx.html">nginx</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a></p>
-</div>
 
-</div>
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Fri, Mar 19, 2021 @ 02:58 UTC</p>
+      <p>Modified: Fri, Jun 04, 2021 @ 08:00 UTC</p>
+    <div class="article-tags">
+      <p>Tags:
+        <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, 
+        <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, 
+        <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, 
+        <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>
+      </p>
+    </div>
+  </div>
     </main>
 
     <footer>

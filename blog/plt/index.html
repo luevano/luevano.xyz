@@ -1,0 +1,34 @@
+{%extends "base.html"%}
+{%block content%}
+  <h1>Index -- {{site_title}}</h1>
+
+  <p>
+  Welcome to my blog where I'll post whatever I please, ranging from rants to how-to's. Además, este pex va a estar en español e inglés porque quiero (no una mezcla en cada entrada, pero sí entradas completas en diferentes lenguajes).
+  </p>
+
+  <p>
+  Get the RSS feed: <a target="_blank" href="{{site_base_url}}/rss.xml">{{site_base_url}}/rss.xml</a>
+  </p>
+
+  <div class="article-tags">
+    <p>Tags:
+    {%for t in all_tags%}
+      <a href="{{t[1]}}">{{t[0]}}</a>{{", " if not loop.last else ""}}
+    {%endfor%}
+    </p>
+  </div>
+
+  <h2>Articles</h2>
+  <ul>
+    {%for p in all_pages%}
+      {%if loop.previtem%}
+        {%if loop.previtem.cdate_list_sep !=p.cdate_list_sep%}
+          <h3>{{p.cdate_list_sep}}</h3>
+        {%endif%}
+      {%else%}
+        <h3>{{p.cdate_list_sep}}</h3>
+      {%endif%}
+      <li>{{p.cdate_list}} - <a href="{{p.url}}">{{p.title}}</a></li>
+    {%endfor%}
+  </ul>
+{%endblock content%}

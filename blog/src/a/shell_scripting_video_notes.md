@@ -2,10 +2,7 @@ title: Shell scripting tutorial video notes
 author: David Luévano
 lang: en
 summary: Notes of videos about shell scripting, as requested by a mentor of mine.
-tags: linux
-	shell
-	scripting
-	notes
+tags: notes
 	english
 
 Another summary, this time about shell scripting in general. And just like with the [Linux notes](https://blog.luevano.xyz/a/linux_video_notes), I also did most of the notes myself or with resources outside the video. The videos in question are: [The Bad Tutorials (YT): Shell Scripting Tutorials](https://www.youtube.com/playlist?list=PL7B7FA4E693D8E790) and [Automation with SCripting (YT): Complete Shell Scripting Tutorials](https://www.youtube.com/playlist?list=PL2qzCKTbjutJRM7K_hhNyvf8sfGCLklXw). Also, some notes were taken from [tutorialspoint: UNIX / LINUX Tutorial](https://www.tutorialspoint.com/unix/index.htm) and general googling.

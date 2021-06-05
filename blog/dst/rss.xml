@@ -12,9 +12,9 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Tue, 01 Jun 2021 09:11:17 GMT</pubDate>
-    <lastBuildDate>Tue, 01 Jun 2021 09:11:17 GMT</lastBuildDate>
-    <generator>pyssg v0.4.1</generator>
+    <pubDate>Sat, 05 Jun 2021 05:50:01 GMT</pubDate>
+    <lastBuildDate>Sat, 05 Jun 2021 05:50:01 GMT</lastBuildDate>
+    <generator>pyssg v0.5.2</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
     <image>
@@ -22,6 +22,21 @@
       <title>Luévano's Blog</title>
       <link>https://blog.luevano.xyz</link>
     </image>
+    <item>
+      <title>Así nomás está quedando el página</title>
+      <link>https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html</guid>
+      <pubDate>Fri, 04 Jun 2021 08:24:03 GMT</pubDate>
+      <category>Short</category>
+      <category>Spanish</category>
+      <category>Update</category>
+      <description>Actualización en el estado de la página, el servidor de XMPP y Matrix que me acomodé y próximas cosas que quiero hacer.</description>
+      <content:encoded><![CDATA[<p>Estuve acomodando un poco más el <em>sItIo</em>, al fin agregué la &ldquo;sección&rdquo; de <a href="https://luevano.xyz/contact.html">contact</a> y de <a href="https://luevano.xyz/donate.html">donate</a> por si hay algún loco que quiere tirar varo.</p>
+<p>También me puse a acomodar un servidor de <a href="https://xmpp.org/">XMPP</a> el cual, en pocas palabras, es un protocolo de mensajería instantánea (y más) descentralizado, por lo cual cada quien puede hacer una cuenta en el servidor que quiera y conectarse con cuentas creadas en otro servidor&hellip; exacto, como con los correos electrónicos. Y esto está perro porque si tú tienes tu propio server, así como con uno de correo electrónico, puedes controlar qué características tiene, quiénes pueden hacer cuenta, si hay <em>end-to-end encryption</em> (o mínimo <em>end-to-server</em>), entre un montón de otras cosas.</p>
+<p>Ahorita este server es SUMISO (<em>compliant</em> en español, jeje) para jalar con la app <a href="https://conversations.im/">conversations</a> y con la red social <a href="https://movim.eu/">movim</a>, pero realmente funcionaría con casi cualquier cliente de XMPP, amenos que ese cliente implemente algo que no tiene mi server. Y también acomodé un server de <a href="https://matrix.org/">Matrix</a> que es muy similar pero es bajo otro protocolo y se siente más como un discord/slack (al menos en el <a href="https://element.io/">element</a>), muy chingón también.</p>
+<p>Si bien aún quedan cosas por hacer sobre estos dos servers que me acomodé (además de hacerles unas entradas para documentar cómo lo hice), quiero moverme a otra cosa que sería acomodar una sección de dibujos, lo cual en teoría es bien sencillo, pero como quiero poder automatizar la publicación de estos, quiero modificar un poco el <a href="https://github.com/luevano/pyssg">pyssg</a> para que jale chido para este pex.</p>
+<p>Ya por último también quiero moverle un poco al CSS, porque lo dejé en un estado muy culerón y quiero meterle/ajustar unas cosas para que quede más limpio y medianamente bonito&hellip; <em>dentro de lo que cabe porque evidentemente me vale verga si se ve como una página del 2000</em>.</p>]]></content:encoded>
+    </item>
     <item>
       <title>I'm using a new blogging system</title>
       <link>https://blog.luevano.xyz/a/new_blogging_system.html</link>
@@ -45,8 +60,7 @@
       <guid isPermaLink="true">https://blog.luevano.xyz/a/git_server_with_cgit.html</guid>
       <pubDate>Sun, 21 Mar 2021 19:00:29 GMT</pubDate>
       <category>English</category>
-      <category>Git</category>
-      <category>Nginx</category>
+      <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.</description>
@@ -164,7 +178,6 @@ repo.desc=These are my personal dotfiles.
       <guid isPermaLink="true">https://blog.luevano.xyz/a/mail_server_with_postfix.html</guid>
       <pubDate>Sun, 21 Mar 2021 04:05:59 GMT</pubDate>
       <category>English</category>
-      <category>Mail</category>
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
@@ -538,7 +551,7 @@ systemctl enable spamassassin.service
       <guid isPermaLink="true">https://blog.luevano.xyz/a/website_with_nginx.html</guid>
       <pubDate>Fri, 19 Mar 2021 02:58:15 GMT</pubDate>
       <category>English</category>
-      <category>Nginx</category>
+      <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics.</description>
@@ -672,14 +685,11 @@ systemctl restart nginx
     </item>
     <item>
       <title>Shell scripting tutorial video notes</title>
-      <link>https://blog.luevano.xyz/a/shell_scripting.html</link>
-      <guid isPermaLink="true">https://blog.luevano.xyz/a/shell_scripting.html</guid>
+      <link>https://blog.luevano.xyz/a/shell_scripting_video_notes.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/shell_scripting_video_notes.html</guid>
       <pubDate>Sun, 14 Mar 2021 05:57:34 GMT</pubDate>
       <category>English</category>
-      <category>Linux</category>
       <category>Notes</category>
-      <category>Scripting</category>
-      <category>Shell</category>
       <description>Notes of videos about shell scripting, as requested by a mentor of mine.</description>
       <content:encoded><![CDATA[<p>Another summary, this time about shell scripting in general. And just like with the <a href="https://blog.luevano.xyz/a/linux_video_notes">Linux notes</a>, I also did most of the notes myself or with resources outside the video. The videos in question are: <a href="https://www.youtube.com/playlist?list=PL7B7FA4E693D8E790">The Bad Tutorials (YT): Shell Scripting Tutorials</a> and <a href="https://www.youtube.com/playlist?list=PL2qzCKTbjutJRM7K_hhNyvf8sfGCLklXw">Automation with SCripting (YT): Complete Shell Scripting Tutorials</a>. Also, some notes were taken from <a href="https://www.tutorialspoint.com/unix/index.htm">tutorialspoint: UNIX / LINUX Tutorial</a> and general googling.</p>
 <h2 id="basic-concepts">Basic concepts</h2>
@@ -889,7 +899,6 @@ function_name () {
       <guid isPermaLink="true">https://blog.luevano.xyz/a/linux_video_notes.html</guid>
       <pubDate>Sun, 14 Mar 2021 05:57:23 GMT</pubDate>
       <category>English</category>
-      <category>Linux</category>
       <category>Notes</category>
       <description>Notes of videos about basic Linux terms, usage and commands, as requested by a mentor of mine.</description>
       <content:encoded><![CDATA[<p>I was requested to make a summary of a video about basic Linux stuff (like the <a href="https://blog.luevano.xyz/a/sql_video_notes">SQL tutorial video notes</a>); this time, I did most of the notes depending on the topic since I&rsquo;m familiar with most of the stuff presented in the video. The video in question is: <a href="https://www.youtube.com/watch?v=wBp0Rb-ZJak">The Complete Linux Course: Beginner to Power User!</a>. Also, some notes were taken from <a href="https://wiki.archlinux.org/">Arch Linux Wiki</a> since it&rsquo;s got pretty decent documentation, and, of course, general googling.</p>
@@ -976,7 +985,6 @@ function_name () {
       <pubDate>Tue, 02 Mar 2021 14:35:11 GMT</pubDate>
       <category>English</category>
       <category>Notes</category>
-      <category>Sql</category>
       <description>Notes of videos about basic SQL syntax and usage, as requested by a mentor of mine.</description>
       <content:encoded><![CDATA[<p>I was requested to make summaries of videos about SQL, these are the notes (mostly this is a transcription of what I found useful). The videos in question are: <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY">SQL Tutorial - Full Database Course for Beginners</a>, <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA">MySQL Tutorial for Beginners [Full Course]</a> and <a href="https://www.youtube.com/watch?v=2Fn0WAyZV0E">Advanced SQL course | SQL tutorial advanced</a>. Also, some notes were taken from <a href="https://www.w3schools.com/sql/">w3schools.com&rsquo;s SQL Tutorial</a> and <a href="https://dev.mysql.com/doc/refman/8.0/en/">MySQL 8.0 Reference Manual</a>.</p>
 <h2 id="what-is-a-database-db">What is a database (DB)?</h2>
@@ -1129,6 +1137,5 @@ function_name () {
 <p>At the moment, I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> (and there&rsquo;s also the problem with the ordering of the entries&hellip;). And all of this just because I didn&rsquo;t want to use <a href="https://github.com/LukeSmithxyz/lb">Luke&rsquo;s</a> solution (don&rsquo;t really like that much how he handles the scripts&hellip; <em>but they just work</em>).</p>
 <p>Hopefully, for tomorrow all of this will be sorted out and I&rsquo;ll have a working blog system.</p>]]></content:encoded>
     </item>
-
   </channel>
 </rss>

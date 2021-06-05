@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{%if page is defined%}
+<html lang="{{page.lang}}">
+{%else%}
+<html lang="en">
+{%endif%}
+  <head>
+    <base href="{{site_base_static_url}}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {%if page is defined%}
+      <title>{{page.title}} -- {{site_title}}</title>
+    {%elif tag is defined%}
+      <title>Posts filtered by {{tag[0]}} -- {{site_title}}</title>
+    {%else%}
+      <title>Index -- {{site_title}}</title>
+    {%endif%}
+    <link rel="alternate" type="application/rss+xml" href="{{site_base_url}}/rss.xml" title="{{site_title}} RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <main>
+      {%block content%}{%endblock content%}
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="fal fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="https://static.luevano.xyz/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>I'm using a new blogging system -- Luévano's Blog</title>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="theme-switch-container">
+        <i class="fas fa-sun"></i>
+        <label class="switch theme">
+          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
+
+    <main>
+<h1>I'm using a new blogging system</h1>
+<p>So, I was tired of working with <code>ssg</code> (and then <code>sbg</code> which was a modified version of <code>ssg</code> that I &ldquo;wrote&rdquo;), for one general reason: not being able to extend it as I would like; and not just dumb little stuff, I wanted to be able to have more control, to add tags (which another tool that I found does: <code>blogit</code>), and even more in a future.</p>
+<p>The solution? Write a new program &ldquo;from scratch&rdquo; in <em>pYtHoN</em>. Yes it is bloated, yes it is in its early stages, but it works just as I want it to work, and I&rsquo;m pretty happy so far with the results and have with even more ideas in mind to &ldquo;optimize&rdquo; and generally clean my wOrKfLoW to post new blog entries. I even thought of using it for posting into a &ldquo;feed&rdquo; like gallery for drawings or pictures in general.</p>
+<p>I called it <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, because it sounds nice and it wasn&rsquo;t taken in the PyPi. It is just a terminal program that reads either a configuration file or the options passed as flags when calling the program.</p>
+<p>It still uses Markdown files because I find them very easy to work with. And instead of just having a &ldquo;header&rdquo; and a &ldquo;footer&rdquo; applied to each parsed entry, you will have templates (generated with the program) for each piece that I thought made sense (idea taken from <code>blogit</code>): the common header and footer, the common header and footer for each entry and, header, footer and list elements for articles and tags. When parsing the Markdown file these templates are applied and stitched together to make a single HTML file. Also generates an RSS feed and the <code>sitemap.xml</code> file, which is nice.</p>
+<p>It might sound convoluted, but it works pretty well, with of course room to improve; I&rsquo;m open to suggestions, issue reporting or direct contributions <a href="https://github.com/luevano/pyssg">here</a>. BTW, it only works on Linux for now (and don&rsquo;t think on making it work on windows, but feel free to do PR for the compatibility).</p>
+<p>That&rsquo;s it for now, the new RSS feed is available here: <a href="https://blog.luevano.xyz/rss.xml">https://blog.luevano.xyz/rss.xml</a>.</p>
+<hr>
+<div class="article-info">
+<p>By: David Luévano</p>
+<p>Created: Fri, May 28, 2021 @ 03:21 UTC</p>
+<p>Edited: Fri, May 28, 2021 @ 03:42 UTC</p>
+<div class="article-tags">
+  <p>Tags: 
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a></p>
+</div>
+
+</div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="fal fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>

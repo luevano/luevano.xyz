@@ -1,0 +1,1142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Luévano's Blog</title>
+    <link>https://blog.luevano.xyz</link>
+    <atom:link href="https://blog.luevano.xyz/rss.xml" rel="self" type="application/rss+xml"/>
+    <description>A personal weblog ranging from rants to how to's and other thoughts.</description>
+    <language>en-us</language>
+    <category>Blog</category>
+    <copyright>Copyright 2021 David Luévano Alvarado</copyright>
+    <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
+    <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
+    <pubDate>Fri, 04 Jun 2021 08:27:09 GMT</pubDate>
+    <lastBuildDate>Fri, 04 Jun 2021 08:27:09 GMT</lastBuildDate>
+    <generator>pyssg v0.4.1</generator>
+    <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    <ttl>30</ttl>
+    <image>
+      <url>https://static.luevano.xyz/images/blog.png</url>
+      <title>Luévano's Blog</title>
+      <link>https://blog.luevano.xyz</link>
+    </image>
+    <item>
+      <title>Así nomás está quedando el página</title>
+      <link>https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html</guid>
+      <pubDate>Fri, 04 Jun 2021 08:24:03 GMT</pubDate>
+      <category>Short</category>
+      <category>Spanish</category>
+      <category>Update</category>
+      <description>Actualización en el estado de la página, el servidor de XMPP y Matrix que me acomodé y próximas cosas que quiero hacer.</description>
+      <content:encoded><![CDATA[<p>Estuve acomodando un poco más el <em>sItIo</em>, al fin agregué la &ldquo;sección&rdquo; de <a href="https://luevano.xyz/contact.html">contact</a> y de <a href="https://luevano.xyz/donate.html">donate</a> por si hay algún loco que quiere tirar varo.</p>
+<p>También me puse a acomodar un servidor de <a href="https://xmpp.org/">XMPP</a> el cual, en pocas palabras, es un protocolo de mensajería instantánea (y más) descentralizado, por lo cual cada quien puede hacer una cuenta en el servidor que quiera y conectarse con cuentas creadas en otro servidor&hellip; exacto, como con los correos electrónicos. Y esto está perro porque si tú tienes tu propio server, así como con uno de correo electrónico, puedes controlar qué características tiene, quiénes pueden hacer cuenta, si hay <em>end-to-end encryption</em> (o mínimo <em>end-to-server</em>), entre un montón de otras cosas.</p>
+<p>Ahorita este server es SUMISO (<em>compliant</em> en español, jeje) para jalar con la app <a href="https://conversations.im/">conversations</a> y con la red social <a href="https://movim.eu/">movim</a>, pero realmente funcionaría con casi cualquier cliente de XMPP, amenos que ese cliente implemente algo que no tiene mi server. Y también acomodé un server de <a href="https://matrix.org/">Matrix</a> que es muy similar pero es bajo otro protocolo y se siente más como un discord/slack (al menos en el <a href="https://element.io/">element</a>), muy chingón también.</p>
+<p>Si bien aún quedan cosas por hacer sobre estos dos servers que me acomodé (además de hacerles unas entradas para documentar cómo lo hice), quiero moverme a otra cosa que sería acomodar una sección de dibujos, lo cual en teoría es bien sencillo, pero como quiero poder automatizar la publicación de estos, quiero modificar un poco el <a href="https://github.com/luevano/pyssg">pyssg</a> para que jale chido para este pex.</p>
+<p>Ya por último también quiero moverle un poco al CSS, porque lo dejé en un estado muy culerón y quiero meterle/ajustar unas cosas para que quede más limpio y medianamente bonito&hellip; <em>dentro de lo que cabe porque evidentemente me vale verga si se ve como una página del 2000</em>.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>I'm using a new blogging system</title>
+      <link>https://blog.luevano.xyz/a/new_blogging_system.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/new_blogging_system.html</guid>
+      <pubDate>Fri, 28 May 2021 03:21:39 GMT</pubDate>
+      <category>English</category>
+      <category>Short</category>
+      <category>Tools</category>
+      <category>Update</category>
+      <description>I created a new blogging system called pyssg, which is based on what I was using but, to be honest, better.</description>
+      <content:encoded><![CDATA[<p>So, I was tired of working with <code>ssg</code> (and then <code>sbg</code> which was a modified version of <code>ssg</code> that I &ldquo;wrote&rdquo;), for one general reason: not being able to extend it as I would like; and not just dumb little stuff, I wanted to be able to have more control, to add tags (which another tool that I found does: <code>blogit</code>), and even more in a future.</p>
+<p>The solution? Write a new program &ldquo;from scratch&rdquo; in <em>pYtHoN</em>. Yes it is bloated, yes it is in its early stages, but it works just as I want it to work, and I&rsquo;m pretty happy so far with the results and have with even more ideas in mind to &ldquo;optimize&rdquo; and generally clean my wOrKfLoW to post new blog entries. I even thought of using it for posting into a &ldquo;feed&rdquo; like gallery for drawings or pictures in general.</p>
+<p>I called it <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, because it sounds nice and it wasn&rsquo;t taken in the PyPi. It is just a terminal program that reads either a configuration file or the options passed as flags when calling the program.</p>
+<p>It still uses Markdown files because I find them very easy to work with. And instead of just having a &ldquo;header&rdquo; and a &ldquo;footer&rdquo; applied to each parsed entry, you will have templates (generated with the program) for each piece that I thought made sense (idea taken from <code>blogit</code>): the common header and footer, the common header and footer for each entry and, header, footer and list elements for articles and tags. When parsing the Markdown file these templates are applied and stitched together to make a single HTML file. Also generates an RSS feed and the <code>sitemap.xml</code> file, which is nice.</p>
+<p>It might sound convoluted, but it works pretty well, with of course room to improve; I&rsquo;m open to suggestions, issue reporting or direct contributions <a href="https://github.com/luevano/pyssg">here</a>. BTW, it only works on Linux for now (and don&rsquo;t think on making it work on windows, but feel free to do PR for the compatibility).</p>
+<p>That&rsquo;s it for now, the new RSS feed is available here: <a href="https://blog.luevano.xyz/rss.xml">https://blog.luevano.xyz/rss.xml</a>.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Create a git server and setup cgit web app (on Nginx)</title>
+      <link>https://blog.luevano.xyz/a/git_server_with_cgit.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/git_server_with_cgit.html</guid>
+      <pubDate>Sun, 21 Mar 2021 19:00:29 GMT</pubDate>
+      <category>English</category>
+      <category>Server</category>
+      <category>Tools</category>
+      <category>Tutorial</category>
+      <description>How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.</description>
+      <content:encoded><![CDATA[<p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
+<p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of SSH. Also, most if not all commands here are run as root.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>I might get tired of saying this (it&rsquo;s just copy paste, basically)&hellip; but similar as before (check my <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> and <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> entries):</p>
+<ul>
+<li>(This time, optional) A domain name if you want to have a &ldquo;front end&rdquo; to show your repositories. Got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
+<li>With a <strong>CNAME</strong> for &ldquo;git&rdquo; and (optionally) &ldquo;www.git&rdquo;, or some other name for your sub-domains.</li>
+</ul>
+</li>
+<li>A VPS or somewhere else to host. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).<ul>
+<li><code>ssh</code> configured.</li>
+<li>(Optionally, if doing the domain name thingy) With <code>nginx</code> and <code>certbot</code> setup and running.</li>
+<li>Of course, <code>git</code> already installed (it should be a must have always).</li>
+</ul>
+</li>
+</ul>
+<h2 id="git-server">git server</h2>
+<p>If not installed already, install the <code>git</code> package:</p>
+<pre><code class="language-sh">pacman -S git
+</code></pre>
+<p>On Arch Linux, when you install the <code>git</code> package, a <code>git</code> user is automatically created, so all you have to do is decide where you want to store the repositories, for me, I like them to be on <code>/home/git</code> like if <code>git</code> was a &ldquo;normal&rdquo; user. So, create the <code>git</code> folder (with corresponding permissions) under <code>/home</code> and set the <code>git</code> user&rsquo;s home to <code>/home/git</code>:</p>
+<pre><code class="language-sh">mkdir /home/git
+chown git:git /home/git
+usermod -d /home/git git
+</code></pre>
+<p>Also, the <code>git</code> user is &ldquo;expired&rdquo; by default and will be locked (needs a password), change that with:</p>
+<pre><code class="language-sh">chage -E -1 git
+passwd git
+</code></pre>
+<p>Give it a strong one and remember to use <code>PasswordAuthentication no</code> for <code>ssh</code> (as you should). Create the <code>.ssh/authorized_keys</code> for the <code>git</code> user and set the permissions accordingly:</p>
+<pre><code class="language-sh">mkdir /home/git/.ssh
+chmod 700 /home/git/.ssh
+touch /home/git/.ssh/authorized_keys
+chmod 600 /home/git/.ssh/authorized_keys
+chown -R git:git /home/git
+</code></pre>
+<p>Now is a good idea to copy over your local SSH public keys to this file, to be able to push/pull to the repositories. Do it by either manually copying it or using <code>ssh</code>&lsquo;s built in <code>ssh-copy-id</code> (for that you may want to check your <code>ssh</code> configuration in case you don&rsquo;t let people access your server with user/password).</p>
+<p>Next, and almost finally, we need to edit the <code>git-daemon</code> service, located at <code>/usr/lib/systemd/system/</code> (called <code>git-daemon@.service</code>):</p>
+<pre><code class="language-ini">...
+ExecStart=-/usr/lib/git-core/git-daemon --inetd --export-all --base-path=/home/git --enable=receive-pack
+...
+</code></pre>
+<p>I just appended <code>--enable=receive-pack</code> and note that I also changed the <code>--base-path</code> to reflect where I want to serve my repositories from (has to match what you set when changing <code>git</code> user&rsquo;s home).</p>
+<p>Now, go ahead and start and enable the <code>git-daemon</code> socket:</p>
+<pre><code class="language-sh">systemctl start git-daemon.socket
+systemctl enable git-daemon.socket
+</code></pre>
+<p>You&rsquo;re basically done. Now you should be able to push/pull repositories to your server&hellip; except, you haven&rsquo;t created any repository in your server, that&rsquo;s right, they&rsquo;re not created automatically when trying to push. To do so, you have to do the following sequence (assuming you&rsquo;re &ldquo;<code>cd</code>&lsquo;ed&rdquo; into the <code>/home/git</code> directory):</p>
+<pre><code class="language-sh">mkdir {repo_name}.git
+cd {repo_name}.git
+</code></pre>
+<p>Those two lines above will need to be run each time you want to add a new repository to your server (yeah, kinda lame&hellip; although there are options to &ldquo;automate&rdquo; this, I like it this way).</p>
+<p>After that you can already push/pull to your repository. I have my repositories (locally) set up so I can push to more than one remote at the same time (my server, GitHub, GitLab, etc.), which is detailed <a href="https://gist.github.com/rvl/c3f156e117e22a25f242">here</a>.</p>
+<h2 id="cgit">cgit</h2>
+<p>This bit is optional if you only wanted a git server (really easy to set up), this is so you can have a web application. This is basically a copy paste of <a href="https://wiki.archlinux.org/index.php/Cgit#Nginx">Arch Linux Wiki: Cgit</a> so you can go there and get more in-depth configurations.</p>
+<p>Install the <code>cgit</code> and <code>fcgiwrap</code> packages:</p>
+<pre><code class="language-sh">pacman -S cgit fcgiwrap
+</code></pre>
+<p>Now, just start and enable the <code>fcgiwrap</code> socket:</p>
+<pre><code class="language-sh">systemctl start fcgiwrap.socket
+systemctl enable fcgiwrap.socket
+</code></pre>
+<p>Next, the way I configure <code>nginx</code> is creating a separate file <code>{module}.conf</code> (<code>git.conf</code> in this case) under <code>/etc/nginx/sites-available</code> and create a symlink to <code>/etc/nginx/sites-enabled</code> as stated in my <a href="https://blog.luevano.xyz/a/website_with_nginx.html"><code>nginx</code> setup entry</a>. Add the following lines to your <code>git.conf</code> file:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    listen [::]:80;
+    root /usr/share/webapps/cgit;
+    server_name {yoursubdomain}.{yourdomain};
+    try_files $uri @cgit;
+
+    location @cgit {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/cgit.cgi;
+        fastcgi_param PATH_INFO $uri;
+        fastcgi_param QUERY_STRING $args;
+        fastcgi_param HTTP_HOST $server_name;
+        fastcgi_pass unix:/run/fcgiwrap.sock;
+    }
+}
+</code></pre>
+<p>Where the <code>server_name</code> line depends on you, I have mine setup to <code>git.luevano.xyz</code> and <code>www.git.luevano.xyz</code>. Optionally run <code>certbot --nginx</code> to get a certificate for those domains if you don&rsquo;t have already.</p>
+<p>Now, all that&rsquo;s left is to configure <code>cgit</code>. Create the configuration file <code>/etc/cgitrc</code> with the following content (my personal options, pretty much the default):</p>
+<pre><code class="language-apache">css=/cgit.css
+source-filter=/usr/lib/cgit/filters/syntax-highlighting-edited.sh
+logo=/cgit.png
+
+enable-http-clone=1
+# robots=noindex, nofollow
+virtual-root=/
+
+repo.url={url}
+repo.path={dir_path}
+repo.owner={owner}
+repo.desc={short_description}
+
+...
+</code></pre>
+<p>Where you can uncomment the <code>robots</code> line to let web crawlers (like Google&rsquo;s) to index your <code>git</code> web app. And at the end keep all your repositories (the ones you want to make public), for example for my <a href="https://git.luevano.xyz/.dots"><em>dotfiles</em></a> I have:</p>
+<pre><code class="language-apache">...
+repo.url=.dots
+repo.path=/home/git/.dots.git
+repo.owner=luevano
+repo.desc=These are my personal dotfiles.
+...
+</code></pre>
+<p>Otherwise you could let <code>cgit</code> to automatically detect your repositories (you have to be careful if you want to keep &ldquo;private&rdquo; repos) using the option <code>scan-path</code> and setup <code>.git/description</code> for each repository. I will add more to my actual configuration, but for now it is useful as it is. For more, you can check <a href="https://man.archlinux.org/man/cgitrc.5">cgitrc(5)</a>.</p>
+<p>Finally, if you want further support for highlighting, other compressed snapshots or support for markdown, checkout the optional dependencies for <code>cgit</code> and also the Arch Wiki goes in detail on how to setup highlighting with two different packages.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</title>
+      <link>https://blog.luevano.xyz/a/mail_server_with_postfix.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/mail_server_with_postfix.html</guid>
+      <pubDate>Sun, 21 Mar 2021 04:05:59 GMT</pubDate>
+      <category>English</category>
+      <category>Server</category>
+      <category>Tools</category>
+      <category>Tutorial</category>
+      <description>How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot.</description>
+      <content:encoded><![CDATA[<p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
+<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL. And note that most if not all commands executed here are run with root privileges.</p>
+<p>More in depth configuration is detailed in the Arch Wiki for each package used here.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Basically the same as with the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website with Nginx and Certbot</a>:</p>
+<ul>
+<li>A domain name. Got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
+<li>Later we&rsquo;ll be adding some <strong>MX</strong>  and <strong>TXT</strong> records.</li>
+<li>You also need a <strong>CNAME</strong> for &ldquo;mail&rdquo; and (optionally) &ldquo;www.mail&rdquo;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on <code>nginx</code> and <code>certbot</code>) with <code>certbot</code> (just create a <code>mail.conf</code> for <code>nginx</code>, similar to how we created it in the website entry).</li>
+</ul>
+</li>
+<li>A VPS or somewhere else to host. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).<ul>
+<li><code>ssh</code> configured.</li>
+<li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall (I use <code>ufw</code>).</li>
+<li>With <code>nginx</code> and <code>certbot</code> setup and running.</li>
+</ul>
+</li>
+</ul>
+<h2 id="postfix">Postfix</h2>
+<p><a href="https://wiki.archlinux.org/index.php/Postfix">Postfix</a> is a &ldquo;mail transfer agent&rdquo; which is the component of the mail server that receives and sends emails via SMTP.</p>
+<p>Install the <code>postfix</code> package:</p>
+<pre><code class="language-sh">pacman -S postfix
+</code></pre>
+<p>We have two main files to configure (inside <code>/etc/postfix</code>): <code>master.cf</code> (<a href="https://man.archlinux.org/man/master.5">master(5)</a>) and <code>main.cf</code> (<a href="https://man.archlinux.org/man/postconf.5">postconf(5)</a>). We&rsquo;re going to edit <code>main.cf</code> first either by using the command <code>postconf -e 'setting'</code> or by editing the file itself (I prefer to edit the file).</p>
+<p>Note that the default file itself has a lot of comments with description on what each thing does (or you can look up the manual, linked above), I used what Luke&rsquo;s script did plus some other settings that worked for me.</p>
+<p>Now, first locate where your website cert is, mine is at the default location <code>/etc/letsencrypt/live/</code>, so my <code>certdir</code> is <code>/etc/letsencrypt/live/luevano.xyz</code>. Given this information, change <code>{yourcertdir}</code> on the corresponding lines. The configuration described below has to be appended in the <code>main.cf</code> configuration file.</p>
+<p>Certificates and ciphers to use for authentication and security:</p>
+<pre><code class="language-apache">smtpd_tls_key_file = {yourcertdir}/privkey.pem
+smtpd_tls_cert_file = {yourcertdir}/fullchain.pem
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
+smtp_tls_CAfile = {yourcertdir}/cert.pem
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+tls_preempt_cipherlist = yes
+smtpd_tls_exclude_ciphers = aNULL, LOW, EXP, MEDIUM, ADH, AECDH, MD5,
+                DSS, ECDSA, CAMELLIA128, 3DES, CAMELLIA256,
+                RSA+AES, eNULL
+
+smtp_tls_CApath = /etc/ssl/certs
+smtpd_tls_CApath = /etc/ssl/certs
+
+smtpd_relay_restrictions = permit_sasl_authenticated, permit_mynetworks, defer_unauth_destination
+</code></pre>
+<p>Also, for the <em>connection</em> with <code>dovecot</code>, append the next few lines (telling postfix that <code>dovecot</code> will use user/password for authentication):</p>
+<pre><code class="language-apache">smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_security_options = noanonymous, noplaintext
+smtpd_sasl_tls_security_options = noanonymous
+</code></pre>
+<p>Specify the mailbox home (this is going to be a directory inside your user&rsquo;s home):</p>
+<pre><code class="language-apache">home_mailbox = Mail/Inbox/
+</code></pre>
+<p>Pre-configuration to work seamlessly with <code>dovecot</code> and <code>opendkim</code>:</p>
+<pre><code class="language-apache">myhostname = {yourdomainname}
+mydomain = localdomain
+mydestination = $myhostname, localhost.$mydomain, localhost
+
+milter_default_action = accept
+milter_protocol = 6
+smtpd_milters = inet:127.0.0.1:8891
+non_smtpd_milters = inet:127.0.0.1:8891
+mailbox_command = /usr/lib/dovecot/deliver
+</code></pre>
+<p>Where <code>{yourdomainname}</code> is <code>luevano.xyz</code> in my case, or if you have <code>localhost</code> configured to your domain, then use <code>localhost</code> for <code>myhostname</code> (<code>myhostname = localhost</code>).</p>
+<p>Lastly, if you don&rsquo;t want the sender&rsquo;s IP and user agent (application used to send the mail), add the following line:</p>
+<pre><code class="language-apache">smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
+</code></pre>
+<p>And create the <code>/etc/postfix/smtp_header_checks</code> file with the following content:</p>
+<pre><code class="language-coffee">/^Received: .*/     IGNORE
+/^User-Agent: .*/   IGNORE
+</code></pre>
+<p>That&rsquo;s it for <code>main.cf</code>, now we have to configure <code>master.cf</code>. This one is a bit more tricky.</p>
+<p>First look up lines (they&rsquo;re uncommented) <code>smtp inet n - n - - smtpd</code>, <code>smtp unix - - n - - smtp</code> and <code>-o syslog_name=postfix/$service_name</code> and either delete or uncomment them&hellip; or just run <code>sed -i "/^\s*-o/d;/^\s*submission/d;/\s*smtp/d" /etc/postfix/master.cf</code> as stated in Luke&rsquo;s script.</p>
+<p>Lastly, append the following lines to complete postfix setup and pre-configure for <code>spamassassin</code>.</p>
+<pre><code class="language-txt">smtp unix - - n - - smtp
+smtp inet n - y - - smtpd
+    -o content_filter=spamassassin
+submission inet n - y - - smtpd
+    -o syslog_name=postfix/submission
+    -o smtpd_tls_security_level=encrypt
+    -o smtpd_sasl_auth_enable=yes
+    -o smtpd_tls_auth_only=yes
+smtps inet n - y - - smtpd
+    -o syslog_name=postfix/smtps
+    -o smtpd_tls_wrappermode=yes
+    -o smtpd_sasl_auth_enable=yes
+spamassassin unix - n n - - pipe
+    user=spamd argv=/usr/bin/vendor_perl/spamc -f -e /usr/sbin/sendmail -oi -f \${sender} \${recipient}
+</code></pre>
+<p>Now, I ran into some problems with postfix, one being <a href="https://www.faqforge.com/linux/fix-for-opensuse-error-postfixmaster-fatal-0-0-0-0smtps-servname-not-supported-for-ai_socktype/">smtps: Servname not supported for ai_socktype</a>, to fix it, as <em>Till</em> posted in that site, edit <code>/etc/services</code> and add:</p>
+<pre><code class="language-apache">smtps 465/tcp
+smtps 465/udp
+</code></pre>
+<p>Before starting the <code>postfix</code> service, you need to run <code>newaliases</code> first (but you can do a bit of configuration beforehand). Edit the file <code>/etc/postfix/aliases</code> and edit accordingly. I only change the <code>root: you</code> line (where <code>you</code> is the account that will be receiving &ldquo;root&rdquo; mail). Check the Arch Wiki for more info and other alternatives/options. After you&rsquo;re done, run:</p>
+<pre><code class="language-sh">postalias /etc/postfix/aliases
+newaliases
+</code></pre>
+<p>At this point you&rsquo;re done configuring <code>postfix</code> and you can already start/enable the <code>postfix</code> service:</p>
+<pre><code class="language-sh">systemctl start postfix.service
+systemctl enable postfix.service
+</code></pre>
+<h2 id="dovecot">Dovecot</h2>
+<p><a href="https://wiki.archlinux.org/index.php/Dovecot">Dovecot</a> is an IMAP and POP3 server, which is what lets an email application retrieve the mail.</p>
+<p>Install the <code>dovecot</code> and <code>pigeonhole</code> (sieve for <code>dovecot</code>) packages:</p>
+<pre><code class="language-sh">pacman -S dovecot pigeonhole
+</code></pre>
+<p>On arch, by default, there is no <code>/etc/dovecot</code> directory with default configurations set in place, but the package does provide the example configuration files. Create the <code>dovecot</code> directory under <code>/etc</code> and, optionally, copy the <code>dovecot.conf</code> file and <code>conf.d</code> directory under the just created <code>dovecot</code> directory:</p>
+<pre><code class="language-sh">mkdir /etc/dovecot
+cp /usr/share/doc/dovecot/example-config/dovecot.conf /etc/dovecot/dovecot.conf
+cp -r /usr/share/doc/dovecot/example-config/conf.d /etc/dovecot
+</code></pre>
+<p>As Luke stated, <code>dovecot</code> comes with a lot of &ldquo;modules&rdquo; (under <code>/etc/dovecot/conf.d/</code> if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edits/creates the whole <code>dovecot.conf</code> file; although, I would like to check each of the separate configuration files <code>dovecot</code> provides I think the options Luke provides are more than good enough.</p>
+<p>I&rsquo;m working with an empty <code>dovecot.conf</code> file. Add the following lines for SSL and login configuration (also replace <code>{yourcertdir}</code> with the same certificate directory described in the Postfix section above, note that the <code>&lt;</code> is required):</p>
+<pre><code class="language-apache">ssl = required
+ssl_cert = &lt;{yourcertdir}/fullchain.pem
+ssl_key = &lt;{yourcertdir}/privkey.pem
+ssl_min_protocol = TLSv1.2
+ssl_cipher_list = ALL:!RSA:!CAMELLIA:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:!RC4:!SHA1:!SHA256:!SHA384:!LOW@STRENGTH
+ssl_prefer_server_ciphers = yes
+ssl_dh = &lt;/etc/dovecot/dh.pem
+
+auth_mechanisms = plain login
+auth_username_format = %n
+protocols = $protocols imap
+</code></pre>
+<p>You may notice we specify a file we don&rsquo;t have under <code>/etc/dovecot</code>: <code>dh.pem</code>. We need to create it with <code>openssl</code> (you should already have it installed if you&rsquo;ve been following this entry and the one for <code>nginx</code>). Just run (might take a few minutes):</p>
+<pre><code class="language-sh">openssl dhparam -out /etc/dovecot/dh.pem 4096
+</code></pre>
+<p>After that, the next lines define what a &ldquo;valid user is&rdquo; (really just sets the database for users and passwords to be the local users with their password):</p>
+<pre><code class="language-apache">userdb {
+    driver = passwd
+}
+
+passdb {
+    driver = pam
+}
+</code></pre>
+<p>Next, comes the mail directory structure (has to match the one described in the Postfix section). Here, the <code>LAYOUT</code> option is important so the boxes are <code>.Sent</code> instead of <code>Sent</code>. Add the next lines (plus any you like):</p>
+<pre><code class="language-apache">mail_location = maildir:~/Mail:INBOX=~/Mail/Inbox:LAYOUT=fs
+namespace inbox {
+    inbox = yes
+
+    mailbox Drafts {
+        special_use = \Drafts
+        auto = subscribe
+        }
+
+    mailbox Junk {
+        special_use = \Junk
+        auto = subscribe
+        autoexpunge = 30d
+        }
+
+    mailbox Sent {
+        special_use = \Sent
+        auto = subscribe
+        }
+
+    mailbox Trash {
+        special_use = \Trash
+        }
+
+    mailbox Archive {
+        special_use = \Archive
+        }
+}
+</code></pre>
+<p>Also include this so Postfix can use Dovecot&rsquo;s authentication system:</p>
+<pre><code class="language-apache">service auth {
+    unix_listener /var/spool/postfix/private/auth {
+        mode = 0660
+        user = postfix
+        group = postfix
+        }
+}
+</code></pre>
+<p>Lastly (for <code>dovecot</code> at least), the plugin configuration for <code>sieve</code> (<code>pigeonhole</code>):</p>
+<pre><code class="language-apache">protocol lda {
+    mail_plugins = $mail_plugins sieve
+}
+
+protocol lmtp {
+    mail_plugins = $mail_plugins sieve
+}
+
+plugin {
+    sieve = ~/.dovecot.sieve
+    sieve_default = /var/lib/dovecot/sieve/default.sieve
+    sieve_dir = ~/.sieve
+    sieve_global_dir = /var/lib/dovecot/sieve/
+</code></pre>
+<p>Where <code>/var/lib/dovecot/sieve/default.sieve</code> doesn&rsquo;t exist yet. Create the folders:</p>
+<pre><code class="language-sh">mkdir -p /var/lib/dovecot/sieve
+</code></pre>
+<p>And create the file <code>default.sieve</code> inside that just created folder with the content:</p>
+<pre><code class="language-nginx">require [&quot;fileinto&quot;, &quot;mailbox&quot;];
+if header :contains &quot;X-Spam-Flag&quot; &quot;YES&quot; {
+    fileinto &quot;Junk&quot;;
+}
+</code></pre>
+<p>Now, if you don&rsquo;t have a <code>vmail</code> (virtual mail) user, create one and change the ownership of the <code>/var/lib/dovecot</code> directory to this user:</p>
+<pre><code class="language-sh">grep -q &quot;^vmail:&quot; /etc/passwd || useradd -m vmail -s /usr/bin/nologin
+chown -R vmail:vmail /var/lib/dovecot
+</code></pre>
+<p>Note that I also changed the shell for <code>vmail</code> to be <code>/usr/bin/nologin</code>. After that, run:</p>
+<pre><code class="language-sh">sievec /var/lib/dovecot/sieve/default.sieve
+</code></pre>
+<p>To compile the configuration file (a <code>default.svbin</code> file will be created next to <code>default.sieve</code>).</p>
+<p>Next, add the following lines to <code>/etc/pam.d/dovecot</code> if not already present (shouldn&rsquo;t be there if you&rsquo;ve been following these notes):</p>
+<pre><code class="language-txt">auth required pam_unix.so nullok
+account required pam_unix.so
+</code></pre>
+<p>That&rsquo;s it for <code>dovecot</code>, at this point you can start/enable the <code>dovecot</code> service:</p>
+<pre><code class="language-sh">systemctl start dovecot.service
+systemctl enable dovecot.service
+</code></pre>
+<h1 id="opendkim">OpenDKIM</h1>
+<p><a href="https://wiki.archlinux.org/index.php/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
+<p>Install the <code>opendkim</code> package:</p>
+<pre><code class="language-sh">pacman -S opendkim
+</code></pre>
+<p>Generate the keys for your domain:</p>
+<pre><code class="language-sh">opendkim-genkey -D /etc/opendkim -d {yourdomain} -s {yoursubdomain} -r -b 2048
+</code></pre>
+<p>Where you need to change <code>{yourdomain}</code> and <code>{yoursubdomain}</code> (doesn&rsquo;t really need to be the sub-domain, could be anything that describes your key) accordingly, for me it&rsquo;s <code>luevano.xyz</code> and <code>mail</code>, respectively. After that, we need to create some files inside the <code>/etc/opendkim</code> directory. First, create the file <code>KeyTable</code> with the content:</p>
+<pre><code class="language-txt">{yoursubdomain}._domainkey.{yourdomain} {yourdomain}:{yoursubdomain}:/etc/opendkim/{yoursubdomain}.private
+</code></pre>
+<p>So, for me it would be:</p>
+<pre><code class="language-txt">mail._domainkey.luevano.xyz luevano.xyz:mail:/etc/opendkim/mail.private
+</code></pre>
+<p>Next, create the file <code>SigningTable</code> with the content:</p>
+<pre><code class="language-txt">*@{yourdomain} {yoursubdomain}._domainkey.{yourdomain}
+</code></pre>
+<p>Again, for me it would be:</p>
+<pre><code class="language-txt">*@luevano.xyz mail._domainkey.luevano.xyz
+</code></pre>
+<p>And, lastly create the file <code>TrustedHosts</code> with the content:</p>
+<pre><code class="language-txt">127.0.0.1
+::1
+10.1.0.0/16
+1.2.3.4/24
+localhost
+{yourserverip}
+...
+</code></pre>
+<p>And more, make sure to include your server IP and something like <code>subdomain.domainname</code>.</p>
+<p>Next, edit <code>/etc/opendkim/opendkim.conf</code> to reflect the changes (or rather, additions) of these files, as well as some other configuration. You can look up the example configuration file located at <code>/usr/share/doc/opendkim/opendkim.conf.sample</code>, but I&rsquo;m creating a blank one with the contents:</p>
+<pre><code class="language-apache">Domain {yourdomain}
+Selector {yoursubdomain}
+
+Syslog Yes
+UserID opendkim
+
+KeyFile /etc/opendkim/{yoursubdomain}.private
+Socket inet:8891@localhost
+</code></pre>
+<p>Now, change the permissions for all the files inside <code>/etc/opendkim</code>:</p>
+<pre><code class="language-sh">chown -R root:opendkim /etc/opendkim
+chmod g+r /etc/postfix/dkim/*
+</code></pre>
+<p>I&rsquo;m using <code>root:opendkim</code> so <code>opendkim</code> doesn&rsquo;t complain about the <code>{yoursubdomani}.private</code> being insecure (you can change that by using the option <code>RequireSafeKeys False</code> in the <code>opendkim.conf</code> file, as stated <a href="http://lists.opendkim.org/archive/opendkim/users/2014/12/3331.html">here</a>).</p>
+<p>That&rsquo;s it for the general configuration, but you could go more in depth and be more secure with some extra configuration as described in the <a href="https://wiki.archlinux.org/index.php/OpenDKIM#Security">Arch Wiki entry for OpenDKIM</a>.</p>
+<p>Now, just start/enable the <code>opendkim</code> service:</p>
+<pre><code class="language-sh">systemctl start opendkim.service
+systemctl enable opendkim.service
+</code></pre>
+<p>And don&rsquo;t forget to add the following <strong>TXT</strong> records on your domain registrar (these examples are for Epik):</p>
+<ol>
+<li><em>DKIM</em> entry: look up your <code>{yoursubdomain}.txt</code> file, it should look something like:</li>
+</ol>
+<pre><code class="language-txt">{yoursubdomain}._domainkey IN TXT ( &quot;v=DKIM1; k=rsa; s=email; &quot;
+    &quot;p=...&quot;
+    &quot;...&quot; )  ; ----- DKIM key mail for {yourdomain}
+</code></pre>
+<p>In the TXT record you will place <code>{yoursubdomain}._domainkey</code> as the &ldquo;Host&rdquo; and <code>"v=DKIM1; k=rsa; s=email; " "p=..." "..."</code> in the &ldquo;TXT Value&rdquo; (replace the dots with the actual value you see in your file).</p>
+<ol start="2">
+<li>
+<p><em>DMARC</em> entry: just <code>_dmarc.{yourdomain}</code> as the &ldquo;Host&rdquo; and <code>"v=DMARC1; p=reject; rua=mailto:dmarc@{yourdomain}; fo=1"</code> as the &ldquo;TXT Value&rdquo;.</p>
+</li>
+<li>
+<p><em>SPF</em> entry: just <code>@</code> as the &ldquo;Host&rdquo; and <code>"v=spf1 mx a:{yoursubdomain}.{yourdomain} - all"</code> as the &ldquo;TXT Value&rdquo;.</p>
+</li>
+</ol>
+<p>And at this point you could test your mail for spoofing and more, but you don&rsquo;t know -yet- how to login (it&rsquo;s really easy, but I&rsquo;m gonna state that at the end of this entry).</p>
+<h2 id="spamassassin">SpamAssassin</h2>
+<p><a href="https://wiki.archlinux.org/index.php/SpamAssassin">SpamAssassin</a> is just <em>a mail filter to identify spam</em>.</p>
+<p>Install the <code>spamassassin</code> package (which will install a bunch of ugly <code>perl</code> packages&hellip;):</p>
+<pre><code class="language-sh">pacman -S spamassassin
+</code></pre>
+<p>For some reason, the permissions on all <code>spamassassin</code> stuff are all over the place. First, change owner of the executables, and directories:</p>
+<pre><code class="language-sh">chown spamd:spamd /usr/bin/vendor_perl/sa-*
+chown spamd:spamd /usr/bin/vendor_perl/spam*
+chwown -R spamd:spamd /etc/mail/spamassassin
+</code></pre>
+<p>Then, you can edit <code>local.cf</code> (located in <code>/etc/mail/spamassassin</code>) to fit your needs (I only uncommented the <code>rewrite_header Subject ...</code> line). And then you can run the following command to update the patterns and compile them:</p>
+<pre><code class="language-sh">sudo -u spamd sa-update
+sudo -u spamd sa-compile
+</code></pre>
+<p>And since this should be run periodically, create the service <code>spamassassin-update.service</code> under <code>/etc/systemd/system</code> with the following content:</p>
+<pre><code class="language-ini">[Unit]
+Description=SpamAssassin housekeeping
+After=network.target
+
+[Service]
+User=spamd
+Group=spamd
+Type=oneshot
+
+ExecStart=/usr/bin/vendor_perl/sa-update --allowplugins
+SuccessExitStatus=1
+ExecStart=/usr/bin/vendor_perl/sa-compile
+ExecStart=/usr/bin/systemctl -q --no-block try-restart spamassassin.service
+</code></pre>
+<p>And you could also execute <code>sa-learn</code> to train <code>spamassassin</code>&lsquo;s bayes filter, but this works for me. Then create the timer <code>spamassassin-update.timer</code> under the same directory, with the content:</p>
+<pre><code class="language-ini">[Unit]
+Description=SpamAssassin housekeeping
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+</code></pre>
+<p>You can now start/enable the <code>spamassassin-update</code> timer:</p>
+<pre><code class="language-sh">systemctl start spamassassin-update.timer
+systemctl enable spamassassin-update.timer
+</code></pre>
+<p>Next, you may want to edit the <code>spamassassin</code> service before starting and enabling it, because by default, it could <a href="https://rimuhosting.com/howto/memory.jsp">spawn a lot of &ldquo;childs&rdquo;</a> eating a lot of resources and you really only need one child. Append <code>--max-children=1</code> to the line <code>ExecStart=...</code> in <code>/usr/bin/systemd/system/spamassassin.service</code>:</p>
+<pre><code class="language-ini">...
+ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/spamd.sock --listen=localhost --max-children=1
+...
+</code></pre>
+<p>Finally, start and enable the <code>spamassassin</code> service:</p>
+<pre><code class="language-sh">systemctl start spamassassin.service
+systemctl enable spamassassin.service
+</code></pre>
+<h2 id="wrapping-up">Wrapping up</h2>
+<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code>for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked <em>(((it just werks on my machine)))</em>.</p>
+<p>Now, to actually use the mail service: first of all, you need a <em>normal</em> account (don&rsquo;t use root) that belongs to the <code>mail</code> group (<code>gpasswd -a user group</code> to add a user <code>user</code> to group <code>group</code>) and that has a password.</p>
+<p>Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>
+<ul>
+<li>* server: subdomain.domain (mail.luevano.xyz in my case)</li>
+<li><strong>SMTP</strong> port: 587</li>
+<li><strong>SMTPS</strong> port: 465 (I use this one)</li>
+<li><strong>IMAP</strong> port: 143</li>
+<li><strong>IMAPS</strong> port: 993 (again, I use this one)</li>
+<li>Connection/security: SSL/TLS</li>
+<li>Authentication method: Normal password</li>
+<li>Username: just your <code>user</code>, not the whole email (<code>david</code> in my case)</li>
+<li>Password: your <code>user</code> password (as in the password you use to login to the server with that user)</li>
+</ul>
+<p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
+<p><img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png"></p>
+<p>(Yes, I blurred a lot in the picture just to be sure, either way what&rsquo;s important is the list on the bottom part of the image)</p>
+<p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you have my info down below.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Create a website with Nginx and Certbot</title>
+      <link>https://blog.luevano.xyz/a/website_with_nginx.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/website_with_nginx.html</guid>
+      <pubDate>Fri, 19 Mar 2021 02:58:15 GMT</pubDate>
+      <category>English</category>
+      <category>Server</category>
+      <category>Tools</category>
+      <category>Tutorial</category>
+      <description>How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics.</description>
+      <content:encoded><![CDATA[<p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke&rsquo;s video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I&rsquo;m configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
+<p>As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linux distro, and I&rsquo;m doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You will need two things:</p>
+<ul>
+<li>A domain name (duh!). I got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
+<li>With the corresponding <strong>A</strong> and <strong>AAA</strong> records pointing to the VPS&rsquo; IPs (&ldquo;A&rdquo; record points to the ipv4 address and &ldquo;AAA&rdquo; to the ipv6, basically). I have three records for each type: empty one, &ldquo;www&rdquo; and &ldquo;*&rdquo; for a wildcard, that way &ldquo;domain.name&rdquo;, &ldquo;www.domain.name&rdquo;, &ldquo;anythingelse.domain.name&rdquo; point to the same VPS (meaning that you can have several VPS for different sub-domains).</li>
+</ul>
+</li>
+<li>A VPS or somewhere else to host it. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).<ul>
+<li>With <code>ssh</code> already configured both on the local machine and on the remote machine.</li>
+<li>Firewall already configured to allow ports 80 (HTTP) and 443 (HTTPS). I use <code>ufw</code> so it&rsquo;s just a matter of doing <code>ufw allow 80,443/tcp</code> as root and you&rsquo;re golden.</li>
+<li><code>cron</code> installed if you follow along (you could use <code>systemd</code> timers, or some other method you prefer to automate running commands every X time).</li>
+</ul>
+</li>
+</ul>
+<h2 id="nginx">Nginx</h2>
+<p>You have two options: <code>nginx</code> and <code>nginx-mainline</code>. I prefer <code>nginx-mainline</code> because it&rsquo;s the &ldquo;up to date&rdquo; package even though <code>nginx</code> is labeled to be the &ldquo;stable&rdquo; version. Install the package and enable/start the service:</p>
+<pre><code class="language-sh">pacman -S nginx-mainline
+systemctl enable nginx.service
+systemctl start nginx.service
+</code></pre>
+<p>And that&rsquo;s it, at this point you can already look at the default initial page of nginx if you enter the ip of your server in a web browser. You should see something like this:</p>
+<p><img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png"></p>
+<p>As stated in the welcome page, configuration is needed, head to the directory of nginx:</p>
+<pre><code class="language-sh">cd /etc/nginx
+</code></pre>
+<p>Here you have several files, the important one is <code>nginx.conf</code>, which as its name implies, contains general configuration of the web server. If you peek into the file, you will see that it contains around 120 lines, most of which are commented out and contains the welcome page server block. While you can configure a website in this file, it&rsquo;s common practice to do it on a separate file (so you can scale really easily if needed for mor websites or sub-domains).</p>
+<p>Inside the <code>nginx.conf</code> file, delete the <code>server</code> blocks and add the lines <code>include sites-enabled/*;</code> (to look into individual server configuration files) and <code>types_hash_max_size 4096;</code> (to get rid of an ugly warning that will keep appearing) somewhere inside the <code>http</code> block. The final <code>nginx.conf</code> file would look something like (ignoring the comments just for clarity, but you can keep them as side notes):</p>
+<pre><code class="language-nginx">worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include sites-enabled/*;
+    include mime.types;
+    default_type application/octet-stream;
+
+    sendfile on;
+
+    keepalive_timeout 65;
+
+    types_hash_max_size 4096;
+}
+</code></pre>
+<p>Next, inside the directory <code>/etc/nginx/</code> create the <code>sites-available</code> and <code>sites-enabled</code>, and go into the <code>sites-available</code> one:</p>
+<pre><code class="language-sh">mkdir sites-available
+mkdir sites-enabled
+cd sites-available
+</code></pre>
+<p>Here, create a new <code>.conf</code> file for your website and add the following lines (this is just the sample content more or less):</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    listen [::]:80;
+
+    root /path/to/root/directory;
+    server_name domain.name another.domain.name;
+    index index.html anotherindex.otherextension;
+
+    location /{
+        try_files $uri $uri/ =404;
+    }
+}
+</code></pre>
+<p>Note several things:</p>
+<ul>
+<li><code>listen</code>: we&rsquo;re telling nginx which port to listen to (ipv4 and ipv6, respectively).</li>
+<li><code>root</code>: the root directory of where the website files (<code>.html</code>, <code>.css</code>, <code>.js</code>, etc. files) are located. I followed Luke&rsquo;s directory path <code>/var/www/some_folder</code>.</li>
+<li><code>server_name</code>: the actual domain to &ldquo;listen&rdquo; to (for my website it is: <code>server_name luevano.xyz www.luevano.xyz</code>; and for this blog is: <code>server_name blog.luevano.xyz www.blog.luevano.xyz</code>).</li>
+<li><code>index</code>: what file to serve as the index (could be any <code>.html</code>, <code>.htm</code>, <code>.php</code>, etc. file) when just entering the website.</li>
+<li><code>location</code>: used in case of different configurations across different URL paths.<ul>
+<li><code>try_files</code>: tells what files to look for, don&rsquo;t look into this too much for now.</li>
+</ul>
+</li>
+</ul>
+<p>Then, make a symbolic from this config file to the <code>sites-enabled</code> directory:</p>
+<pre><code class="language-sh">ln -s /etc/nginx/sites-available/your_config_file.conf /etc/nginx/sites-enabled
+</code></pre>
+<p>This is so the <code>nginx.conf</code> file can look up the newly created server config. With this method of having each server configuration file separate you can easily &ldquo;deactivate&rdquo; any website by just deleting the symbolic link in <code>sites-enabled</code> and you&rsquo;re good, or just add new configuration files and keep everything nice and tidy.</p>
+<p>All you have to do now is restart (or enable and start if you haven&rsquo;t already) the nginx service (and optionally test the configuration):</p>
+<pre><code class="language-sh">nginx -t
+systemctl restart nginx
+</code></pre>
+<p>If everything goes correctly, you can now go to your website by typing &ldquo;domain.name&rdquo; on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different nginx version):</p>
+<p><img alt="Nginx 404 page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png"></p>
+<p>That&rsquo;s no problem, because it means that the web server it&rsquo;s actually working. Just add an <code>index.html</code> file with something simple to see it in action. If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>
+<p>I like to remove the <code>.html</code> and trailing <code>/</code> on the URLs of my website, for that you need to add the following <code>rewrite</code> lines and modify the <code>try_files</code> line (for more: <a href="https://www.seancdavis.com/blog/remove-html-extension-and-trailing-slash-in-nginx-config/">Sean C. Davis: Remove HTML Extension And Trailing Slash In Nginx Config</a>):</p>
+<pre><code class="language-nginx">server {
+    ...
+    rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+    rewrite ^/(.*)/$ /$1 permanent;
+    ...
+    try_files $uri/index.html $uri.html $uri/ $uri =404;
+    ...
+</code></pre>
+<p>For more: <a href="https://wiki.archlinux.org/index.php/nginx">Arch Linux Wiki: nginx</a>.</p>
+<h2 id="certbot">Certbot</h2>
+<p>The only &ldquo;bad&rdquo; (bloated) thing about certbot, is that it uses <code>python</code>, but for me it doesn&rsquo;t matter too much. You may want to look up another alternative if you prefer. Install the packages <code>certbot</code> and <code>certbot-nginx</code>:</p>
+<pre><code class="language-sh">pacman -S certbot certbot-nginx
+</code></pre>
+<p>After that, all you have to do now is run <code>certbot</code> and follow the instructions given by the tool:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>It will ask you for some information, for you to accept some agreements and the names to activate https for. Also, you will want to &ldquo;say yes&rdquo; to the redirection from http to https. And that&rsquo;s it, you can now go to your website and see that you have https active.</p>
+<p>Now, the certificate given by <code>certbot</code> expires every 3 months or something like that, so you want to renew this certificate every once in a while. Using <code>cron</code>, you can do this by running:</p>
+<pre><code class="language-sh">crontab -e
+</code></pre>
+<p>And a file will be opened where you need to add a new rule for certbot, just append the line: <code>1 1 1 * * certbot renew</code> (renew on the first day of every month) and you&rsquo;re good. Alternatively use <code>systemd</code> timers as stated in the <a href="https://wiki.archlinux.org/index.php/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
+<p>For more: <a href="https://wiki.archlinux.org/index.php/Certbot">Arch Linux Wiki: Certbot</a>.</p>
+<p>That&rsquo;s it, you now have a website with SSL certificate.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Así es raza, el blog ya tiene timestamps</title>
+      <link>https://blog.luevano.xyz/a/el_blog_ya_tiene_timestamps.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/el_blog_ya_tiene_timestamps.html</guid>
+      <pubDate>Tue, 16 Mar 2021 02:46:24 GMT</pubDate>
+      <category>Short</category>
+      <category>Spanish</category>
+      <category>Tools</category>
+      <category>Update</category>
+      <description>Actualización en el estado del blog y el sistema usado para crearlo.</description>
+      <content:encoded><![CDATA[<p>Pues eso, esta entrada es sólo para tirar update sobre mi <a href="https://blog.luevano.xyz/a/first_blog_post.html">primer post</a>. Ya modifiqué el <code>ssg</code> lo suficiente como para que maneje los <em>timestamps</em>, y ya estoy más familiarizado con este script entonces ya lo podré extender más, pero por ahora las entradas ya tienen su fecha de creación (y modificación en dado caso) al final y en el índice ya están organizados por fecha, que por ahora está algo simple pero está sencillo de extender.</p>
+<p>Ya lo único que queda es cambiar un poco el formato del blog (y de la página en general), porque en un momento de desesperación puse todo el texto en justificado y pues no se ve chido siempre, entonces queda corregir eso. <em>Y aunque me tomó más tiempo del que quisiera, así nomás quedó, diría un cierto personaje.</em></p>
+<p>El <code>ssg</code> modificado está en mis <a href="https://git.luevano.xyz/.dots">dotfiles</a> (o directamente <a href="https://git.luevano.xyz/.dots/tree/.local/bin/ssg">aquí</a>).</p>
+<p>Por último, también quité las extensiones <code>.html</code> de las URLs, porque se veía bien pitero, pero igual los links con <code>.html</code> al final redirigen a su link sin <code>.html</code>, así que no hay rollo alguno.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Shell scripting tutorial video notes</title>
+      <link>https://blog.luevano.xyz/a/shell_scripting_video_notes.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/shell_scripting_video_notes.html</guid>
+      <pubDate>Sun, 14 Mar 2021 05:57:34 GMT</pubDate>
+      <category>English</category>
+      <category>Notes</category>
+      <description>Notes of videos about shell scripting, as requested by a mentor of mine.</description>
+      <content:encoded><![CDATA[<p>Another summary, this time about shell scripting in general. And just like with the <a href="https://blog.luevano.xyz/a/linux_video_notes">Linux notes</a>, I also did most of the notes myself or with resources outside the video. The videos in question are: <a href="https://www.youtube.com/playlist?list=PL7B7FA4E693D8E790">The Bad Tutorials (YT): Shell Scripting Tutorials</a> and <a href="https://www.youtube.com/playlist?list=PL2qzCKTbjutJRM7K_hhNyvf8sfGCLklXw">Automation with SCripting (YT): Complete Shell Scripting Tutorials</a>. Also, some notes were taken from <a href="https://www.tutorialspoint.com/unix/index.htm">tutorialspoint: UNIX / LINUX Tutorial</a> and general googling.</p>
+<h2 id="basic-concepts">Basic concepts</h2>
+<p>A <strong>shell</strong> it&rsquo;s an <strong>interface</strong> between the user and the <strong>kernel</strong>. While the kernel it&rsquo;s the layer that interacts between the shell and the <strong>hardware</strong>. And you access the shell either via a <strong>terminal</strong>, or executing a <strong>shell script</strong>. Note that if you&rsquo;re using a GUI environment, you need a <strong>terminal emulator</strong> to actually use a terminal (most Linux distros come with everything needed, so no need to worry).</p>
+<p>When using a terminal a blank screen with some text and a cursor that shows you where to type will appear and depending on the shell being used (<code>sh</code>, <code>dash</code>, <code>ksh</code>, <code>bash</code>, <code>zsh</code>, <code>fish</code>, etc.) the <strong>prompt</strong> will be different. The most common one being of the form <code>user@host:~$</code>, which tells that the <code>user</code> is using <code>host</code> machine and the current working directory is <code>~</code> (can be <code>/any/path/</code> too), and lastly, the <code>$</code> shows the current privileges of the shell/user using the shell (a <code>$</code> for normal user and <code>#</code> for root access).</p>
+<p>To clear the screen use command <code>clear</code> or simply do <code>Ctrl + l</code> (most terminals let you do this) and to cancel or create a new prompt do <code>Ctrl + c</code>, this also cancels any running program that&rsquo;s using the terminal (typing <code>q</code> when a program is running also stops the process, sometimes).</p>
+<p>Also there are <strong>POSIX</strong> (portable operating system interface) compliant shells like <code>sh</code>, <code>dash</code>, <code>ksh</code>, etc., that have a standard syntax and are portable to any Unix system. Non POSIX compliant shells (or not necessary fully POSIX compliant) are <code>bash</code>, <code>zsh</code>, <code>fish</code>, etc., that provide a more modern syntax but lack speed on executing scripts.</p>
+<h3 id="common-commandsprograms">Common commands/programs</h3>
+<p>A list of common commands or programs with a short description (for more, do <code>man command</code> or <code>command -h</code> or <code>command --help</code>):</p>
+<ul>
+<li><strong><code>man</code>: an interface to the system reference manuals.</strong></li>
+<li><code>pwd</code>: print name of current/working directory.</li>
+<li><code>cd</code>: change the working directory.</li>
+<li><code>ls</code>: list directory contents.</li>
+<li><code>echo</code>: display a line of text. Also, see <strong>escape sequences</strong> (<a href="https://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html">Bash Prompt HOWTO: Chapter 2. Bash and Bash Prompts: 2.5. Bash Prompt Escape Sequences</a>).</li>
+<li><code>mkdir</code>: make directories.</li>
+<li><code>touch</code>: change file timestamps (if no file exists, creates a new blank one).</li>
+<li><code>cat</code>: concatenate files and print on the standard output.</li>
+<li><code>mv</code>: move (rename) files.</li>
+<li><code>rm</code>: remove files or directories.</li>
+<li><code>rmdir</code>: remove empty directories.</li>
+<li><code>cp</code>: copy files and directories.</li>
+<li><code>ln</code>: make links between files (hard or soft, also known as symbolic).</li>
+<li><code>umask</code>: get or set the file mode creation mask.</li>
+<li><code>chmod</code>: change file mode bits (change file permissions).</li>
+<li><code>chown</code>: change file owner and group.</li>
+<li><code>wc</code>: print newline, word, and byte counts for each file.</li>
+<li><code>file</code>: determine file type.</li>
+<li><code>sort</code>: sort lines of text files.</li>
+<li><code>cut</code>: remove sections from each line of files.</li>
+<li><code>dd</code>: convert and copy a file (mostly used to make bootable USBs).</li>
+<li><code>compress</code>: compress data.</li>
+<li><code>gzip</code>, <code>gunzip</code>, <code>zcat</code>: compress or expand files.</li>
+<li><code>uname</code>: print system information.</li>
+<li><code>cal</code>: display a calendar.</li>
+<li><code>date</code>: print or set the system date and time.</li>
+<li><code>read</code>: read from standard input into shell variables (also used to read from a file).</li>
+<li><code>tr</code>: translate or delete characters.</li>
+<li><code>readonly</code>: set the readonly attribute for variables.</li>
+<li><code>set</code>: set or unset options and positional parameters.</li>
+<li><code>unset</code>: unset values and attributes of variables and functions.</li>
+<li><code>expr</code>: evaluate expressions.</li>
+<li><code>tput</code>, <code>reset</code>: initialize a terminal or query terminfo database (used for more complex terminal output).</li>
+<li><code>grep</code>, <code>egrep</code>, <code>fgrep</code>: print lines that match patterns (usually used to find text in a file or some text).</li>
+<li><code>sleep</code>: delay for a specified amount of time.</li>
+<li><code>break</code>: exit from for, while, or until loop.</li>
+<li><code>continue</code>: continue for, while, or until loop.</li>
+<li><code>logname</code>: print user&rsquo;s login name.</li>
+<li><code>write</code>: send a message to another user.</li>
+<li><code>mesg</code>: display (or do not display) messages from other users.</li>
+<li><code>return</code>: return from a function or dot script.</li>
+<li><code>exit</code>: cause the sell to exit.</li>
+</ul>
+<p>And some special &ldquo;commands&rdquo; or &ldquo;operators&rdquo; (for more: <a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">gnu: 3.6 Redirections</a>):</p>
+<ul>
+<li><code>|</code> (pipe): used between two commands and the output from the command from the left serves as input to the command from the right.</li>
+<li><code>&gt;</code>: redirects output to a file, overwriting the file (or creating a new file).</li>
+<li><code>&gt;&gt;</code>: redirects output to a file, appending to the file (or creating a new file).</li>
+</ul>
+<h2 id="shell-scripting">Shell scripting</h2>
+<p>A shell script is nothing more but a file that contains commands in it; they&rsquo;re executed in the same order they are present in the file. A shell script file is usually terminated with a <code>.sh</code> extension, independently of the shell being used, but it&rsquo;s not 100% necessary as in Unix systems, an extension mean nothing, other than distinction (visually) between files. Then one can just have an extension-less file as a script. <strong>The script must have execution permissions (<code>chmod +x file</code>)</strong>, unless <code>shell script</code> is executed in the terminal, where <code>shell</code> could be <code>sh</code>, <code>bash</code>, etc. <strong>Comments</strong> are created by prepending <code>#</code> to whatever the text should be a comment.</p>
+<p>It&rsquo;s common practice to have the first line as a <strong>she-bang</strong> (<code>#!</code>), which is just a comment telling the interpreter which shell to execute the script with (usable when having the script in your <strong>PATH</strong> so you only call the name of the script like any other command/program). A she-bang has the syntax <code>#!/path/to/shell some_other_options</code>, the most common she-bangs being: <code>#!/bin/sh</code>, <code>#!/bin/bash</code>, <code>#!/usr/bin/python</code>, etc.</p>
+<p>Also, some people argue that you shouldn&rsquo;t use absolute paths, since not all Unix operating systems have the same directory structure, or not all programs are going to be installed in the same folder. So a portable she-bang can be made by prepending <code>/usr/bin/env</code> and the specify the program to run, for example: <code>#!/usr/bin/env bash</code>.</p>
+<p>Like always&hellip; the basic &ldquo;Hello, world!&rdquo; script:</p>
+<pre><code class="language-sh">#!/bin/sh
+echo &quot;Hello, world!&quot;
+</code></pre>
+<p>Three ways of executing this script (assuming the file name is <code>hw</code>):</p>
+<ol>
+<li>Type in terminal <code>sh hw</code>.</li>
+<li>Type in terminal <code>./hw</code>. Requires the file to have execute permissions.</li>
+<li>Type in terminal <code>hw</code>. Requires the file to have execute permissions. Requires the file to be in your PATH.</li>
+</ol>
+<h3 id="variables">Variables</h3>
+<p>Variables are case sensitive, meaning that <code>my_var</code> and <code>MY_VAR</code> are different and a variable name can only contain letters and numbers (<code>a-z</code>, <code>A-Z</code> and <code>0-9</code>) or the underscore character <code>_</code>. Can&rsquo;t contain a space. Variables are called by prepending <code>$</code> to the variable name.</p>
+<p>Like in most programming languages, there are some reserved words like <code>if</code>, <code>select</code>, <code>then</code>, <code>until</code>, <code>while</code>, etc., that can&rsquo;t be used as variables or as values of variables. For more: <a href="https://www.gnu.org/software/bash/manual/html_node/Reserved-Word-Index.html">D.2 Index of Shell Reserved Words</a>.</p>
+<p>There is no need to specify a variable type. Anything surrounded by <code>"</code> will be treated as text. You can use booleans, numbers, text and arrays (the implementation of arrays depends on the shell being used). Make a variable readonly by calling <code>readonly variable_name</code>. Basic syntax:</p>
+<ul>
+<li>Text variables: <code>var="my var"</code>.</li>
+<li>Numeric variables: <code>var=123</code>.</li>
+<li>Boolean variables: <code>var=true</code> and <code>var=false</code>.</li>
+<li>Arrays (assuming <code>bash</code> is the shell):<ul>
+<li><code>var[0]=value1</code>, <code>var[...]=...</code>, <code>var[n]=valuen</code>, etc.</li>
+<li><code>var=(value1 ... valuen)</code></li>
+<li>Access single values with <code>${var[index]}</code> and all values with <code>${var[*]}</code> or <code>${var[@]}</code>.</li>
+</ul>
+</li>
+</ul>
+<p>There are special variables (for more. <a href="https://www.tutorialspoint.com/unix/unix-special-variables.htm">tutorialspoint: Unix / Linux - Special Variables</a>):</p>
+<ul>
+<li><code>$</code>: represents the process ID number, or PID, of the current shell.</li>
+<li><code>0</code>: the filename of the current script.</li>
+<li><code>n</code>: where <code>n</code> can be any whole number, correspond to arguments passed to the script (<code>command arg1 arg2 arg3 argn</code>).</li>
+<li><code>#:</code> number of arguments supplied to the script.</li>
+<li><code>*:</code> all the arguments are double quoted.</li>
+<li><code>@:</code> all the arguments are individually double quoted.</li>
+<li><code>?:</code> exit status of the last command executed.</li>
+<li><code>!:</code> process number of the last background command.</li>
+</ul>
+<p>When calling a script, you can pass optional (or required) positional arguments like: <code>command arg1 arg2 arg3 argn</code>.</p>
+<p>Note that a variable can also take the output of another command, one common way to do this is using <code>$(command)</code> or <code>`command`</code>, for example: <code>var="$(echo 'this is a command being executed inside the definition of a variable')"</code> which, since the <code>echo</code> command is being run, <code>var="this is a command being executed inside the definition of a variable"</code>, which doesn&rsquo;t seem like much, but there could be any command inside <code>$()</code> or <code>`command`</code>. Note that this is not special to defining variables, could also be used as arguments of another command.</p>
+<h4 id="internal-field-separator-ifs">Internal Field Separator (IFS)</h4>
+<p>This is used by the shell to determine how to do word splitting (how to recognize word boundaries). The default value for <code>IFS</code> consists of whitespace characters (space, tab and newline). This value can ve overridden by setting the variable <code>IFS</code> to something like, for example, <code>:</code>.</p>
+<h3 id="conditionals">Conditionals</h3>
+<h4 id="exit-status">Exit status</h4>
+<p>Any command being run has an exit status, either <code>0</code> or <code>1</code>, if the command has been executed successfully or otherwise (an error), respectively.</p>
+<h4 id="if-statement"><code>if</code> statement</h4>
+<p>Pretty similar to other programming languages, evaluates an expression to a <code>true</code> or <code>false</code> and executes code as specified. <code>if</code> statements can be nested, and follow normal rules of logical operations. Basic syntax is:</p>
+<pre><code class="language-sh">#!/bin/sh
+if expression
+then
+do_something
+elif another_expression
+then
+do_another_thing
+else
+do_something_else
+fi
+</code></pre>
+<p>The expression is usually wrapped around <code>[]</code> or <code>[[]]</code>, the first being POSIX compliant and the second <code>bash</code>-specific (and other shells).</p>
+<p>Also, some <strong>operators</strong> to compare things use <code>==</code> for &ldquo;equals&rdquo; and <code>&gt;</code> for &ldquo;greater than&rdquo;, for example; while in a POSIX compliant shell, <code>=</code> for &ldquo;equals&rdquo; and <code>-gt</code> for &ldquo;greater than&rdquo; has to be used. For more operators: <a href="https://www.tutorialspoint.com/unix/unix-basic-operators.htm">tutorialspoint: Unix / Linux - Shell Basic Operators</a> (this also covers <strong>logical operators</strong> and <strong>file test operators</strong>).</p>
+<h3 id="case-statement">Case statement</h3>
+<p>A common good alternative to multilevel <code>if</code> statements, enables you to match several values against one variable. Basic syntax is:</p>
+<pre><code class="language-sh">case $var in
+    pattern1)
+        do_something1
+        ;;
+    pattern2)
+        subpattern1)
+            do_subsomething1
+            ;;
+        subpattern2)
+            do_subsomething2
+            ;;
+        *)
+    pattern3|pattern4|...|patternN)
+        do_something3
+        ;;
+    patternM)
+        do_somethingM
+        ;;
+    *)
+        do_something_default
+        ;;
+esac
+</code></pre>
+<p>Where the <code>*</code> pattern is not necessary but serves the same purpose as a &ldquo;default&rdquo; case.</p>
+<h3 id="loops">Loops</h3>
+<p>Loops enable execution of a set of commands repeatedly. Loops, naturally, can be nested. <code>expression</code> here (in the basic syntax examples) work the same as mentioned in the &ldquo;<code>if</code> statement&rdquo; section. For more: <a href="https://www.tutorialspoint.com/unix/unix-shell-loops.htm">tutorialspoint: Unix / Linux - Shell Loop Types</a>.</p>
+<h4 id="loop-control">Loop control</h4>
+<p>Similar than other programming languages, there are loop controls to interrupt or continue a loop:</p>
+<pre><code>* `break` statement.
+* `continue` statement.
+</code></pre>
+<p>These statements accept an argument that specify from which loop to exit/continue.</p>
+<h4 id="while-loop"><code>while</code> loop</h4>
+<p>Enables to execute a set of commands repeatedly until some condition occurs. Basic syntax:</p>
+<pre><code class="language-sh">#!/bin/sh
+while expression
+do
+    do_something
+done
+</code></pre>
+<h4 id="until-loop"><code>until</code> loop</h4>
+<p>Similar to the <code>while</code> loop, the difference is that the <code>while</code> loop is executed as long as a condition is true, but the <code>until</code> loop&hellip; until a condition is true. Basic syntax (similar to <code>while</code> loop):</p>
+<pre><code class="language-sh">#!/bin/sh
+until expression
+do
+    do_something
+done
+</code></pre>
+<h4 id="for-loop"><code>for</code> loop</h4>
+<p>Operates on lists of items. It repeats a set of commands for every item in a list. Basic syntax:</p>
+<pre><code class="language-sh">#!/bin/sh
+for var in word1 word2 ... wordN
+do
+    do_something_with_var
+done
+</code></pre>
+<p>Where <code>var</code> is the current value (<code>word1</code>, <code>word2</code>, etc.) in the loop and the expression after <code>for</code> can refer to an array, or the output of a command that outputs a list of things, etc.</p>
+<h4 id="select-loop"><code>select</code> loop</h4>
+<p>Provides an easy way to create a numbered menu from which users can select options. Basic syntax (similar to <code>for</code> loop):</p>
+<pre><code class="language-sh">select var in word1 word2 ... wordN
+do
+    do_something_with_var
+done
+</code></pre>
+<h3 id="meta-characters">Meta characters</h3>
+<p>Meta characters are used to execute several commands on a single line (depending on what it&rsquo;s needed). The most used meta characters to accomplish this are semi-colon <code>;</code>, double ampersand <code>&amp;&amp;</code> and double &ldquo;pipe&rdquo; <code>||</code>.</p>
+<ul>
+<li><code>;</code>: is used to finish one command (similar to some programming languages), after the command on the left of <code>;</code> is finished (whatever the exit code is), the command on the right will be executed.</li>
+<li><code>&amp;&amp;</code>: similar to <code>;</code>, but only if the command on the left exits with code <code>0</code> (success).</li>
+<li><code>||</code>: similar to <code>&amp;&amp;</code>, but for exit code <code>1</code>(error).</li>
+</ul>
+<h3 id="functions">Functions</h3>
+<p>Enable to break down the overall functionality of a script into smaller, logical subsections, which can then be called upon to perform their individual tasks when needed (like in any other programming language&hellip;). For more: <a href="https://www.tutorialspoint.com/unix/unix-shell-functions.htm">tutorialspoint: Unix / Linux - Shell Functions</a>. Basic syntax:</p>
+<pre><code class="language-sh">#!/bin/sh
+function_name () {
+    do_something
+}
+</code></pre>
+<p>Functions can also take arguments and can access their individual arguments (each function will have a different &ldquo;storage&rdquo; for their arguments). Functions can also be nested. Here <code>exit</code> will not only will finish the function code, but also the shell script that called it, instead use <code>return</code> plus an exit code to just exit the function.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Linux tutorial video notes</title>
+      <link>https://blog.luevano.xyz/a/linux_video_notes.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/linux_video_notes.html</guid>
+      <pubDate>Sun, 14 Mar 2021 05:57:23 GMT</pubDate>
+      <category>English</category>
+      <category>Notes</category>
+      <description>Notes of videos about basic Linux terms, usage and commands, as requested by a mentor of mine.</description>
+      <content:encoded><![CDATA[<p>I was requested to make a summary of a video about basic Linux stuff (like the <a href="https://blog.luevano.xyz/a/sql_video_notes">SQL tutorial video notes</a>); this time, I did most of the notes depending on the topic since I&rsquo;m familiar with most of the stuff presented in the video. The video in question is: <a href="https://www.youtube.com/watch?v=wBp0Rb-ZJak">The Complete Linux Course: Beginner to Power User!</a>. Also, some notes were taken from <a href="https://wiki.archlinux.org/">Arch Linux Wiki</a> since it&rsquo;s got pretty decent documentation, and, of course, general googling.</p>
+<h2 id="basic-commands">(Basic) commands</h2>
+<p>A list of basic commands and small explanation (note that options are started with either <code>-</code> or <code>--</code>, depending on the program, but most of the time <code>-</code> is used for letter options and <code>--</code> for word options, <code>-l</code> vs <code>--list</code> for example):</p>
+<ul>
+<li><code>pwd</code>: &ldquo;print working directory&rdquo;, full <strong>absolute</strong> path to the current directory.</li>
+<li><code>cd</code>: &ldquo;change directory&rdquo;, followed by the absolute or relative path of the directory to change to.<ul>
+<li>Absolute path is started with <code>/</code>, while a relative path is started with <code>./</code> or just the name of the folder.</li>
+<li>Use <code>..</code> (two dots) to go up one directory.</li>
+<li>An abbreviation of <code>/home/username</code> is <code>~</code> (tilde).</li>
+</ul>
+</li>
+<li><code>ls</code>: &ldquo;list&rdquo; files and directories in current directory, or specify a directory from which to show the list after typing <code>ls</code>. Has many options, the most common ones being:<ul>
+<li><code>l</code>: use long listing format.</li>
+<li><code>r</code> or <code>reverse</code>: reverse order while sorting.</li>
+<li><code>s</code>: sort by file size, largest first.</li>
+<li><code>a</code> or <code>all</code>: do not ignore entries starting with <code>.</code>.</li>
+</ul>
+</li>
+<li><code>mkdir</code>: &ldquo;make directory&rdquo;, create a new directory with specified name.</li>
+<li><code>touch</code>: create new (empty) files.</li>
+<li><code>cp</code>: &ldquo;copy&rdquo; files or directories (using option <code>r</code> for recursive). Requires file/directory to copy and destination, separated by space.</li>
+<li><code>mv</code>: &ldquo;move&rdquo; files or directories, also requires file/directory to copy and destination, separated by space. This is also used to <strong>rename</strong> files/directories.</li>
+<li><code>rm</code>: &ldquo;remove&rdquo;, followed by a file to remove it.</li>
+<li><code>rmdir</code>: &ldquo;remove empty directory&rdquo;, followed by a directory to remove it. If the directory is not empty, use <code>rm -r</code> on the directory (&ldquo;remove recursive&rdquo;).</li>
+<li><code>su</code>: &ldquo;switch user&rdquo;, by default to <strong>root</strong> user, but another one can be specified.</li>
+<li><code>sudo</code>: &ldquo;switch user, do&rdquo;, similar to <code>su</code>, but only to execute a command as <strong>root</strong> or the specified user.</li>
+<li><code>clear</code>: clear the terminal window, a (common) keyboard shortcut is <code>Ctrl + l</code>.</li>
+<li><code>find</code>: search for files/directories matching a pattern or all contents of a directory (using <code>.</code>).</li>
+<li><code>grep</code>: comes from the <code>ed</code> command &ldquo;g/re/p&rdquo;, for searching plain-text for lines that match a regular expression (regex).</li>
+<li><code>top</code>: a task manager program, shows currently running commands and gives important info such as PID (process ID), user who is running that command, command name, cpu and ram usage, etc.. Some useful commands to manage programs running are:<ul>
+<li><code>pgrep</code>: get the PID of a running process, or a list in chronological order.</li>
+<li><code>kill</code> or <code>pkill</code>: kill a running process either by PID or by name.</li>
+<li><code>killall</code>: similar to <code>pkill</code>.</li>
+</ul>
+</li>
+<li><code>ssh</code>: &ldquo;secure shell&rdquo; is a remote login client used to connect into a remote machine and executing commands remotely, basically taking control of the remote machine. Widely used when managing servers.</li>
+<li><code>ftp</code> or <code>sftp</code>: &ldquo;(secure) file transfer protocol&rdquo; used to transfer files from one machine to another one (usually a server). It&rsquo;s recommended to use <code>sftp</code> instead of <code>ftp</code> because anyone can look through the packages if it&rsquo;s not secured (encrypted).</li>
+</ul>
+<p>And in general, to see the options supported by almost any command, use <code>command -h</code> or <code>command --help</code>, for a quick explanation. <strong>IMPORTANT</strong>: Most programs have <strong>man (manual) pages</strong>; to access them do <code>man command</code>, this is a very powerful tool to use.</p>
+<p>Commands can be redirected to other commands (the output), which is powerful to create mini scripts or to achieve a goal in a single command. Most of the time the redirection can be done with the special characters <code>&gt;</code>, <code>&lt;</code> and most powerful, the <code>|</code> (pipe). Also, some commands accept an option to execute another command, but this depends on a command to command basis (<code>exec</code> option for <code>find</code>, for example).</p>
+<p><strong>Most terminal programs accept <code>Ctrl-c</code> or just <code>q</code> to exit the program.</strong></p>
+<h2 id="file-permissions-and-ownership">File permissions and ownership</h2>
+<p>When listing files with <code>ls -l</code>, an output with file attributes (permissions) and ownership is shown, such as <code>drwxr-xr-x 2 user group 4096 Jul 5 21:03 Desktop</code>, where the first part are the attributes, and <code>user</code> and <code>group</code> the ownership info (all other info is irrelevant for now).</p>
+<p>File attributes (<code>drwxr-xr-x</code> in the example above) are specified by 10 (sometimes 11) characters, and can be break into 4 parts (or 5):</p>
+<ul>
+<li>The first character is just the file type, typically <code>d</code> for directories or just <code>-</code> for files. There is <code>l</code> too, which is for <strong>symlinks</strong>.</li>
+<li>The next 3 characters represent the permissions that the <strong>owner</strong> has over the file.</li>
+<li>Next 3 the permissions that the <strong>group</strong> has over the file.</li>
+<li>Next 3 the permissions everyone else (<strong>others</strong>) have over the file.</li>
+<li>An optional <code>+</code> character that specifies whether an alternate access method applies to the file. When the character is a space, there is no alterante access method.</li>
+</ul>
+<p>Each of the three permission triads (<code>rwx</code>) can be:</p>
+<ul>
+<li><code>-</code> or <code>r</code>, for the first character, if the file can be <strong>read</strong> or directory&rsquo;s content can be shown.</li>
+<li><code>-</code> or <code>w</code>, for the second character, if the file can be <strong>modified</strong> or the directory&rsquo;s content can be modified (create new files or folders or rename existing files or folders).</li>
+<li><code>-</code> or <code>x</code>, for the third character, if the file can be <strong>executed</strong> or the directory can be <strong>accessed</strong> with <code>cd</code>. Other characters can be present, like <code>s</code>, <code>S</code>, <code>t</code> and <code>T</code> (for more: <a href="https://wiki.archlinux.org/index.php/File_permissions_and_attributes">Arch Linux Wiki: File permissions and attributes</a>).</li>
+</ul>
+<p>To change attributes or ownership use <code>chmod</code> and <code>chown</code>, respectively.</p>
+<h2 id="services">Services</h2>
+<p>Special type of linux process (think of a program or set of programs that run in the background waiting to be used, or doing essential tasks). There are many ways to manage (start, stop, restart, enable, disable, etc.) services, the most common way (if using <code>systemd</code>) is to just use <code>systemctl</code>. Basic usage of <code>systemctl</code> is <code>systemctl verb service</code>, where <code>verb</code> could be <code>start</code>, <code>enable</code>, <code>stop</code>, <code>disable</code>, <code>restart</code>, etc. Also, to get a general system status run <code>systemctl status</code> or just <code>systemctl</code> for a list of running <strong>units</strong> (a unit is an instance of a service, or a mount point or even a device or a socket). For more: <a href="https://wiki.archlinux.org/index.php/systemd">Arch Linux Wiki: systemd</a>.</p>
+<p><code>systemd</code> also provides a way to do tasks based on a <strong>timer</strong>, where you can schedule from the second to the year. One could also use <code>cron</code> (using <code>crontab</code> with option <code>e</code>) to do this. These timers provide support for calendar time events, monotonic time events, and can be run asynchronously.</p>
+<h2 id="user-and-group-management">User and group management</h2>
+<p>Most mainstream linux distributions come with a Graphic User Interface (GUI) to manage users and groups on the system. For a Command-Line Interface (CLI) just use <code>useradd</code> (with <code>passwd</code> to create a password for a given user) and <code>groupadd</code>. Also, other useful commands are <code>usermod</code>, <code>userdel</code>, <code>groups</code>, <code>gpasswd</code>, <code>groupdel</code> and more, each used for a basic management of users/groups like modification, deletion, listing (of all existing users/groups), etc.. For more: <a href="https://wiki.archlinux.org/index.php/users_and_groups">Arch Linux Wiki: Users and groups</a>.</p>
+<h2 id="networking">Networking</h2>
+<h3 id="hosts-file">Hosts file</h3>
+<p>Located at <code>/etc/hosts</code>, serves as a translator from <strong>hostname</strong> (web addresses or URLs) into IP addresses (think of DNS records), meaning that any URL can be overridden to make it point to whatever IP address it&rsquo;s specified (only locally on the machine affected). The syntax of the file is pretty simple: first column for IP, second for hostname (URL) and third+ for aliases.</p>
+<h3 id="some-commands">(Some) commands</h3>
+<p>These commands serve the sole purpose of showing information about the network and stuff related to it:</p>
+<ul>
+<li><code>ping</code>: gives information about latency to a given ip/domain.</li>
+<li><code>ifconfig</code>: gives similar information to <code>ipconfig</code> on windows, general info of physical network devices with their addresses and properties. An alternative could be <code>ip addr</code>, depending on the linux distribution being used and programs installed.</li>
+<li><code>tcpdump</code>: &ldquo;transmission control protocol dump&rdquo; gives information on all &ldquo;packets&rdquo; being sent and received through the network.</li>
+<li><code>netstat</code>: &ldquo;network statistics&rdquo; general statistics about network devices usage, display connections to the machine and more.</li>
+<li><code>traceroute</code>: shows the route that the packets go through (how the packets jump from one server to another one) when trying to access an IP (or, for example, a website).</li>
+<li><code>nmap</code>: &ldquo;network mapper&rdquo; explore network available hosts, opened ports, reverse DNS names, can guess the operating system of the device, it&rsquo;s type, MAC address and more.</li>
+</ul>]]></content:encoded>
+    </item>
+    <item>
+      <title>SQL tutorial video notes</title>
+      <link>https://blog.luevano.xyz/a/sql_video_notes.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/sql_video_notes.html</guid>
+      <pubDate>Tue, 02 Mar 2021 14:35:11 GMT</pubDate>
+      <category>English</category>
+      <category>Notes</category>
+      <description>Notes of videos about basic SQL syntax and usage, as requested by a mentor of mine.</description>
+      <content:encoded><![CDATA[<p>I was requested to make summaries of videos about SQL, these are the notes (mostly this is a transcription of what I found useful). The videos in question are: <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY">SQL Tutorial - Full Database Course for Beginners</a>, <a href="https://www.youtube.com/watch?v=7S_tz1z_5bA">MySQL Tutorial for Beginners [Full Course]</a> and <a href="https://www.youtube.com/watch?v=2Fn0WAyZV0E">Advanced SQL course | SQL tutorial advanced</a>. Also, some notes were taken from <a href="https://www.w3schools.com/sql/">w3schools.com&rsquo;s SQL Tutorial</a> and <a href="https://dev.mysql.com/doc/refman/8.0/en/">MySQL 8.0 Reference Manual</a>.</p>
+<h2 id="what-is-a-database-db">What is a database (DB)?</h2>
+<p>Any collection of related information, such as a phone book, a shopping list, Facebook&rsquo;s user base, etc.. It can be stored in different ways: on paper, on a computer, in your mind, etc..</p>
+<h3 id="database-management-systems-dbms">Database Management Systems (DBMS)</h3>
+<p>A special software program that helps users create and maintain a database that makes it easy to manage large amounts of information, handles security, backups and can connect to programming languages for automation.</p>
+<h3 id="crud">CRUD</h3>
+<p>The four main operations that a DBMS will do: create, read, update and delete.</p>
+<h3 id="two-types-of-databases">Two types of databases</h3>
+<ul>
+<li>Relational (SQL)<ul>
+<li>Organize data into one or more tables.</li>
+<li>Each table has columns and rows.</li>
+<li>A unique key identifies each row.</li>
+</ul>
+</li>
+<li>Non-relational (noSQL/not just SQL)<ul>
+<li>Key-value stores.</li>
+<li>Documents (JSON, XML, etc).</li>
+<li>Graphs.</li>
+<li>Flexible tables.</li>
+</ul>
+</li>
+</ul>
+<h4 id="relational-databases-rdb-sql">Relational databases (RDB) (SQL)</h4>
+<p>When we want to create a RDB we need a Relational Database Management System (RDBMS) that uses Structured Query Language (SQL) which is a standardized language for interacting with RDBMS and it&rsquo;s used to perform CRUD operations (and other administrative tasks).</p>
+<h4 id="non-relational-databases-nrdb-nosqlnot-just-sql">Non-relational databases (NRDB) (noSQL/not just SQL)</h4>
+<p>Anything that&rsquo;s not relational, stores data in anything but static tables. Could be a document (JSON, XML, etc.), graph (relational nodes), key-value hash (strings, json, etc.), etc.</p>
+<p>NRDB also require a Non-Relational Database Management System (NRDBMS) to maintain a database. But it doesn&rsquo;t have a standardized language for performing CRUD and administrative operations like how RDB have.</p>
+<h3 id="database-queries">Database queries</h3>
+<p>A DB query is a request that is made to the (R/NR)DBMS for a specific information. A google search is a query, for example.</p>
+<h2 id="tables-and-keys">Tables and keys</h2>
+<p>A table is composed of columns, rows and a primary key. The primary key is unique and identifies one specific row. Columns and rows are trivial, a column identifies a field and has a specific data type (name, email, birth) and a row identifies a table entry (person that contains a name, email and birth).</p>
+<p>Also, there are foreign keys, it&rsquo;s purpose is to relate to another database table; this foreign key is unique in it&rsquo;s own table, but can be repeated where you use it as a foreign key.</p>
+<p>It&rsquo;s possible to use the same table keys as foreign keys to make relations inside the same table.</p>
+<h2 id="sql-basics">SQL basics</h2>
+<p>It&rsquo;s actually a hybrid language, basically 4 types of languages in one:</p>
+<ul>
+<li>Data Query Language (DQL)<ul>
+<li>Used to query the database for information.</li>
+<li>Get information that is already stored there.</li>
+</ul>
+</li>
+<li>Data Definition Language (DDL)<ul>
+<li>Used for defining database schemas.</li>
+</ul>
+</li>
+<li>Data Control Language (DCL)<ul>
+<li>Used for controlling access to the data in the database.</li>
+<li>User and permissions management.</li>
+</ul>
+</li>
+<li>Data Manipulation Language (DML)<ul>
+<li>Used for inserting, updating and deleting data from a database.</li>
+</ul>
+</li>
+</ul>
+<h3 id="queries">Queries</h3>
+<p>A set of instructions given to the RDBMS (written in SQL) that tell the RDBMS what information you want it to retrieve. Instead of getting the whole database, retrieve only a bit of information that you need.</p>
+<p>Also, SQL keywords can be either lower or upper case, but it&rsquo;s <strong>convention to use upper case</strong>. And <strong>queries are ended by a semi-colon</strong>.</p>
+<h4 id="data-types">Data types</h4>
+<p>Just some SQL data types (for more: <a href="https://dev.mysql.com/doc/refman/8.0/en/data-types.html">MySQL 8.0 Reference Manual: Chapter 11 Data Types</a>, the notation is <code>DATATYPE(SIZE(,SIZE))</code>:</p>
+<ul>
+<li><code>INT</code>: integer numbers.</li>
+<li><code>DECIMAL(M,N)</code>: decimal numbers.</li>
+<li><code>VARCHAR(N)</code>: string of text of length N.</li>
+<li><code>BLOB</code>: Binary Large Object, stores large data.</li>
+<li><code>DATE</code>: YYYY-MM-DD.</li>
+<li><code>TIMESTAMP</code>: YYYY-MM-DD HH:MM:SS.</li>
+</ul>
+<h4 id="basic-management-of-tables">Basic management of tables</h4>
+<p>To <strong>create a table</strong>, the basic syntax is <code>CREATE TABLE tablename (column1 datatype constraint, column2 datatype constraint, ...)</code>, where a constraint could be (for more: <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">MySQL 8.0 Reference Manual: 13.1.20 CREATE TABLE Statement</a>):</p>
+<ul>
+<li><code>NOT NULL</code>: can&rsquo;t have a <code>NULL</code> value.</li>
+<li><code>UNIQUE</code>: all values are unique.</li>
+<li><code>PRIMARY KEY</code>: uniquely identifies each row.</li>
+<li><code>FOREIGN KEY</code>: uniquely identifies a row in another table.</li>
+<li><code>CHECK expresion</code>: satisfy a special condition (<code>expresion</code>).</li>
+<li><code>DEFAULT value</code>: if no value is specified use value <code>value</code>.</li>
+<li><code>INDEX</code>: to create and retrieve data from the database very quickly.</li>
+</ul>
+<p>Get the <strong>table structure</strong> with <code>DESCRIBE tablename</code> and delete it with <code>DROP TABLE tablename</code>. <strong>Add columns</strong> to the table with <code>ALTER TABLE tablename ADD column DATATYPE(N,M)</code>, similar syntax to <strong>delete a specific column</strong> <code>ALTER TABLE tablename DRORP COLUMN column</code>.</p>
+<p><strong>Add entries</strong> to the table with <code>INSERT INTO tablename VALUES(value1, value2, ...)</code> where all the fields must be specified, or <code>INSERT INTO tablename(column1, column2) VALUES(value1, value2)</code> to just add some fields to the new entry. While at it, (all) the table content can be fetched with <code>SELECT * FROM tablename</code>.</p>
+<p>Basic <strong>Updating of entries</strong> with <code>UPDATE tablename SET expression1 WHERE expression2</code>, where <code>expression1</code> could be <code>column = value2</code> and <code>expression2</code> could be <code>column = value1</code>, meaning that the value of <code>column</code> will be changed from <code>value1</code> to <code>value2</code>. Note that the expressions are not limited by <code>column = value</code>, and that the <code>column</code> has to be the same, it would be any expression. Also, this is really extensive as <code>SET</code> can set multiple variables and <code>WHERE</code> take more than one condition by chaining conditions with <code>AND</code>, <code>OR</code> and <code>NOT</code> keywords, for example.</p>
+<h5 id="on-delete-statement">ON DELETE statement</h5>
+<p>When an entry needs to be updated somehow based on a modification on a foreign key. If two tables are related to each other, if something is deleted on one end, update the other end in some way.</p>
+<p>For example on creation of a table, on the specification of a foreign key: <code>CREATE TABLE tablename (..., FOREIGN KEY(column) REFERENCES othertable(othertablecolumn) ON DELETE something)</code>. That something could be <code>SET NULL</code>, <code>CASCADE</code>, etc..</p>
+<h4 id="select-queries">SELECT queries</h4>
+<p>Instead of doing <code>SELECT * FROM tablename</code>, which gets all the data from a table, more complex <code>SELECT</code> queries can be implemented, such as <code>SELECT column FROM tablename</code> to only get all data from one column of the table. Append <code>LIMIT N</code> to limit the query to <code>N</code> entries. Append <code>WHERE condition</code> to meet a custom condition.</p>
+<p>Other statements that can be used in conjunction with <code>SELECT</code> are <code>ORDER BY column ASC|DESC</code>, <code>SELECT DISTINCT</code>, <code>MIN(column)</code>, <code>MAX(column)</code>, <code>COUNT(column)</code>, <code>AVG(column)</code>, <code>SUM(column)</code>, <code>LIKE</code> and more. For more, visit <a href="https://dev.mysql.com/doc/refman/8.0/en/select.html">MySQL 8.0 Reference Manual: 13.2.10 SELECT Statement</a>.</p>
+<p>MySQL uses regular expressions (regex) like pattern matching, some wildcards that can be used with the <code>LIKE</code> statement are:</p>
+<ul>
+<li><code>%</code>: zero or more characters.</li>
+<li><code>_</code>: a single character.</li>
+<li><code>[]</code>: any single character within the brackets.</li>
+<li><code>^</code>: any character not in the brackets.</li>
+<li><code>-</code>: a range of characters.</li>
+</ul>
+<p>An extended regex can be used with the statement <code>REGEX_LIKE(expression)</code>; <code>REGEXP</code> and <code>RLIKE</code> are synonyms for <code>REGEX_LIKE</code>. For more: <a href="https://dev.mysql.com/doc/refman/8.0/en/pattern-matching.html">MySQL 8.0 Reference Manual: 3.3.4.7 Pattern Matching</a>.</p>
+<h4 id="unions">Unions</h4>
+<p>A specialized SQL operator that is used to combine multiple <code>SELECT</code> statements into one. The basic syntax is <code>SELECT ... UNION SELECT ...</code>, where <code>...</code> is a whole <code>SELECT</code> statement; there can be any amount of unions. There are some rules that apply when doing unions, such as having the same amount of columns on both statements and being of the same data type.</p>
+<h4 id="joins">Joins</h4>
+<p>Used to combine rows from two or more tables based on a related column between them. Basic syntax is <code>SELECT table1.column1, ..., table2.column1, ... FROM table(1|2) JOIN table(1|2) ON table1.common_column = table2.common_column</code>, where the table specified in the <code>FROM</code> statement is called the &ldquo;left&rdquo; table, where the one in the <code>JOIN</code> statement is the &ldquo;right&rdquo; table. For more: <a href="https://dev.mysql.com/doc/refman/8.0/en/join.html">MySQL 8.0 Reference Manual: 13.2.10.2 JOIN Clause</a>.</p>
+<p>There are different types of SQL JOINs:</p>
+<ul>
+<li><code>(INNER) JOIN</code>: returns records that have matching values in both tables.</li>
+<li><code>LEFT (OUTER) JOIN</code>: returns all records from the left table, and the matched records from the right table.</li>
+<li><code>RIGHT (OUTER) JOIN</code>: returns all records from the right table, and the matched records from the left table.</li>
+<li><code>FULL (OUTER) JOIN</code>: returns all records when there is a match in either left or right table.</li>
+</ul>
+<p><img alt="INNER JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_innerjoin.gif">
+<img alt="LEFT JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_leftjoin.gif">
+<img alt="RIGHT JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_rightjoin.gif">
+<img alt="FULL OUTER JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_fulljoin.gif"></p>
+<h4 id="nested-queries">Nested queries</h4>
+<p>A query composed of multiple select statements to get a specific piece of information. This is self explanatory, you do a <code>SELECT</code> query somewhere inside another one, for example <code>SELECT ... IN (SELECT ...)</code>, where the nesting is occurring inside the parenthesis after the <code>IN</code> statement.</p>
+<p>A nesting isn&rsquo;t constrained to the <code>IN</code> statement, it can appear anywhere, for example in a <code>WHERE</code> statement: <code>SELECT ... WHERE something = (SELECT ...)</code>.</p>
+<h4 id="triggers">Triggers</h4>
+<p>A block of SQL code that will define a certain action that will happen when a specific operation is performed on the database. It is <strong>recommended to change the <code>DELIMITER</code> temporarily from semi-colon to something else</strong> (since we need to use semi-colon to end the trigger) while the trigger is created. The basic syntax is <code>CREATE TRIGGER trigername triggertime triggerevent ON tablename FOR EACH ROW triggerorder triggerbody</code>. For more: <a href="https://dev.mysql.com/doc/refman/8.0/en/create-trigger.html">MySQL 8.0 Reference Manual: 13.1.22 CREATE TRIGGER Statement</a> and <a href="https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html">MySQL 8.0 Reference Manual: 25.3.1 Trigger Syntax and Examples</a>.</p>
+<h4 id="entity-relationship-diagrams-erd">Entity Relationship Diagrams (ERD)</h4>
+<p>When designing a database it&rsquo;s important to define a <strong>database schema</strong> which is just a definition of all the different tables and their attributes that are going to live inside the database. So, basically, an ERD diagram is a diagram that consists of text, symbols and shapes that are combined to create a relationship model.</p>
+<p>The diagram consists of:</p>
+<ul>
+<li><strong>Entity</strong>: a square with the name of the entity inside it.</li>
+<li><strong>Attributes</strong>: ovals with the name of the attributes inside it; an attribute defines specific pieces of information about an entity (columns).</li>
+<li><strong>Primary key</strong>: same as with attributes but with name underlined; the primary key uniquely identifies the entity.</li>
+<li><strong>Composite attribute</strong>: an attribute that consists on one or more (sub-)attributes.</li>
+<li><strong>Multi-valued attribute</strong>: oval with another oval inside it and the name of the attribute.</li>
+<li><strong>Derived attribute</strong>: dotted oval; this attribute can be derived from other attributes from the entity.</li>
+<li><strong>Relationship</strong>: a diamond with the relationship name in it, for the connections a single line (partial participation) or a doubled line (total participation); it denotes how two or more attributes are related to each other; all members must participate in the relationship.</li>
+<li><strong>Relationship attribute</strong>: denoted like a normal attribute, but it&rsquo;s child of a relationship; it defines what attributes exists because of the relationship, it&rsquo;s not stored in any of the entities related, but on the relationship object itself.</li>
+<li><strong>Relationship cardinality</strong>: denoted with a number on the line connecting the relationship to the entity; detones the number of instances of an entity from a relation that can be associated with the relation.</li>
+<li><strong>Weak entity</strong>: rectangle inside a rectangle with its name inside; it cannot be uniquely identified by its attributes alone.</li>
+<li><strong>Weak entity&rsquo;s primary key</strong>: oval with its text underlined, but the line is dotted.</li>
+<li><strong>Identifying relationship</strong>: a diamond inside a diamond with its name inside; a relationship that serves to uniquely identify the weak entity.</li>
+</ul>
+<p><img alt="ERD example taken from wikipedia" src="https://static.luevano.xyz/images/b/notes/sql/erd_example.png"></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>This is the first blog post, just for testing purposes</title>
+      <link>https://blog.luevano.xyz/a/first_blog_post.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/first_blog_post.html</guid>
+      <pubDate>Sat, 27 Feb 2021 13:08:33 GMT</pubDate>
+      <category>English</category>
+      <category>Short</category>
+      <category>Tools</category>
+      <category>Update</category>
+      <description>Just my first blog post where I state what tools I'm using to build this blog.</description>
+      <content:encoded><![CDATA[<p>I&rsquo;m making this post just to figure out how <a href="https://www.romanzolotarev.com/ssg.html"><code>ssg5</code></a> and <a href="https://kristaps.bsd.lv/lowdown/"><code>lowdown</code></a> are supposed to work (and eventually also <a href="https://www.romanzolotarev.com/rssg.html"><code>rssg</code></a>).</p>
+<p>At the moment, I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> (and there&rsquo;s also the problem with the ordering of the entries&hellip;). And all of this just because I didn&rsquo;t want to use <a href="https://github.com/LukeSmithxyz/lb">Luke&rsquo;s</a> solution (don&rsquo;t really like that much how he handles the scripts&hellip; <em>but they just work</em>).</p>
+<p>Hopefully, for tomorrow all of this will be sorted out and I&rsquo;ll have a working blog system.</p>]]></content:encoded>
+    </item>
+
+  </channel>
+</rss>

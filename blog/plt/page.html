@@ -1,0 +1,22 @@
+{%extends "base.html"%}
+{%block content%}
+  <h1>{{page.title}}</h1>
+
+  {{page.content}}
+
+  <hr>
+  <div class="article-info">
+    <p>By {{page.author}}</p>
+    <p>Created: {{page.cdate}}</p>
+    {%if page.mdate is not none%}
+      <p>Modified: {{page.mdate}}</p>
+    {%endif%}
+    <div class="article-tags">
+      <p>Tags:
+      {%for t in page.tags%}
+        <a href="{{t[1]}}">{{t[0]}}</a>{{", " if not loop.last else ""}}
+      {%endfor%}
+      </p>
+    </div>
+  </div>
+{%endblock content%}

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <base href="https://static.luevano.xyz/">
+    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create a git server and setup cgit web app (on Nginx) -- Luévano's Blog</title>
+      <title>Create a git server and setup cgit web app (on Nginx) -- Luévano's Blog</title>
     <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
@@ -64,8 +64,9 @@
     </header>
 
     <main>
-<h1>Create a git server and setup cgit web app (on Nginx)</h1>
-<p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
+  <h1>Create a git server and setup cgit web app (on Nginx)</h1>
+
+  <p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
 <p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of SSH. Also, most if not all commands here are run as root.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>I might get tired of saying this (it&rsquo;s just copy paste, basically)&hellip; but similar as before (check my <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> and <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> entries):</p>
@@ -172,17 +173,21 @@ repo.desc=These are my personal dotfiles.
 </code></pre>
 <p>Otherwise you could let <code>cgit</code> to automatically detect your repositories (you have to be careful if you want to keep &ldquo;private&rdquo; repos) using the option <code>scan-path</code> and setup <code>.git/description</code> for each repository. I will add more to my actual configuration, but for now it is useful as it is. For more, you can check <a href="https://man.archlinux.org/man/cgitrc.5">cgitrc(5)</a>.</p>
 <p>Finally, if you want further support for highlighting, other compressed snapshots or support for markdown, checkout the optional dependencies for <code>cgit</code> and also the Arch Wiki goes in detail on how to setup highlighting with two different packages.</p>
-<hr>
-<div class="article-info">
-<p>By: David Luévano</p>
-<p>Created: Sun, Mar 21, 2021 @ 19:00 UTC</p>
-<p>Edited: Mon, May 17, 2021 @ 21:03 UTC</p>
-<div class="article-tags">
-  <p>Tags: 
-<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@git.html">git</a>, <a href="https://blog.luevano.xyz/tag/@nginx.html">nginx</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a></p>
-</div>
 
-</div>
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Sun, Mar 21, 2021 @ 19:00 UTC</p>
+      <p>Modified: Fri, Jun 04, 2021 @ 07:59 UTC</p>
+    <div class="article-tags">
+      <p>Tags:
+        <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, 
+        <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, 
+        <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, 
+        <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>
+      </p>
+    </div>
+  </div>
     </main>
 
     <footer>
