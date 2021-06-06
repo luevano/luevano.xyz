@@ -109,7 +109,7 @@ body {
 }
 
 main {
-  background: linear-gradient(var(--bg) 0.5em, 1em, var(--body-bg) 1.5em calc(100% - 1.5em), calc(100% - 1em), var(--bg) calc(100% - 0.5em));
+  background: var(--body-bg);
 }
 
 pre, code {
@@ -119,7 +119,7 @@ pre, code {
 
 /* nav bar */
 body > header {
-  background: linear-gradient(var(--body-bg) calc(100% - 1.5em), calc(100% - 1em), var(--bg) calc(100% - 0.5em));
+  background: var(--bg);
 }
 
 nav li {
@@ -142,7 +142,7 @@ nav li:hover > a {
 
 /* footer */
 body > footer {
-  background: linear-gradient(var(--bg) calc(100% - 1.5em), calc(100% - 1em), var(--body-bg) calc(100% - 0.5em));
+  background: var(--bg);
 }
 
 

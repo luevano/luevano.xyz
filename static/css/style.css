@@ -3,28 +3,19 @@
   font-size: larger;
 }
 
-h1 {
+* {
+  box-sizing: border-box;
+  transition: all 0.25s ease-in-out;
+}
+
+h1,
+h2 {
   text-align: center;
-}
-
-ul {
-  margin-left: 2em;
-  margin-right: 2em;
-}
-
-ul.page-list {
-  margin-left: 0;
-  margin-right: 0;
 }
 
 body, html {
   margin: 0;
   padding: 0;
-}
-
-* {
-  box-sizing: border-box;
-  transition: all 0.25s ease-in-out;
 }
 
 body {
@@ -49,6 +40,7 @@ body > footer {
 
 main {
   grid-area: main;
+  border-radius: 5px;
 }
 
 a{
@@ -91,7 +83,8 @@ nav ul {
 nav li {
   display: block;
   float: left;
-  min-width: 2em;
+  border-radius: 5px;
+  min-width: 1em;
   max-width: 10em;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
@@ -118,7 +111,14 @@ nav > ul > li > ul > li {
 }
 
 nav span {
-  padding-left: 0.4em;
+  display: none;
+}
+
+@media screen and (min-width: 600px) {
+  nav span {
+    display: inline;
+    padding-left: 0.4em;
+  }
 }
 
 
@@ -168,9 +168,35 @@ button.theme-switcher > .fa-moon {
 }
 
 /* code blocks */
+pre {
+  white-space: pre-wrap;
+}
+
+code {
+  overflow-wrap: anywhere;
+}
+
 code.crypto {
   font-size: smaller;
-  overflow-wrap: anywhere;
+}
+
+/* for hljs line numbers */
+.hljs-ln-numbers {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  text-align: right;
+  border-right: 1px solid #CCC;
+  vertical-align: top;
+  padding-right: 0.5em !important;
+}
+
+.hljs-ln-code {
+    padding-left: 0.5em !important;
 }
 
 
@@ -230,11 +256,11 @@ div.art-grid img {
   overflow: hidden;
 }
 
-@media screen and (min-width: 600px) {  
+@media screen and (min-width: 600px) {
   div.art-grid img.wide {
     grid-column: span 2 / auto;
   }
-  
+
   div.art-grid img.tall {
     grid-row: span 2 / auto;
   }
