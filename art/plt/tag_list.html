@@ -1,5 +1,5 @@
 {%macro print(tags)%}
-<div class="article-tags">
+<div class="art-tags">
   <p>Tags:
   {%for t in tags-%}
     <a href="{{t[1]}}">{{t[0]}}</a>{{", " if not loop.last else ""}}

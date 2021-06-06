@@ -7,9 +7,9 @@
     <title>{{config.title}}</title>
     <link>{{config.url}}</link>
     <atom:link href="{{config.url}}/rss.xml" rel="self" type="application/rss+xml"/>
-    <description>A personal weblog ranging from rants to how to's and other thoughts.</description>
+    <description>A personal collection of drawings, sketches and more art related stuff.</description>
     <language>en-us</language>
-    <category>Blog</category>
+    <category>Art</category>
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
@@ -19,7 +19,7 @@
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
     <image>
-      <url>{{config.static_url}}/images/blog.png</url>
+      <url>{{config.static_url}}/images/a/default.png</url>
       <title>{{config.title}}</title>
       <link>{{config.url}}</link>
     </image>

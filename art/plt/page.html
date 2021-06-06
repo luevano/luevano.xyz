@@ -14,15 +14,19 @@
 {%block content%}
   <h1>{{page.title}}</h1>
 
+  <a class="zoom-in" href="{{page.image_url}}" alt="See raw.">
+    <img src="{{page.image_url}}" alt="{{page.summary}}">
+  </a>
+
   {{page.content}}
 
+  {%import "art_nav.html" as art_nav%}
+  {{art_nav.print(page, config)}}
+
   <hr>
-  <div class="article-info">
-    <p>By {{page.author}}</p>
-    <p>Created: {{page.cdate}}</p>
-    {%if page.mdate is not none%}
-      <p>Modified: {{page.mdate}}</p>
-    {%endif%}
+  <div class="art-info">
+    <p>By: {{page.author}}</p>
+    <p>Posted: {{page.cdate}}</p>
     {%import "tag_list.html" as tag_list%}
     {{tag_list.print(page.tags)}}
   </div>

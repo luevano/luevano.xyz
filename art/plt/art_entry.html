@@ -1,0 +1,5 @@
+{%macro print(page, class='')%}
+<a class="zoom-in {{class}}" href="{{page.url}}" alt="{{page.title}}">
+  <img src="{{page.image_url}}" alt="{{page.title}}">
+</a>
+{%endmacro%}

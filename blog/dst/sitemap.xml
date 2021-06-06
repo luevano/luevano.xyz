@@ -39,24 +39,6 @@
       <priority>1.0</priority>
     </url>
     <url>
-      <loc>https://blog.luevano.xyz/a/shell_scripting_video_notes.html</loc>
-      <lastmod>2021-06-04</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>1.0</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/a/linux_video_notes.html</loc>
-      <lastmod>2021-06-04</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>1.0</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/a/sql_video_notes.html</loc>
-      <lastmod>2021-06-06</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>1.0</priority>
-    </url>
-    <url>
       <loc>https://blog.luevano.xyz/a/first_blog_post.html</loc>
       <lastmod>2021-05-17</lastmod>
       <changefreq>weekly</changefreq>
@@ -65,12 +47,6 @@
 
     <url>
       <loc>https://blog.luevano.xyz/tag/@english.html</loc>
-      <lastmod>2021-06-06</lastmod>
-      <changefreq>daily</changefreq>
-      <priority>0.5</priority>
-    </url>
-    <url>
-      <loc>https://blog.luevano.xyz/tag/@notes.html</loc>
       <lastmod>2021-06-06</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>

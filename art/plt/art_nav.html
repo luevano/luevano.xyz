@@ -1,0 +1,28 @@
+{%macro print(page, config)%}
+<div class="art-nav">
+  {%if page.next is not none%}
+    <span class="next">
+      <a href="{{page.next.url}}" alt="Next">
+        <i class="fas fa-arrow-left" alt="Arrow left"></i>
+        <span>Next</span>
+      </a>
+    </span>
+  {%endif%}
+
+    <span class="index">
+      <a href="{{config.url}}" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+  {%if page.previous is not none%}
+    <span class="previous">
+      <a href="{{page.previous.url}}" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+  {%endif%}
+</div>
+{%endmacro%}

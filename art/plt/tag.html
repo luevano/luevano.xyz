@@ -1,18 +1,18 @@
 {%extends "base.html"%}
 {%block html_lang%}en{%endblock html_lang%}
-{%block head_title%}Posts filtered by {{tag[0]}}{%endblock head_title%}
-{%block head_description%}Posts filtered by {{tag[0]}}{%endblock head_description%}
+{%block head_title%}Art filtered by {{tag[0]}}{%endblock head_title%}
+{%block head_description%}Art filtered by {{tag[0]}}{%endblock head_description%}
 {%block head_og%}
-  <meta property="og:title" content="Posts filtered by {{tag[0]}} -- {{config.title}}"/>
+  <meta property="og:title" content="Art filtered by {{tag[0]}} -- {{config.title}}"/>
   <meta property="og:type" content="article"/>
   <meta property="og:url" content="{{tag[1]}}"/>
   <meta property="og:image" content="{{config.static_url}}{{config.default_image_url}}"/>
-  <meta property="og:description" content="Posts filtered by {{tag[0]}}."/>
+  <meta property="og:description" content="Art filtered by {{tag[0]}}."/>
   <meta property="og:locale" content="en"/>
   <meta property="og:site_name" content="{{config.title}}"/>
 {%endblock head_og%}
 {%block content%}
-  <h1>Posts filtered by {{tag[0]}}</h1>
+  <h1>Art filtered by {{tag[0]}}</h1>
 
   {%import "page_list.html" as page_list%}
   {{page_list.print(tag_pages)}}

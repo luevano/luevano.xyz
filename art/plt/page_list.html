@@ -1,15 +1,22 @@
 {%macro print(pages)%}
-  <h2>Articles</h2>
-  <ul class="page-list">
-    {%for p in pages%}
-      {%if loop.previtem%}
-        {%if loop.previtem.cdate_list_sep !=p.cdate_list_sep%}
-          <h3>{{p.cdate_list_sep}}</h3>
-        {%endif%}
+{%import "art_entry.html" as art_entry%}
+<div class="art-grid">
+  {%for p in pages%}
+    {%if p.meta['tall'] is defined%}
+      {%if p.meta['wide'] is defined%}
+        {{art_entry.print(p, 'tall wide')}}
       {%else%}
-        <h3>{{p.cdate_list_sep}}</h3>
+        {{art_entry.print(p, 'tall')}}
       {%endif%}
-      <li>{{p.cdate_list}} - <a href="{{p.url}}">{{p.title}}</a></li>
-    {%endfor%}
-  </ul>
+    {%elif p.meta['wide'] is defined%}
+      {%if p.meta['tall'] is defined%}
+        {{art_entry.print(p, 'tall wide')}}
+      {%else%}
+        {{art_entry.print(p, 'tall')}}
+      {%endif%}
+    {%else%}
+      {{art_entry.print(p)}}
+    {%endif%}
+  {%endfor%}
+</div>
 {%endmacro%}

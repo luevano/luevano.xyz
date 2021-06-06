@@ -1,0 +1,10 @@
+SRC=src
+DST=dst
+PLT=plt
+URL=https://art.luevano.xyz
+STATIC_URL=https://static.luevano.xyz
+DEFAULT_IMAGE_URL=/images/a/default.png
+TITLE=Luévano's Art
+DATE_FORMAT=%a, %b %d, %Y @ %H:%M %Z
+LIST_DATE_FORMAT=%b %d
+LIST_SEP_DATE_FORMAT=%B %Y

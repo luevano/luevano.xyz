@@ -21,16 +21,16 @@
 .theme-light {
   --bg: var(--color5);
   --body-bg: var(--color4);
-  --navitem-bg: var(--color9);
-  --navitem-bg-hl: var(--color10);
+  --navitem-bg: var(--color10);
+  --navitem-bg-hl: var(--color9);
 
-  --fg: var(--color3);
-  --fg-hl: var(--color0);
+  --fg: var(--color0);
+  --fg-hl: var(--color3);
 
   --link: var(--color15);
   --link-hl: var(--color7);
-  --navitem-link: var(--color8);
-  --navitem-link-hl: var(--color7);
+  --navitem-link: var(--color7);
+  --navitem-link-hl: var(--color6);
 
   --fg-acc1: var(--color11);
   --fg-acc2: var(--color12);
@@ -44,6 +44,11 @@
   --switch-sun: var(--color13);
 
   --code-border: var(--color3);
+
+  --pagenav-bg: var(--color1);
+  --pagenav-bg-hl: var(--color2);
+  --pagenav-link: var(--color8);
+  --pagenav-link-hl: var(--color7);
 }
 
 .theme-dark {
@@ -72,6 +77,11 @@
   --switch-sun: var(--color13);
 
   --code-border: var(--color4);
+
+  --pagenav-bg: var(--color10);
+  --pagenav-bg-hl: var(--color9);
+  --pagenav-link: var(--color7);
+  --pagenav-link-hl: var(--color6);
 }
 
 /* general */
@@ -176,4 +186,21 @@ button.theme-switcher > .fa-sun {
 
 .theme-light button.theme-switcher > .fa-sun {
   color: var(--switch-sun);
+}
+
+/* art nav */
+div.art-nav > span {
+  background: var(--pagenav-bg);
+}
+
+div.art-nav > span > a {
+  color: var(--pagenav-link);
+}
+
+div.art-nav > span:hover {
+  background: var(--pagenav-bg-hl);
+}
+
+div.art-nav > span:hover > a {
+  color: var(--pagenav-link-hl);
 }

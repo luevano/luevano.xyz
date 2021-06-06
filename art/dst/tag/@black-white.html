@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html class="theme-dark" lang="{%block html_lang%}{%endblock html_lang%}"
+<html class="theme-dark" lang="en"
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="{{config.static_url}}">
+    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{%block head_title%}{%endblock head_title%} -- {{config.title}}</title>
-    <meta name="description" content"{%block head_description%}{%endblock head_description%}"/>
-    <link rel="alternate" type="application/rss+xml" href="{{config.url}}/rss.xml" title="{{config.title}} RSS">
+    <title>Art filtered by black-white -- Luévano's Art</title>
+    <meta name="description" content"Art filtered by black-white"/>
+    <link rel="alternate" type="application/rss+xml" href="https://art.luevano.xyz/rss.xml" title="Luévano's Art RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
     <!-- general style -->
@@ -20,7 +20,13 @@
     <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
 
     <!-- og meta -->
-    {%block head_og%}{%endblock head_og%}
+  <meta property="og:title" content="Art filtered by black-white -- Luévano's Art"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://art.luevano.xyz/tag/@black-white.html"/>
+  <meta property="og:image" content="https://static.luevano.xyz/images/a/default.png"/>
+  <meta property="og:description" content="Art filtered by black-white."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Art"/>
   </head>
 
   <body>
@@ -61,7 +67,16 @@
     </header>
 
     <main class="art">
-      {%block content%}{%endblock content%}
+  <h1>Art filtered by black-white</h1>
+
+  <div class="art-grid">
+      <a class="zoom-in " href="https://art.luevano.xyz/a/elephant_octopus.html" alt="Elephant octopus">
+  <img src="https://static.luevano.xyz/images/a/elephant_octopus.png" alt="Elephant octopus">
+</a>
+
+</div>
+
+
     </main>
 
     <footer>
