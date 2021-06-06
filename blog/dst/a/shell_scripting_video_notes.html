@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
+<html class="theme-dark" lang="en"
   prefix="og: https://ogp.me/ns#">
   <head>
     <base href="https://static.luevano.xyz">
@@ -21,7 +21,7 @@
 
     <!-- theme related -->
     <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
     <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
 
     <!-- og meta -->
@@ -68,14 +68,7 @@
         </ul>
       </nav>
 
-      <div class="theme-switch-container">
-        <i class="fas fa-sun"></i>
-        <label class="switch theme">
-          <input id="theme-switch" type="checkbox" onclick="toggleTheme()">
-          <span class="slider round"></span>
-        </label>
-        <i class="fas fa-moon"></i>
-      </div>
+      <button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
     </header>
 
     <main>
@@ -309,7 +302,7 @@ function_name () {
 
       <span>
         <i class="fas fa-rss" alt="RSS"></i>
-        <a href="https://blog.luevano.xyz/rss.xml">RSS</a>
+        <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
       </span>
 
       <br>

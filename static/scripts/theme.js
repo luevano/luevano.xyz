@@ -1,90 +1,32 @@
+// refactored code for a better solution found in https://medium.com/@haxzie/dark-and-light-theme-switcher-using-css-variables-and-pure-javascript-zocada-dd0059d72fa2
 var local_storage = window.localStorage;
 
 window.onload = () => {
   let theme = local_storage.getItem('theme');
-  let switch_theme = document.getElementById('theme-switch');
 
   if(theme == null){
-    local_storage.setItem('theme', 'dark');
-    switch_theme.checked = true;
+    local_storage.setItem('theme', 'theme-dark');
   }
   else{
-    if(theme == 'dark'){
-      switch_theme.checked = true;
+    if(theme == 'theme-dark'){
+      setTheme('theme-dark');
     }
     else{
-      switch_theme.checked = false;
-
-      let theme = document.getElementById('theme-css');
-
-      let href = theme.getAttribute('href');
-      href = href.replace('dark.css', 'light.css');
-      theme.setAttribute('href', href);
-
-      /*
-      let code_theme = document.getElementById('code-theme-css');
-
-      let code_href;
-      if (code_theme !== null){
-        code_href = code_theme.getAttribute('href');
-        code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
-        code_theme.setAttribute('href', code_href);
-      }
-      */
+      setTheme('theme-light');
     }
   }
-
 }
 
-function setTheme(){
-  let switch_theme = document.getElementById('theme-switch');
-
-  if(switch_theme.checked == true){
-    local_storage.setItem('theme', 'dark');
-  }
-  else{
-    local_storage.setItem('theme', 'light');
-  }
+function setTheme(themeName){
+  local_storage.setItem('theme', themeName)
+  document.documentElement.className = themeName;
 }
 
-// toggles between both themes, and then calls set theme to actually set it persistently.
 function toggleTheme(){
-  let theme = document.getElementById('theme-css');
-  let href = theme.getAttribute('href');
-
-  /*
-  let code_theme = document.getElementById('code-theme-css');
-  let code_href;
-  if (code_theme !== null){
-    code_href = code_theme.getAttribute('href');
-  }
-  */
-
-  if(href.endsWith('dark.css')){
-    href = href.replace('dark.css', 'light.css');
-    /*
-    if (code_theme !== null){
-      code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
-    }
-    */
-  }
-  else if (href.endsWith('light.css')){
-    href = href.replace('light.css', 'dark.css');
-    /*
-    if (code_theme !== null){
-      code_href = code_href.replace('solarized-light.min.css', 'solarized-dark.min.css');
-    }
-    */
+  if (local_storage.getItem('theme') == 'theme-dark') {
+    setTheme('theme-light');
   }
   else{
-    console.log('Wrong replacement.');
+    setTheme('theme-dark');
   }
-
-  theme.setAttribute('href', href);
-  /*
-  if (code_theme !== null){
-    code_theme.setAttribute('href', code_href);
-  }
-  */
-  setTheme();
 }

@@ -1,6 +1,6 @@
 {%macro print(pages)%}
   <h2>Articles</h2>
-  <ul>
+  <ul class="page-list">
     {%for p in pages%}
       {%if loop.previtem%}
         {%if loop.previtem.cdate_list_sep !=p.cdate_list_sep%}

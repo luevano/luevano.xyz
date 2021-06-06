@@ -24,6 +24,7 @@ body, html {
 
 * {
   box-sizing: border-box;
+  transition: all 0.25s ease-in-out;
 }
 
 body {
@@ -134,56 +135,37 @@ body > footer > span {
 
 
 /* theme swticher */
-.switch {
-  position: relative;
-  top: 0.2em;
-  display: inline-block;
-  width: 2em;
-  height: 1em;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.switch input:checked + .slider:before {
-  -webkit-transform: translateX(0.9em);
-  -ms-transform: translateX(0.9em);
-  transform: translateX(0.9em);
-}
-
-.slider {
-  position: absolute;
+button.theme-switcher {
+  border: none;
+  font: inherit;
   cursor: pointer;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  position: relative;
+  border-radius: 5px;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
 
-.slider:before {
-  position:absolute;
-  content: "";
-  height: 0.8em;
-  width: 0.8em;
-  left: 0.1em;
-  bottom: 0.1em;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+button.theme-switcher > .fa-sun {
+  transform: translate(-0.5em, -1em);
 }
 
-.slider.round {
-  border-radius: 1em;
+.theme-light button.theme-switcher > .fa-sun {
+  transform: translateX(-0.5em);
+  transition: all 0.25s ease-in-out;
 }
 
-.slider.round:before {
-  border-radius: 1em;
+button.theme-switcher > .fa-moon {
+  transform: translate(0.5em, -1em);
 }
 
+.theme-dark button.theme-switcher > .fa-moon {
+  transform: translateX(0.5em);
+  transition: all 0.25s ease-in-out;
+}
 
 /* code blocks */
 code.crypto {
