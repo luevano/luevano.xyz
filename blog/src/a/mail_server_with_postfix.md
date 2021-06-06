@@ -316,7 +316,7 @@ systemctl start dovecot.service
 systemctl enable dovecot.service
 ```
 
-# OpenDKIM
+## OpenDKIM
 
 [OpenDKIM](https://wiki.archlinux.org/index.php/OpenDKIM) is needed so services like G\*\*gle (we don't mention that name here \[\[\[this is a meme\]\]\]) don't throw the mail to the trash. DKIM stands for "DomainKeys Identified Mail".
 
@@ -518,7 +518,7 @@ Next, to actually login into a mail app/program/whateveryouwanttocallit, you wil
 
 All that's left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to [DKIM Test](https://www.appmaildev.com/en/dkim) and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:
 
-![DKIM Test successful](https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png)
+![DKIM Test successful](images/b/notes/mail/dkim_test_successful.png)
 
 (Yes, I blurred a lot in the picture just to be sure, either way what's important is the list on the bottom part of the image)
 

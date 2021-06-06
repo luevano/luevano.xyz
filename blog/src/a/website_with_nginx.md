@@ -34,7 +34,7 @@ systemctl start nginx.service
 
 And that's it, at this point you can already look at the default initial page of nginx if you enter the ip of your server in a web browser. You should see something like this:
 
-![Nginx welcome page](https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png)
+![Nginx welcome page](images/b/notes/nginx/nginx_welcome_page.png)
 
 As stated in the welcome page, configuration is needed, head to the directory of nginx:
 
@@ -117,7 +117,7 @@ systemctl restart nginx
 
 If everything goes correctly, you can now go to your website by typing "domain.name" on a web browser. But you will see a "404 Not Found" page like the following (maybe with different nginx version):
 
-![Nginx 404 page](https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png)
+![Nginx 404 page](images/b/notes/nginx/nginx_404_page.png)
 
 That's no problem, because it means that the web server it's actually working. Just add an `index.html` file with something simple to see it in action. If you keep seeing the 404 page make sure your `root` line is correct and that the directory/index file exists.
 

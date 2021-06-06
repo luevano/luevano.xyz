@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      prefix="og: https://ogp.me/ns#">
+  prefix="og: https://ogp.me/ns#">
   <head>
     <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
@@ -44,6 +44,10 @@
 
           <li>
             <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li>
+            <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
           </li>
 
           <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
@@ -100,7 +104,7 @@ systemctl enable nginx.service
 systemctl start nginx.service
 </code></pre>
 <p>And that&rsquo;s it, at this point you can already look at the default initial page of nginx if you enter the ip of your server in a web browser. You should see something like this:</p>
-<p><img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png"></p>
+<p><img alt="Nginx welcome page" src="images/b/notes/nginx/nginx_welcome_page.png"></p>
 <p>As stated in the welcome page, configuration is needed, head to the directory of nginx:</p>
 <pre><code class="language-sh">cd /etc/nginx
 </code></pre>
@@ -163,7 +167,7 @@ cd sites-available
 systemctl restart nginx
 </code></pre>
 <p>If everything goes correctly, you can now go to your website by typing &ldquo;domain.name&rdquo; on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different nginx version):</p>
-<p><img alt="Nginx 404 page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png"></p>
+<p><img alt="Nginx 404 page" src="images/b/notes/nginx/nginx_404_page.png"></p>
 <p>That&rsquo;s no problem, because it means that the web server it&rsquo;s actually working. Just add an <code>index.html</code> file with something simple to see it in action. If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>
 <p>I like to remove the <code>.html</code> and trailing <code>/</code> on the URLs of my website, for that you need to add the following <code>rewrite</code> lines and modify the <code>try_files</code> line (for more: <a href="https://www.seancdavis.com/blog/remove-html-extension-and-trailing-slash-in-nginx-config/">Sean C. Davis: Remove HTML Extension And Trailing Slash In Nginx Config</a>):</p>
 <pre><code class="language-nginx">server {
@@ -194,7 +198,7 @@ systemctl restart nginx
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Fri, Mar 19, 2021 @ 02:58 UTC</p>
-      <p>Modified: Fri, Jun 04, 2021 @ 08:00 UTC</p>
+      <p>Modified: Sun, Jun 06, 2021 @ 00:23 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

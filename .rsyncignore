@@ -8,4 +8,5 @@ LICENSE
 # Rsync specific
 .rsyncignore
 blog/
+art/
 gendata/

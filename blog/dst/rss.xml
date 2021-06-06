@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0"
+  xml:base="https://static.luevano.xyz"
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
@@ -12,8 +13,8 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Sat, 05 Jun 2021 09:41:27 GMT</pubDate>
-    <lastBuildDate>Sat, 05 Jun 2021 09:41:27 GMT</lastBuildDate>
+    <pubDate>Sun, 06 Jun 2021 00:30:52 GMT</pubDate>
+    <lastBuildDate>Sun, 06 Jun 2021 00:30:52 GMT</lastBuildDate>
     <generator>pyssg v0.5.5</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
@@ -404,7 +405,7 @@ account required pam_unix.so
 <pre><code class="language-sh">systemctl start dovecot.service
 systemctl enable dovecot.service
 </code></pre>
-<h1 id="opendkim">OpenDKIM</h1>
+<h2 id="opendkim">OpenDKIM</h2>
 <p><a href="https://wiki.archlinux.org/index.php/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
 <p>Install the <code>opendkim</code> package:</p>
 <pre><code class="language-sh">pacman -S opendkim
@@ -541,7 +542,7 @@ systemctl enable spamassassin.service
 <li>Password: your <code>user</code> password (as in the password you use to login to the server with that user)</li>
 </ul>
 <p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
-<p><img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png"></p>
+<p><img alt="DKIM Test successful" src="images/b/notes/mail/dkim_test_successful.png"></p>
 <p>(Yes, I blurred a lot in the picture just to be sure, either way what&rsquo;s important is the list on the bottom part of the image)</p>
 <p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you have my info down below.</p>]]></content:encoded>
     </item>
@@ -578,7 +579,7 @@ systemctl enable nginx.service
 systemctl start nginx.service
 </code></pre>
 <p>And that&rsquo;s it, at this point you can already look at the default initial page of nginx if you enter the ip of your server in a web browser. You should see something like this:</p>
-<p><img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png"></p>
+<p><img alt="Nginx welcome page" src="images/b/notes/nginx/nginx_welcome_page.png"></p>
 <p>As stated in the welcome page, configuration is needed, head to the directory of nginx:</p>
 <pre><code class="language-sh">cd /etc/nginx
 </code></pre>
@@ -641,7 +642,7 @@ cd sites-available
 systemctl restart nginx
 </code></pre>
 <p>If everything goes correctly, you can now go to your website by typing &ldquo;domain.name&rdquo; on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different nginx version):</p>
-<p><img alt="Nginx 404 page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png"></p>
+<p><img alt="Nginx 404 page" src="images/b/notes/nginx/nginx_404_page.png"></p>
 <p>That&rsquo;s no problem, because it means that the web server it&rsquo;s actually working. Just add an <code>index.html</code> file with something simple to see it in action. If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>
 <p>I like to remove the <code>.html</code> and trailing <code>/</code> on the URLs of my website, for that you need to add the following <code>rewrite</code> lines and modify the <code>try_files</code> line (for more: <a href="https://www.seancdavis.com/blog/remove-html-extension-and-trailing-slash-in-nginx-config/">Sean C. Davis: Remove HTML Extension And Trailing Slash In Nginx Config</a>):</p>
 <pre><code class="language-nginx">server {
@@ -1095,10 +1096,10 @@ function_name () {
 <li><code>RIGHT (OUTER) JOIN</code>: returns all records from the right table, and the matched records from the left table.</li>
 <li><code>FULL (OUTER) JOIN</code>: returns all records when there is a match in either left or right table.</li>
 </ul>
-<p><img alt="INNER JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_innerjoin.gif">
-<img alt="LEFT JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_leftjoin.gif">
-<img alt="RIGHT JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_rightjoin.gif">
-<img alt="FULL OUTER JOIN" src="https://static.luevano.xyz/images/b/notes/sql/img_fulljoin.gif"></p>
+<p><img alt="INNER JOIN" src="images/b/notes/sql/img_innerjoin.gif">
+<img alt="LEFT JOIN" src="images/b/notes/sql/img_leftjoin.gif">
+<img alt="RIGHT JOIN" src="images/b/notes/sql/img_rightjoin.gif">
+<img alt="FULL OUTER JOIN" src="images/b/notes/sql/img_fulljoin.gif"></p>
 <h4 id="nested-queries">Nested queries</h4>
 <p>A query composed of multiple select statements to get a specific piece of information. This is self explanatory, you do a <code>SELECT</code> query somewhere inside another one, for example <code>SELECT ... IN (SELECT ...)</code>, where the nesting is occurring inside the parenthesis after the <code>IN</code> statement.</p>
 <p>A nesting isn&rsquo;t constrained to the <code>IN</code> statement, it can appear anywhere, for example in a <code>WHERE</code> statement: <code>SELECT ... WHERE something = (SELECT ...)</code>.</p>
@@ -1121,7 +1122,7 @@ function_name () {
 <li><strong>Weak entity&rsquo;s primary key</strong>: oval with its text underlined, but the line is dotted.</li>
 <li><strong>Identifying relationship</strong>: a diamond inside a diamond with its name inside; a relationship that serves to uniquely identify the weak entity.</li>
 </ul>
-<p><img alt="ERD example taken from wikipedia" src="https://static.luevano.xyz/images/b/notes/sql/erd_example.png"></p>]]></content:encoded>
+<p><img alt="ERD example taken from wikipedia" src="images/b/notes/sql/erd_example.png"></p>]]></content:encoded>
     </item>
     <item>
       <title>This is the first blog post, just for testing purposes</title>

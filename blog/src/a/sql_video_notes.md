@@ -140,10 +140,10 @@ There are different types of SQL JOINs:
 * `RIGHT (OUTER) JOIN`: returns all records from the right table, and the matched records from the left table.
 * `FULL (OUTER) JOIN`: returns all records when there is a match in either left or right table.
 
-![INNER JOIN](https://static.luevano.xyz/images/b/notes/sql/img_innerjoin.gif)
-![LEFT JOIN](https://static.luevano.xyz/images/b/notes/sql/img_leftjoin.gif)
-![RIGHT JOIN](https://static.luevano.xyz/images/b/notes/sql/img_rightjoin.gif)
-![FULL OUTER JOIN](https://static.luevano.xyz/images/b/notes/sql/img_fulljoin.gif)
+![INNER JOIN](images/b/notes/sql/img_innerjoin.gif)
+![LEFT JOIN](images/b/notes/sql/img_leftjoin.gif)
+![RIGHT JOIN](images/b/notes/sql/img_rightjoin.gif)
+![FULL OUTER JOIN](images/b/notes/sql/img_fulljoin.gif)
 
 #### Nested queries
 
@@ -174,4 +174,4 @@ The diagram consists of:
 * **Weak entity's primary key**: oval with its text underlined, but the line is dotted.
 * **Identifying relationship**: a diamond inside a diamond with its name inside; a relationship that serves to uniquely identify the weak entity.
 
-![ERD example taken from wikipedia](https://static.luevano.xyz/images/b/notes/sql/erd_example.png)
+![ERD example taken from wikipedia](images/b/notes/sql/erd_example.png)

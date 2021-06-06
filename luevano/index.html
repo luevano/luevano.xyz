@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+  prefix="og: https://ogp.me/ns#">
   <head>
     <base href="https://static.luevano.xyz/">
     <meta charset="utf-8">
-    <title>Luévano's Site</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Luévano's Site</title>
+    <meta name="description" content="My personal website where I host my blog, art gallery and more."/>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="alternate" type="application/rss+xml" href="https://art.luevano.xyz/rss.xml" title="Luévano's Art RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
     <!-- general style -->
@@ -15,6 +19,15 @@
     <!-- theme related -->
     <script type="text/javascript" src="scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
+
+    <!-- og meta -->
+    <meta property="og:title" content="Luévano's Site"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://luevano.xyz/index.html"/>
+    <meta property="og:image" content="images/default.png"/>
+    <meta property="og:description" content="My personal website where I host my blog, art gallery and more."/>
+    <meta property="og:locale" content="en"/>
+    <meta property="og:site_name" content="Luévano's Site"/>
   </head>
 
   <body>
@@ -27,6 +40,10 @@
 
           <li>
             <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li>
+            <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
           </li>
 
           <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
@@ -59,26 +76,41 @@
 
     <main>
       <h1>
-        Welcome!
+        Luévano's Site
       </h1>
+
+      <h2>
+        Welcome!
+      </h2>
 
       <p>
       My name is David Luévano and this is my little piece of internet. I'm into alot of stuff, but mostly technology, drawing sometimes and... of course, gaming.
       </p>
 
       <p>
-      I plan on using this space for a lot of stuff, but for now I'm mostly focused in having a working <a href="https://blog.luevano.xyz/">blog</a> (and actually using it). Later I'd love to have a space to place my drawings or whatever art related I make, and maybe a gallery if I feel like posting pictures in general.
+      I have some sites setup here, such as a working <a href="https://blog.luevano.xyz/">blog</a> where I post about whatever, an <a href="https://art.luevano.xyz/">art</a> gallery, and other stuff (check the nav bar).
       </p>
 
       <p>
-      But for now, this place is under construction, as you may notice from some links being broken and inconsistencies across pages.<br/>
-
-      <img src="images/gifs/under_construction_1.gif" alt="Under construction">
+      Also, yes, yes it is supposed to look like this. This isn't supposed to be a bloated <em>mOdErN</em> website; I use plain HTML and CSS and sometimes a bit of JS (meaning that I use no <em>rEaCt</em> nor <em>bOoTsTrAp</em>).
       </p>
 
-      <p>
-      Btw, here's my blog's RSS feed: <a target="_blank" href="https://blog.luevano.xyz/rss.xml">https://blog.luevano.xyz/rss.xml</a>
-      </p>
+      <h2>
+        <i class="fas fa-rss" alt="RSS"></i> RSS feeds
+      </h2>
+
+      <p>Get updates about me or what I'm doing via RSS feeds. If you don't know what an RSS feed is: <a href="https://www.rssboard.org/rss-specification">RSS 2.0 Specification</a>, or <em>just google it</em>.</p>
+
+      <ul>
+        <li>
+          <i class="fas fa-book-open" alt="Blog"></i> Blog: <a target="_blank" href="https://blog.luevano.xyz/rss.xml">https://blog.luevano.xyz/rss.xml</a>
+        </li>
+
+        <li>
+          <i class="fas fa-paint-brush" alt="Art"></i> Art: <a target="_blank" href="https://art.luevano.xyz/rss.xml">https://art.luevano.xyz/rss.xml</a>
+        </li>
+      </ul>
+
     </main>
 
     <footer>
