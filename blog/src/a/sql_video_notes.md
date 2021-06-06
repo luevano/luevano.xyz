@@ -140,10 +140,12 @@ There are different types of SQL JOINs:
 * `RIGHT (OUTER) JOIN`: returns all records from the right table, and the matched records from the left table.
 * `FULL (OUTER) JOIN`: returns all records when there is a match in either left or right table.
 
+<div class="img-grid" markdown="1">
 ![INNER JOIN](images/b/notes/sql/img_innerjoin.gif)
 ![LEFT JOIN](images/b/notes/sql/img_leftjoin.gif)
 ![RIGHT JOIN](images/b/notes/sql/img_rightjoin.gif)
 ![FULL OUTER JOIN](images/b/notes/sql/img_fulljoin.gif)
+</div>
 
 #### Nested queries
 

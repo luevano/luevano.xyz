@@ -22,7 +22,7 @@
     <!-- theme related -->
     <script type="text/javascript" src="scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="css/dark.css">
-    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/solarized-dark.min.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="SQL tutorial video notes -- Luévano's Blog"/>
@@ -190,10 +190,12 @@
 <li><code>RIGHT (OUTER) JOIN</code>: returns all records from the right table, and the matched records from the left table.</li>
 <li><code>FULL (OUTER) JOIN</code>: returns all records when there is a match in either left or right table.</li>
 </ul>
+<div class="img-grid">
 <p><img alt="INNER JOIN" src="images/b/notes/sql/img_innerjoin.gif">
 <img alt="LEFT JOIN" src="images/b/notes/sql/img_leftjoin.gif">
 <img alt="RIGHT JOIN" src="images/b/notes/sql/img_rightjoin.gif">
 <img alt="FULL OUTER JOIN" src="images/b/notes/sql/img_fulljoin.gif"></p>
+</div>
 <h4 id="nested-queries">Nested queries</h4>
 <p>A query composed of multiple select statements to get a specific piece of information. This is self explanatory, you do a <code>SELECT</code> query somewhere inside another one, for example <code>SELECT ... IN (SELECT ...)</code>, where the nesting is occurring inside the parenthesis after the <code>IN</code> statement.</p>
 <p>A nesting isn&rsquo;t constrained to the <code>IN</code> statement, it can appear anywhere, for example in a <code>WHERE</code> statement: <code>SELECT ... WHERE something = (SELECT ...)</code>.</p>
@@ -222,7 +224,7 @@
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Tue, Mar 02, 2021 @ 14:35 UTC</p>
-      <p>Modified: Sun, Jun 06, 2021 @ 00:22 UTC</p>
+      <p>Modified: Sun, Jun 06, 2021 @ 03:41 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@notes.html">notes</a>  </p>

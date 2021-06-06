@@ -3,6 +3,20 @@
   font-size: larger;
 }
 
+h1 {
+  text-align: center;
+}
+
+ul {
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+ul.page-list {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 body, html {
   margin: 0;
   padding: 0;
@@ -42,9 +56,20 @@ a{
 
 body > header, body > footer, main {
   justify-self: center;
-  width: clamp(45ch, 50%, 75ch);
+  width: clamp(30ch, calc(100% - 1em), 75ch);
   padding-left: 0.5em;
   padding-right: 0.5em;
+}
+
+
+/* article elements */
+div.article-info {
+  line-height: 0.3;
+  font-size: smaller;
+}
+
+div.article-info > div.article-tags {
+  font-size: larger;
 }
 
 
@@ -103,6 +128,10 @@ body > footer {
   text-align: center;
 }
 
+body > footer > span {
+  font-size: smaller;
+}
+
 
 /* theme swticher */
 .switch {
@@ -153,4 +182,78 @@ body > footer {
 
 .slider.round:before {
   border-radius: 1em;
+}
+
+
+/* code blocks */
+code.crypto {
+  font-size: smaller;
+  overflow-wrap: anywhere;
+}
+
+
+/* images */
+img {
+  border-radius: 5px;
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: middle;
+}
+
+img.wrap-right {
+  float: right;
+}
+
+img.wrap-left {
+  float: left;
+}
+
+img.qr {
+  max-width: 200px;
+  padding: 1em;
+}
+
+/* img grid */
+div.img-grid, div.img-grid > p {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+div.img-grid img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+
+/* art grid */
+div.art-grid, div.art-grid > p {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-auto-rows: minmax(250px, auto);
+}
+
+div.art-grid img {
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 600px) {  
+  div.art-grid img.wide {
+    grid-column: span 2 / auto;
+  }
+  
+  div.art-grid img.tall {
+    grid-row: span 2 / auto;
+  }
 }

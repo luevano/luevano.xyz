@@ -21,6 +21,7 @@ window.onload = () => {
       href = href.replace('dark.css', 'light.css');
       theme.setAttribute('href', href);
 
+      /*
       let code_theme = document.getElementById('code-theme-css');
 
       let code_href;
@@ -29,6 +30,7 @@ window.onload = () => {
         code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
         code_theme.setAttribute('href', code_href);
       }
+      */
     }
   }
 
@@ -50,31 +52,39 @@ function toggleTheme(){
   let theme = document.getElementById('theme-css');
   let href = theme.getAttribute('href');
 
+  /*
   let code_theme = document.getElementById('code-theme-css');
   let code_href;
   if (code_theme !== null){
     code_href = code_theme.getAttribute('href');
   }
+  */
 
   if(href.endsWith('dark.css')){
     href = href.replace('dark.css', 'light.css');
+    /*
     if (code_theme !== null){
       code_href = code_href.replace('solarized-dark.min.css', 'solarized-light.min.css');
     }
+    */
   }
   else if (href.endsWith('light.css')){
     href = href.replace('light.css', 'dark.css');
+    /*
     if (code_theme !== null){
       code_href = code_href.replace('solarized-light.min.css', 'solarized-dark.min.css');
     }
+    */
   }
   else{
     console.log('Wrong replacement.');
   }
 
   theme.setAttribute('href', href);
+  /*
   if (code_theme !== null){
     code_theme.setAttribute('href', code_href);
   }
+  */
   setTheme();
 }

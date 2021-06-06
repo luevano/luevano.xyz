@@ -26,6 +26,8 @@
   --switch-ol: var(--color0);
   --switch-moon: var(--color3);
   --switch-sun: var(--color13);
+
+  --code-border: var(--fg);
 }
 
 /* general */
@@ -60,6 +62,11 @@ h5 {
 body {
   background: var(--bg);
   color: var(--fg);
+}
+
+pre, code {
+  border-radius: 5px;
+  border: 1px solid var(--code-border);
 }
 
 main {
@@ -129,4 +136,3 @@ div.gallery:hover {
 .switch input:focus + .slider {
   box-shadow: 0 0 0.1em var(--switch-ol);
 }
-

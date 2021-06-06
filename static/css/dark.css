@@ -26,6 +26,8 @@
   --switch-ol: var(--color4);
   --switch-moon: var(--color3);
   --switch-sun: var(--color13);
+
+  --code-border: var(--fg);
 }
 
 /* general */
@@ -64,6 +66,11 @@ body {
 
 main {
   background: linear-gradient(var(--bg) 0.5em, 1em, var(--body-bg) 1.5em calc(100% - 1.5em), calc(100% - 1em), var(--bg) calc(100% - 0.5em));
+}
+
+pre, code {
+  border-radius: 5px;
+  border: 1px solid var(--code-border);
 }
 
 /* nav bar */
@@ -129,4 +136,3 @@ div.gallery:hover {
 .switch input:focus + .slider {
   box-shadow: 0 0 0.1em var(--switch-ol);
 }
-
