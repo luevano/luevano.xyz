@@ -8,7 +8,11 @@ This is only for version control, the way I "push" the content to my website is 
 
 ~~The blog is managed via [`ssg`](https://www.romanzolotarev.com/ssg.html), [`rssg`](https://www.romanzolotarev.com/rssg.html) and [`lowdow`](https://github.com/kristapsdz/lowdown).~~
 
-Now I use my own static site generator called [`pyssg`](https://github.com/luevano/pyssg), which works pretty well for me.
+Now I use my own static site generator called [`pyssg`](https://github.com/luevano/pyssg) to manage my blog, which works pretty well for me.
+
+## Art (art.luevano.xyz)
+
+Also use my pyssg to manage this site.
 
 ## Static (static.luevano.xyz)
 
