@@ -9,25 +9,19 @@ tags: server
 
 The entry is going to be long because it's a *tedious* process. This is also based on [Luke Smith's script](https://github.com/LukeSmithxyz/emailwiz), but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; also I'm going to be writing a script that does everything in one go (for Arch Linux), that will be hosted [here](https://git.luevano.xyz/server_scripts.git).
 
-This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL. And note that most if not all commands executed here are run with root privileges.
-
-More in depth configuration is detailed in the Arch Wiki for each package used here.
+This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL Database. And note that most if not all commands executed here are run with root privileges.
 
 ## Prerequisites
 
-Basically the same as with the [website with Nginx and Certbot](https://blog.luevano.xyz/a/website_with_nginx.html):
+Basically the same as with the [website with Nginx and Certbot](https://blog.luevano.xyz/a/website_with_nginx.html), with the extras:
 
-* A domain name. Got mine on [Epik](https://www.epik.com/?affid=da5ne9ru4) (affiliate link, btw).
-	* Later we'll be adding some **MX**  and **TXT** records.
-	* You also need a **CNAME** for "mail" and (optionally) "www.mail", or whatever you want to call the sub-domains (although the [RFC 2181](https://tools.ietf.org/html/rfc2181#section-10.3) states that it NEEDS to be an **A** record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on `nginx` and `certbot`) with `certbot` (just create a `mail.conf` for `nginx`, similar to how we created it in the website entry).
-* A VPS or somewhere else to host. I'm using [Vultr](https://www.vultr.com/?ref=8732849) (also an affiliate link).
-	* `ssh` configured.
-	* Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall (I use `ufw`).
-	* With `nginx` and `certbot` setup and running.
+- You will need a **CNAME** for "mail" and (optionally) "www.mail", or whatever you want to call the sub-domains (although the [RFC 2181](https://tools.ietf.org/html/rfc2181#section-10.3) states that it NEEDS to be an **A** record, fuck the police).
+- An SSL certificate. You can use the SSL certificate obtained following my last post using `certbot` (just create a `mail.conf` and run `certbot --nginx` again).
+- Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall.
 
 ## Postfix
 
-[Postfix](https://wiki.archlinux.org/index.php/Postfix) is a "mail transfer agent" which is the component of the mail server that receives and sends emails via SMTP.
+[Postfix](https://wiki.archlinux.org/title/postfix) is a "mail transfer agent" which is the component of the mail server that receives and sends emails via SMTP.
 
 Install the `postfix` package:
 
@@ -76,7 +70,7 @@ smtpd_sasl_security_options = noanonymous, noplaintext
 smtpd_sasl_tls_security_options = noanonymous
 ```
 
-Specify the mailbox home (this is going to be a directory inside your user's home):
+Specify the mailbox home (this is going to be a directory inside your user's home containing the actual mail files):
 
 ```apache
 home_mailbox = Mail/Inbox/
@@ -141,7 +135,7 @@ smtps 465/tcp
 smtps 465/udp
 ```
 
-Before starting the `postfix` service, you need to run `newaliases` first (but you can do a bit of configuration beforehand). Edit the file `/etc/postfix/aliases` and edit accordingly. I only change the `root: you` line (where `you` is the account that will be receiving "root" mail). Check the Arch Wiki for more info and other alternatives/options. After you're done, run:
+Before starting the `postfix` service, you need to run `newaliases` first, but you can do a bit of configuration beforehand editing the file `/etc/postfix/aliases`. I only change the `root: you` line (where `you` is the account that will be receiving "root" mail). After you're done, run:
 
 ```sh
 postalias /etc/postfix/aliases
@@ -157,7 +151,7 @@ systemctl enable postfix.service
 
 ## Dovecot
 
-[Dovecot](https://wiki.archlinux.org/index.php/Dovecot) is an IMAP and POP3 server, which is what lets an email application retrieve the mail.
+[Dovecot](https://wiki.archlinux.org/title/Dovecot) is an IMAP and POP3 server, which is what lets an email application retrieve the mail.
 
 Install the `dovecot` and `pigeonhole` (sieve for `dovecot`) packages:
 
@@ -173,9 +167,9 @@ cp /usr/share/doc/dovecot/example-config/dovecot.conf /etc/dovecot/dovecot.conf
 cp -r /usr/share/doc/dovecot/example-config/conf.d /etc/dovecot
 ```
 
-As Luke stated, `dovecot` comes with a lot of "modules" (under `/etc/dovecot/conf.d/` if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edits/creates the whole `dovecot.conf` file; although, I would like to check each of the separate configuration files `dovecot` provides I think the options Luke provides are more than good enough.
+As Luke stated, `dovecot` comes with a lot of "modules" (under `/etc/dovecot/conf.d/` if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edit/create the whole `dovecot.conf` file; although, I would like to check each of the separate configuration files `dovecot` provides I think the options Luke provides are more than good enough.
 
-I'm working with an empty `dovecot.conf` file. Add the following lines for SSL and login configuration (also replace `{yourcertdir}` with the same certificate directory described in the Postfix section above, note that the `<` is required):
+I'm working with an empty `dovecot.conf` file. Add the following lines for SSL and login configuration (also replace `{yourcertdir}` with the same certificate directory described in the [Postfix](#postfix) section above, note that the `<` is required):
 
 ```apache
 ssl = required
@@ -254,7 +248,7 @@ service auth {
 }
 ```
 
-Lastly (for `dovecot` at least), the plugin configuration for `sieve` (`pigeonhole`):
+Lastly (for Dovecot at least), the plugin configuration for `sieve` (`pigeonhole`):
 
 ```apache
 protocol lda {
@@ -294,13 +288,13 @@ grep -q "^vmail:" /etc/passwd || useradd -m vmail -s /usr/bin/nologin
 chown -R vmail:vmail /var/lib/dovecot
 ```
 
-Note that I also changed the shell for `vmail` to be `/usr/bin/nologin`. After that, run:
+Note that I also changed the shell for `vmail` to be `/usr/bin/nologin`. After that, to compile the configuration file run:
 
 ```sh
 sievec /var/lib/dovecot/sieve/default.sieve
 ```
 
-To compile the configuration file (a `default.svbin` file will be created next to `default.sieve`).
+A `default.svbin` file will be created next to `default.sieve`.
 
 Next, add the following lines to `/etc/pam.d/dovecot` if not already present (shouldn't be there if you've been following these notes):
 
@@ -309,7 +303,7 @@ auth required pam_unix.so nullok
 account required pam_unix.so
 ```
 
-That's it for `dovecot`, at this point you can start/enable the `dovecot` service:
+That's it for Dovecot, at this point you can start/enable the `dovecot` service:
 
 ```sh
 systemctl start dovecot.service
@@ -318,7 +312,7 @@ systemctl enable dovecot.service
 
 ## OpenDKIM
 
-[OpenDKIM](https://wiki.archlinux.org/index.php/OpenDKIM) is needed so services like G\*\*gle (we don't mention that name here \[\[\[this is a meme\]\]\]) don't throw the mail to the trash. DKIM stands for "DomainKeys Identified Mail".
+[OpenDKIM](https://wiki.archlinux.org/title/OpenDKIM) is needed so services like G\*\*gle (we don't mention that name here \[\[\[this is a meme\]\]\]) don't throw the mail to the trash. DKIM stands for "DomainKeys Identified Mail".
 
 Install the `opendkim` package:
 
@@ -370,7 +364,7 @@ localhost
 
 And more, make sure to include your server IP and something like `subdomain.domainname`.
 
-Next, edit `/etc/opendkim/opendkim.conf` to reflect the changes (or rather, additions) of these files, as well as some other configuration. You can look up the example configuration file located at `/usr/share/doc/opendkim/opendkim.conf.sample`, but I'm creating a blank one with the contents:
+Next, edit `/etc/opendkim/opendkim.conf` to reflect the changes (or rather, addition) of these files, as well as some other configuration. You can look up the example configuration file located at `/usr/share/doc/opendkim/opendkim.conf.sample`, but I'm creating a blank one with the contents:
 
 ```apache
 Domain {yourdomain}
@@ -392,7 +386,7 @@ chmod g+r /etc/postfix/dkim/*
 
 I'm using `root:opendkim` so `opendkim` doesn't complain about the `{yoursubdomani}.private` being insecure (you can change that by using the option `RequireSafeKeys False` in the `opendkim.conf` file, as stated [here](http://lists.opendkim.org/archive/opendkim/users/2014/12/3331.html)).
 
-That's it for the general configuration, but you could go more in depth and be more secure with some extra configuration as described in the [Arch Wiki entry for OpenDKIM](https://wiki.archlinux.org/index.php/OpenDKIM#Security).
+That's it for the general configuration, but you could go more in depth and be more secure with some extra configuration.
 
 Now, just start/enable the `opendkim` service:
 
@@ -417,11 +411,11 @@ In the TXT record you will place `{yoursubdomain}._domainkey` as the "Host" and 
 
 3. *SPF* entry: just `@` as the "Host" and `"v=spf1 mx a:{yoursubdomain}.{yourdomain} - all"` as the "TXT Value".
 
-And at this point you could test your mail for spoofing and more, but you don't know -yet- how to login (it's really easy, but I'm gonna state that at the end of this entry).
+And at this point you could test your mail for spoofing and more.
 
 ## SpamAssassin
 
-[SpamAssassin](https://wiki.archlinux.org/index.php/SpamAssassin) is just *a mail filter to identify spam*.
+[SpamAssassin](https://wiki.archlinux.org/title/SpamAssassin) is just *a mail filter to identify spam*.
 
 Install the `spamassassin` package (which will install a bunch of ugly `perl` packages...):
 
@@ -500,7 +494,7 @@ systemctl enable spamassassin.service
 
 ## Wrapping up
 
-We should have a working mail server by now. Before continuing check your journal logs (`journalctl -xe --unit={unit}`, where `{unit}` could be `spamassassin.service`for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked *(((it just werks on my machine)))*.
+We should have a working mail server by now. Before continuing check your journal logs (`journalctl -xe --unit={unit}`, where `{unit}` could be `spamassassin.service` for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked *(((it just werks on my machine)))*.
 
 Now, to actually use the mail service: first of all, you need a *normal* account (don't use root) that belongs to the `mail` group (`gpasswd -a user group` to add a user `user` to group `group`) and that has a password.
 
@@ -518,8 +512,6 @@ Next, to actually login into a mail app/program/whateveryouwanttocallit, you wil
 
 All that's left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to [DKIM Test](https://www.appmaildev.com/en/dkim) and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:
 
-![DKIM Test successful](images/b/notes/mail/dkim_test_successful.png)
+![DKIM Test successful](images/b/notes/mail/dkim_test_successful.png "DKIM Test successful")
 
-(Yes, I blurred a lot in the picture just to be sure, either way what's important is the list on the bottom part of the image)
-
-Finally, that's actually it for this entry, if you have any problem whatsoever you have my info down below.
+Finally, that's actually it for this entry, if you have any problem whatsoever you can [contact me](https://luevano.xyz/contact.html).

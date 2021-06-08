@@ -79,25 +79,16 @@
   <h1>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
 
   <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
-<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL. And note that most if not all commands executed here are run with root privileges.</p>
-<p>More in depth configuration is detailed in the Arch Wiki for each package used here.</p>
+<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL Database. And note that most if not all commands executed here are run with root privileges.</p>
 <h2 id="prerequisites">Prerequisites</h2>
-<p>Basically the same as with the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website with Nginx and Certbot</a>:</p>
+<p>Basically the same as with the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website with Nginx and Certbot</a>, with the extras:</p>
 <ul>
-<li>A domain name. Got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
-<li>Later we&rsquo;ll be adding some <strong>MX</strong>  and <strong>TXT</strong> records.</li>
-<li>You also need a <strong>CNAME</strong> for &ldquo;mail&rdquo; and (optionally) &ldquo;www.mail&rdquo;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police), to actually work and to get SSL certificate (you can also use the SSL certificate obtained if you created a website following my other notes on <code>nginx</code> and <code>certbot</code>) with <code>certbot</code> (just create a <code>mail.conf</code> for <code>nginx</code>, similar to how we created it in the website entry).</li>
-</ul>
-</li>
-<li>A VPS or somewhere else to host. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).<ul>
-<li><code>ssh</code> configured.</li>
-<li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall (I use <code>ufw</code>).</li>
-<li>With <code>nginx</code> and <code>certbot</code> setup and running.</li>
-</ul>
-</li>
+<li>You will need a <strong>CNAME</strong> for &ldquo;mail&rdquo; and (optionally) &ldquo;www.mail&rdquo;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police).</li>
+<li>An SSL certificate. You can use the SSL certificate obtained following my last post using <code>certbot</code> (just create a <code>mail.conf</code> and run <code>certbot --nginx</code> again).</li>
+<li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall.</li>
 </ul>
 <h2 id="postfix">Postfix</h2>
-<p><a href="https://wiki.archlinux.org/index.php/Postfix">Postfix</a> is a &ldquo;mail transfer agent&rdquo; which is the component of the mail server that receives and sends emails via SMTP.</p>
+<p><a href="https://wiki.archlinux.org/title/postfix">Postfix</a> is a &ldquo;mail transfer agent&rdquo; which is the component of the mail server that receives and sends emails via SMTP.</p>
 <p>Install the <code>postfix</code> package:</p>
 <pre><code class="language-sh">pacman -S postfix
 </code></pre>
@@ -133,7 +124,7 @@ smtpd_sasl_path = private/auth
 smtpd_sasl_security_options = noanonymous, noplaintext
 smtpd_sasl_tls_security_options = noanonymous
 </code></pre>
-<p>Specify the mailbox home (this is going to be a directory inside your user&rsquo;s home):</p>
+<p>Specify the mailbox home (this is going to be a directory inside your user&rsquo;s home containing the actual mail files):</p>
 <pre><code class="language-apache">home_mailbox = Mail/Inbox/
 </code></pre>
 <p>Pre-configuration to work seamlessly with <code>dovecot</code> and <code>opendkim</code>:</p>
@@ -177,7 +168,7 @@ spamassassin unix - n n - - pipe
 <pre><code class="language-apache">smtps 465/tcp
 smtps 465/udp
 </code></pre>
-<p>Before starting the <code>postfix</code> service, you need to run <code>newaliases</code> first (but you can do a bit of configuration beforehand). Edit the file <code>/etc/postfix/aliases</code> and edit accordingly. I only change the <code>root: you</code> line (where <code>you</code> is the account that will be receiving &ldquo;root&rdquo; mail). Check the Arch Wiki for more info and other alternatives/options. After you&rsquo;re done, run:</p>
+<p>Before starting the <code>postfix</code> service, you need to run <code>newaliases</code> first, but you can do a bit of configuration beforehand editing the file <code>/etc/postfix/aliases</code>. I only change the <code>root: you</code> line (where <code>you</code> is the account that will be receiving &ldquo;root&rdquo; mail). After you&rsquo;re done, run:</p>
 <pre><code class="language-sh">postalias /etc/postfix/aliases
 newaliases
 </code></pre>
@@ -186,7 +177,7 @@ newaliases
 systemctl enable postfix.service
 </code></pre>
 <h2 id="dovecot">Dovecot</h2>
-<p><a href="https://wiki.archlinux.org/index.php/Dovecot">Dovecot</a> is an IMAP and POP3 server, which is what lets an email application retrieve the mail.</p>
+<p><a href="https://wiki.archlinux.org/title/Dovecot">Dovecot</a> is an IMAP and POP3 server, which is what lets an email application retrieve the mail.</p>
 <p>Install the <code>dovecot</code> and <code>pigeonhole</code> (sieve for <code>dovecot</code>) packages:</p>
 <pre><code class="language-sh">pacman -S dovecot pigeonhole
 </code></pre>
@@ -195,8 +186,8 @@ systemctl enable postfix.service
 cp /usr/share/doc/dovecot/example-config/dovecot.conf /etc/dovecot/dovecot.conf
 cp -r /usr/share/doc/dovecot/example-config/conf.d /etc/dovecot
 </code></pre>
-<p>As Luke stated, <code>dovecot</code> comes with a lot of &ldquo;modules&rdquo; (under <code>/etc/dovecot/conf.d/</code> if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edits/creates the whole <code>dovecot.conf</code> file; although, I would like to check each of the separate configuration files <code>dovecot</code> provides I think the options Luke provides are more than good enough.</p>
-<p>I&rsquo;m working with an empty <code>dovecot.conf</code> file. Add the following lines for SSL and login configuration (also replace <code>{yourcertdir}</code> with the same certificate directory described in the Postfix section above, note that the <code>&lt;</code> is required):</p>
+<p>As Luke stated, <code>dovecot</code> comes with a lot of &ldquo;modules&rdquo; (under <code>/etc/dovecot/conf.d/</code> if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edit/create the whole <code>dovecot.conf</code> file; although, I would like to check each of the separate configuration files <code>dovecot</code> provides I think the options Luke provides are more than good enough.</p>
+<p>I&rsquo;m working with an empty <code>dovecot.conf</code> file. Add the following lines for SSL and login configuration (also replace <code>{yourcertdir}</code> with the same certificate directory described in the <a href="#postfix">Postfix</a> section above, note that the <code>&lt;</code> is required):</p>
 <pre><code class="language-apache">ssl = required
 ssl_cert = &lt;{yourcertdir}/fullchain.pem
 ssl_key = &lt;{yourcertdir}/privkey.pem
@@ -260,7 +251,7 @@ namespace inbox {
         }
 }
 </code></pre>
-<p>Lastly (for <code>dovecot</code> at least), the plugin configuration for <code>sieve</code> (<code>pigeonhole</code>):</p>
+<p>Lastly (for Dovecot at least), the plugin configuration for <code>sieve</code> (<code>pigeonhole</code>):</p>
 <pre><code class="language-apache">protocol lda {
     mail_plugins = $mail_plugins sieve
 }
@@ -288,20 +279,20 @@ if header :contains &quot;X-Spam-Flag&quot; &quot;YES&quot; {
 <pre><code class="language-sh">grep -q &quot;^vmail:&quot; /etc/passwd || useradd -m vmail -s /usr/bin/nologin
 chown -R vmail:vmail /var/lib/dovecot
 </code></pre>
-<p>Note that I also changed the shell for <code>vmail</code> to be <code>/usr/bin/nologin</code>. After that, run:</p>
+<p>Note that I also changed the shell for <code>vmail</code> to be <code>/usr/bin/nologin</code>. After that, to compile the configuration file run:</p>
 <pre><code class="language-sh">sievec /var/lib/dovecot/sieve/default.sieve
 </code></pre>
-<p>To compile the configuration file (a <code>default.svbin</code> file will be created next to <code>default.sieve</code>).</p>
+<p>A <code>default.svbin</code> file will be created next to <code>default.sieve</code>.</p>
 <p>Next, add the following lines to <code>/etc/pam.d/dovecot</code> if not already present (shouldn&rsquo;t be there if you&rsquo;ve been following these notes):</p>
 <pre><code class="language-txt">auth required pam_unix.so nullok
 account required pam_unix.so
 </code></pre>
-<p>That&rsquo;s it for <code>dovecot</code>, at this point you can start/enable the <code>dovecot</code> service:</p>
+<p>That&rsquo;s it for Dovecot, at this point you can start/enable the <code>dovecot</code> service:</p>
 <pre><code class="language-sh">systemctl start dovecot.service
 systemctl enable dovecot.service
 </code></pre>
 <h2 id="opendkim">OpenDKIM</h2>
-<p><a href="https://wiki.archlinux.org/index.php/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
+<p><a href="https://wiki.archlinux.org/title/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
 <p>Install the <code>opendkim</code> package:</p>
 <pre><code class="language-sh">pacman -S opendkim
 </code></pre>
@@ -330,7 +321,7 @@ localhost
 ...
 </code></pre>
 <p>And more, make sure to include your server IP and something like <code>subdomain.domainname</code>.</p>
-<p>Next, edit <code>/etc/opendkim/opendkim.conf</code> to reflect the changes (or rather, additions) of these files, as well as some other configuration. You can look up the example configuration file located at <code>/usr/share/doc/opendkim/opendkim.conf.sample</code>, but I&rsquo;m creating a blank one with the contents:</p>
+<p>Next, edit <code>/etc/opendkim/opendkim.conf</code> to reflect the changes (or rather, addition) of these files, as well as some other configuration. You can look up the example configuration file located at <code>/usr/share/doc/opendkim/opendkim.conf.sample</code>, but I&rsquo;m creating a blank one with the contents:</p>
 <pre><code class="language-apache">Domain {yourdomain}
 Selector {yoursubdomain}
 
@@ -345,7 +336,7 @@ Socket inet:8891@localhost
 chmod g+r /etc/postfix/dkim/*
 </code></pre>
 <p>I&rsquo;m using <code>root:opendkim</code> so <code>opendkim</code> doesn&rsquo;t complain about the <code>{yoursubdomani}.private</code> being insecure (you can change that by using the option <code>RequireSafeKeys False</code> in the <code>opendkim.conf</code> file, as stated <a href="http://lists.opendkim.org/archive/opendkim/users/2014/12/3331.html">here</a>).</p>
-<p>That&rsquo;s it for the general configuration, but you could go more in depth and be more secure with some extra configuration as described in the <a href="https://wiki.archlinux.org/index.php/OpenDKIM#Security">Arch Wiki entry for OpenDKIM</a>.</p>
+<p>That&rsquo;s it for the general configuration, but you could go more in depth and be more secure with some extra configuration.</p>
 <p>Now, just start/enable the <code>opendkim</code> service:</p>
 <pre><code class="language-sh">systemctl start opendkim.service
 systemctl enable opendkim.service
@@ -367,9 +358,9 @@ systemctl enable opendkim.service
 <p><em>SPF</em> entry: just <code>@</code> as the &ldquo;Host&rdquo; and <code>"v=spf1 mx a:{yoursubdomain}.{yourdomain} - all"</code> as the &ldquo;TXT Value&rdquo;.</p>
 </li>
 </ol>
-<p>And at this point you could test your mail for spoofing and more, but you don&rsquo;t know -yet- how to login (it&rsquo;s really easy, but I&rsquo;m gonna state that at the end of this entry).</p>
+<p>And at this point you could test your mail for spoofing and more.</p>
 <h2 id="spamassassin">SpamAssassin</h2>
-<p><a href="https://wiki.archlinux.org/index.php/SpamAssassin">SpamAssassin</a> is just <em>a mail filter to identify spam</em>.</p>
+<p><a href="https://wiki.archlinux.org/title/SpamAssassin">SpamAssassin</a> is just <em>a mail filter to identify spam</em>.</p>
 <p>Install the <code>spamassassin</code> package (which will install a bunch of ugly <code>perl</code> packages&hellip;):</p>
 <pre><code class="language-sh">pacman -S spamassassin
 </code></pre>
@@ -422,7 +413,7 @@ ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/sp
 systemctl enable spamassassin.service
 </code></pre>
 <h2 id="wrapping-up">Wrapping up</h2>
-<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code>for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked <em>(((it just werks on my machine)))</em>.</p>
+<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code> for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked <em>(((it just werks on my machine)))</em>.</p>
 <p>Now, to actually use the mail service: first of all, you need a <em>normal</em> account (don&rsquo;t use root) that belongs to the <code>mail</code> group (<code>gpasswd -a user group</code> to add a user <code>user</code> to group <code>group</code>) and that has a password.</p>
 <p>Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>
 <ul>
@@ -437,15 +428,17 @@ systemctl enable spamassassin.service
 <li>Password: your <code>user</code> password (as in the password you use to login to the server with that user)</li>
 </ul>
 <p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
-<p><img alt="DKIM Test successful" src="images/b/notes/mail/dkim_test_successful.png"></p>
-<p>(Yes, I blurred a lot in the picture just to be sure, either way what&rsquo;s important is the list on the bottom part of the image)</p>
-<p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you have my info down below.</p>
+<figure id="__yafg-figure-3">
+<img alt="DKIM Test successful" src="images/b/notes/mail/dkim_test_successful.png" title="DKIM Test successful">
+<figcaption>DKIM Test successful</figcaption>
+</figure>
+<p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you can <a href="https://luevano.xyz/contact.html">contact me</a>.</p>
 
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
-      <p>Modified: Sun, Jun 06, 2021 @ 00:24 UTC</p>
+      <p>Modified: Tue, Jun 08, 2021 @ 06:27 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

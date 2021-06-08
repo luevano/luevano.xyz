@@ -22,19 +22,19 @@
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/git_server_with_cgit.html</loc>
-      <lastmod>2021-06-04</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/mail_server_with_postfix.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/website_with_nginx.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
@@ -53,43 +53,43 @@
 
     <url>
       <loc>https://blog.luevano.xyz/tag/@english.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@server.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@short.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@spanish.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@tools.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@tutorial.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@update.html</loc>
-      <lastmod>2021-06-06</lastmod>
+      <lastmod>2021-06-08</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>

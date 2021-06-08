@@ -1,7 +1,7 @@
-title: Create a git server and setup cgit web app (on Nginx)
+title: Create an XMPP server with Prosody compatible with Conversations and Movim
 author: David Luévano
 lang: en
-summary: How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.
+summary: How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim.
 tags: server
 	tools
 	tutorial

@@ -15,14 +15,16 @@ As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linu
 
 You will need two things:
 
-* A domain name (duh!). I got mine on [Epik](https://www.epik.com/?affid=da5ne9ru4) (affiliate link, btw).
-	* With the corresponding **A** and **AAA** records pointing to the VPS' IPs ("A" record points to the ipv4 address and "AAA" to the ipv6, basically). I have three records for each type: empty one, "www" and "\*" for a wildcard, that way "domain.name", "www.domain.name", "anythingelse.domain.name" point to the same VPS (meaning that you can have several VPS for different sub-domains).
-* A VPS or somewhere else to host it. I'm using [Vultr](https://www.vultr.com/?ref=8732849) (also an affiliate link).
-	* With `ssh` already configured both on the local machine and on the remote machine.
-	* Firewall already configured to allow ports 80 (HTTP) and 443 (HTTPS). I use `ufw` so it's just a matter of doing `ufw allow 80,443/tcp` as root and you're golden.
-	* `cron` installed if you follow along (you could use `systemd` timers, or some other method you prefer to automate running commands every X time).
+- A domain name (duh!). I got mine on [Epik](https://www.epik.com/?affid=da5ne9ru4) (affiliate link, btw).
+	- With the corresponding **A** and **AAA** records pointing to the VPS' IPs ("A" record points to the ipv4 address and "AAA" to the ipv6, basically). I have three records for each type: empty one, "www" and "\*" for a wildcard, that way "domain.name", "www.domain.name", "anythingelse.domain.name" point to the same VPS (meaning that you can have several VPS for different sub-domains).
+- A VPS or somewhere else to host it. I'm using [Vultr](https://www.vultr.com/?ref=8732849) (also an affiliate link).
+	- With `ssh` already configured both on the local machine and on the remote machine.
+	- Firewall already configured to allow ports 80 (HTTP) and 443 (HTTPS). I use `ufw` so it's just a matter of doing `ufw allow 80,443/tcp` as root and you're golden.
+	- `cron` installed if you follow along (you could use `systemd` timers, or some other method you prefer to automate running commands every X time).
 
 ## Nginx
+
+[Nginx](https://wiki.archlinux.org/title/Nginx) is a web (HTTP) server and reverse proxy server.
 
 You have two options: `nginx` and `nginx-mainline`. I prefer `nginx-mainline` because it's the "up to date" package even though `nginx` is labeled to be the "stable" version. Install the package and enable/start the service:
 
@@ -32,11 +34,11 @@ systemctl enable nginx.service
 systemctl start nginx.service
 ```
 
-And that's it, at this point you can already look at the default initial page of nginx if you enter the ip of your server in a web browser. You should see something like this:
+And that's it, at this point you can already look at the default initial page of Nginx if you enter the IP of your server in a web browser. You should see something like this:
 
-![Nginx welcome page](images/b/notes/nginx/nginx_welcome_page.png)
+![Nginx welcome page](images/b/notes/nginx/nginx_welcome_page.png "Nginx welcome page")
 
-As stated in the welcome page, configuration is needed, head to the directory of nginx:
+As stated in the welcome page, configuration is needed, head to the directory of Nginx:
 
 ```sh
 cd /etc/nginx
@@ -66,7 +68,7 @@ http {
 }
 ```
 
-Next, inside the directory `/etc/nginx/` create the `sites-available` and `sites-enabled`, and go into the `sites-available` one:
+Next, inside the directory `/etc/nginx/` create the `sites-available` and `sites-enabled` directories, and go into the `sites-available` one:
 
 ```sh
 mkdir sites-available
@@ -91,35 +93,37 @@ server {
 }
 ```
 
-Note several things:
+That could serve as a template if you intend to add more domains.
 
-* `listen`: we're telling nginx which port to listen to (ipv4 and ipv6, respectively).
+Note some things:
+
+* `listen`: we're telling Nginx which port to listen to (IPv4 and IPv6, respectively).
 * `root`: the root directory of where the website files (`.html`, `.css`, `.js`, etc. files) are located. I followed Luke's directory path `/var/www/some_folder`.
-* `server_name`: the actual domain to "listen" to (for my website it is: `server_name luevano.xyz www.luevano.xyz`; and for this blog is: `server_name blog.luevano.xyz www.blog.luevano.xyz`).
+* `server_name`: the actual domain to "listen" to (for my website it is: `server_name luevano.xyz www.luevano.xyz;` and for this blog is: `server_name blog.luevano.xyz www.blog.luevano.xyz;`).
 * `index`: what file to serve as the index (could be any `.html`, `.htm`, `.php`, etc. file) when just entering the website.
-* `location`: used in case of different configurations across different URL paths.
-	* `try_files`: tells what files to look for, don't look into this too much for now.
+* `location`: what goes after `domain.name`, used in case of different configurations depending on the URL paths (deny access on `/private`, make a proxy on `/proxy`, etc).
+	* `try_files`: tells what files to look for.
 
-Then, make a symbolic from this config file to the `sites-enabled` directory:
+Then, make a symbolic link from this configuration file to the `sites-enabled` directory:
 
 ```sh
 ln -s /etc/nginx/sites-available/your_config_file.conf /etc/nginx/sites-enabled
 ```
 
-This is so the `nginx.conf` file can look up the newly created server config. With this method of having each server configuration file separate you can easily "deactivate" any website by just deleting the symbolic link in `sites-enabled` and you're good, or just add new configuration files and keep everything nice and tidy.
+This is so the `nginx.conf` file can look up the newly created server configuration. With this method of having each server configuration file separate you can easily "deactivate" any website by just deleting the symbolic link in `sites-enabled` and you're good, or just add new configuration files and keep everything nice and tidy.
 
-All you have to do now is restart (or enable and start if you haven't already) the nginx service (and optionally test the configuration):
+All you have to do now is restart (or enable and start if you haven't already) the Nginx service (and optionally test the configuration):
 
 ```sh
 nginx -t
 systemctl restart nginx
 ```
 
-If everything goes correctly, you can now go to your website by typing "domain.name" on a web browser. But you will see a "404 Not Found" page like the following (maybe with different nginx version):
+If everything goes correctly, you can now go to your website by typing `domain.name` on a web browser. But you will see a "404 Not Found" page like the following (maybe with different Nginx version):
 
-![Nginx 404 page](images/b/notes/nginx/nginx_404_page.png)
+![Nginx 404 Not Found page](images/b/notes/nginx/nginx_404_page.png "Nginx 404 Not Found page")
 
-That's no problem, because it means that the web server it's actually working. Just add an `index.html` file with something simple to see it in action. If you keep seeing the 404 page make sure your `root` line is correct and that the directory/index file exists.
+That's no problem, because it means that the web server it's actually working. Just add an `index.html` file with something simple to see it in action (in the `/var/www/some_folder` that you decided upon). If you keep seeing the 404 page make sure your `root` line is correct and that the directory/index file exists.
 
 I like to remove the `.html` and trailing `/` on the URLs of my website, for that you need to add the following `rewrite` lines and modify the `try_files` line (for more: [Sean C. Davis: Remove HTML Extension And Trailing Slash In Nginx Config](https://www.seancdavis.com/blog/remove-html-extension-and-trailing-slash-in-nginx-config/)):
 
@@ -133,11 +137,11 @@ server {
 	...
 ```
 
-For more: [Arch Linux Wiki: nginx](https://wiki.archlinux.org/index.php/nginx).
-
 ## Certbot
 
-The only "bad" (bloated) thing about certbot, is that it uses `python`, but for me it doesn't matter too much. You may want to look up another alternative if you prefer. Install the packages `certbot` and `certbot-nginx`:
+[Certbot](https://wiki.archlinux.org/title/Certbot) is what provides the SSL certificates via [Let's Encrypt](https://letsencrypt.org/).
+
+The only "bad" (bloated) thing about Certbot, is that it uses `python`, but for me it doesn't matter too much. You may want to look up another alternative if you prefer. Install the packages `certbot` and `certbot-nginx`:
 
 ```sh
 pacman -S certbot certbot-nginx
@@ -149,7 +153,7 @@ After that, all you have to do now is run `certbot` and follow the instructions 
 certbot --nginx
 ```
 
-It will ask you for some information, for you to accept some agreements and the names to activate https for. Also, you will want to "say yes" to the redirection from http to https. And that's it, you can now go to your website and see that you have https active.
+It will ask you for some information, for you to accept some agreements and the names to activate HTTPS for. Also, you will want to "say yes" to the redirection from HTTP to HTTPS. And that's it, you can now go to your website and see that you have HTTPS active.
 
 Now, the certificate given by `certbot` expires every 3 months or something like that, so you want to renew this certificate every once in a while. Using `cron`, you can do this by running:
 
@@ -157,8 +161,6 @@ Now, the certificate given by `certbot` expires every 3 months or something like
 crontab -e
 ```
 
-And a file will be opened where you need to add a new rule for certbot, just append the line: `1 1 1 * * certbot renew` (renew on the first day of every month) and you're good. Alternatively use `systemd` timers as stated in the [Arch Linux Wiki](https://wiki.archlinux.org/index.php/Certbot#Automatic_renewal).
-
-For more: [Arch Linux Wiki: Certbot](https://wiki.archlinux.org/index.php/Certbot).
+And a file will be opened where you need to add a new rule for Certbot, just append the line: `1 1 1 * * certbot renew` (renew on the first day of every month) and you're good. Alternatively use `systemd` timers as stated in the [Arch Linux Wiki](https://wiki.archlinux.org/title/Certbot#Automatic_renewal).
 
 That's it, you now have a website with SSL certificate.
