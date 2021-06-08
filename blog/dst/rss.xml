@@ -13,9 +13,9 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Sun, 06 Jun 2021 16:01:07 GMT</pubDate>
-    <lastBuildDate>Sun, 06 Jun 2021 16:01:07 GMT</lastBuildDate>
-    <generator>pyssg v0.5.6</generator>
+    <pubDate>Sun, 06 Jun 2021 19:08:48 GMT</pubDate>
+    <lastBuildDate>Sun, 06 Jun 2021 19:08:48 GMT</lastBuildDate>
+    <generator>pyssg v0.5.7</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
     <image>
@@ -23,6 +23,19 @@
       <title>Luévano's Blog</title>
       <link>https://blog.luevano.xyz</link>
     </image>
+    <item>
+      <title>Al fin ya me acomodé la página pa' los dibujos</title>
+      <link>https://blog.luevano.xyz/a/acomodada_la_pagina_de_arte.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/acomodada_la_pagina_de_arte.html</guid>
+      <pubDate>Sun, 06 Jun 2021 19:06:09 GMT</pubDate>
+      <category>Short</category>
+      <category>Spanish</category>
+      <category>Update</category>
+      <description>Actualización en el estado de la página, en este caso sobre la existencia de una nueva página para los dibujos y arte en general.</description>
+      <content:encoded><![CDATA[<p>Así es, ya quedó acomodado el sub-dominio <code>art.luevano.xyz</code> pos pal <a href="https://art.luevano.xyz">arte</a> veda. Entonces pues ando feliz por eso.</p>
+<p>Este pedo fue gracias a que me reescribí la forma en la que <code>pyssg</code> maneja los templates, ahora uso el sistema de <code>jinja</code> en vez del cochinero que hacía antes.</p>
+<p>Y pues nada más eso, aquí está el <a href="https://art.luevano.xyz/a/elephant_octopus.html">primer post</a> y por supuesto acá está el link del RSS <a href="https://art.luevano.xyz/rss.xml">https://art.luevano.xyz/rss.xml</a>.</p>]]></content:encoded>
+    </item>
     <item>
       <title>Así nomás está quedando el página</title>
       <link>https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html</link>
