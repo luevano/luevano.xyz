@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <base href="https://static.luevano.xyz">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create an XMPP server with Prosody compatible with Conversations and Movim -- Luévano's Blog</title>
+    <meta name="description" content"How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim."/>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <!--<script type="text/javascript" src="hl/highlight-ln.min.js"></script>-->
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad();
+      // hljs.initLineNumbersOnLoad();
+    </script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+
+    <!-- og meta -->
+  <meta property="og:title" content="Create an XMPP server with Prosody compatible with Conversations and Movim -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/xmpp_server_with_prosody.html"/>
+  <meta property="og:image" content="https://static.luevano.xyz//images/b/default.png"/>
+  <meta property="og:description" content="How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li>
+            <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+    </header>
+
+    <main>
+  <h1>Create an XMPP server with Prosody compatible with Conversations and Movim</h1>
+
+  <p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <mark><a href="https://lmcj.xyz">EL ELE EME</a></mark>, for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
+<p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, and of course the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
+<p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Same as with my other entries (<a href="https://luevano.xyz/a/website_with_nginx.html">website</a>, <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> and <a href="https://blog.luevano.xyz/a/git_server_with_cgit.html">git</a>) plus:</p>
+<ul>
+<li><strong>A</strong> and (optionally) <strong>AAA</strong> DNS records for:<ul>
+<li><code>xmpp</code>: the actual XMPP server and the file upload service.</li>
+<li><code>muc</code> (or <code>conference</code>): for multi-user chats.</li>
+<li><code>pubsub</code>: the publish-subscribe service.</li>
+<li><code>proxy</code>: a proxy in case one of the users needs it.</li>
+<li><code>vjud</code>: user directory.</li>
+</ul>
+</li>
+<li>(Optionally, but recommended) the following <strong>SRV</strong> DNS records; make sure it is pointing to an <strong>A</strong> or <strong>AAA</strong> record (matching the records from the last point, for example):<ul>
+<li><code>_xmpp-client._tcp.**your.domain**.</code> for port <code>5222</code> pointing to <code>xmpp.**your.domain**.</code></li>
+<li><code>_xmpp-server._tcp.**your.domain**.</code> for port <code>5269</code> pointing to <code>xmpp.**your.domain**.</code></li>
+<li><code>_xmpp-server._tcp.muc.**your.domain**.</code> for port <code>5269</code> pointing to <code>xmpp.**your.domain**.</code></li>
+</ul>
+</li>
+<li>SSL certificates for the previous subdomains; similar that with my other entries just create the appropriate <code>prosody.conf</code> (where <code>server_name</code> will be all the subdomains defined above) file and run <code>certbot --nginx</code>. You can find the example configuration file almost at the end of this entry.</li>
+<li>Email addresses for <code>admin</code>, <code>abuse</code>, <code>contact</code>, <code>security</code>, etc. Or use your own email for all of them, doesn&rsquo;t really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.</li>
+<li>Allow ports 5000, 5222, 5269, 5280 and 5281 for <a href="https://prosody.im/doc/ports">Prosody</a> and, 3478 and 5349 for <a href="https://webrtc.org/getting-started/turn-server">Turnserver</a> which are the defaults for <code>coturn</code>.</li>
+</ul>
+<h2 id="prosody">Prosody</h2>
+<p><a href="https://wiki.archlinux.org/title/Prosody">Prosody</a> is an implementation of the XMPP protocol that is flexible and extensible.</p>
+<p>Install the <code>prosody</code> package (with optional dependencies) and the <code>mercurial</code> package:</p>
+<pre><code class="language-sh">pacman -S prosody, mercurial, lua52-sec, lua52-dbi, lua52-zlib
+</code></pre>
+<p>We need mercurial to be able to download and update the extra modules needed to make the server compliant with <code>conversations.im</code> and <code>mov.im</code>. Go to <code>/var/lib/prosody</code>, clone the latest Prosody modules repository and prepare the directories:</p>
+<pre><code class="language-sh">cd /var/lib/prosody
+hg clone https://hg.prosody.im/prosody-modules modules-available
+mkdir modules-enabled
+</code></pre>
+<p>You can see that I follow a similar approach that I used with Nginx and the server configuration, where I have all the modules available in a directory, and make a symlink to another to keep track of what is being used. You can update the repository by running <code>hg pull --update</code> while inside the <code>modules-available</code> directory (similar to Git).</p>
+<p>Make symbolic links to the following modules:</p>
+<pre><code>ln -s /var/lib/prosody/modules-available/MODULE_NAME /var/lib/prosody/modules-enabled/
+...
+</code></pre>
+<ul>
+<li>Modules:<ul>
+<li><code>mod_bookmarks</code></li>
+<li><code>mod_cache_c2s_caps</code></li>
+<li><code>mod_checkcerts</code></li>
+<li><code>mod_cloud_notify</code></li>
+<li><code>mod_csi_battery_saver</code></li>
+<li><code>mod_default_bookmarks</code></li>
+<li><code>mod_external_services</code></li>
+<li><code>mod_http_avatar</code></li>
+<li><code>mod_http_pep_avatar</code></li>
+<li><code>mod_http_upload</code></li>
+<li><code>mod_http_upload_external</code></li>
+<li><code>mod_idlecompat</code></li>
+<li><code>mod_muc_limits</code></li>
+<li><code>mod_muc_mam_hints</code></li>
+<li><code>mod_muc_mention_notifications</code></li>
+<li><code>mod_presence_cache</code></li>
+<li><code>mod_pubsub_feeds</code></li>
+<li><code>mod_pubsub_text_interface</code></li>
+<li><code>mod_smacks</code></li>
+<li><code>mod_strict_https</code></li>
+<li><code>mod_vcard_muc</code></li>
+<li><code>mod_vjud</code></li>
+<li><code>mod_watchuntrusted</code></li>
+</ul>
+</li>
+</ul>
+<p>And add other modules if needed, but these work for the apps that I mentioned. You should also change the permissions for these files:</p>
+<pre><code class="language-sh">chown -R prosody:prosody /var/lib/prosody
+</code></pre>
+<p>Now, configure the server by editing the <code>/etc/prosody/prosody.cfg.lua</code> file. It&rsquo;s a bit tricky to configure, so here is my configuration file (lines starting with <code>--</code> are comments). Make sure to change according to your domain, and maybe preferences. Read each line and each comment to know what&rsquo;s going on, It&rsquo;s easier to explain it with comments in the file itself than strip it in a lot of pieces.</p>
+<p>And also, note that the configuration file has a &ldquo;global&rdquo; section and a per &ldquo;virtual server&rdquo;/&rdquo;component&rdquo; section, basically everything above all the VirtualServer/Component sections are global, and bellow each VirtualServer/Component, corresponds to that section.</p>
+<pre><code>-- important for systemd
+daemonize = true
+pidfile = &quot;/run/prosody/prosody.pid&quot;
+
+-- or your account, not that this is an xmpp jid, not email
+admins = { &quot;admin@your.domain&quot; }
+
+contact_info = {
+    abuse = { &quot;mailto:abuse@your.domain&quot;, &quot;xmpp:abuse@your.domain&quot; };
+    admin = { &quot;mailto:admin@your.domain&quot;, &quot;xmpp:admin@your.domain&quot; };
+    admin = { &quot;mailto:feedback@your.domain&quot;, &quot;xmpp:feedback@your.domain&quot; };
+    security = { &quot;mailto:security@your.domain&quot; };
+    support = { &quot;mailto:support@your.domain&quot;, &quot;xmpp:support@muc.your.domain&quot; };
+}
+
+-- so prosody look up the plugins we added
+plugin_paths = { &quot;/var/lib/prosody/modules-enabled&quot; }
+
+modules_enabled = {
+    -- Generally required
+        &quot;roster&quot;; -- Allow users to have a roster. Recommended ;)
+        &quot;saslauth&quot;; -- Authentication for clients and servers. Recommended if you want to log in.
+        &quot;tls&quot;; -- Add support for secure TLS on c2s/s2s connections
+        &quot;dialback&quot;; -- s2s dialback support
+        &quot;disco&quot;; -- Service discovery
+    -- Not essential, but recommended
+        &quot;carbons&quot;; -- Keep multiple clients in sync
+        &quot;pep&quot;; -- Enables users to publish their avatar, mood, activity, playing music and more
+        &quot;private&quot;; -- Private XML storage (for room bookmarks, etc.)
+        &quot;blocklist&quot;; -- Allow users to block communications with other users
+        &quot;vcard4&quot;; -- User profiles (stored in PEP)
+        &quot;vcard_legacy&quot;; -- Conversion between legacy vCard and PEP Avatar, vcard
+        &quot;limits&quot;; -- Enable bandwidth limiting for XMPP connections
+    -- Nice to have
+        &quot;version&quot;; -- Replies to server version requests
+        &quot;uptime&quot;; -- Report how long server has been running
+        &quot;time&quot;; -- Let others know the time here on this server
+        &quot;ping&quot;; -- Replies to XMPP pings with pongs
+        &quot;register&quot;; -- Allow users to register on this server using a client and change passwords
+        &quot;mam&quot;; -- Store messages in an archive and allow users to access it
+        &quot;csi_simple&quot;; -- Simple Mobile optimizations
+    -- Admin interfaces
+        &quot;admin_adhoc&quot;; -- Allows administration via an XMPP client that supports ad-hoc commands
+        --&quot;admin_telnet&quot;; -- Opens telnet console interface on localhost port 5582
+    -- HTTP modules
+        &quot;http&quot;; -- Explicitly enable http server.
+        &quot;bosh&quot;; -- Enable BOSH clients, aka &quot;Jabber over HTTP&quot;
+        &quot;websocket&quot;; -- XMPP over WebSockets
+        &quot;http_files&quot;; -- Serve static files from a directory over HTTP
+    -- Other specific functionality
+        &quot;groups&quot;; -- Shared roster support
+        &quot;server_contact_info&quot;; -- Publish contact information for this service
+        &quot;announce&quot;; -- Send announcement to all online users
+        &quot;welcome&quot;; -- Welcome users who register accounts
+        &quot;watchregistrations&quot;; -- Alert admins of registrations
+        &quot;motd&quot;; -- Send a message to users when they log in
+        --&quot;legacyauth&quot;; -- Legacy authentication. Only used by some old clients and bots.
+        --&quot;s2s_bidi&quot;; -- not yet implemented, have to wait for v0.12
+        &quot;bookmarks&quot;;
+        &quot;checkcerts&quot;;
+        &quot;cloud_notify&quot;;
+        &quot;csi_battery_saver&quot;;
+        &quot;default_bookmarks&quot;;
+        &quot;http_avatar&quot;;
+        &quot;idlecompat&quot;;
+        &quot;presence_cache&quot;;
+        &quot;smacks&quot;;
+        &quot;strict_https&quot;;
+        --&quot;pep_vcard_avatar&quot;; -- not compatible with this version of pep, wait for v0.12
+        &quot;watchuntrusted&quot;;
+        &quot;webpresence&quot;;
+        &quot;external_services&quot;;
+    }
+
+-- only if you want to disable some modules
+modules_disabled = {
+    -- &quot;offline&quot;; -- Store offline messages
+    -- &quot;c2s&quot;; -- Handle client connections
+    -- &quot;s2s&quot;; -- Handle server-to-server connections
+    -- &quot;posix&quot;; -- POSIX functionality, sends server to background, enables syslog, etc.
+}
+
+external_services = {
+    {
+        type = &quot;stun&quot;,
+        transport = &quot;udp&quot;,
+        host = &quot;proxy.your.domain&quot;,
+        port = 3478
+    }, {
+        type = &quot;turn&quot;,
+        transport = &quot;udp&quot;,
+        host = &quot;proxy.your.domain&quot;,
+        port = 3478,
+        -- you could decide this now or come back later when you install coturn
+        secret = &quot;YOUR SUPER SECRET TURN PASSWORD&quot;
+    }
+}
+
+--- general global configuration
+http_ports = { 5280 }
+http_interfaces = { &quot;*&quot;, &quot;::&quot; }
+
+https_ports = { 5281 }
+https_interfaces = { &quot;*&quot;, &quot;::&quot; }
+
+proxy65_ports = { 5000 }
+proxy65_interfaces = { &quot;*&quot;, &quot;::&quot; }
+
+http_default_host = &quot;xmpp.your.domain&quot;
+http_external_url = &quot;https://xmpp.your.domain/&quot;
+-- or if you want to have it somewhere else, change this
+https_certificate = &quot;/etc/prosody/certs/xmpp.your.domain.crt&quot;
+
+hsts_header = &quot;max-age=31556952&quot;
+
+cross_domain_bosh = true
+--consider_bosh_secure = true
+cross_domain_websocket = true
+--consider_websocket_secure = true
+
+trusted_proxies = { &quot;127.0.0.1&quot;, &quot;::1&quot;, &quot;192.169.1.1&quot; }
+
+pep_max_items = 10000
+
+-- this is disabled by default, and I keep it like this, depends on you
+--allow_registration = true
+
+-- you might want this options as they are
+c2s_require_encryption = true
+s2s_require_encryption = true
+s2s_secure_auth = false
+--s2s_insecure_domains = { &quot;insecure.example&quot; }
+--s2s_secure_domains = { &quot;jabber.org&quot; }
+
+-- where the certificates are stored (/etc/prosody/certs by default)
+certificates = &quot;certs&quot;
+checkcerts_notify = 7 -- ( in days )
+
+-- rate limits on connections to the server, these are my personal settings, because by default they were limited to something like 30kb/s
+limits = {
+    c2s = {
+        rate = &quot;2000kb/s&quot;;
+    };
+    s2sin = {
+        rate = &quot;5000kb/s&quot;;
+    };
+    s2sout = {
+        rate = &quot;5000kb/s&quot;;
+    };
+}
+
+-- again, this could be yourself, it is a jid
+unlimited_jids = { &quot;admin@your.domain&quot; }
+
+authentication = &quot;internal_hashed&quot;
+
+-- if you don't want to use sql, change it to internal and comment the second line
+-- since this is optional, i won't describe how to setup mysql or setup the user/database, that would be out of the scope for this entry
+storage = &quot;sql&quot;
+sql = { driver = &quot;MySQL&quot;, database = &quot;prosody&quot;, username = &quot;prosody&quot;, password = &quot;PROSODY USER SECRET PASSWORD&quot;, host = &quot;localhost&quot; }
+
+archive_expires_after = &quot;4w&quot; -- configure message archive
+max_archive_query_results = 20;
+mam_smart_enable = true
+default_archive_policy = &quot;roster&quot; -- archive only messages from users who are in your roster
+
+-- normally you would like at least one log file of certain level, but I keep all of them, the default is only the info = &quot;*syslog&quot; one
+log = {
+    info = &quot;*syslog&quot;;
+    warn = &quot;prosody.warn&quot;;
+    error = &quot;prosody.err&quot;;
+    debug = &quot;prosody.debug&quot;;
+    -- &quot;*console&quot;; -- Needs daemonize=false
+}
+
+-- cloud_notify
+push_notification_with_body = false -- Whether or not to send the message body to remote pubsub node
+push_notification_with_sender = false -- Whether or not to send the message sender to remote pubsub node
+push_max_errors = 5 -- persistent push errors are tolerated before notifications for the identifier in question are disabled
+push_max_devices = 5 -- number of allowed devices per user
+
+-- by default every user on this server will join these muc rooms
+default_bookmarks = {
+    { jid = &quot;room@muc.your.domain&quot;, name = &quot;The Room&quot; };
+    { jid = &quot;support@muc.your.domain&quot;, name = &quot;Support Room&quot; };
+}
+
+-- could be your jid
+untrusted_fail_watchers = { &quot;admin@your.domain&quot; }
+untrusted_fail_notification = &quot;Establishing a secure connection from $from_host to $to_host failed. Certificate hash: $sha1. $errors&quot;
+
+----------- Virtual hosts -----------
+VirtualHost &quot;your.domain&quot;
+    name = &quot;Prosody&quot;
+    http_host = &quot;xmpp.your.domain&quot;
+
+disco_items = {
+    { &quot;your.domain&quot;, &quot;Prosody&quot; };
+    { &quot;muc.your.domain&quot;, &quot;MUC Service&quot; };
+    { &quot;pubsub.your.domain&quot;, &quot;Pubsub Service&quot; };
+    { &quot;proxy.your.domain&quot;, &quot;SOCKS5 Bytestreams Service&quot; };
+    { &quot;vjud.your.domain&quot;, &quot;User Directory&quot; };
+}
+
+
+-- Multi-user chat
+Component &quot;muc.your.domain&quot; &quot;muc&quot;
+    name = &quot;MUC Service&quot;
+    modules_enabled = {
+        --&quot;bob&quot;; -- not compatible with this version of Prosody
+        &quot;muc_limits&quot;;
+        &quot;muc_mam&quot;; -- message archive in muc, again, a placeholder
+        &quot;muc_mam_hints&quot;;
+        &quot;muc_mention_notifications&quot;;
+        &quot;vcard_muc&quot;;
+    }
+
+    restrict_room_creation = false
+
+    muc_log_by_default = true
+    muc_log_presences = false
+    log_all_rooms = false
+    muc_log_expires_after = &quot;1w&quot;
+    muc_log_cleanup_interval = 4 * 60 * 60
+
+
+-- Upload
+Component &quot;xmpp.your.domain&quot; &quot;http_upload&quot;
+    name = &quot;Upload Service&quot;
+    http_host= &quot;xmpp.your.domain&quot;
+    -- you might want to change this, these are numbers in bytes, so 10MB and 100MB respectively
+    http_upload_file_size_limit = 1024*1024*10
+    http_upload_quota = 1024*1024*100
+
+
+-- Pubsub
+Component &quot;pubsub.your.domain&quot; &quot;pubsub&quot;
+    name = &quot;Pubsub Service&quot;
+    pubsub_max_items = 10000
+    modules_enabled = {
+        &quot;pubsub_feeds&quot;;
+        &quot;pubsub_text_interface&quot;;
+    }
+
+    -- personally i don't have any feeds configured
+    feeds = {
+        -- The part before = is used as PubSub node
+        --planet_jabber = &quot;http://planet.jabber.org/atom.xml&quot;;
+        --prosody_blog = &quot;http://blog.prosody.im/feed/atom.xml&quot;;
+    }
+
+
+-- Proxy
+Component &quot;proxy.your.domain&quot; &quot;proxy65&quot;
+    name = &quot;SOCKS5 Bytestreams Service&quot;
+    proxy65_address = &quot;proxy.your.domain&quot;
+
+
+-- Vjud, user directory
+Component &quot;vjud.your.domain&quot; &quot;vjud&quot;
+    name = &quot;User Directory&quot;
+    vjud_mode = &quot;opt-in&quot;
+</code></pre>
+<p>You <mark>HAVE</mark> to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:</p>
+<pre><code class="language-sh">luac5.2 -p /etc/prosody/prosody.cfg.lua
+</code></pre>
+<p>Notice that by default <code>prosody</code> will look up certificates that look like <code>sub.your.domain</code>, but if you get the certificates as myself, you&rsquo;ll have a single certificate for all subdomains, and by default it is in <code>/etc/letsencrypt/live</code>, which has some strict permissions. So, to import them you can run:</p>
+<pre><code class="language-sh">prosodyctl --root cert import /etc/letsencrypt/live
+</code></pre>
+<p>Ignore the complaining about not finding the subdomain certificates and note that you will have to run that command on each certificate renewal, to automate this, add the <code>--deploy-hook</code> flag to your automated Certbot renewal system; for me it&rsquo;s a <code>systemd</code> timer with the following <code>certbot.service</code>:</p>
+<pre><code class="language-ini">[Unit]
+Description=Let's Encrypt renewal
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot renew --quiet --agree-tos --deploy-hook &quot;systemctl reload nginx.service &amp;&amp; prosodyctl --root cert import /etc/letsencrypt/live&quot;
+</code></pre>
+<p>And if you don&rsquo;t have it already, the <code>certbot.timer</code>:</p>
+<pre><code class="language-ini">[Unit]
+Description=Twice daily renewal of Let's Encrypt's certificates
+
+[Timer]
+OnCalendar=0/12:00:00
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+</code></pre>
+<p>Also, go to the <code>certs</code> directory and make the appropriate symbolic links:</p>
+<pre><code class="language-sh">cd /etc/prosody/certs
+ln -s your.domain.crt SUBDOMAIN.your.domain.crt
+ln -s your.domain.key SUBDOMAIN.your.domain.key
+...
+</code></pre>
+<p>That&rsquo;s basically all the configuration that needs Prosody itself, but we still have to configure Nginx and Coturn before starting/enabling the <code>prosody</code> service.</p>
+<h2 id="nginx-configuration-file">Nginx configuration file</h2>
+<p>Since this is not an ordinary configuration file I&rsquo;m going to describe this too. Your <code>prosody.conf</code> file should have the following location blocks under the main server block (the one that listens to HTTPS):</p>
+<pre><code class="language-nginx"># HTTPS server block
+server {
+    root /var/www/prosody/;
+    server_name xmpp.luevano.xyz muc.luevano.xyz pubsub.luevano.xyz vjud.luevano.xyz proxy.luevano.xyz;
+    index index.html;
+
+    # for extra https discovery (XEP-0256)
+    location /.well-known/acme-challenge {
+        allow all;
+    }
+
+    # bosh specific
+    location /http-bind {
+        proxy_pass  https://localhost:5281/http-bind;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;
+        tcp_nodelay on;
+    }
+
+    # websocket specific
+    location /xmpp-websocket {
+        proxy_pass https://localhost:5281/xmpp-websocket;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection &quot;Upgrade&quot;;
+        proxy_set_header Upgrade $http_upgrade;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 900s;
+    }
+
+    # general proxy
+    location / {
+        proxy_pass https://localhost:5281;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+    ...
+    # Certbot stuff
+}
+# HTTP server block (the one that certbot creates)
+server {
+    ...
+}
+</code></pre>
+<p>Also, you need to add the following to your actual <code>your.domain</code> (this cannot be a subdomain) configuration file:</p>
+<pre><code class="language-nginx">server {
+    ...
+    location /.well-known/host-meta {
+        default_type 'application/xrd+xml';
+        add_header Access-Control-Allow-Origin '*' always;
+    }
+
+    location /.well-known/host-meta.json {
+        default_type 'application/jrd+json';
+        add_header Access-Control-Allow-Origin '*' always;
+    }
+    ...
+}
+</code></pre>
+<p>And you will need the following <code>host-meta</code> and <code>host-meta.json</code> files inside the <code>.well-known/acme-challenge</code> directory for <code>your.domain</code> (following my nomenclature: <code>/var/www/yourdomaindir/.well-known/acme-challenge/</code>).</p>
+<p>For <code>host-meta</code> file:</p>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='utf-8'?&gt;
+&lt;XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'&gt;
+    &lt;Link rel=&quot;urn:xmpp:alt-connections:xbosh&quot;
+        href=&quot;https://xmpp.your.domain:5281/http-bind&quot; /&gt;
+    &lt;Link rel=&quot;urn:xmpp:alt-connections:websocket&quot;
+        href=&quot;wss://xmpp.your.domain:5281/xmpp-websocket&quot; /&gt;
+&lt;/XRD&gt;
+</code></pre>
+<p>And <code>host-meta.json</code> file:</p>
+<pre><code class="language-json">{
+    &quot;links&quot;: [
+        {
+            &quot;rel&quot;: &quot;urn:xmpp:alt-connections:xbosh&quot;,
+                &quot;href&quot;: &quot;https://xmpp.your.domain:5281/http-bind&quot;
+        },
+        {
+            &quot;rel&quot;: &quot;urn:xmpp:alt-connections:websocket&quot;,
+                &quot;href&quot;: &quot;wss://xmpp.your.domain:5281/xmpp-websocket&quot;
+        }
+    ]
+}
+</code></pre>
+<p>Remember to have your <code>prosody.conf</code> file symlinked (or discoverable by Nginx) to the <code>sites-enabled</code> directory. You can now restart your <code>nginx</code> service (and test the configuration, optionally):</p>
+<pre><code class="language-sh">nginx -t
+systemctl restart nginx.service
+</code></pre>
+<h2 id="coturn">Coturn</h2>
+<p><a href="https://github.com/coturn/coturn">Coturn</a> is the implementation of TURN and STUN server, which in general is for (at least in the XMPP world) voice support and external service discovery.</p>
+<p>Install the <code>coturn</code> package:</p>
+<pre><code class="language-sh">pacman -S coturn
+</code></pre>
+<p>You can modify the configuration file (located at <code>/etc/turnserver/turnserver.conf</code>) as desired, but at least you need to make the following changes (uncomment or edit):</p>
+<pre><code>use-auth-secret
+realm=proxy.your.domain
+static-auth-secret=YOUR SUPER SECRET TURN PASSWORD
+</code></pre>
+<p>I&rsquo;m sure there is more configuration to be made, like using SQL to store data and whatnot, but for now this is enough for me. Note that you may not have some functionality that&rsquo;s needed to create dynamic users to use the TURN server, and to be honest I haven&rsquo;t tested this since I don&rsquo;t use this feature in my XMPP clients, but if it doesn&rsquo;t work, or you know of an error or missing configuration don&rsquo;t hesitate to <a href="https://luevano.xyz/contact.html">contact me</a>.</p>
+<p>Start/enable the <code>turnserver</code> service:</p>
+<pre><code class="language-sh">systemctl start turnserver.service
+systemctl enable turnserver.service
+</code></pre>
+<p>You can test if your TURN server works at <a href="https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/">Trickle ICE</a>. You may need to add a user in the <code>turnserver.conf</code> to test this.</p>
+<h2 id="wrapping-up">Wrapping up</h2>
+<p>At this point you should have a working XMPP server, start/enable the <code>prosody</code> service now:</p>
+<pre><code>systemctl start prosody.service
+systemctl enable prosody.service
+</code></pre>
+<p>And you can add your first user with the <code>prosodyctl</code> command (it will prompt you to add a password):</p>
+<pre><code>prosodyctl adduser user@your.domain
+</code></pre>
+<p>You may want to add a <code>compliance</code> user, so you can check if your server is set up correctly. To do so, go to <a href="https://compliance.conversations.im/add/">XMPP Compliance Tester</a> and enter the <code>compliance</code> user credentials. It should have similar compliance score to mine:</p>
+<p><a href='https://compliance.conversations.im/server/luevano.xyz'><img src='https://compliance.conversations.im/badge/luevano.xyz'></a></p>
+<p>Additionally, you can test the security of your server in <a href="https://xmpp.net/index.php">IM Observatory</a>, here you only need to specify your <code>domain.name</code> (not <code>xmpp.domain.name</code>, if you set up the <strong>SRV</strong> DNS records correctly). Again, it should have a similar score to mine:</p>
+<p><a href='https://xmpp.net/result.php?domain=luevano.xyz&amp;type=client'><img src='https://xmpp.net/badge.php?domain=luevano.xyz' alt='xmpp.net score' /></a></p>
+<p>You can now log in into your XMPP client of choice, if it asks for the server it should be <code>xmpp.your.domain</code> (or <code>your.domain</code> for some clients) and your login credentials <code>you@your.domain</code> and the password you chose (which you can change in most clients).</p>
+<p>That&rsquo;s it, send me a message <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.</p>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/acomodada_la_pagina_de_arte.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Wed, Jun 09, 2021 @ 05:24 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="far fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>

@@ -169,7 +169,7 @@ cp -r /usr/share/doc/dovecot/example-config/conf.d /etc/dovecot
 
 As Luke stated, `dovecot` comes with a lot of "modules" (under `/etc/dovecot/conf.d/` if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edit/create the whole `dovecot.conf` file; although, I would like to check each of the separate configuration files `dovecot` provides I think the options Luke provides are more than good enough.
 
-I'm working with an empty `dovecot.conf` file. Add the following lines for SSL and login configuration (also replace `{yourcertdir}` with the same certificate directory described in the [Postfix](#postfix) section above, note that the `<` is required):
+I'm working with an empty `dovecot.conf` file. Add the following lines for SSL and login configuration (also replace `{yourcertdir}` with the same certificate directory described in the Postfix section above, note that the `<` is required):
 
 ```apache
 ssl = required
@@ -500,15 +500,15 @@ Now, to actually use the mail service: first of all, you need a *normal* account
 
 Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for `thunderdbird`(I tested in windows default mail app and you don't need a lot of settings):
 
-* \* server: subdomain.domain (mail.luevano.xyz in my case)
-* **SMTP** port: 587
-* **SMTPS** port: 465 (I use this one)
-* **IMAP** port: 143
-* **IMAPS** port: 993 (again, I use this one)
-* Connection/security: SSL/TLS
-* Authentication method: Normal password
-* Username: just your `user`, not the whole email (`david` in my case)
-* Password: your `user` password (as in the password you use to login to the server with that user)
+- \* server: subdomain.domain (mail.luevano.xyz in my case)
+- **SMTP** port: 587
+- **SMTPS** port: 465 (I use this one)
+- **IMAP** port: 143
+- **IMAPS** port: 993 (again, I use this one)
+- Connection/security: SSL/TLS
+- Authentication method: Normal password
+- Username: just your `user`, not the whole email (`david` in my case)
+- Password: your `user` password (as in the password you use to login to the server with that user)
 
 All that's left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to [DKIM Test](https://www.appmaildev.com/en/dkim) and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:
 

@@ -13,7 +13,8 @@ h2 {
   text-align: center;
 }
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
 }
@@ -36,10 +37,13 @@ body > header {
 
 body > footer {
   grid-area: footer;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 main {
   grid-area: main;
+  padding-top: 0.5em;
   border-radius: 5px;
   padding-bottom: 0.5em;
 }
@@ -48,7 +52,9 @@ a{
   text-decoration: none;
 }
 
-body > header, body > footer, main {
+body > header,
+body > footer,
+main {
   justify-self: center;
   width: clamp(30ch, calc(100% - 1em), 75ch);
   padding-left: 0.5em;
@@ -57,6 +63,12 @@ body > header, body > footer, main {
 
 main.art {
   width: clamp(30ch, calc(100% - 1em), 100%);
+}
+
+main.art p {
+  margin-left: auto;
+  margin-right: auto;
+  width: clamp(30ch, calc(100% - 1em), 75ch);
 }
 
 
@@ -180,6 +192,9 @@ pre {
 }
 
 code {
+  padding: 0.1em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
   overflow-wrap: anywhere;
 }
 
@@ -208,6 +223,19 @@ code.crypto {
 
 
 /* images */
+figure {
+  margin: 0;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+figcaption {
+  margin-top: 0.5em;
+  text-align: center;
+  font-size: smaller;
+  font-style: italic;
+}
+
 img {
   border-radius: 5px;
   max-width: 100%;
@@ -267,7 +295,6 @@ div.art-grid a {
 }
 
 div.art-grid img {
-  border: 1px solid white;
   object-fit: cover;
 }
 
@@ -293,8 +320,9 @@ a.zoom-in {
   cursor: zoom-in;
 }
 
-/* art nav */
-div.art-nav {
+/* art nav / for now also page nav */
+div.art-nav,
+div.page-nav {
   width: 100%;
   display: grid;
   grid-template-areas:
@@ -305,19 +333,23 @@ div.art-nav {
   justify-items: center;
 }
 
-div.art-nav > span.index {
+div.art-nav > span.index,
+div.page-nav > span.index {
   grid-area: index;
 }
 
-div.art-nav > span.previous {
+div.art-nav > span.previous,
+div.page-nav > span.previous {
   grid-area: prev;
 }
 
-div.art-nav > span.next {
+div.art-nav > span.next,
+div.page-nav > span.next {
   grid-area: next;
 }
 
-div.art-nav > span {
+div.art-nav > span,
+div.page-nav > span {
   border-radius: 5px;
   min-width: 1em;
   max-width: 10em;
@@ -329,12 +361,14 @@ div.art-nav > span {
   margin-right: 0.2em;
 }
 
-div.art-nav > span span {
+div.art-nav > span span,
+div.page-nav > span span {
   display: none;
 }
 
 @media screen and (min-width: 600px) {
-  div.art-nav > span span {
+  div.art-nav > span span,
+  div.page-nav > span span {
     display: inline;
   }
 }

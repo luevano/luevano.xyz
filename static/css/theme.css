@@ -44,6 +44,7 @@
   --switch-sun: var(--color13);
 
   --code-border: var(--color3);
+  --art-border: var(--color3);
 
   --pagenav-bg: var(--color1);
   --pagenav-bg-hl: var(--color2);
@@ -77,6 +78,7 @@
   --switch-sun: var(--color13);
 
   --code-border: var(--color4);
+  --art-border: var(--color4);
 
   --pagenav-bg: var(--color10);
   --pagenav-bg-hl: var(--color9);
@@ -188,19 +190,32 @@ button.theme-switcher > .fa-sun {
   color: var(--switch-sun);
 }
 
-/* art nav */
-div.art-nav > span {
+/* art grid / art gallery */
+div.art-grid img {
+  border: 1px solid var(--art-border);
+}
+
+div.art-grid img:hover {
+  border: 5px solid var(--art-border);
+}
+
+/* art nav / for now also page nav */
+div.art-nav > span,
+div.page-nav > span {
   background: var(--pagenav-bg);
 }
 
-div.art-nav > span > a {
+div.art-nav > span > a,
+div.page-nav > span > a {
   color: var(--pagenav-link);
 }
 
-div.art-nav > span:hover {
+div.art-nav > span:hover,
+div.page-nav > span:hover {
   background: var(--pagenav-bg-hl);
 }
 
-div.art-nav > span:hover > a {
+div.art-nav > span:hover > a,
+div.page-nav > span:hover > a {
   color: var(--pagenav-link-hl);
 }

@@ -16,6 +16,9 @@
 
   {{page.content}}
 
+  {%import "page_nav.html" as page_nav%}
+  {{page_nav.print(page, config)}}
+
   <hr>
   <div class="article-info">
     <p>By {{page.author}}</p>

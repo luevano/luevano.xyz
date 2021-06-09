@@ -97,12 +97,12 @@ That could serve as a template if you intend to add more domains.
 
 Note some things:
 
-* `listen`: we're telling Nginx which port to listen to (IPv4 and IPv6, respectively).
-* `root`: the root directory of where the website files (`.html`, `.css`, `.js`, etc. files) are located. I followed Luke's directory path `/var/www/some_folder`.
-* `server_name`: the actual domain to "listen" to (for my website it is: `server_name luevano.xyz www.luevano.xyz;` and for this blog is: `server_name blog.luevano.xyz www.blog.luevano.xyz;`).
-* `index`: what file to serve as the index (could be any `.html`, `.htm`, `.php`, etc. file) when just entering the website.
-* `location`: what goes after `domain.name`, used in case of different configurations depending on the URL paths (deny access on `/private`, make a proxy on `/proxy`, etc).
-	* `try_files`: tells what files to look for.
+- `listen`: we're telling Nginx which port to listen to (IPv4 and IPv6, respectively).
+- `root`: the root directory of where the website files (`.html`, `.css`, `.js`, etc. files) are located. I followed Luke's directory path `/var/www/some_folder`.
+- `server_name`: the actual domain to "listen" to (for my website it is: `server_name luevano.xyz www.luevano.xyz;` and for this blog is: `server_name blog.luevano.xyz www.blog.luevano.xyz;`).
+- `index`: what file to serve as the index (could be any `.html`, `.htm`, `.php`, etc. file) when just entering the website.
+- `location`: what goes after `domain.name`, used in case of different configurations depending on the URL paths (deny access on `/private`, make a proxy on `/proxy`, etc).
+	- `try_files`: tells what files to look for.
 
 Then, make a symbolic link from this configuration file to the `sites-enabled` directory:
 

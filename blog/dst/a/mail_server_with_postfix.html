@@ -187,7 +187,7 @@ cp /usr/share/doc/dovecot/example-config/dovecot.conf /etc/dovecot/dovecot.conf
 cp -r /usr/share/doc/dovecot/example-config/conf.d /etc/dovecot
 </code></pre>
 <p>As Luke stated, <code>dovecot</code> comes with a lot of &ldquo;modules&rdquo; (under <code>/etc/dovecot/conf.d/</code> if you copied that folder) for all sorts of configurations that you can include, but I do as he does and just edit/create the whole <code>dovecot.conf</code> file; although, I would like to check each of the separate configuration files <code>dovecot</code> provides I think the options Luke provides are more than good enough.</p>
-<p>I&rsquo;m working with an empty <code>dovecot.conf</code> file. Add the following lines for SSL and login configuration (also replace <code>{yourcertdir}</code> with the same certificate directory described in the <a href="#postfix">Postfix</a> section above, note that the <code>&lt;</code> is required):</p>
+<p>I&rsquo;m working with an empty <code>dovecot.conf</code> file. Add the following lines for SSL and login configuration (also replace <code>{yourcertdir}</code> with the same certificate directory described in the Postfix section above, note that the <code>&lt;</code> is required):</p>
 <pre><code class="language-apache">ssl = required
 ssl_cert = &lt;{yourcertdir}/fullchain.pem
 ssl_key = &lt;{yourcertdir}/privkey.pem
@@ -434,11 +434,35 @@ systemctl enable spamassassin.service
 </figure>
 <p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you can <a href="https://luevano.xyz/contact.html">contact me</a>.</p>
 
+  <div class="page-nav">
+    <span class="next">
+      <a href="https://blog.luevano.xyz/a/git_server_with_cgit.html" alt="Next">
+        <i class="fas fa-arrow-left" alt="Arrow left"></i>
+        <span>Next</span>
+      </a>
+    </span>
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/website_with_nginx.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
-      <p>Modified: Tue, Jun 08, 2021 @ 06:27 UTC</p>
+      <p>Modified: Tue, Jun 08, 2021 @ 07:29 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

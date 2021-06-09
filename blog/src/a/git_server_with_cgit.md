@@ -15,8 +15,8 @@ Note that this is mostly for personal use, so there's no user/authentication con
 
 I might get tired of saying this (it's just copy paste, basically)... but you will need the same prerequisites as before (check my [website](https://blog.luevano.xyz/a/website_with_nginx.html) and [mail](https://blog.luevano.xyz/a/mail_server_with_postfix.html) entries), with the extras:
 
-* (Optional, if you want a "front-end") A **CNAME** for "git" and (optionally) "www.git", or some other name for your sub-domains.
-* An SSL certificate, if you're following the other entries, add a `git.conf` and run `certbot --nginx` to extend the certificate.
+- (Optional, if you want a "front-end") A **CNAME** for "git" and (optionally) "www.git", or some other name for your sub-domains.
+- An SSL certificate, if you're following the other entries, add a `git.conf` and run `certbot --nginx` to extend the certificate.
 
 ## Git
 
