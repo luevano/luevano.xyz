@@ -52,6 +52,12 @@ a{
   text-decoration: none;
 }
 
+mark,
+mark * {
+  background: none;
+  animation: mark-rainbow 2s linear infinite;
+}
+
 body > header,
 body > footer,
 main {
@@ -75,13 +81,8 @@ main.art p {
 /* article/art elements */
 div.article-info,
 div.art-info {
-  line-height: 0.3;
+  line-height: 0.5;
   font-size: smaller;
-}
-
-div.article-info > div.article-tags,
-div.art-info > div.art-tags {
-  font-size: larger;
 }
 
 
@@ -253,11 +254,6 @@ img.wrap-left {
   float: left;
 }
 
-img.qr {
-  max-width: 200px;
-  padding: 1em;
-}
-
 /* img grid */
 div.img-grid,
 div.img-grid > p {
@@ -272,6 +268,26 @@ div.img-grid img {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+}
+
+/* crypto grid */
+div.crypto-grid {
+  display: grid;
+  gap: 1em;
+  /* the 200px corresponds tothe img qr size */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+div.crypto-grid figure {
+  margin: 0;
+}
+
+div.crypto-grid a {
+  display: contents;
+}
+
+div.crypto-grid img.qr {
+  max-width: 140px;
 }
 
 /* art grid / art gallery */
@@ -296,8 +312,11 @@ div.art-grid a {
 
 div.art-grid img {
   object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
+/* not sure if these two are needed as the one above works fine */
 div.art-grid a.wide img {
   width: 100%;
 }

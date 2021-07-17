@@ -364,7 +364,7 @@ You ???HAVE??? to read all of the configuration file, because there are a lot of
 luac5.2 -p /etc/prosody/prosody.cfg.lua
 ```
 
-Notice that by default `prosody` will look up certificates that look like `sub.your.domain`, but if you get the certificates as myself, you'll have a single certificate for all subdomains, and by default it is in `/etc/letsencrypt/live`, which has some strict permissions. So, to import them you can run:
+Notice that by default `prosody` will look up certificates that look like `sub.your.domain`, but if you get the certificates like I do, you'll have a single certificate for all subdomains, and by default it is in `/etc/letsencrypt/live`, which has some strict permissions. So, to import it you can run:
 
 ```sh
 prosodyctl --root cert import /etc/letsencrypt/live
@@ -534,7 +534,7 @@ pacman -S coturn
 
 You can modify the configuration file (located at `/etc/turnserver/turnserver.conf`) as desired, but at least you need to make the following changes (uncomment or edit):
 
-```
+```ini
 use-auth-secret
 realm=proxy.your.domain
 static-auth-secret=YOUR SUPER SECRET TURN PASSWORD
@@ -555,14 +555,14 @@ You can test if your TURN server works at [Trickle ICE](https://webrtc.github.io
 
 At this point you should have a working XMPP server, start/enable the `prosody` service now:
 
-```
+```sh
 systemctl start prosody.service
 systemctl enable prosody.service
 ```
 
 And you can add your first user with the `prosodyctl` command (it will prompt you to add a password):
 
-```
+```sh
 prosodyctl adduser user@your.domain
 ```
 

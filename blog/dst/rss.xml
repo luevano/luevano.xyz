@@ -13,8 +13,8 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Wed, 09 Jun 2021 05:24:56 GMT</pubDate>
-    <lastBuildDate>Wed, 09 Jun 2021 05:24:56 GMT</lastBuildDate>
+    <pubDate>Thu, 10 Jun 2021 04:42:19 GMT</pubDate>
+    <lastBuildDate>Thu, 10 Jun 2021 04:42:19 GMT</lastBuildDate>
     <generator>pyssg v0.5.9</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
@@ -371,7 +371,7 @@ Component &quot;vjud.your.domain&quot; &quot;vjud&quot;
 <p>You <mark>HAVE</mark> to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:</p>
 <pre><code class="language-sh">luac5.2 -p /etc/prosody/prosody.cfg.lua
 </code></pre>
-<p>Notice that by default <code>prosody</code> will look up certificates that look like <code>sub.your.domain</code>, but if you get the certificates as myself, you&rsquo;ll have a single certificate for all subdomains, and by default it is in <code>/etc/letsencrypt/live</code>, which has some strict permissions. So, to import them you can run:</p>
+<p>Notice that by default <code>prosody</code> will look up certificates that look like <code>sub.your.domain</code>, but if you get the certificates like I do, you&rsquo;ll have a single certificate for all subdomains, and by default it is in <code>/etc/letsencrypt/live</code>, which has some strict permissions. So, to import it you can run:</p>
 <pre><code class="language-sh">prosodyctl --root cert import /etc/letsencrypt/live
 </code></pre>
 <p>Ignore the complaining about not finding the subdomain certificates and note that you will have to run that command on each certificate renewal, to automate this, add the <code>--deploy-hook</code> flag to your automated Certbot renewal system; for me it&rsquo;s a <code>systemd</code> timer with the following <code>certbot.service</code>:</p>
@@ -505,7 +505,7 @@ systemctl restart nginx.service
 <pre><code class="language-sh">pacman -S coturn
 </code></pre>
 <p>You can modify the configuration file (located at <code>/etc/turnserver/turnserver.conf</code>) as desired, but at least you need to make the following changes (uncomment or edit):</p>
-<pre><code>use-auth-secret
+<pre><code class="language-ini">use-auth-secret
 realm=proxy.your.domain
 static-auth-secret=YOUR SUPER SECRET TURN PASSWORD
 </code></pre>
@@ -517,11 +517,11 @@ systemctl enable turnserver.service
 <p>You can test if your TURN server works at <a href="https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/">Trickle ICE</a>. You may need to add a user in the <code>turnserver.conf</code> to test this.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
 <p>At this point you should have a working XMPP server, start/enable the <code>prosody</code> service now:</p>
-<pre><code>systemctl start prosody.service
+<pre><code class="language-sh">systemctl start prosody.service
 systemctl enable prosody.service
 </code></pre>
 <p>And you can add your first user with the <code>prosodyctl</code> command (it will prompt you to add a password):</p>
-<pre><code>prosodyctl adduser user@your.domain
+<pre><code class="language-sh">prosodyctl adduser user@your.domain
 </code></pre>
 <p>You may want to add a <code>compliance</code> user, so you can check if your server is set up correctly. To do so, go to <a href="https://compliance.conversations.im/add/">XMPP Compliance Tester</a> and enter the <code>compliance</code> user credentials. It should have similar compliance score to mine:</p>
 <p><a href='https://compliance.conversations.im/server/luevano.xyz'><img src='https://compliance.conversations.im/badge/luevano.xyz'></a></p>

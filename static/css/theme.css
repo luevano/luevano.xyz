@@ -86,6 +86,28 @@
   --pagenav-link-hl: var(--color6);
 }
 
+/* animations */
+@keyframes mark-rainbow {
+  0%{
+    color: var(--color11);
+  }
+  20%{
+    color: var(--color12);
+  }
+  40%{
+    color: var(--color13);
+  }
+  60%{
+    color: var(--color14);
+  }
+  80%{
+    color: var(--color15);
+  }
+  100%{
+    color: var(--color11);
+  }
+}
+
 /* general */
 a {
   color: var(--link);
