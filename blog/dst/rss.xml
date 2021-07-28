@@ -13,8 +13,8 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Thu, 10 Jun 2021 04:42:19 GMT</pubDate>
-    <lastBuildDate>Thu, 10 Jun 2021 04:42:19 GMT</lastBuildDate>
+    <pubDate>Sun, 18 Jul 2021 07:55:24 GMT</pubDate>
+    <lastBuildDate>Sun, 18 Jul 2021 07:55:24 GMT</lastBuildDate>
     <generator>pyssg v0.5.9</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
@@ -23,6 +23,22 @@
       <title>Luévano's Blog</title>
       <link>https://blog.luevano.xyz</link>
     </image>
+    <item>
+      <title>Tenia este pex algo descuidado</title>
+      <link>https://blog.luevano.xyz/a/tenia_esto_descuidado.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/tenia_esto_descuidado.html</guid>
+      <pubDate>Sun, 18 Jul 2021 07:51:50 GMT</pubDate>
+      <category>Short</category>
+      <category>Spanish</category>
+      <category>Update</category>
+      <description>Nada más un update en el estado del blog y lo que he andado haciendo.</description>
+      <content:encoded><![CDATA[<p>Así es, tenía un poco descuidado este pex, siendo la razón principal que andaba ocupado con cosas de <em>la vida profesional</em>, ayay. Pero ya que ando un poco más despejado y menos estresado voy a seguir usando el blog y a ver qué más hago.</p>
+<p>Tengo unas entradas pendientes que quiero hacer del estilo de &ldquo;tutorial&rdquo; o &ldquo;how-to&rdquo;, pero me lo he estado debatiendo, porque Luke ya empezó a hacerlo más de verdad en <a href="https://landchad.net/">landchad.net</a>, lo cual recomiendo bastante pues igual yo empecé a hacer esto por él (y por <a href="https://lmcj.xyz/">lm</a>); aunque la verdad pues es muy específico a como él hace las cosas y quizá sí puede haber diferencias, pero ya veré en estos días. La próxima que quiero hacer es sobre el VPN, porque no lo he <em>setupeado</em> desde que reinicié El Página Web y La Servidor, entonces acomodaré el VPN de nuevo y de pasada tiro entrada de eso.</p>
+<p>También dejé un dibujo pendiente, que la neta lo dejé por 2 cosas: está bien cabrón (porque también lo quiero colorear) y porque estaba ocupado; de lo cuál ya sólo queda el <em>está bien cabrón</em> pero no he tenido el valor de retomarlo. Lo triste es que ya pasó el tiempo del hype y ya no tengo mucha motivación para terminarlo más que el hecho de que cuando lo termine empezaré a usar Clip Studio Paint en vez de Krita, porque compré una licencia ahora que estuvo en 50% de descuento (sí, me mamé).</p>
+<p>Algo bueno es que me he estado sintiendo muy bien conmigo mismo últimamente, aunque casi no hable de eso. Sí hay una razón en específico, pero es una razón algo tonta. Espero así siga.</p>
+<p>Ah, y también quería acomodarme una sección de comentarios, pero como siempre, todas las opciones están bien <em>bloated</em>, entonces pues me voy a hacer una en corto seguramente en Python para <em>el back</em>, MySQL para la base de datos y Javascript para la conexión acá en <em>el front</em>, algo tranqui.</p>
+<p>Sobres pues.</p>]]></content:encoded>
+    </item>
     <item>
       <title>Create an XMPP server with Prosody compatible with Conversations and Movim</title>
       <link>https://blog.luevano.xyz/a/xmpp_server_with_prosody.html</link>
