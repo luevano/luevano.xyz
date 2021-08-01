@@ -100,7 +100,7 @@
 </li>
 <li>SSL certificates for the previous subdomains; similar that with my other entries just create the appropriate <code>prosody.conf</code> (where <code>server_name</code> will be all the subdomains defined above) file and run <code>certbot --nginx</code>. You can find the example configuration file almost at the end of this entry.</li>
 <li>Email addresses for <code>admin</code>, <code>abuse</code>, <code>contact</code>, <code>security</code>, etc. Or use your own email for all of them, doesn&rsquo;t really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.</li>
-<li>Allow ports 5000, 5222, 5269, 5280 and 5281 for <a href="https://prosody.im/doc/ports">Prosody</a> and, 3478 and 5349 for <a href="https://webrtc.org/getting-started/turn-server">Turnserver</a> which are the defaults for <code>coturn</code>.</li>
+<li>Allow ports <code>5000</code>, <code>5222</code>, <code>5269</code>, <code>5280</code> and <code>5281</code> for <a href="https://prosody.im/doc/ports">Prosody</a> and, <code>3478</code> and <code>5349</code> for <a href="https://webrtc.org/getting-started/turn-server">Turnserver</a> which are the defaults for <code>coturn</code>.</li>
 </ul>
 <h2 id="prosody">Prosody</h2>
 <p><a href="https://wiki.archlinux.org/title/Prosody">Prosody</a> is an implementation of the XMPP protocol that is flexible and extensible.</p>
@@ -603,7 +603,7 @@ systemctl enable prosody.service
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Wed, Jun 09, 2021 @ 05:24 UTC</p>
-      <p>Modified: Thu, Jun 10, 2021 @ 04:42 UTC</p>
+      <p>Modified: Sun, Aug 01, 2021 @ 09:24 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

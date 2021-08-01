@@ -29,7 +29,7 @@ Same as with my other entries ([website](https://luevano.xyz/a/website_with_ngin
 	- `_xmpp-server._tcp.muc.**your.domain**.` for port `5269` pointing to `xmpp.**your.domain**.`
 * SSL certificates for the previous subdomains; similar that with my other entries just create the appropriate `prosody.conf` (where `server_name` will be all the subdomains defined above) file and run `certbot --nginx`. You can find the example configuration file almost at the end of this entry.
 - Email addresses for `admin`, `abuse`, `contact`, `security`, etc. Or use your own email for all of them, doesn't really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.
-- Allow ports 5000, 5222, 5269, 5280 and 5281 for [Prosody](https://prosody.im/doc/ports) and, 3478 and 5349 for [Turnserver](https://webrtc.org/getting-started/turn-server) which are the defaults for `coturn`.
+- Allow ports `5000`, `5222`, `5269`, `5280` and `5281` for [Prosody](https://prosody.im/doc/ports) and, `3478` and `5349` for [Turnserver](https://webrtc.org/getting-started/turn-server) which are the defaults for `coturn`.
 
 ## Prosody
 
