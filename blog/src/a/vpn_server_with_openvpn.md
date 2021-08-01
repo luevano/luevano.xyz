@@ -298,7 +298,7 @@ Now, we need a way to create and revoke new configuration files. For this I crea
 
 In a nutshell, what it does is: generate a new client certificate keypair, update the CRL and create a new `.ovpn` configuration file that consists on the `client-common` data and all of the required certificates; or, revoke an existing client and refresh the CRL. The file is placed under `~/ovpn`.
 
-Create a new file with the following content (name it whatever you like) and don't forget to make it executable (`chmod +x script_name`):
+Create a new file with the following content (name it whatever you like) and don't forget to make it executable (`chmod +x vpn_script`):
 
 ```
 #!/bin/sh
@@ -356,6 +356,6 @@ chmod o+r pki/crl.pem
 cd $CPWD
 ```
 
-And the way to use is to run `ovpn_script new/rev client_name` as sudo (when revoking, it doesn't actually deletes the `.ovpn` file in `~/ovpn`). Again, this is a little script that I put together, so you should check it out, it might need tweaks (depending on your directory structure for `easy-rsa`) and it might have errors.
+And the way to use is to run `vpn_script new/rev client_name` as sudo (when revoking, it doesn't actually deletes the `.ovpn` file in `~/ovpn`). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for `easy-rsa`) and it could have errors.
 
 Now, just get the `.ovpn` file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.

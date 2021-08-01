@@ -296,7 +296,7 @@ verb 3
 <p>Where you should make any changes necessary, depending on your configuration.</p>
 <p>Now, we need a way to create and revoke new configuration files. For this I created a script, heavily based on one of the links I mentioned at the beginning, by the way. You can place these scripts anywhere you like, and you should take a look before running them because you&rsquo;ll be running them as root.</p>
 <p>In a nutshell, what it does is: generate a new client certificate keypair, update the CRL and create a new <code>.ovpn</code> configuration file that consists on the <code>client-common</code> data and all of the required certificates; or, revoke an existing client and refresh the CRL. The file is placed under <code>~/ovpn</code>.</p>
-<p>Create a new file with the following content (name it whatever you like) and don&rsquo;t forget to make it executable (<code>chmod +x script_name</code>):</p>
+<p>Create a new file with the following content (name it whatever you like) and don&rsquo;t forget to make it executable (<code>chmod +x vpn_script</code>):</p>
 <pre><code>#!/bin/sh
 # Client ovpn configuration creation and revoking.
 MODE=$1
@@ -351,7 +351,7 @@ chown nobody:nobody pki/crl.pem
 chmod o+r pki/crl.pem
 cd $CPWD
 </code></pre>
-<p>And the way to use is to run <code>ovpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually deletes the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it might need tweaks (depending on your directory structure for <code>easy-rsa</code>) and it might have errors.</p>
+<p>And the way to use is to run <code>vpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually deletes the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for <code>easy-rsa</code>) and it could have errors.</p>
 <p>Now, just get the <code>.ovpn</code> file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.</p>
 
   <div class="page-nav">
@@ -375,7 +375,7 @@ cd $CPWD
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
-    <p>Created: Sun, Aug 01, 2021 @ 09:23 UTC</p>
+    <p>Created: Sun, Aug 01, 2021 @ 09:27 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
