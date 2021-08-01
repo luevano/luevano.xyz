@@ -13,8 +13,8 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Sun, 01 Aug 2021 09:27:47 GMT</pubDate>
-    <lastBuildDate>Sun, 01 Aug 2021 09:27:47 GMT</lastBuildDate>
+    <pubDate>Sun, 01 Aug 2021 10:13:12 GMT</pubDate>
+    <lastBuildDate>Sun, 01 Aug 2021 10:13:12 GMT</lastBuildDate>
     <generator>pyssg v0.5.9</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
@@ -188,8 +188,8 @@ verb 3
 # Only usable with udp.
 explicit-exit-notify 1
 </code></pre>
-<p><code>#</code> and <code>;</code> are comments. Read each and every line, you might want to change some stuff (like the logging).</p>
-<p>Now, we need to enable <em>packet forwarding</em>, which can be enabled on the interface level or globally (you can check the different options with <code>sysctl -a | grep forward</code>). I&rsquo;ll do it globally, run:</p>
+<p><code>#</code> and <code>;</code> are comments. Read each and every line, you might want to change some stuff (like the logging), specially the first line which is your server public IP.</p>
+<p>Now, we need to enable <em>packet forwarding</em> (so we can access the web while connected to the VPN), which can be enabled on the interface level or globally (you can check the different options with <code>sysctl -a | grep forward</code>). I&rsquo;ll do it globally, run:</p>
 <pre><code class="language-sh">sysctl net.ipv4.ip_forward=1
 </code></pre>
 <p>And create/edit the file <code>/etc/sysctl.d/30-ipforward.conf</code>:</p>
@@ -198,6 +198,7 @@ explicit-exit-notify 1
 <p>Now we need to configure <code>ufw</code> to forward traffic through the VPN. Append the following to <code>/etc/default/ufw</code> (or edit the existing line):</p>
 <pre><code>...
 DEFAULT_FORWARD_POLICY=&quot;ACCEPT&quot;
+...
 </code></pre>
 <p>And change the <code>/etc/ufw/before.rules</code>, appending the following lines after the header <strong>but before the *filter line</strong>:</p>
 <pre><code>...
@@ -215,7 +216,7 @@ COMMIT
 *filter
 ...
 </code></pre>
-<p>Where <code>interface</code> must be changed depending on your interface (in my case is <code>ens3</code>, another common one is <code>eth0</code>); I always check this by running <code>ip addr</code>, you will get a list of interfaces of which the one containing your public ip is the one that you want, for me it looks something like:</p>
+<p>Where <code>interface</code> must be changed depending on your system (in my case it&rsquo;s <code>ens3</code>, another common one is <code>eth0</code>); I always check this by running <code>ip addr</code> which gives you a list of interfaces (the one containing your server public IP is the one you want, or whatever interface your server uses to connect to the internet):</p>
 <pre><code>...
 2: ens3: &lt;SOMETHING,SOMETHING&gt; bla bla
     link/ether bla:bla
@@ -223,7 +224,7 @@ COMMIT
     inet my.public.ip.addr bla bla
 ...
 </code></pre>
-<p>And also make sure the <code>10.8.0.0/24</code> matches the subnet mask specified in the <code>server.conf</code> file (in this example it matches). You should check this very carefully, because I just spend a good 2 hours debugging why my configuration wasn&rsquo;t working, and this was te reason (I could connect to the VPN, but had no external connection to the web).</p>
+<p>And also make sure the <code>10.8.0.0/24</code> matches the subnet mask specified in the <code>server.conf</code> file (in this example it matches). You should check this very carefully, because I just spent a good 2 hours debugging why my configuration wasn&rsquo;t working, and this was te reason (I could connect to the VPN, but had no external connection to the web).</p>
 <p>Finally, allow the OpenVPN port you specified (in this example its <code>1194/udp</code>) and reload <code>ufw</code>:</p>
 <pre><code class="language-sh">ufw allow 1194/udp comment &quot;OpenVPN&quot;
 ufw reload
@@ -232,7 +233,7 @@ ufw reload
 <pre><code class="language-sh">systemctl start openvpn-server@server.service
 systemctl enable openvpn-server@server.service
 </code></pre>
-<p>Where the <code>server</code> after <code>@</code> is your specific configuration, in my case it is called just <code>server</code>.</p>
+<p>Where the <code>server</code> after <code>@</code> is the name of your configuration, <code>server.conf</code> without the <code>.conf</code> in my case.</p>
 <h3 id="create-client-configurations">Create client configurations</h3>
 <p>You might notice that I didn&rsquo;t specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the <code>server.conf</code> file that we created.</p>
 <p>The real way of doing this would be to run similar steps as the ones with <code>easy-rsa</code> locally, send them to the server, sign them, and retrieve them. Nah, we&rsquo;ll just create all configuration files on the server as I was mentioning earlier.</p>

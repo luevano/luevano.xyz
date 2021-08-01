@@ -202,9 +202,9 @@ verb 3
 explicit-exit-notify 1
 ```
 
-`#` and `;` are comments. Read each and every line, you might want to change some stuff (like the logging).
+`#` and `;` are comments. Read each and every line, you might want to change some stuff (like the logging), specially the first line which is your server public IP.
 
-Now, we need to enable *packet forwarding*, which can be enabled on the interface level or globally (you can check the different options with `sysctl -a | grep forward`). I'll do it globally, run:
+Now, we need to enable *packet forwarding* (so we can access the web while connected to the VPN), which can be enabled on the interface level or globally (you can check the different options with `sysctl -a | grep forward`). I'll do it globally, run:
 
 ```sh
 sysctl net.ipv4.ip_forward=1
@@ -221,6 +221,7 @@ Now we need to configure `ufw` to forward traffic through the VPN. Append the fo
 ```
 ...
 DEFAULT_FORWARD_POLICY="ACCEPT"
+...
 ```
 
 And change the `/etc/ufw/before.rules`, appending the following lines after the header **but before the \*filter line**:
@@ -242,7 +243,7 @@ COMMIT
 ...
 ```
 
-Where `interface` must be changed depending on your interface (in my case is `ens3`, another common one is `eth0`); I always check this by running `ip addr`, you will get a list of interfaces of which the one containing your public ip is the one that you want, for me it looks something like:
+Where `interface` must be changed depending on your system (in my case it's `ens3`, another common one is `eth0`); I always check this by running `ip addr` which gives you a list of interfaces (the one containing your server public IP is the one you want, or whatever interface your server uses to connect to the internet):
 
 ```
 ...
@@ -253,7 +254,7 @@ Where `interface` must be changed depending on your interface (in my case is `en
 ...
 ```
 
-And also make sure the `10.8.0.0/24` matches the subnet mask specified in the `server.conf` file (in this example it matches). You should check this very carefully, because I just spend a good 2 hours debugging why my configuration wasn't working, and this was te reason (I could connect to the VPN, but had no external connection to the web).
+And also make sure the `10.8.0.0/24` matches the subnet mask specified in the `server.conf` file (in this example it matches). You should check this very carefully, because I just spent a good 2 hours debugging why my configuration wasn't working, and this was te reason (I could connect to the VPN, but had no external connection to the web).
 
 Finally, allow the OpenVPN port you specified (in this example its `1194/udp`) and reload `ufw`:
 
@@ -269,7 +270,7 @@ systemctl start openvpn-server@server.service
 systemctl enable openvpn-server@server.service
 ```
 
-Where the `server` after `@` is your specific configuration, in my case it is called just `server`.
+Where the `server` after `@` is the name of your configuration, `server.conf` without the `.conf` in my case.
 
 ### Create client configurations
 
