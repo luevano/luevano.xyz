@@ -3,6 +3,12 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
+      <loc>https://blog.luevano.xyz/a/hoy_toco_desarrollo_personaje.html</loc>
+      <lastmod>2021-07-28</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/a/tenia_esto_descuidado.html</loc>
       <lastmod>2021-07-18</lastmod>
       <changefreq>weekly</changefreq>
@@ -65,43 +71,43 @@
 
     <url>
       <loc>https://blog.luevano.xyz/tag/@english.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@server.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@short.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@spanish.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@tools.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@tutorial.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
     <url>
       <loc>https://blog.luevano.xyz/tag/@update.html</loc>
-      <lastmod>2021-07-18</lastmod>
+      <lastmod>2021-07-28</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>
