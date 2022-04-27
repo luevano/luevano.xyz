@@ -1,0 +1,3 @@
+# temp build script for art and blog
+pyssg --config $HOME/luevano.xyz/blog/config.ini -b
+pyssg --config $HOME/luevano.xyz/art/config.ini -b
