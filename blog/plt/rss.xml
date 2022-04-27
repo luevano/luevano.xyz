@@ -4,24 +4,24 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>{{config.title}}</title>
-    <link>{{config.url}}</link>
-    <atom:link href="{{config.url}}/rss.xml" rel="self" type="application/rss+xml"/>
+    <title>{{config.get("info", "title")}}</title>
+    <link>{{config.get("url", "main")}}</link>
+    <atom:link href="{{config.get("url", "main")}}/rss.xml" rel="self" type="application/rss+xml"/>
     <description>A personal weblog ranging from rants to how to's and other thoughts.</description>
     <language>en-us</language>
     <category>Blog</category>
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>{{config.run_date_rss}}</pubDate>
-    <lastBuildDate>{{config.run_date_rss}}</lastBuildDate>
-    <generator>pyssg v{{config.version}}</generator>
+    <pubDate>{{config.get("info", "rss_run_date")}}</pubDate>
+    <lastBuildDate>{{config.get("info", "rss_run_date")}}</lastBuildDate>
+    <generator>pyssg v{{config.get("info", "version")}}</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
     <image>
-      <url>{{config.static_url}}/images/blog.png</url>
-      <title>{{config.title}}</title>
-      <link>{{config.url}}</link>
+      <url>{{config.get("url", "static")}}/images/blog.png</url>
+      <title>{{config.get("info", "title")}}</title>
+      <link>{{config.get("url", "main")}}</link>
     </image>
     {%for p in all_pages%}
     <item>

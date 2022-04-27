@@ -3,13 +3,13 @@
 {%block head_title%}Posts filtered by {{tag[0]}}{%endblock head_title%}
 {%block head_description%}Posts filtered by {{tag[0]}}{%endblock head_description%}
 {%block head_og%}
-  <meta property="og:title" content="Posts filtered by {{tag[0]}} -- {{config.title}}"/>
+  <meta property="og:title" content="Posts filtered by {{tag[0]}} -- {{config.get("info", "title")}}"/>
   <meta property="og:type" content="article"/>
   <meta property="og:url" content="{{tag[1]}}"/>
-  <meta property="og:image" content="{{config.static_url}}{{config.default_image_url}}"/>
+  <meta property="og:image" content="{{config.get("url", "static")}}{{config.get("url", "default_image")}}"/>
   <meta property="og:description" content="Posts filtered by {{tag[0]}}."/>
   <meta property="og:locale" content="en"/>
-  <meta property="og:site_name" content="{{config.title}}"/>
+  <meta property="og:site_name" content="{{config.get("info", "title")}}"/>
 {%endblock head_og%}
 {%block content%}
   <h1>Posts filtered by {{tag[0]}}</h1>
