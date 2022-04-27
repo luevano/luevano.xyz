@@ -3,23 +3,23 @@
 {%block head_title%}Index{%endblock head_title%}
 {%block head_description%}My personal space where I post all my drawings, sketches and more art related stuff.{%endblock head_description%}
 {%block head_og%}
-  <meta property="og:title" content="Index -- {{config.title}}"/>
+  <meta property="og:title" content="Index -- {{config.get("info", "title")}}"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:url" content="{{config.url}}/index.html"/>
-  <meta property="og:image" content="{{config.static_url}}{{config.default_image_url}}"/>
+  <meta property="og:url" content="{{config.get("url", "main")}}/index.html"/>
+  <meta property="og:image" content="{{config.get("url", "static")}}{{config.get("url", "default_image")}}"/>
   <meta property="og:description" content="My personal space where I post all my drawings, sketches, and more art related stuff."/>
   <meta property="og:locale" content="en"/>
-  <meta property="og:site_name" content="{{config.title}}"/>
+  <meta property="og:site_name" content="{{config.get("info", "title")}}"/>
 {%endblock head_og%}
 {%block content%}
-  <h1>Index -- {{config.title}}</h1>
+  <h1>Index -- {{config.get("info", "title")}}</h1>
 
   <p>
   Here is where I will post all of my drawings, sketches and more art related stuff. Right now this is managed similar to the <a href="https://blog.luevano.xyz" alt="Luévano's Blog">blog</a>, but more "gallery" oriented. The structure is kind of a 3-level zoom, where you see all the images in this index (or on a tag index), then you see the whole image in its separate link with additional information and then you can see the raw image itself.
   </p>
 
   <p>
-  Get the RSS feed: <a target="_blank" href="{{config.url}}/rss.xml">{{config.url}}/rss.xml</a>
+  Get the RSS feed: <a target="_blank" href="{{config.get("url", "main")}}/rss.xml">{{config.get("url", "main")}}/rss.xml</a>
   </p>
 
   {%import "tag_list.html" as tag_list%}

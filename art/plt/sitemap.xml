@@ -14,7 +14,7 @@
   {%for t in all_tags%}
     <url>
       <loc>{{t[1]}}</loc>
-      <lastmod>{{config.run_date_sitemap}}</lastmod>
+      <lastmod>{{config.get("info", "sitemap_run_date")}}</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>

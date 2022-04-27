@@ -2,12 +2,12 @@
 <html class="theme-dark" lang="{%block html_lang%}{%endblock html_lang%}"
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="{{config.static_url}}">
+    <base href="{{config.get("url", "static")}}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{%block head_title%}{%endblock head_title%} -- {{config.title}}</title>
+    <title>{%block head_title%}{%endblock head_title%} -- {{config.get("info", "title")}}</title>
     <meta name="description" content"{%block head_description%}{%endblock head_description%}"/>
-    <link rel="alternate" type="application/rss+xml" href="{{config.url}}/rss.xml" title="{{config.title}} RSS">
+    <link rel="alternate" type="application/rss+xml" href="{{config.get("url", "main")}}/rss.xml" title="{{config.get("info", "title")}} RSS">
     <link rel="icon" href="images/icons/favicon.ico">
 
     <!-- general style -->
