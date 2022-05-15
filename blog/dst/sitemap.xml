@@ -3,6 +3,12 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
+      <loc>https://blog.luevano.xyz/a/password_manager_authenticator_setup.html</loc>
+      <lastmod>2022-05-15</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/a/devs_android_me_trozaron.html</loc>
       <lastmod>2022-05-15</lastmod>
       <changefreq>weekly</changefreq>
