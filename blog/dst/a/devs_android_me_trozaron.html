@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="es"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <base href="https://static.luevano.xyz">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Los devs de Android/MIUI me trozaron -- Luévano's Blog</title>
+    <meta name="description" content"Perdí un día completo resolviendo un problema muy estúpido, por culpa de los devs de Android/MIUI."/>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <!--<script type="text/javascript" src="hl/highlight-ln.min.js"></script>-->
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad();
+      // hljs.initLineNumbersOnLoad();
+    </script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+
+    <!-- og meta -->
+  <meta property="og:title" content="Los devs de Android/MIUI me trozaron -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/devs_android_me_trozaron.html"/>
+  <meta property="og:image" content="https://static.luevano.xyz//images/b/default.png"/>
+  <meta property="og:description" content="Perdí un día completo resolviendo un problema muy estúpido, por culpa de los devs de Android/MIUI."/>
+  <meta property="og:locale" content="es"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li>
+            <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+    </header>
+
+    <main>
+  <h1>Los devs de Android/MIUI me trozaron</h1>
+
+  <p>Llevo dos semanas posponiendo esta entrada porque andaba bien enojado (todavía, pero ya se anda pasando) y me daba <em>zzz</em>. Pero bueno, antes que nada este pex ocupa un poco de contexto sobre dos cositas:</p>
+<ul>
+<li><a href="https://tachiyomi.org/">Tachiyomi</a>: Una aplicación de android que uso para descargar y leer manga. Lo importante aquí es que por default se guardan los mangas con cada página siendo una sola imagen, por lo que al mover el manga de un lado a otro tarda mucho tiempo.</li>
+<li><a href="https://source.android.com/devices/storage/adoptable">Adoptable storage</a>: Un <em>feature</em> de android que básicamente te deja usar una micro SD (mSD) externa como si fuera interna, encriptando y dejando la mSD inutilizable en cualquier otro dispositivo. La memoria interna se <em>pierde</em> o algo por el estilo (bajo mi experiencia), por lo que parece es bastante útil cuando la capacidad de la memoria interna es baja.</li>
+</ul>
+<p>Ahora sí vamonos por partes, primero que nada lo que sucedió fue que ordené una mSD con más capacidad que la que ya tenía (64 GB -&gt; 512 GB, poggies), porque últimamente he estado bajando y leyendo mucho manga entonces me estaba quedando sin espacio. Ésta llegó el día de mi cumpleaños lo cuál estuvo chingón, me puse a hacer backup de la mSD que ya tenía y preparando todo, muy bonito, muy bonito.</p>
+<p>Empecé a tener problemas, porque al estar moviendo tanto archivo pequeño (porque recordemos que el <em>tachiyomi</em> trata a cada página como una sola imagen), la conexión entre el celular y mi computadora se estaba corte y corte por alguna razón; en general muchos pedos. Por lo que mejor le saqué la nueva mSD y la metí directo a mi computadora por medio de un adaptador para batallar menos y que fuera más rápido.</p>
+<p>Hacer este pedo de mover archivos directamente en la mSD puede llevar a corromper la memoria, no se los detalles pero pasa (o quizá estoy meco e hice algo mal). Por lo que al terminar de mover todo a la nueva mSD y ponerla en el celular, éste se emputó que porque no la detectaba y que quería tirar un formateo a la mSD. A este punto no me importaba mucho, sólo era questión de volvera mover archivos y ser más cuidadoso; &ldquo;<em>no issues from my end</em>&rdquo; diría en mis <em>standups</em>.</p>
+<p>Todo valió <strong>vergota</strong> porque en cierto punto al elegir sí formatear la mSD mi celular me daba la opción de &ldquo;<em>usar la micro SD para el celular</em>&rdquo; o &ldquo;<em>usar la micro SD como memoria portátil</em>&rdquo; (o algo entre esas líneas), y yo, estúpidamente, elegí la primera, porque me daba sentido: &ldquo;no, pues simón, voy a usar esta memoria para este celular&rdquo;.</p>
+<p>Pues mamé, resulta que esa primera opción lo que realmente quería decir es que se iba a usar la micro SD como interna usando el pex este de <em>adoptable storage</em>. Entonces básicamente <em>perdí</em> mi capacidad de memoria interna (128 GB aprox.), y toda la mSD nueva se usó como memoria interna. Todo se juntó, si intentaba sacar la mSD todo se iba a la mierda y no podía usar muchas aplicaciones. &ldquo;<em>No hay pedo</em>&rdquo;, pensé, &ldquo;<em>nada más es cuestión de desactivar esta mamada de adoptable storage</em>&rdquo;.</p>
+<p>Ni madres dijeron los devs de Android, este pedo nada más es un <em>one-way</em>: puedes activar <em>adoptable storage</em> pero para desactivarlo <strong>ocupas, a huevo, formatear tu celular a estado de fábrica</strong>. Chingué a mi madre, comí mierda, perdí.</p>
+<p>Pues eso fue lo que hice, ni modo. Hice backup de todo lo que se me ocurrió (también me di cuenta que G**gl* authenticator es cagada ya que no te deja hacer backup, entre otras cosas, mejor usen <a href="https://getaegis.app/">Aegis authenticator</a>), desactivé todo lo que se tenía que desactivar y tocó hacer <em>factory reset</em>, ni modo. Pero como siempre las cosas salen mal y tocó comer mierda del banco porque me bloquearon la tarjeta, perdí credenciales necesarias para el trabajo (se resolvió rápido), etc., etc.. Ya no importa, ya casi todo está resuelto, sólo queda ir al banco a resolver lo de la tarjeta bloqueada (esto es para otro <em>rant</em>, pinches apps de bancos piteras, ocupan hacer una sola cosa y la hacen mal).</p>
+<p>Al final del día, la causa del problema fueron los malditos mangas (por andar queriendo <em>backupearlos</em>), que terminé bajando de nuevo manualmente y resultó mejor porque aparentemente <em>tachiyomi</em> agregó la opción de &ldquo;<em>zippear</em>&rdquo; los mangas en formato <a href="https://docs.fileformat.com/ebook/cbz/">CBZ</a>, por lo que ya son más fácil de mover de un lado para otro, el fono no se queda pendejo, etc., etc..</p>
+<p>Por último, quiero decir que los devs de Android son unos pendejos por no hacer reversible la opción de <em>adoptable storage</em>, y los de MIUI son todavía más por no dar detalles de lo que significan sus opciones de formateo, especialmente si una opción es tan chingadora que para revertirla necesitas formatear a estado de fábrica tu celular; más que nada es culpa de los de MIUI, todavía que ponen un chingo de A(i)DS en todas sus apps, no pueden poner una buena descripción en sus opciones. <strong>REEEE</strong>.</p>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/volviendo_a_usar_la_pagina.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Sun, May 15, 2022 @ 09:51 UTC</p>
+      <p>Modified: Sun, May 15, 2022 @ 10:03 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@rant.html">rant</a>, <a href="https://blog.luevano.xyz/tag/@spanish.html">spanish</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="far fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>
