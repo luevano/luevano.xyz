@@ -13,8 +13,8 @@
     <copyright>Copyright 2021 David Luévano Alvarado</copyright>
     <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
     <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
-    <pubDate>Sun, 15 May 2022 22:40:48 GMT</pubDate>
-    <lastBuildDate>Sun, 15 May 2022 22:40:48 GMT</lastBuildDate>
+    <pubDate>Tue, 17 May 2022 05:24:38 GMT</pubDate>
+    <lastBuildDate>Tue, 17 May 2022 05:24:38 GMT</lastBuildDate>
     <generator>pyssg v0.7.1</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <ttl>30</ttl>
@@ -23,6 +23,20 @@
       <title>Luévano's Blog</title>
       <link>https://blog.luevano.xyz</link>
     </image>
+    <item>
+      <title>Will start blogging about gamedev</title>
+      <link>https://blog.luevano.xyz/g/starting_gamedev_blogging.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/g/starting_gamedev_blogging.html</guid>
+      <pubDate>Tue, 17 May 2022 05:19:54 GMT</pubDate>
+      <category>English</category>
+      <category>Gamedev</category>
+      <category>Short</category>
+      <category>Update</category>
+      <description>Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent.</description>
+      <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to get into gamedev for a while now, but it&rsquo;s always a pain to stay consistent. I just recently started to get into gamedev again, and this time I&rsquo;m trying to actually do stuff.</p>
+<p>So, the plan is to blog about my progress and clone some simple games just to get started. I&rsquo;m thinking on sticking with <a href="https://godotengine.org/">Godot</a> just because I like that it&rsquo;s open source, it&rsquo;s getting better and better overtime (big rewrite happening right now) and I already like how the engine works. Specifically I&rsquo;ll start using <em>Godot 4</em> even though it&rsquo;s not done yet, to get used to the new features, specifically pumped for <a href="https://godotengine.org/article/gdscript-progress-report-feature-complete-40">GDScript 2.0</a>.</p>
+<p>For a moment I almost started a new subdomain just for gamedev stuff, but decided to just use a different directory for subtleness; this directory and use of tags should be enough. I&rsquo;ll be posting the entry about the first rip-off I&rsquo;m <em>developing</em> (FlappyBird L O L) shortly.</p>]]></content:encoded>
+    </item>
     <item>
       <title>My setup for a password manager and MFA authenticator</title>
       <link>https://blog.luevano.xyz/a/password_manager_authenticator_setup.html</link>
