@@ -78,8 +78,8 @@
     <main>
   <h1>General Godot project structure</h1>
 
-  <p>One of my first issues when starting a project is how to structure everything. So I had to spend some time researching best practices and go with what I like the most.</p>
-<p>The first place to look for is of course the official <em>Godot</em> documentation on <a href="https://docs.godotengine.org/en/stable/tutorials/best_practices/project_organization.html">Project organization</a>; along with project structure discussion, also comes with best practices for code style and what-not. I don&rsquo;t like this project/directory structure that much, just because it tells you to bundle everything under the same directory but it&rsquo;s a really good starting point, for example it tells you to use:</p>
+  <p>One of my first issues when starting a project is how to structure everything. So I had to spend some time researching best practices and go with what I like the most and after trying some of them I wanted to write down somewhere what I&rsquo;m sticking with.</p>
+<p>The first place to look for is, of course, the official <em>Godot</em> documentation on <a href="https://docs.godotengine.org/en/stable/tutorials/best_practices/project_organization.html">Project organization</a>; along with project structure discussion, also comes with best practices for code style and what-not. I don&rsquo;t like this project/directory structure that much, just because it tells you to bundle everything under the same directory but it&rsquo;s a really good starting point, for example it tells you to use:</p>
 <ul>
 <li>/models/town/house/<ul>
 <li>house.dae</li>
@@ -107,33 +107,32 @@
 </ul>
 </li>
 </ul>
-<p>It might look like it&rsquo;s more work, but I prefer it like this. I wish <a href="https://www.braindead.bzh/entry/creating-a-game-with-godot-engine-ep-2-project-organization">this site </a> was still available, as I got most of my ideas from there, but apparently the owner is not maintaining his site anymore; but there is <a href="https://www.reddit.com/r/godot/comments/7786ee/comment/dojuzuf/?utm_source=share&amp;utm_medium=web2x&amp;context=3">this excelent comment on reddit</a> which shows a project/sirectory structure more in line with what I&rsquo;m currently using (and similr to the site that is down that I liked that much). I just do somethings a bit different, and end up with:</p>
+<p>It might look like it&rsquo;s more work, but I prefer it like this. I wish <a href="https://www.braindead.bzh/entry/creating-a-game-with-godot-engine-ep-2-project-organization">this site</a> was still available, as I got most of my ideas from there and was a pretty good resource, but apparently the owner is not maintaining his site anymore; but there is <a href="https://www.reddit.com/r/godot/comments/7786ee/comment/dojuzuf/?utm_source=share&amp;utm_medium=web2x&amp;context=3">this excelent comment on reddit</a> which shows a project/directory structure more in line with what I&rsquo;m currently using (and similr to the site that is down that I liked). I ended up with:</p>
 <ul>
 <li>/.git</li>
-<li>/assets (raw assets/editable assets for their respective software, could also be the whole imported assets from some packs, where you can just select few of them to actually use)</li>
+<li>/assets (raw assets/editable assets/asset packs)</li>
 <li>/releases (executables ready to publish)</li>
 <li>/src (the actual godot project)<ul>
 <li>.godot/</li>
 <li>actors/ (or entities)<ul>
 <li>player/<ul>
-<li>assets/</li>
 <li>sprites/</li>
+<li>player.x</li>
 <li>&hellip;</li>
 </ul>
 </li>
 <li>enemy/ (this could be a dir with subdirectories for each type of enemy for example&hellip;)<ul>
-<li>assets/</li>
 <li>sprites/</li>
+<li>enemy.x</li>
 <li>&hellip;</li>
 </ul>
 </li>
-<li>actor.gd</li>
+<li>actor.x</li>
 <li>&hellip;</li>
 </ul>
 </li>
 <li>levels/ (or scenes)<ul>
 <li>common/<ul>
-<li>assets/</li>
 <li>sprites/</li>
 <li>&hellip;</li>
 </ul>
@@ -150,7 +149,7 @@
 <li>&hellip;</li>
 </ul>
 </li>
-<li>Game.tscn (I consider the &ldquo;game&rdquo; itself a level/scene, so I&rsquo;m including it here)</li>
+<li>Game.tscn (I&rsquo;m considering the &ldquo;Game&rdquo; as a level/scene)</li>
 <li>game.gd</li>
 </ul>
 </li>
@@ -179,16 +178,28 @@
 <li>&hellip;</li>
 </ul>
 </li>
+<li>sfx/<ul>
+<li>&hellip;</li>
+</ul>
+</li>
+<li>vfx/<ul>
+<li>&hellip;</li>
+</ul>
+</li>
+<li>etc/<ul>
+<li>&hellip;</li>
+</ul>
+</li>
 <li>Main.tscn (the entry point of the game)</li>
 <li>main.gd</li>
-<li>icon.png</li>
+<li>icon.png (could also be on a separate &ldquo;icons&rdquo; directory)</li>
 <li>project.godot</li>
 <li>&hellip;</li>
 </ul>
 </li>
 <li>\&lt;any other repository related files></li>
 </ul>
-<p>And so on, I hope the idea is clear. Basically you need to abstract some entity/object that you&rsquo;re going to use into its more basic form and use subdirectories for each level of abstraction (a player is an actor and thus we use actor/player; a box is part of the world, and is a level so we can use levels/common/decor/box or something like that). Once you have the most basic abstraction done, anything that belongs to that abstraction will have all of its assets/sounds/shaders/etc in it&rsquo;s directory.</p>
+<p>And so on, I hope the idea is clear. I&rsquo;ll probably change my mind on the long run, but for now this has been working fine.</p>
 
   <div class="page-nav">
 
@@ -212,7 +223,7 @@
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, May 22, 2022 @ 01:16 UTC</p>
-      <p>Modified: Sun, May 22, 2022 @ 01:23 UTC</p>
+      <p>Modified: Tue, May 24, 2022 @ 04:35 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@short.html">short</a>  </p>
