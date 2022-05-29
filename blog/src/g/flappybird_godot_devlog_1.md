@@ -13,11 +13,15 @@ I just have a bit of experience with Godot and with gamedev in general, so I sta
 - If you go through the gap in the pipes you score a point.
 - If you touch the pipes, the ground or go past the "ceiling" you lose.
 
-The game was originally developed with *Godot 4.0 alpha 8*, but it didn't support HTML5 (webassembly) export... so I backported to *Godot 3.5 rc1*. The source code can be found [here](https://github.com/luevano/flappybird_godot) and if any doubts you can check that, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added).
+The game was originally developed with *Godot 4.0 alpha 8*, but it didn't support HTML5 (webassembly) export... so I backported to *Godot 3.5 rc1*.
 
 Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of *Godot* in general. Usually when I mention that a set/change of something it usually it's a property and it can be found under the *Inspector* on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in *snake_case* (scenes/nodes in *PascalCase*).
 
-One thing to note, is that I started writing this when I finished the game, so it's hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog that I do, I'll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea.
+One thing to note, is that I started writing this when I finished the game, so it's hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I'll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.
+
+The source code can be found in my GitHub [here](https://github.com/luevano/flappybird_godot), it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added), or you could also go to the itch.io page I setup where it's playable in the browser:
+
+<iframe src="https://itch.io/embed/1551015?dark=true" width="552" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe>
 
 ## Initial project setup
 
@@ -587,13 +591,94 @@ func _on_ScoreDetector_body_entered(body: Node2D) -> void:
 
 When the `player` dies, we set all processing to `false`, except for the player itself (so it can drop all the way to the ground). Also, when receiving a "scoring" signal, we manage the current score, as well as saving the new high score when applicable, note that we need to read the `high_score` at the beginning by calling `SavedData.get_high_score()`. This signal we emit will be received by the UI so it updates accordingly.
 
-## Temp notes
+### UI
 
-- [x] Texture presets for pixel art.
-- [x] Game scale option in settings.
-- [x] Specifics on the tilemap/tileset config.
-- [x] Setup physics layers.
-- [x] Ggscript debug remove: unused argument, unused signal, return value
-- [ ] Transform png icon to ico for windows releases: magick convert icon.png -define icon:auto-resize=256,128,64,48,32,16 icon.ico
-- [ ] Download rcedit and put it somewhere near godot for ease of access
-- [ ] When exporting toggle off debug mode
+First thing is to get a reference to all the child *Labels*, an initial reference to the high score as well as the version defined in the project settings:
+
+```gdscript
+onready var fps_label: Label = $MarginContainer/DebugContainer/FPS
+onready var version_label: Label = $MarginContainer/VersionContainer/Version
+onready var score_label: Label = $MarginContainer/InfoContainer/ScoreContainer/Score
+onready var high_score_label: Label = $MarginContainer/InfoContainer/ScoreContainer/HighScore
+onready var start_game_label: Label = $MarginContainer/InfoContainer/StartGame
+
+onready var _initial_high_score: int = SavedData.get_high_score()
+
+var _version: String = ProjectSettings.get_setting("application/config/version")
+```
+
+Then set the initial *Label* values as well as making the `fps_label` invisible:
+
+```gdscript
+func _ready() -> void:
+	fps_label.visible = false
+	version_label.set_text("v%s" % _version)
+	high_score_label.set_text("High score: %s" % _initial_high_score)
+```
+
+Now we need to handle the `fps_label` update and toggle:
+
+```gdscript
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("toggle_debug"):
+		fps_label.visible = !fps_label.visible
+
+
+func _process(delta: float) -> void:
+	if fps_label.visible:
+		fps_label.set_text("FPS: %d" % Performance.get_monitor(Performance.TIME_FPS))
+```
+
+Finally the signal receiver handlers which are straight forward:
+
+```gdscript
+func _on_Game_game_started() -> void:
+	start_game_label.visible = false
+	high_score_label.visible = false
+
+
+func _on_Game_game_over() -> void:
+	start_game_label.set_text("Press R to restart")
+	start_game_label.visible = true
+	high_score_label.visible = true
+
+
+func _on_Game_new_score(score: int, high_score: int) -> void:
+	score_label.set_text(String(score))
+	high_score_label.set_text("High score: %s" % high_score)
+```
+
+### Main
+
+This is the shortest script, it just connects the signals between the "Game" and the "UI":
+
+```gdscript
+onready var game: Game = $Game
+onready var ui: UI = $UI
+
+var _game_over: bool = false
+
+
+func _ready() -> void:
+	game.connect("game_started", ui, "_on_Game_game_started")
+	game.connect("game_over", ui, "_on_Game_game_over")
+	game.connect("new_score", ui, "_on_Game_new_score")
+```
+
+## Final notes and exporting
+
+At this point the game should be fully playable (if any detail missing feel free to look into the source code linked at the beginning). Only thing missing is an icon for the game; I did one pretty quicly with the assets I had.
+
+### Preparing the files
+
+If you followed the directory structure I used, then only thing needed is to transform the icon to a native Windows `ico` format (if exporting to Windows, else ignore this part). For this you need [ImageMagick](https://imagemagick.org/index.php) or some other program that can transform `png` (or whatever file format you used for the icon) to `ico`. I used [Chocolatey][https://chocolatey.org/] to install `imagemagick`, then to convert the icon itself used: `magick convert icon.png -define icon:auto-resize=256,128,64,48,32,16 icon.ico` as detailed in *Godot*'s [Changing application icon for Windows](https://docs.godotengine.org/en/stable/tutorials/export/changing_application_icon_for_windows.html).
+
+### Exporting
+
+You need to download the templates for exporting as detailed in *Godot*'s [Exporting projects](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html). Basically you go to *Editor -> Manage Export Templates...* and download the latest one specific to your *Godot* version by clicking on "Download and Install".
+
+If exporting for Windows then you also need to download `rcedit` from [here](https://github.com/electron/rcedit/releases/latest). Just place it wherever you want (I put it next to the *Godot* executable).
+
+Then go to *Project -> Export...* and the Window should be empty, add a new template by clicking on "Add..." at the top and then select the template you want. I used HTML5, Windows Desktop and Linux/X11. Really the only thing you need to set is the "Export Path" for each template, which is te location of where the executable will be written to, and in the case of the Windows Desktop template you could also setup stuff like "Company Name", "Product Name", "File/Product Version", etc..
+
+Once the templates are setup, select any and click on "Export Project" at the bottom, and make sure to untoggle "Export With Debug" in the window that pops up, this checkbox should be at the bottom of the new window.
