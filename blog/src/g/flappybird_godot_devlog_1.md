@@ -21,7 +21,7 @@ One thing to note, is that I started writing this when I finished the game, so i
 
 The source code can be found in my GitHub [here](https://github.com/luevano/flappybird_godot), it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added), or you could also go to the itch.io page I setup where it's playable in the browser:
 
-<iframe src="https://itch.io/embed/1551015?dark=true" width="552" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe>
+<p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="552" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
 ## Initial project setup
 
