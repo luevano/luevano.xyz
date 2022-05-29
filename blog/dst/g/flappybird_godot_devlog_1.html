@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <base href="https://static.luevano.xyz">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Creating a FlappyBird clone in Godot 3.5 devlog 1 -- Luévano's Blog</title>
+    <meta name="description" content"Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff."/>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <!--<script type="text/javascript" src="hl/highlight-ln.min.js"></script>-->
+    <!-- Specific to GDScript -->
+    <script type="text/javascript" src="hl/languages/gdscript.min.js"></script>
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad();
+      // hljs.initLineNumbersOnLoad();
+    </script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+
+    <!-- og meta -->
+  <meta property="og:title" content="Creating a FlappyBird clone in Godot 3.5 devlog 1 -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html"/>
+  <meta property="og:image" content="https://static.luevano.xyz//images/b/default.png"/>
+  <meta property="og:description" content="Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li>
+            <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+    </header>
+
+    <main>
+  <h1>Creating a FlappyBird clone in Godot 3.5 devlog 1</h1>
+
+  <p>I just have a bit of experience with Godot and with gamedev in general, so I started with this game as it is pretty straight forward. On a high level the main characteristics of the game are:</p>
+<ul>
+<li>Literally just one sprite going up and down.</li>
+<li>Constant horizontal move of the world/player.</li>
+<li>If you go through the gap in the pipes you score a point.</li>
+<li>If you touch the pipes, the ground or go past the &ldquo;ceiling&rdquo; you lose.</li>
+</ul>
+<p>The game was originally developed with <em>Godot 4.0 alpha 8</em>, but it didn&rsquo;t support HTML5 (webassembly) export&hellip; so I backported to <em>Godot 3.5 rc1</em>. The source code can be found <a href="https://github.com/luevano/flappybird_godot">here</a> and if any doubts you can check that, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added).</p>
+<p>Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of <em>Godot</em> in general. Usually when I mention that a set/change of something it usually it&rsquo;s a property and it can be found under the <em>Inspector</em> on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in <em>snake_case</em> (scenes/nodes in <em>PascalCase</em>).</p>
+<h2 id="initial-project-setup">Initial project setup</h2>
+<h3 id="directory-structure">Directory structure</h3>
+<p>I&rsquo;m basically going with what I wrote on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> recently, and probably with minor changes depending on the situation.</p>
+<h3 id="config">Config</h3>
+<h4 id="default-import-settings">Default import settings</h4>
+<p>Since this is just pixel art, the importing settings for textures needs to be adjusted so the sprites don&rsquo;t look blurry. Go to <em>Project -&gt; Project settings&hellip; -&gt; Import defaults</em> and on the drop down select <code>Texture</code>, untick everything and make sure <em>Compress/Mode</em> is set to <code>Lossless</code>.</p>
+<figure id="__yafg-figure-4">
+<img alt="Project settings - Import defaults - Texture settings." src="images/g/flappybird_godot/project_settings_import_texture.png">
+<figcaption></figcaption>
+</figure>
+<h4 id="general-settings">General settings</h4>
+<p>It&rsquo;s also a good idea to setup some config variables project-wide. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Application/config</em> and add a new property (there is a text box at the top of the project settings window) for game scale: <code>application/config/game_scale</code> for the type use <code>float</code> and then click on add; configure the new property to <code>3.0</code>; On the same window, also add <code>application/config/version</code> as a <code>string</code>, and make it <code>1.0.0</code> (or whatever number you want).</p>
+<figure id="__yafg-figure-5">
+<img alt="Project settings - General - Game scale and version properties." src="images/g/flappybird_godot/project_settings_config_properties.png">
+<figcaption></figcaption>
+</figure>
+<p>For my personal preferences, also disable some of the <em>GDScript</em> debug warnings that are annoying, this is done at <em>Project -&gt; Project settings -&gt; General</em>, select <em>Debug/GDScript</em> and toggle off &ldquo;Unused arguments&rdquo;, &ldquo;Unused signal&rdquo; and &ldquo;Return value discarded&rdquo;, and any other that might come up too often and don&rsquo;t want to see.</p>
+<figure id="__yafg-figure-6">
+<img alt="Project settings - General - GDScript debug warnings" src="images/g/flappybird_godot/project_settings_debug_gdscript.png">
+<figcaption></figcaption>
+</figure>
+<p>Finally, set the initial window size in <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Display/Window</em> and set <em>Size/Width</em> and <em>Size/Height</em> to <code>600</code> and <code>800</code>, respectively. As well as the <em>Stretch/Mode</em> to &ldquo;viewport&rdquo;, and <em>Stretch/Aspect</em> to &ldquo;keep&rdquo;:</p>
+<figure id="__yafg-figure-7">
+<img alt="Project settings - General - Initial window size" src="images/g/flappybird_godot/project_settings_window_settings.png">
+<figcaption></figcaption>
+</figure>
+<h4 id="keybindings">Keybindings</h4>
+<p>I only used 3 actions (keybindings): jump, restart and toggle_debug (optional). To add custom keybindings (so that the <code>Input.something()</code> API can be used), go to <em>Project -&gt; Project settings -&gt; Input Map</em> and on the text box write &ldquo;jump&rdquo; and click add, then it will be added to the list and it&rsquo;s just a matter of clicking the <code>+</code> sign to add a &ldquo;Physical key&rdquo;, press any key you want to be used to jump and click ok. Do the same for the rest of the actions.</p>
+<figure id="__yafg-figure-8">
+<img alt="Project settings - Input Map - Adding necessary keybindings" src="images/g/flappybird_godot/project_settings_input_map.png">
+<figcaption></figcaption>
+</figure>
+<h4 id="layers">Layers</h4>
+<p>Finally, rename the physics layers so we don&rsquo;t lose track of which layer is which. Go to <em>Project -&gt; Layer Names -&gt; 2d Physics</em> and change the first 5 layer names to (in order): &ldquo;player&rdquo;, &ldquo;ground&rdquo;, &ldquo;pipe&rdquo;, &ldquo;ceiling&rdquo; and &ldquo;score&rdquo;.</p>
+<figure id="__yafg-figure-9">
+<img alt="Project settings - Layer Names - 2D Physics" src="images/g/flappybird_godot/project_settings_layer_names_2d_physics.png">
+<figcaption></figcaption>
+</figure>
+<h2 id="assets">Assets</h2>
+<p>For the assets I found out about a pack that contains just what I need: <a href="https://megacrash.itch.io/flappy-bird-assets">flappy-bird-assets</a> by <a href="https://megacrash.itch.io/">MegaCrash</a>; I just did some minor modifications on the naming of the files. For the font I used <a href="https://poppyworks.itch.io/silver">Silver</a>, and for the sound the resources from <a href="https://github.com/meeq/FlappyBird-N64">FlappyBird-N64</a> (which seems to be taken from <a href="https://www.101soundboards.com/boards/10178-flappy-bird-sounds">101soundboards.com</a> which the orignal copyright holder is <a href="https://dotgears.com/">.Gears</a> anyways).</p>
+<h3 id="importing">Importing</h3>
+<p>Create the necessary directories to hold the respective assets and it&rsquo;s just a matter of dragging and dropping, I used directories: <code>res://entities/actors/player/sprites/</code>, <code>res://fonts/</code>, <code>res://levels/world/background/sprites/</code>, <code>res://levels/world/ground/sprites/</code>, <code>res://levels/world/pipe/sprites/</code>, <code>res://sfx/</code>. For the player sprites, the &ldquo;FileSystem&rdquo; window looks like this (<code>entities/actor</code> directories are really not necessary):</p>
+<figure id="__yafg-figure-10">
+<img alt="Player sprite imports" src="images/g/flappybird_godot/player_sprite_imports.png">
+<figcaption></figcaption>
+</figure>
+<p>It should look similar for other directories, except maybe for the file extensions. For example, for the sfx:</p>
+<figure id="__yafg-figure-11">
+<img alt="SFX imports" src="images/g/flappybird_godot/sfx_imports.png">
+<figcaption></figcaption>
+</figure>
+<h2 id="scenes">Scenes</h2>
+<p>Now it&rsquo;s time to actually create the game, by creating the basic scenes that will make up the game. The hardest part and the most confusing is going to be the <em>TileMaps</em>, so that goes first.</p>
+<h3 id="tilemaps">TileMaps</h3>
+<p>I&rsquo;m using a scene called &ldquo;WorldTiles&rdquo; with a <em>Node2D</em> node as root called the same. With 2 different <em>TileMap</em> nodes as children named &ldquo;GroundTileMap&rdquo; and &ldquo;PipeTileMap&rdquo; (these are their own scene); yes 2 different <em>TileMaps</em> because we need 2 different physics colliders (In Godot 4.0 you can have a single <em>TileMap</em> with different physics colliders in it). Each node has its own script. It should look something like this:</p>
+<figure id="__yafg-figure-12">
+<img alt="Scene - WorldTiles (TileMaps)" src="images/g/flappybird_godot/scene_world_tiles.png">
+<figcaption></figcaption>
+</figure>
+<p>I used the following directory structure:</p>
+<figure id="__yafg-figure-13">
+<img alt="Scene - WorldTiles - Directory structure" src="images/g/flappybird_godot/scene_world_tiles_directory_structure.png">
+<figcaption></figcaption>
+</figure>
+<p>To configure the GroundTileMap, select the node and click on &ldquo;(empty)&rdquo; on the <em>TileMap/Tile set</em> property and then click on &ldquo;New TileSet&rdquo;, then click where the &ldquo;(empty)&rdquo; used to be, a new window should open on the bottom:</p>
+<figure id="__yafg-figure-14">
+<img alt="TileSet - Configuration window" src="images/g/flappybird_godot/tile_set_config_window.png">
+<figcaption></figcaption>
+</figure>
+<p>Click on the plus on the bottom left and you can now select the specific tile set to use. Now click on the yellow &ldquo;+ New Single Tile&rdquo;, activate the grid and select any of the tiles. Should look like this:</p>
+<figure id="__yafg-figure-15">
+<img alt="TileSet - New single tile" src="images/g/flappybird_godot/tile_set_new_single_tile.png">
+<figcaption></figcaption>
+</figure>
+<p>We need to do this because for some reason we can&rsquo;t change the snap options before selecting a tile. After selecting a random tile, set up the <em>Snap Options/Step</em> (in the <em>Inspector</em>) and set it to 16x16 (or if using a different tile set, to it&rsquo;s tile size):</p>
+<figure id="__yafg-figure-16">
+<img alt="TileSet - Tile - Step snap options" src="images/g/flappybird_godot/tile_set_tile_step_snap_options.png">
+<figcaption></figcaption>
+</figure>
+<p>Now you can select the actual single tile. Once selected click on &ldquo;Collision&rdquo;, use the rectangle tool and draw the rectangle corresponding to that tile&rsquo;s collision:</p>
+<figure id="__yafg-figure-17">
+<img alt="TileSet - Tile - Selection and collision" src="images/g/flappybird_godot/tile_set_tile_selection_collision.png">
+<figcaption></figcaption>
+</figure>
+<p>Do the same for the other 3 tiles. If you select the <em>TileMap</em> itself again, it should look like this on the right (on default layout it&rsquo;s on the left of the <em>Inspector</em>):</p>
+<figure id="__yafg-figure-18">
+<img alt="TileSet - Available tiles" src="images/g/flappybird_godot/tile_set_available_tiles.png">
+<figcaption></figcaption>
+</figure>
+<p>The ordering is important only for the &ldquo;underground tile&rdquo;, which is the filler ground, it should be at the end (index 3); if this is not the case, repeat the process (it&rsquo;s possible to rearrange them but it&rsquo;s hard to explain as it&rsquo;s pretty weird).</p>
+<p>At this point the tilemap doesn&rsquo;t have any physics and the cell size is wrong. Select the &ldquo;GroundTileMap&rdquo;, set the <em>TileMap/Cell/Size</em> to 16x16, the <em>TileMap/Collision/Layer</em> set to <code>bit 2</code> only (ground layer) and disable any <em>TileMap/Collision/Mask</em> bits. Should look something like this:</p>
+<figure id="__yafg-figure-19">
+<img alt="TileMap - Cell size and collision configuration" src="images/g/flappybird_godot/tile_map_cell_collision_configuration.png">
+<figcaption></figcaption>
+</figure>
+<p>Now it&rsquo;s just a matter of repeating the same for the pipes (&ldquo;PipeTileMap&rdquo;), only difference is that when selecting the tiles you need to select 2 tiles, as the pipe is 2 tiles wide, or just set the <em>Snap Options/Step</em> to 32x16, for example, just keep the cell size to 16x16.</p>
+<h4 id="default-ground-tiles">Default ground tiles</h4>
+<p>I added few default ground tiles to the scene, just for testing purposes but I left them there. These could be place programatically, but I was too lazy to change things. On the &ldquo;WorldTiles&rdquo; scene, while selecting the &ldquo;GroundTileMap&rdquo;, you can select the tiles you want to paint with, and left click in the grid to paint with the selected tile. Need to place tiles from <code>(-8, 7)</code> to <code>(10, 7)</code> as well as the tile below with the filler ground (the tile position/coordinates show at the bottom left, refer to the image below):</p>
+<figure id="__yafg-figure-20">
+<img alt="Scene - WorldTiles - Default ground tiles" src="images/g/flappybird_godot/world_tiles_default_tiles.png">
+<figcaption></figcaption>
+</figure>
+<h3 id="player">Player</h3>
+<p>On a new scene called &ldquo;Player&rdquo; with a <em>KinematicBody2D</em> node named &ldquo;Player&rdquo; as the root of the scene, then for the children: <em>AnimatedSprite</em> as &ldquo;Sprite&rdquo;, <em>CollisionShape2D</em> as &ldquo;Collision&rdquo; (with a circle shape) and 3 <em>AudioStreamPlayers</em> for &ldquo;JumpSound&rdquo;, &ldquo;DeadSound&rdquo; and &ldquo;HitSound&rdquo;. Not sure if it&rsquo;s a good practice to have the audio here, since I did that at the end, pretty lazy. Then, attach a script to the &ldquo;Player&rdquo; node and then it should look like this:</p>
+<figure id="__yafg-figure-21">
+<img alt="Scene - Player - Node setup" src="images/g/flappybird_godot/scene_player_node_setup.png">
+<figcaption></figcaption>
+</figure>
+<p>Select the &ldquo;Player&rdquo; node and set the <em>CollisionShape2D/Collision/Layer</em> to 1 and the <em>CollisionObject2D/Collision/Mask</em> to 2 and 3 (ground and pipe).</p>
+<p>For the &ldquo;Sprite&rdquo; node, when selecting it click on the &ldquo;(empty)&rdquo; for the <em>AnimatedSprite/Frames</em> property and click &ldquo;New SpriteFrames&rdquo;, click again where the &ldquo;(empty)&rdquo; used to be and ane window should open on the bottom:</p>
+<figure id="__yafg-figure-22">
+<img alt="Scene - Player - SpriteFrames window" src="images/g/flappybird_godot/scene_player_spriteframes_window.png">
+<figcaption></figcaption>
+</figure>
+<p>Right off the bat, set the &ldquo;Speed&rdquo; to <code>10 FPS</code> (bottom left) and rename &ldquo;default&rdquo; to &ldquo;bird_1&rdquo;. With the &ldquo;bird_1&rdquo; selected, click on the &ldquo;Add frames from a Sprite Sheet&rdquo;, which is the second button under &ldquo;Animation Frames:&rdquo; which looks has an icon of a small grid (next to the folder icon), a new window will popup where you need to select the respective sprite sheet to use and configure it for importing. On the &ldquo;Select Frames&rdquo; window, change the &ldquo;Vertical&rdquo; to 1, and then select all 4 frames (<em>Ctrl + Scroll</em> wheel to zoom in):</p>
+<figure id="__yafg-figure-23">
+<img alt="Scene - Player - Sprite sheet importer" src="images/g/flappybird_godot/scene_player_sprite_sheet_importer.png">
+<figcaption></figcaption>
+</figure>
+<p>After that, the <em>SpriteFrames</em> window should look like this:</p>
+<figure id="__yafg-figure-24">
+<img alt="Scene - Player - SpriteFrames window with sprite sheet configured" src="images/g/flappybird_godot/scene_player_spriteframes_window_with_sprite_sheet.png">
+<figcaption></figcaption>
+</figure>
+<p>Finally, make sure the &ldquo;Sprite&rdquo; node has the <em>AnimatedSprite/Animation</em> is set to &ldquo;bird_1&rdquo; and that the &ldquo;Collision&rdquo; node is configured correctly for its size and position (I just have it as a radius of 7). As well as dropping the SFX files into the corresponding <em>AudioStreamPlayer</em> (into the <em>AudioStreamPlayer/Stream</em> property).</p>
+<h3 id="other">Other</h3>
+<p>These are really simple scenes that don&rsquo;t require much setup:</p>
+<ul>
+<li>&ldquo;CeilingDetector&rdquo;: just an <em>Area2D</em> node with a <em>CollisionShape2D</em> in the form of a rectangle (<em>CollisionShape2D/Shape/extents</em> to <code>(120, 10)</code>), stretched horizontally so it fits the whole screen. <em>CollisionObject2D/Collision/Layer</em> set to <code>bit 4</code> (ceiling) and <em>CollisionObject2D/Collision/Mask</em> set to bit 1 (player).</li>
+<li>&ldquo;ScoreDetector&rdquo;: similar to the &ldquo;CeilingDetector&rdquo;, but vertical (<em>CollisionShape2D/Shape/extents</em> to <code>(2.5, 128)</code>) and <em>CollisionObject2D/Collision/Layer</em> set to <code>bit 1</code> (player).</li>
+<li>&ldquo;WorldDetector&rdquo;: <em>Node2D</em> with a script attached, and 3 <em>RayCast2D</em> as children:<ul>
+<li>&ldquo;NewTile&rdquo;: <em>Raycast2D/Enabled</em> to true (checked), <em>Raycast2D/Cast To</em> <code>(0, 400)</code>, <em>Raycast2D/Collision Mask</em> to <code>bit 2</code> (ground) and <em>Node2D/Transform/Position</em> to <code>(152, -200)</code></li>
+<li>&ldquo;OldTile&rdquo;: same as &ldquo;NewTile&rdquo;, except for the <em>Node2D/Transform/Position</em>, set it to <code>(-152, -200)</code>.</li>
+<li>&ldquo;OldPipe&rdquo;: same as &ldquo;OldTile&rdquo;, except for the <em>Raycast2D/Collision Mask</em>, set it to <code>bit 3</code> (pipe).</li>
+</ul>
+</li>
+</ul>
+<h3 id="game">Game</h3>
+<p>This is the actual &ldquo;Game&rdquo; scene that holds all the playable stuff, here we will drop in all the previous scenes; the root node is a <em>Node2D</em> and also has an attached script. Also need to add 2 additional <em>AudioStreamPlayers</em> for the &ldquo;start&rdquo; and &ldquo;score&rdquo; sounds, as well as a <em>Sprite</em> for the background (<em>Sprite/Offset/Offset</em> set to <code>(0, 10)</code>) and a <em>Camera2D</em> (<em>Camera2D/Current</em> set to true (checked)). It should look something like this:</p>
+<figure id="__yafg-figure-25">
+<img alt="Scene - Game - Node setup" src="images/g/flappybird_godot/scene_game_node_setup.png">
+<figcaption></figcaption>
+</figure>
+<p>The scene viewport should look something like the following:</p>
+<figure id="__yafg-figure-26">
+<img alt="Scene - Game - Viewport" src="images/g/flappybird_godot/scene_game_viewport.png">
+<figcaption></figcaption>
+</figure>
+<h3 id="ui">UI</h3>
+<h4 id="fonts">Fonts</h4>
+<p>We need some font &ldquo;Resources&rdquo; to style the <em>Label</em> fonts. Under the <em>FileSystem</em> window, right click on the fonts directory (create one if needed) and click on &ldquo;New Resource&hellip;&rdquo; and select <em>DynamicFontData</em>, save it in the &ldquo;fonts&rdquo; directory as &ldquo;SilverDynamicFontData.tres&rdquo; (&ldquo;Silver&rdquo; as it is the font I&rsquo;m using) then double click the just created resource and set the <em>DynamicFontData/Font Path</em> to the actual &ldquo;Silver.ttf&rdquo; font (or whatever you want).</p>
+<p>Then create a new resource and this time select <em>DynamicFont</em>, name it &ldquo;SilverDynamicFont.tres&rdquo;, then double click to edit and add the &ldquo;SilverDynamicFontData.tres&rdquo; to the <em>DynamicFont/Font/Font Data</em> property (and I personally toggled off the <em>DynamicFont/Font/Antialiased</em> property), now just set the <em>DynamicFont/Settings/(Size, Outline Size, Outline Color)</em> to 32, 1 and black, respectively (or any other values you want). It should look something like this:</p>
+<figure id="__yafg-figure-27">
+<img alt="Resource - DynamicFont - Default font" src="images/g/flappybird_godot/resource_dynamic_font.png">
+<figcaption></figcaption>
+</figure>
+<p>Do the same for another <em>DynamicFont</em> which will be used for the score label, named &ldquo;SilverScoreDynamicFont.tres&rdquo;. Only changes are <em>Dynamic/Settings/(Size, Outline Size)</em> which are set to 128 and 2, respectively. The final files for the fonts should look something like this:</p>
+<figure id="__yafg-figure-28">
+<img alt="Resource - Dynamicfont - Directory structure" src="images/g/flappybird_godot/resource_dynamic_font_directory_structure.png">
+<figcaption></figcaption>
+</figure>
+<h4 id="scene-setup">Scene setup</h4>
+<p>This has a bunch of nested nodes, so I&rsquo;ll try to be concise here. The root node is a <em>CanvasLayer</em> named &ldquo;UI&rdquo; with its own script attached, and for the children:</p>
+<ul>
+<li>&ldquo;MarginContainer&rdquo;: <em>MarginContainer</em> with <em>Control/Margin/(Left, Top)</em> set to <code>10</code> and <em>Control/Margin/(Right, Bottom)</em> set to <code>-10</code>.<ul>
+<li>&ldquo;InfoContainer&rdquo;: <em>VBoxContainer</em> with <em>Control/Theme Overrides/Constants/Separation</em> set to <code>250</code>.<ul>
+<li>&ldquo;ScoreContainer&rdquo;: <em>VBoxContainer</em>.<ul>
+<li>&ldquo;Score&rdquo;: <em>Label</em> with <em>Label/Align</em> set to &ldquo;Center&rdquo;, <em>Control/Theme Overrides/Fonts/Font</em> to the &ldquo;SilverScoreDynamicFont.tres&rdquo;, if needed adjust the <em>DynamicFont</em> settings.</li>
+<li>&ldquo;HighScore: same as &ldquo;Score&rdquo;, escept for the <em>Control/Theme Overrides/Fonts/Font</em> which is set to &ldquo;SilverDynamicFont.tres&rdquo;.</li>
+</ul>
+</li>
+<li>&ldquo;StartGame&rdquo;: Same as &ldquo;HighScore&rdquo;.</li>
+</ul>
+</li>
+<li>&ldquo;DebugContainer&rdquo;: <em>VBoxContainer</em>.<ul>
+<li>&ldquo;FPS&rdquo;: <em>Label</em>.</li>
+</ul>
+</li>
+<li>&ldquo;VersionContainer&rdquo;: <em>VBoxContainer</em> with <em>BoxContainer/Alignment</em> set to &ldquo;Begin&rdquo;.<ul>
+<li>&ldquo;Version&rdquo;: <em>Label</em> with <em>Label/Align</em> set to &ldquo;Right&rdquo;.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The scene ends up looking like this:</p>
+<figure id="__yafg-figure-29">
+<img alt="Scene - UI - Node setup" src="images/g/flappybird_godot/scene_ui.png">
+<figcaption></figcaption>
+</figure>
+<h3 id="main">Main</h3>
+<p>This is the final scene where we connect the Game and the UI. It&rsquo;s made of a <em>Node2D</em> with it&rsquo;s own script attached and an instance of &ldquo;Game&rdquo; and &ldquo;UI&rdquo; as it&rsquo;s children.</p>
+<p>This is a good time to set the default scene when we run the game by going to <em>Project -&gt; Project settings&hellip; -&gt; General</em> and in <em>Application/Run</em> set the <em>Main Scene</em> to the &ldquo;Main.tscn&rdquo; scene.</p>
+<h2 id="scripting">Scripting</h2>
+<p>I&rsquo;m going to keep this scripting part to the most basic code blocks, as it&rsquo;s too much code, for a complete view you can head to the <a href="https://github.com/luevano/flappybird_godot">source code</a>.</p>
+<p>As of now, the game itself doesn&rsquo;t do anything if we hit play. The first thing to do so we have something going on is to do the minimal player scripting.</p>
+<h3 id="player_1">Player</h3>
+<p>The most basic code needed so the bird goes up and down is to just detect &ldquo;jump&rdquo; key presses and add a negative jump velocity so it goes up (<code>y</code> coordinate is reversed in godot&hellip;), we also check the velocity sign of the <code>y</code> coordinate to decide if the animation is playing or not.</p>
+<pre><code class="language-gdscript">class_name Player
+extends KinematicBody2D
+
+export(float, 1.0, 1000.0, 1.0) var JUMP_VELOCITY: float = 380.0
+
+onready var sprite: AnimatedSprite = $Sprite
+
+var gravity: float = 10 * ProjectSettings.get_setting(&quot;physics/2d/default_gravity&quot;)
+var velocity: Vector2 = Vector2.ZERO
+
+
+func _physics_process(delta: float) -&gt; void:
+    velocity.y += gravity * delta
+
+    if Input.is_action_just_pressed(&quot;jump&quot;):
+        velocity.y = -JUMP_VELOCITY
+
+    if velocity.y &lt; 0.0:
+        sprite.play()
+    else:
+        sprite.stop()
+
+    velocity = move_and_slide(velocity)
+</code></pre>
+<p>You can play it now and you should be able to jump up and down, and the bird should stop on the ground (although you can keep jumping). One thing to notice is that when doing <code>sprite.stop()</code> it stays on the last frame, we can fix that using the code below (and then change <code>sprite.stop()</code> for <code>_stop_sprite()</code>):</p>
+<pre><code class="language-gdscript">func _stop_sprite() -&gt; void:
+    if sprite.playing:
+        sprite.stop()
+    if sprite.frame != 0:
+        sprite.frame = 0
+</code></pre>
+<p>Where we just check that the last frame has to be the frame 0.</p>
+<p>Now just a matter of adding other needed code for moving horizontally, add sound by getting a reference to the <em>AudioStreamPlayers</em> and doing <code>sound.play()</code> when needed, as well as handling death scenarios by adding a <code>signal died</code> at the beginning of the script and handle any type of death scenario using the below function:</p>
+<pre><code class="language-gdscript">func _emit_player_died() -&gt; void:
+    # bit 2 corresponds to pipe (starts from 0)
+    set_collision_mask_bit(2, false)
+    dead = true
+    SPEED = 0.0
+    emit_signal(&quot;died&quot;)
+    # play the sounds after, because yield will take a bit of time,
+    # this way the camera stops when the player &quot;dies&quot;
+    velocity.y = -DEATH_JUMP_VELOCITY
+    velocity = move_and_slide(velocity)
+    hit_sound.play()
+    yield(hit_sound, &quot;finished&quot;)
+    dead_sound.play()
+</code></pre>
+<p>Finally need to add the actual checks for when the player dies (like collision with ground or pipe) as well as a function that listens to a signal for when the player goes to the ceiling.</p>
+<h3 id="worlddetector">WorldDetector</h3>
+<p>The code is pretty simple, we just need a way of detecting if we ran out of ground and send a signal, as well as sending as signal when we start detecting ground/pipes behind us (to remove it) because the world is being generated as we move. The most basic functions needed are:</p>
+<pre><code class="language-gdscript">func _was_colliding(detector: RayCast2D, flag: bool, signal_name: String) -&gt; bool:
+    if detector.is_colliding():
+        return true
+    if flag:
+        emit_signal(signal_name)
+        return false
+    return true
+
+
+func _now_colliding(detector: RayCast2D, flag: bool, signal_name: String) -&gt; bool:
+    if detector.is_colliding():
+        if not flag:
+            emit_signal(signal_name)
+            return true
+    return false
+</code></pre>
+<p>We need to keep track of 3 &ldquo;flags&rdquo;: <code>ground_was_colliding</code>, <code>ground_now_colliding</code> and <code>pipe_now_colliding</code> (and their respective signals), which are going to be used to do the checks inside <code>_physics_process</code>. For example for checking for new ground: <code>ground_now_colliding = _now_colliding(old_ground, ground_now_colliding, "ground_started_colliding")</code>.</p>
+<h3 id="worldtiles">WorldTiles</h3>
+<p>This script is what handles the &ldquo;GroundTileMap&rdquo; as well as the &ldquo;PipeTileMap&rdquo; and just basically functions as a &ldquo;Signal bus&rdquo; connecting a bunch of signals and just tracking how many pipes have been placed:</p>
+<pre><code class="language-gdscript"># omitting code for signal definitions and references to nodes
+export(int, 2, 20, 2) var PIPE_SEP: int = 6
+var tiles_since_last_pipe: int = PIPE_SEP - 1
+
+
+func _ready() -&gt; void:
+    connect(&quot;place_ground&quot;, ground_tile_map, &quot;_on_WorldTiles_place_ground&quot;)
+    connect(&quot;remove_ground&quot;, ground_tile_map, &quot;_on_WorldTiles_remove_ground&quot;)
+    connect(&quot;place_pipe&quot;, pipe_tile_map, &quot;_on_WorldTiles_place_pipe&quot;)
+    connect(&quot;remove_pipe&quot;, pipe_tile_map, &quot;_on_WorldTiles_remove_pipe&quot;)
+
+
+func _on_WorldDetector_ground_stopped_colliding() -&gt; void:
+    emit_signal(&quot;place_ground&quot;)
+
+    tiles_since_last_pipe += 1
+    if tiles_since_last_pipe == PIPE_SEP:
+        emit_signal(&quot;place_pipe&quot;)
+        tiles_since_last_pipe = 0
+
+
+func _on_WorldDetector_ground_started_colliding() -&gt; void:
+    emit_signal(&quot;remove_ground&quot;)
+
+
+func _on_WorldDetector_pipe_started_colliding() -&gt; void:
+    emit_signal(&quot;remove_pipe&quot;)
+</code></pre>
+<h4 id="groundtilemap">GroundTileMap</h4>
+<p>asdfg</p>
+<h2 id="temp-notes">Temp notes</h2>
+<ul class="checklist">
+<li><input type="checkbox" disabled checked> Texture presets for pixel art.</li>
+<li><input type="checkbox" disabled checked> Game scale option in settings.</li>
+<li><input type="checkbox" disabled checked> Specifics on the tilemap/tileset config.</li>
+<li><input type="checkbox" disabled checked> Setup physics layers.</li>
+<li><input type="checkbox" disabled checked> Ggscript debug remove: unused argument, unused signal, return value</li>
+<li><input type="checkbox" disabled> Transform png icon to ico for windows releases: magick convert icon.png -define icon:auto-resize=256,128,64,48,32,16 icon.ico</li>
+<li><input type="checkbox" disabled> Download rcedit and put it somewhere near godot for ease of access</li>
+<li><input type="checkbox" disabled> When exporting toggle off debug mode</li>
+</ul>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/g/godot_project_structure.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Sat, May 28, 2022 @ 21:36 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="far fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>

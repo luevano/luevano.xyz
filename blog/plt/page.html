@@ -3,10 +3,8 @@
 {%block head_title%}{{page.title}}{%endblock head_title%}
 {%block head_description%}{{page.summary}}{%endblock head_description%}
 {%block gdscript_hl%}
-{%if "godot" in page.tags%}
     <!-- Specific to GDScript -->
     <script type="text/javascript" src="hl/languages/gdscript.min.js"></script>
-{%endif%}
 {%endblock gdscript_hl%}
 {%block head_og%}
   <meta property="og:title" content="{{page.title}} -- {{config.get("info", "title")}}"/>
