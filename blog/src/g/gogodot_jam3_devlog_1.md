@@ -20,7 +20,7 @@ I wanted to do a *Snake* clone, and I'm using this jam as an excuse to do it and
 
 ## Initial setup
 
-Again, similar to the [FlappyBird](https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html) clone I developed, I'm using the structure I wrote about on [Godot project structure](https://blog.luevano.xyz/g/godot_project_structure.html) with slight modifications to test things out. Also using similar *Project settings* as those from the *FlappyBird* clone like the pixel art texture imports, keybindings, layers, etc..
+Again, similar to the [FlappyBird](https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html) clone I developed, I'm using the directory structure I wrote about on [Godot project structure](https://blog.luevano.xyz/g/godot_project_structure.html) with slight modifications to test things out. Also using similar *Project settings* as those from the *FlappyBird* clone like the pixel art texture imports, keybindings, layers, etc..
 
 I've also setup [GifMaker](https://github.com/bram-dingelstad/godot-gifmaker), with slight modifications as the *AssetLib* doesn't install it correctly and contains unnecessry stuff: moved necessary files to the `res://addons` directory, deleted test scenes and files in general, and copied the license to the `res://docs` directory. Setting this up was a bit annoying because the tutorial it's bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn't find it anywhere other than by inspecting some of the code/scenes.
 
@@ -77,7 +77,7 @@ After tunning all the necessary parameters you should get something like this:
 
 To move other snake parts by following the snake head the only solution I found was to use the *Path2D* and *PathFollow2D* nodes. *Path2D* basically just handles the curve/path that *PathFollow2D* will use to move its child node; and I say "child node" in singular... as *PathFollow2D* can only handle one damn child, all the other ones will have weird transformations and/or rotations. So, the next thing to do is to setup a way to compute (and draw so we can validate) the snake's path/curve.
 
-Added `signal new_curve_point(coordinates)` to the *Event* singleton and then add the following to `head.gd`:
+Added the signal `snake_path_new_point(coordinates)` to the *Event* singleton and then add the following to `head.gd`:
 
 ```gdscript
 var _time_elapsed: float = 0.0
@@ -85,7 +85,7 @@ var _time_elapsed: float = 0.0
 # using a timer is not recommended for < 0.01
 func _handle_time_elapsed(delta: float) -> void:
 	if _time_elapsed >= Global.SNAKE_POSITION_UPDATE_INTERVAL:
-		Event.emit_signal("new_curve_point", global_position)
+		Event.emit_signal("snake_path_new_point", global_position)
 		_time_elapsed = 0.0
 	_time_elapsed += delta
 ```
@@ -99,7 +99,7 @@ extends Node2D
 onready var path: Path2D = $Path
 
 func _ready():
-	Event.connect("new_curve_point", self, "_on_Head_new_curve_point")
+	Event.connect("snake_path_new_point", self, "_on_Head_snake_path_new_point")
 
 
 func _draw() -> void:
@@ -107,14 +107,10 @@ func _draw() -> void:
 		draw_polyline(path.curve.get_baked_points(), Color.aquamarine, 1, true)
 
 
-func add_point_to_curve(coordinates: Vector2) -> void:
+func _on_Head_snake_path_new_point(coordinates: Vector2) -> void:
 	path.curve.add_point(coordinates)
 	# update call is to draw curve as there are new points to the path's curve
 	update()
-
-
-func _on_Head_new_curve_point(coordinates: Vector2) -> void:
-	add_point_to_curve(coordinates)
 ```
 
 With this, we're now populating the *Path2D* curve points with the position of the snake head. You should be able to see it because of the `_draw` call. If you run it you should see something like this:
@@ -139,9 +135,9 @@ func _physics_process(delta: float) -> void:
 
 And this can be attached to the *Body*'s root node (*PathFollow2D*), no extra setup needed. Repeat the same steps for creating the `Tail.tscn` scene and when attaching the `generic_segment.gd` script just configure the `Type` parameter to `tail` in the GUI (by selecting the node with the script attached and editing in the *Inspector*).
 
-### Creating body parts on the fly
+### Adding body parts
 
-Now it's just a matter of handling when to add new body parts in the `snake.gd` script. For now I've only setup the initial lenght of the snake. The extra code needed is the following:
+Now it's just a matter of handling when to add new body parts in the `snake.gd` script. For now I've only setup for adding body parts to fulfill the initial length of the snake (this doesn't include the head or tail). The extra code needed is the following:
 
 ```gdscript
 export(PackedScene) var BODY_SEGMENT_NP: PackedScene
@@ -149,31 +145,83 @@ export(PackedScene) var TAIL_SEGMENT_NP: PackedScene
 
 var current_body_segments: int = 0
 var max_body_segments: int = 1
-var body_segment_size: float = 16.0
 
 
-func add_point_to_curve(coordinates: Vector2) -> void:
+func _add_initial_segment(type: PackedScene) -> void:
+	if path.curve.get_baked_length() >= (current_body_segments + 1.0) * Global.SNAKE_SEGMENT_SIZE:
+		var _temp_body_segment: PathFollow2D = type.instance()
+		path.add_child(_temp_body_segment)
+		current_body_segments += 1
+
+
+func _on_Head_snake_path_new_point(coordinates: Vector2) -> void:
 	path.curve.add_point(coordinates)
 	# update call is to draw curve as there are new points to the path's curve
 	update()
 
 	# add the following lines
 	if current_body_segments < max_body_segments:
-		add_snake_segment(BODY_SEGMENT_NP)
+		_add_initial_segment(BODY_SEGMENT_NP)
 	elif current_body_segments == max_body_segments:
-		add_snake_segment(TAIL_SEGMENT_NP)
-
-
-func add_snake_segment(type: PackedScene) -> void:
-	if path.curve.get_baked_length() >= (current_body_segments + 1.0) * body_segment_size:
-		var _temp_body_segment: PathFollow2D = type.instance()
-		path.add_child(_temp_body_segment)
-		current_body_segments += 1
+		_add_initial_segment(TAIL_SEGMENT_NP)
 ```
 
 Select the *Snake* node and add the *Body* and *Tail* scene to the parameters, respectively. Then when running you should see something like this:
 
 ![Snake - Basic movement with all body parts](images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif "Snake - Basic movement with all body parts")
+
+Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: `snake_add_new_segment(type)`, `snake_added_new_segment(type)`, `snake_added_initial_segments` and use them when makes sense. Now we need to add the following:
+
+```gdscript
+var body_segment_stack: Array
+var tail_segment: PathFollow2D
+# didn't konw how to name this, basically holds the current path lenght
+# 	whenever the add body segment, and we use this stack to add body parts
+var body_segment_queue: Array
+```
+
+As well as updating `_add_initial_segment` with the following so it adds the new segment on the specific variable:
+
+```gdscript
+if _temp_body_segment.TYPE == "body":
+	body_segment_stack.append(_temp_body_segment)
+else:
+	tail_segment = _temp_body_segment
+```
+
+Now that it's just a matter of creating the segment queue whenever a new segment is needed, as well as adding each segment in a loop whenever we have items in the queue and it's a good distance to place the segment on. These two things can be achieved with the following code:
+
+```gdscript
+# this will be called in _physics_process
+func _add_new_segment() -> void:
+	var _path_length_threshold: float = body_segment_queue[0] + Global.SNAKE_SEGMENT_SIZE
+	if path.curve.get_baked_length() >= _path_length_threshold:
+		var _removed_from_queue: float = body_segment_queue.pop_front()
+		var _temp_body_segment: PathFollow2D = BODY_SEGMENT_NP.instance()
+		var _new_body_offset: float = body_segment_stack.back().offset - Global.SNAKE_SEGMENT_SIZE
+
+		_temp_body_segment.offset = _new_body_offset
+		body_segment_stack.append(_temp_body_segment)
+		path.add_child(_temp_body_segment)
+		tail_segment.offset = body_segment_stack.back().offset - Global.SNAKE_SEGMENT_SIZE
+
+		current_body_segments += 1
+
+
+func _add_segment_to_queue() -> void:
+	# need to have the queues in a fixed separation, else if the eating functionality
+	#	gets spammed, all next bodyparts will be spawned almost at the same spot
+	if body_segment_queue.size() == 0:
+		body_segment_queue.append(path.curve.get_baked_length())
+	else:
+		body_segment_queue.append(body_segment_queue.back() + Global.SNAKE_SEGMENT_SIZE)
+```
+
+With everything implemented and connected accordingly then we can add segments on demand (for testing I'm adding with a keystroke), it should look like this:
+
+![Snake - Basic movement with dynamic addition of new segments](images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif "Snake - Basic movement with dynamic addition of new segments")
+
+For now, this should be enough, I'll add more stuff as needed as I go.
 
 ## Brainstorm/To-do
 

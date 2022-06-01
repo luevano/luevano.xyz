@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <base href="https://static.luevano.xyz">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Creating my Go Godot Jam 3 entry devlog 1 -- Luévano's Blog</title>
+    <meta name="description" content"Details on the implementation for the game I created for the Go Godot Jam 3, which theme is Evolution."/>
+    <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <link rel="icon" href="images/icons/favicon.ico">
+
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+
+    <!-- highlight support for code blocks -->
+    <script type="text/javascript" src="hl/highlight.min.js"></script>
+    <!--<script type="text/javascript" src="hl/highlight-ln.min.js"></script>-->
+    <!-- Specific to GDScript -->
+    <script type="text/javascript" src="hl/languages/gdscript.min.js"></script>
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad();
+      // hljs.initLineNumbersOnLoad();
+    </script>
+
+    <!-- theme related -->
+    <script type="text/javascript" src="scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+
+    <!-- og meta -->
+  <meta property="og:title" content="Creating my Go Godot Jam 3 entry devlog 1 -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/g/gogodot_jam3_devlog_1.html"/>
+  <meta property="og:image" content="https://static.luevano.xyz//images/b/default.png"/>
+  <meta property="og:description" content="Details on the implementation for the game I created for the Go Godot Jam 3, which theme is Evolution."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+          </li>
+
+          <li>
+            <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+          </li>
+
+          <li>
+            <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+          </li>
+
+          <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+            <ul>
+              <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+              <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+              <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+            </ul>
+          </li>
+
+          <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+            <ul>
+              <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+    </header>
+
+    <main>
+  <h1>Creating my Go Godot Jam 3 entry devlog 1</h1>
+
+  <p><strong>IF YOU&rsquo;RE SEEING THIS, THIS IS A WIP</strong></p>
+<p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
+<p>I wanted to do a <em>Snake</em> clone, and I&rsquo;m using this jam as an excuse to do it and add something to it. The features include:</p>
+<ul>
+<li>Snakes will pass their stats in some form to the next snakes.</li>
+<li>Non-grid snake movement. I just hate the grid constraint, so I wanted to make it move in any direction.</li>
+<li>Depending on the food you eat, you&rsquo;ll gain new mutations and the more you eat the more that mutation develops.</li>
+<li>Procedural map creation.</li>
+</ul>
+<h2 id="initial-setup">Initial setup</h2>
+<p>Again, similar to the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird</a> clone I developed, I&rsquo;m using the directory structure I wrote about on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> with slight modifications to test things out. Also using similar <em>Project settings</em> as those from the <em>FlappyBird</em> clone like the pixel art texture imports, keybindings, layers, etc..</p>
+<p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes.</p>
+<p>This time I&rsquo;m also going to be using an <a href="https://www.gdquest.com/docs/guidelines/best-practices/godot-gdscript/event-bus/">Event bus</a> singleton (which I&rsquo;m going to just call <em>Event</em>) as managing signals was pretty annoying on my last project; as well as a <em>Global</em> singleton for essential stuff so I don&rsquo;t have to do as many cross references between nodes/scenes.</p>
+<h2 id="assets">Assets</h2>
+<p>This time I&rsquo;ll be creating my own assets in <a href="https://www.aseprite.org/">Aseprite</a>, wont be that good, but enough to prototype and get things going.</p>
+<h2 id="the-snake">The snake</h2>
+<p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
+<figure id="__yafg-figure-4">
+<img alt="FileSystem - Snake dir structure" src="images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
+<figcaption>FileSystem - Snake dir structure</figcaption>
+</figure>
+<h3 id="basic-movement">Basic movement</h3>
+<p>The most basic thing is to move the head, this is what we have control of. Create a scene called <code>Head.tscn</code> and setup the basic <em>KinematicBody2D</em> with it&rsquo;s own <em>Sprite</em> and <em>CollisionShape2D</em> (I used a small circle for the tip of the head), and set the <em>Collision Layer/Mask</em> accordingly, for now just <code>layer = bit 1</code>. And all we need to do, is keep moving the snake forwards and be able to rotate left or right. Created a new script called <code>head.gd</code> attached to the root (<em>KinematicBody2D</em>) and added:</p>
+<pre><code class="language-gdscript">extends KinematicBody2D
+
+enum {
+    LEFT=-1,
+    RIGHT=1
+}
+
+var velocity: Vector2 = Vector2.ZERO
+var _direction: Vector2 = Vector2.UP
+
+
+func _physics_process(delta: float) -&gt; void:
+    if Input.is_action_pressed(&quot;move_left&quot;):
+        _rotate_to(LEFT)
+    if Input.is_action_pressed(&quot;move_right&quot;):
+        _rotate_to(RIGHT)
+
+    velocity = _direction * Global.SNAKE_SPEED
+
+    velocity = move_and_slide(velocity)
+    _handle_time_elapsed(delta)
+
+
+func _rotate_to(direction: int) -&gt; void:
+    rotate(deg2rad(direction * Global.SNAKE_ROT_SPEED * get_physics_process_delta_time()))
+    _direction = _direction.rotated(deg2rad(direction * Global.SNAKE_ROT_SPEED * get_physics_process_delta_time()))
+</code></pre>
+<p>After tunning all the necessary parameters you should get something like this:</p>
+<figure id="__yafg-figure-5">
+<img alt="Snake - Basic movement (left and right controls)" src="images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
+<figcaption>Snake - Basic movement (left and right controls)</figcaption>
+</figure>
+<h3 id="setting-up-path-following">Setting up path following</h3>
+<p>To move other snake parts by following the snake head the only solution I found was to use the <em>Path2D</em> and <em>PathFollow2D</em> nodes. <em>Path2D</em> basically just handles the curve/path that <em>PathFollow2D</em> will use to move its child node; and I say &ldquo;child node&rdquo; in singular&hellip; as <em>PathFollow2D</em> can only handle one damn child, all the other ones will have weird transformations and/or rotations. So, the next thing to do is to setup a way to compute (and draw so we can validate) the snake&rsquo;s path/curve.</p>
+<p>Added the signal <code>snake_path_new_point(coordinates)</code> to the <em>Event</em> singleton and then add the following to <code>head.gd</code>:</p>
+<pre><code class="language-gdscript">var _time_elapsed: float = 0.0
+
+# using a timer is not recommended for &lt; 0.01
+func _handle_time_elapsed(delta: float) -&gt; void:
+    if _time_elapsed &gt;= Global.SNAKE_POSITION_UPDATE_INTERVAL:
+        Event.emit_signal(&quot;snake_path_new_point&quot;, global_position)
+        _time_elapsed = 0.0
+    _time_elapsed += delta
+</code></pre>
+<p>This will be pinging the current snake head position every <code>0.01</code> seconds (defined in <em>Global</em>). Now create a new scene called <code>Snake.tscn</code> which will contain a <em>Node2D</em>, a <em>Path2D</em> and an instance of <em>Head</em> as its childs. Create a new script called <code>snake.gd</code> attached to the root (<em>Node2D</em>) with the following content:</p>
+<pre><code class="language-gdscript">class_name Snake
+extends Node2D
+
+onready var path: Path2D = $Path
+
+func _ready():
+    Event.connect(&quot;snake_path_new_point&quot;, self, &quot;_on_Head_snake_path_new_point&quot;)
+
+
+func _draw() -&gt; void:
+    if path.curve.get_baked_points().size() &gt;= 2:
+        draw_polyline(path.curve.get_baked_points(), Color.aquamarine, 1, true)
+
+
+func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
+    path.curve.add_point(coordinates)
+    # update call is to draw curve as there are new points to the path's curve
+    update()
+</code></pre>
+<p>With this, we&rsquo;re now populating the <em>Path2D</em> curve points with the position of the snake head. You should be able to see it because of the <code>_draw</code> call. If you run it you should see something like this:</p>
+<figure id="__yafg-figure-6">
+<img alt="Snake - Basic movement with path" src="images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
+<figcaption>Snake - Basic movement with path</figcaption>
+</figure>
+<h3 id="define-body-parts-for-the-snake">Define body parts for the snake</h3>
+<p>At this point the only thing to do is to add the corresponding next body parts and tail of the snake. To do so, we need a <em>PathFollow2D</em> to use the live-generating <em>Path2D</em>, the only caveat is that we need one of these per body part/tail (this took me hours to figure out, <em>thanks documentation</em>).</p>
+<p>Create a new scene called <code>Body.tscn</code> with a <em>PathFollow2D</em> as its root and an <em>Area2D</em> as its child, then just add the necessary <em>Sprite</em> and <em>CollisionShap2D</em> for the <em>Area2D</em>, I&rsquo;m using <code>layer = bit 2</code> for its collision. Create a new script called <code>generic_segment.gd</code> with the following code:</p>
+<pre><code class="language-gdscript">extends PathFollow2D
+
+export(String, &quot;body&quot;, &quot;tail&quot;) var TYPE: String = &quot;body&quot;
+
+
+func _physics_process(delta: float) -&gt; void:
+    offset += Global.SNAKE_SPEED * delta
+</code></pre>
+<p>And this can be attached to the <em>Body</em>&lsquo;s root node (<em>PathFollow2D</em>), no extra setup needed. Repeat the same steps for creating the <code>Tail.tscn</code> scene and when attaching the <code>generic_segment.gd</code> script just configure the <code>Type</code> parameter to <code>tail</code> in the GUI (by selecting the node with the script attached and editing in the <em>Inspector</em>).</p>
+<h3 id="adding-body-parts">Adding body parts</h3>
+<p>Now it&rsquo;s just a matter of handling when to add new body parts in the <code>snake.gd</code> script. For now I&rsquo;ve only setup for adding body parts to fulfill the initial length of the snake (this doesn&rsquo;t include the head or tail). The extra code needed is the following:</p>
+<pre><code class="language-gdscript">export(PackedScene) var BODY_SEGMENT_NP: PackedScene
+export(PackedScene) var TAIL_SEGMENT_NP: PackedScene
+
+var current_body_segments: int = 0
+var max_body_segments: int = 1
+
+
+func _add_initial_segment(type: PackedScene) -&gt; void:
+    if path.curve.get_baked_length() &gt;= (current_body_segments + 1.0) * Global.SNAKE_SEGMENT_SIZE:
+        var _temp_body_segment: PathFollow2D = type.instance()
+        path.add_child(_temp_body_segment)
+        current_body_segments += 1
+
+
+func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
+    path.curve.add_point(coordinates)
+    # update call is to draw curve as there are new points to the path's curve
+    update()
+
+    # add the following lines
+    if current_body_segments &lt; max_body_segments:
+        _add_initial_segment(BODY_SEGMENT_NP)
+    elif current_body_segments == max_body_segments:
+        _add_initial_segment(TAIL_SEGMENT_NP)
+</code></pre>
+<p>Select the <em>Snake</em> node and add the <em>Body</em> and <em>Tail</em> scene to the parameters, respectively. Then when running you should see something like this:</p>
+<figure id="__yafg-figure-7">
+<img alt="Snake - Basic movement with all body parts" src="images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
+<figcaption>Snake - Basic movement with all body parts</figcaption>
+</figure>
+<p>Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: <code>snake_add_new_segment(type)</code>, <code>snake_added_new_segment(type)</code>, <code>snake_added_initial_segments</code> and use them when makes sense. Now we need to add the following:</p>
+<pre><code class="language-gdscript">var body_segment_stack: Array
+var tail_segment: PathFollow2D
+# didn't konw how to name this, basically holds the current path lenght
+#   whenever the add body segment, and we use this stack to add body parts
+var body_segment_queue: Array
+</code></pre>
+<p>As well as updating <code>_add_initial_segment</code> with the following so it adds the new segment on the specific variable:</p>
+<pre><code class="language-gdscript">if _temp_body_segment.TYPE == &quot;body&quot;:
+    body_segment_stack.append(_temp_body_segment)
+else:
+    tail_segment = _temp_body_segment
+</code></pre>
+<p>Now that it&rsquo;s just a matter of creating the segment queue whenever a new segment is needed, as well as adding each segment in a loop whenever we have items in the queue and it&rsquo;s a good distance to place the segment on. These two things can be achieved with the following code:</p>
+<pre><code class="language-gdscript"># this will be called in _physics_process
+func _add_new_segment() -&gt; void:
+    var _path_length_threshold: float = body_segment_queue[0] + Global.SNAKE_SEGMENT_SIZE
+    if path.curve.get_baked_length() &gt;= _path_length_threshold:
+        var _removed_from_queue: float = body_segment_queue.pop_front()
+        var _temp_body_segment: PathFollow2D = BODY_SEGMENT_NP.instance()
+        var _new_body_offset: float = body_segment_stack.back().offset - Global.SNAKE_SEGMENT_SIZE
+
+        _temp_body_segment.offset = _new_body_offset
+        body_segment_stack.append(_temp_body_segment)
+        path.add_child(_temp_body_segment)
+        tail_segment.offset = body_segment_stack.back().offset - Global.SNAKE_SEGMENT_SIZE
+
+        current_body_segments += 1
+
+
+func _add_segment_to_queue() -&gt; void:
+    # need to have the queues in a fixed separation, else if the eating functionality
+    #   gets spammed, all next bodyparts will be spawned almost at the same spot
+    if body_segment_queue.size() == 0:
+        body_segment_queue.append(path.curve.get_baked_length())
+    else:
+        body_segment_queue.append(body_segment_queue.back() + Global.SNAKE_SEGMENT_SIZE)
+</code></pre>
+<p>With everything implemented and connected accordingly then we can add segments on demand (for testing I&rsquo;m adding with a keystroke), it should look like this:</p>
+<figure id="__yafg-figure-8">
+<img alt="Snake - Basic movement with dynamic addition of new segments" src="images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
+<figcaption>Snake - Basic movement with dynamic addition of new segments</figcaption>
+</figure>
+<p>For now, this should be enough, I&rsquo;ll add more stuff as needed as I go.</p>
+<h2 id="brainstormto-do">Brainstorm/To-do</h2>
+<ul>
+<li>
+<p>Snake clone with evolution.</p>
+<ul>
+<li>Evolution on the snake itself?<ul>
+<li>Evolve after eating X amount?</li>
+<li>Evolve after eating X type of food?<ul>
+<li>Similar to Contra, where you can switch the food (not sure if this counts as evolution)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Evolution on the world?<ul>
+<li>Start with a small procedural generated map, then expand it?</li>
+</ul>
+</li>
+<li>When snake dies, it passes the genes it collected by eating some food to the next snakes?<ul>
+<li>Or similar to the Rogue Legacy system?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Snake clone</p>
+<ul>
+<li>Each snake has several attributes<ul>
+<li>Health</li>
+<li>Time to live (before getting food?)</li>
+</ul>
+</li>
+<li>Special food will unlock new attributes for subsequent snakes<ul>
+<li>Jumping ability (need to level it up by eating more of the same food or by using it)</li>
+<li>Crawl up walls?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a></li>
+</ul>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Wed, Jun 01, 2022 @ 09:21 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gamejam.html">gamejam</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+      <span>
+        <i class="fas fa-address-card" alt="Contact"></i>
+        <a href="https://luevano.xyz/contact.html">Contact</a>
+      </span>
+
+      <span>
+        <i class="fas fa-donate" alt="Donate"></i>
+        <a href="https://luevano.xyz/donate.html">Donate</a>
+      </span>
+
+      <span>
+        <i class="fas fa-rss" alt="RSS"></i>
+        <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+      </span>
+
+      <br>
+      <span class="created-with">
+        <i class="fas fa-hammer" alt="Hammer"></i>
+        Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+      </span>
+
+      <br>
+      <span class="copyright">
+        Copyright <i class="far fa-copyright" alt="Copyright"></i> 2021 David Luévano Alvarado
+      </span>
+    </footer>
+  </body>
+</html>
