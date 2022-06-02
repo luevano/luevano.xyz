@@ -216,7 +216,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
 <img alt="Snake - Basic movement with all body parts" src="images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
 <figcaption>Snake - Basic movement with all body parts</figcaption>
 </figure>
-<p>Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: <code>snake_add_new_segment(type)</code>, <code>snake_added_new_segment(type)</code>, <code>snake_added_initial_segments</code> and use them when makes sense. Now we need to add the following:</p>
+<p>Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: <code>snake_adding_new_segment(type)</code>, <code>snake_added_new_segment(type)</code>, <code>snake_added_initial_segments</code> and use them when makes sense. Now we need to add the following:</p>
 <pre><code class="language-gdscript">var body_segment_stack: Array
 var tail_segment: PathFollow2D
 # didn't konw how to name this, basically holds the current path lenght
@@ -259,7 +259,63 @@ func _add_segment_to_queue() -&gt; void:
 <img alt="Snake - Basic movement with dynamic addition of new segments" src="images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
 <figcaption>Snake - Basic movement with dynamic addition of new segments</figcaption>
 </figure>
-<p>For now, this should be enough, I&rsquo;ll add more stuff as needed as I go.</p>
+<p>For now, this should be enough, I&rsquo;ll add more stuff as needed as I go. Last thing is that after finished testing that the movement felt ok, I just added a way to stop the snake whenever it collides with itself by using the following code (and the signal <code>snake_segment_body_entered(body)</code>) in a <code>main.gd</code> script that is the entry point for the game:</p>
+<pre><code class="language-gdscript">func _snake_disabled(on_off: bool) -&gt; void:
+    _snake.propagate_call(&quot;set_process&quot;, [on_off])
+    _snake.propagate_call(&quot;set_process_internal&quot;, [on_off])
+    _snake.propagate_call(&quot;set_physics_process&quot;, [on_off])
+    _snake.propagate_call(&quot;set_physics_process_internal&quot;, [on_off])
+    _snake.propagate_call(&quot;set_process_input&quot;, [on_off])
+</code></pre>
+<p>Which will stop the snake node and all children.</p>
+<h2 id="the-food">The food</h2>
+<p>For now I just decided to setup a simple system to see everything works fine. The idea is to make some kind of generic food node/scene and a &ldquo;food manager&rdquo; to spawn them, for now in totally random locations. For this I added the following signals: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type)</code> and <code>food_eaten(type)</code>.</p>
+<p>First thing is creating the <code>Food.tscn</code> which is just an <em>Area2D</em> with its necessary children with an attached script called <code>food.gd</code>. The script is really simple:</p>
+<pre><code class="language-gdscript">class_name Food # needed to access Type enum outside of the script, this registers this script as a node
+extends Area2D
+
+enum Type {
+    APPLE
+}
+
+var _type_texture: Dictionary = {
+    Type.APPLE: preload(&quot;res://entities/food/sprites/apple.png&quot;)
+}
+
+export(Type) var TYPE
+onready var _sprite: Sprite = $Sprite
+
+
+func _ready():
+    connect(&quot;body_entered&quot;, self, &quot;_on_body_entered&quot;)
+    _sprite.texture = _type_texture[TYPE]
+
+
+func _on_body_entered(body: Node) -&gt; void:
+    Event.emit_signal(&quot;food_eaten&quot;, TYPE)
+    queue_free()
+</code></pre>
+<p>Then this <code>food_eaten</code> signal is received in <code>snake.gd</code> to add a new segment to the queue.</p>
+<p>Finally, for the food manager I just created a <code>FoodManager.tscn</code> with a <em>Node2D</em> with an attached script called <code>food_manager.gd</code>. To get a random position:</p>
+<pre><code class="language-gdscript">func _get_random_pos() -&gt; Vector2:
+    var screen_size: Vector2 = get_viewport().get_visible_rect().size
+    var temp_x: float = randf() * screen_size.x - screen_size.x / 2.0
+    var temp_y: float = randf() * screen_size.y - screen_size.y / 2.0
+
+    return Vector2(temp_x, temp_y)
+</code></pre>
+<p>Which gets the job done, but later I&rsquo;ll have to add a way to check that the position is valid. And to actually place the food:</p>
+<pre><code class="language-gdscript">func _place_new_food() -&gt; void:
+    var food: Area2D = FOOD.instance()
+    var position: Vector2 = _get_random_pos()
+    food.global_position = position
+    add_child(food)
+</code></pre>
+<p>And this is used in <code>_process</code> to place new food whenever needed. For now I added a condition to add food until 10 pieces are in place, and keep adding whenever the food is is lower than 10. After setting everything up, this is the result:</p>
+<figure id="__yafg-figure-9">
+<img alt="Snake - Food basic interaction" src="images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
+<figcaption>Snake - Food basic interaction</figcaption>
+</figure>
 <h2 id="brainstormto-do">Brainstorm/To-do</h2>
 <ul>
 <li>
@@ -325,7 +381,7 @@ func _add_segment_to_queue() -&gt; void:
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
-    <p>Created: Wed, Jun 01, 2022 @ 09:21 UTC</p>
+    <p>Created: Thu, Jun 02, 2022 @ 08:34 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gamejam.html">gamejam</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>

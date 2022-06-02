@@ -170,7 +170,7 @@ Select the *Snake* node and add the *Body* and *Tail* scene to the parameters, r
 
 ![Snake - Basic movement with all body parts](images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif "Snake - Basic movement with all body parts")
 
-Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: `snake_add_new_segment(type)`, `snake_added_new_segment(type)`, `snake_added_initial_segments` and use them when makes sense. Now we need to add the following:
+Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: `snake_adding_new_segment(type)`, `snake_added_new_segment(type)`, `snake_added_initial_segments` and use them when makes sense. Now we need to add the following:
 
 ```gdscript
 var body_segment_stack: Array
@@ -221,7 +221,77 @@ With everything implemented and connected accordingly then we can add segments o
 
 ![Snake - Basic movement with dynamic addition of new segments](images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif "Snake - Basic movement with dynamic addition of new segments")
 
-For now, this should be enough, I'll add more stuff as needed as I go.
+For now, this should be enough, I'll add more stuff as needed as I go. Last thing is that after finished testing that the movement felt ok, I just added a way to stop the snake whenever it collides with itself by using the following code (and the signal `snake_segment_body_entered(body)`) in a `main.gd` script that is the entry point for the game:
+
+```gdscript
+func _snake_disabled(on_off: bool) -> void:
+	_snake.propagate_call("set_process", [on_off])
+	_snake.propagate_call("set_process_internal", [on_off])
+	_snake.propagate_call("set_physics_process", [on_off])
+	_snake.propagate_call("set_physics_process_internal", [on_off])
+	_snake.propagate_call("set_process_input", [on_off])
+```
+
+Which will stop the snake node and all children.
+
+## The food
+
+For now I just decided to setup a simple system to see everything works fine. The idea is to make some kind of generic food node/scene and a "food manager" to spawn them, for now in totally random locations. For this I added the following signals: `food_placing_new_food(type)`, `food_placed_new_food(type)` and `food_eaten(type)`.
+
+First thing is creating the `Food.tscn` which is just an *Area2D* with its necessary children with an attached script called `food.gd`. The script is really simple:
+
+```gdscript
+class_name Food # needed to access Type enum outside of the script, this registers this script as a node
+extends Area2D
+
+enum Type {
+	APPLE
+}
+
+var _type_texture: Dictionary = {
+	Type.APPLE: preload("res://entities/food/sprites/apple.png")
+}
+
+export(Type) var TYPE
+onready var _sprite: Sprite = $Sprite
+
+
+func _ready():
+	connect("body_entered", self, "_on_body_entered")
+	_sprite.texture = _type_texture[TYPE]
+
+
+func _on_body_entered(body: Node) -> void:
+	Event.emit_signal("food_eaten", TYPE)
+	queue_free()
+```
+
+Then this `food_eaten` signal is received in `snake.gd` to add a new segment to the queue.
+
+Finally, for the food manager I just created a `FoodManager.tscn` with a *Node2D* with an attached script called `food_manager.gd`. To get a random position:
+
+```gdscript
+func _get_random_pos() -> Vector2:
+	var screen_size: Vector2 = get_viewport().get_visible_rect().size
+	var temp_x: float = randf() * screen_size.x - screen_size.x / 2.0
+	var temp_y: float = randf() * screen_size.y - screen_size.y / 2.0
+
+	return Vector2(temp_x, temp_y)
+```
+
+Which gets the job done, but later I'll have to add a way to check that the position is valid. And to actually place the food:
+
+```gdscript
+func _place_new_food() -> void:
+	var food: Area2D = FOOD.instance()
+	var position: Vector2 = _get_random_pos()
+	food.global_position = position
+	add_child(food)
+```
+
+And this is used in `_process` to place new food whenever needed. For now I added a condition to add food until 10 pieces are in place, and keep adding whenever the food is is lower than 10. After setting everything up, this is the result:
+
+![Snake - Food basic interaction](images/g/gogodot_jam3/snake_food_basic_interaction.gif "Snake - Food basic interaction")
 
 ## Brainstorm/To-do
 
