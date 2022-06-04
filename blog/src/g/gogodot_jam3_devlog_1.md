@@ -293,6 +293,22 @@ And this is used in `_process` to place new food whenever needed. For now I adde
 
 ![Snake - Food basic interaction](images/g/gogodot_jam3/snake_food_basic_interaction.gif "Snake - Food basic interaction")
 
+
+## From here on just minor temp notes for now
+
+- Added restartability function.
+- Added signals for game control: `game_over` and `game_start`.
+- Tried fixing the snake because it keeps getting closer to the first body node because of accuarcy of the path when doing curves (the more the snake rotates, the more this is affected).
+	- Added signal `snake_rotated`
+- Fixed issue where the curve2d stayed the same even when restarting.
+- Disabled drawing of the curve2d.
+- Added world generation by implementing a "random walker" by following [Nuclear Throne Like Map Generation In Godot](https://www.youtube.com/watch?v=ppP2Doq3p7s), with minor changes to fit my needs and implemented few other things.
+	- Added several signals for the world gen: `world_gen_walker_started(id)`, `world_gen_walker_finished(id)`, `world_gen_walker_died(id)` and `world_gen_spawn_walker_unit(location)`.
+- Edited the food manager to communicate with the world gen to get actual possible tile locations.
+	- Added a location attribute to food.
+	- Added several related signals: `food_placing_new_food(type)`, `food_placed_new_food(type, location)` and `food_eaten(type, location)`.
+
+
 ## Brainstorm/To-do
 
 - Snake clone with evolution.
@@ -312,7 +328,3 @@ And this is used in `_process` to place new food whenever needed. For now I adde
 	- Special food will unlock new attributes for subsequent snakes
 		- Jumping ability (need to level it up by eating more of the same food or by using it)
 		- Crawl up walls?
-
-## Resources
-
-- [Nuclear Throne Like Map Generation In Godot](https://www.youtube.com/watch?v=ppP2Doq3p7s)
