@@ -307,7 +307,13 @@ And this is used in `_process` to place new food whenever needed. For now I adde
 - Edited the food manager to communicate with the world gen to get actual possible tile locations.
 	- Added a location attribute to food.
 	- Added several related signals: `food_placing_new_food(type)`, `food_placed_new_food(type, location)` and `food_eaten(type, location)`.
-
+- Tweaked the tracking of the snake size.
+- Tweaked the food system to contain more attributes and use a base food node.
+- Added a HUD with mini snake sprites. Added necessary signals.
+- Added a HUD for growth progress. Added necessary signals.
+- Refactored the nodes to make it work with `change_scene_to`, and added a main menu.
+- Added GUI for dead screen, showing the progress. Will add next mutations there.
+- Added new food and generalized a bit the food system.
 
 ## Brainstorm/To-do
 
