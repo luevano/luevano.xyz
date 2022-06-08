@@ -81,20 +81,21 @@
   <h1>Creating my Go Godot Jam 3 entry devlog 1</h1>
 
   <p><strong>IF YOU&rsquo;RE SEEING THIS, THIS IS A WIP</strong></p>
-<p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
+<p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. <del>This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way</del> <ins>I couldn&rsquo;t actually do this, as I was running out of time.</ins>. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
 <p>I wanted to do a <em>Snake</em> clone, and I&rsquo;m using this jam as an excuse to do it and add something to it. The features include:</p>
 <ul>
 <li>Snakes will pass their stats in some form to the next snakes.</li>
 <li>Non-grid snake movement. I just hate the grid constraint, so I wanted to make it move in any direction.</li>
-<li>Depending on the food you eat, you&rsquo;ll gain new mutations and the more you eat the more that mutation develops.</li>
+<li>Depending on the food you eat, you&rsquo;ll gain new mutations/abilities <del>and the more you eat the more that mutation develops.</del> <ins>didn&rsquo;t have time to add this feature, sad.</ins></li>
 <li>Procedural map creation.</li>
 </ul>
 <h2 id="initial-setup">Initial setup</h2>
 <p>Again, similar to the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird</a> clone I developed, I&rsquo;m using the directory structure I wrote about on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> with slight modifications to test things out. Also using similar <em>Project settings</em> as those from the <em>FlappyBird</em> clone like the pixel art texture imports, keybindings, layers, etc..</p>
-<p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes.</p>
+<p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes.<ins>I ended up not leaving this enabled in the game as it lagged the game out, but it&rsquo;s an option I&rsquo;ll end up researching more.</ins></p>
 <p>This time I&rsquo;m also going to be using an <a href="https://www.gdquest.com/docs/guidelines/best-practices/godot-gdscript/event-bus/">Event bus</a> singleton (which I&rsquo;m going to just call <em>Event</em>) as managing signals was pretty annoying on my last project; as well as a <em>Global</em> singleton for essential stuff so I don&rsquo;t have to do as many cross references between nodes/scenes.</p>
 <h2 id="assets">Assets</h2>
 <p>This time I&rsquo;ll be creating my own assets in <a href="https://www.aseprite.org/">Aseprite</a>, wont be that good, but enough to prototype and get things going.</p>
+<p>Other than that I used few key sprites from <a href="https://vryell.itch.io/">vryell</a>: <a href="https://vryell.itch.io/controller-keyboard-icons">Controller &amp; Keyboard Icons</a> and a font from <a href="https://datagoblin.itch.io/">datagoblin</a>: <a href="https://datagoblin.itch.io/monogram">Monogram</a>.</p>
 <h2 id="the-snake">The snake</h2>
 <p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
 <figure id="__yafg-figure-4">
@@ -268,6 +269,12 @@ func _add_segment_to_queue() -&gt; void:
     _snake.propagate_call(&quot;set_process_input&quot;, [on_off])
 </code></pre>
 <p>Which will stop the snake node and all children.</p>
+<h3 id="fix-on-body-segments-following-head">Fix on body segments following head</h3>
+<p>After a while of testing and developing, I noticed that sometimes the head &ldquo;detaches&rdquo; from the body when a lot of rotations happen (moving the snake left or right), because of how imprecise the <em>Curve2D</em> is. To do this I just send a signal (<code>snake_rotated</code>) whenever the snake rotates and make a small correction (in <code>generic_segment.gd</code>):</p>
+<pre><code class="language-gdscript">func _on_snake_rotated() -&gt; void:
+    offset -= 0.75 * Global.SNAKE_SPEED * pow(get_physics_process_delta_time(), 2)
+</code></pre>
+<p>This is completely random, I tweaked it manually after a lot of iterations.</p>
 <h2 id="the-food">The food</h2>
 <p>For now I just decided to setup a simple system to see everything works fine. The idea is to make some kind of generic food node/scene and a &ldquo;food manager&rdquo; to spawn them, for now in totally random locations. For this I added the following signals: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type)</code> and <code>food_eaten(type)</code>.</p>
 <p>First thing is creating the <code>Food.tscn</code> which is just an <em>Area2D</em> with its necessary children with an attached script called <code>food.gd</code>. The script is really simple:</p>
@@ -316,48 +323,104 @@ func _on_body_entered(body: Node) -&gt; void:
 <img alt="Snake - Food basic interaction" src="images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
 <figcaption>Snake - Food basic interaction</figcaption>
 </figure>
-<h2 id="brainstormto-do">Brainstorm/To-do</h2>
+<h2 id="za-warudo-the-world">Za warudo! (The world)</h2>
+<p>It just happend that I saw a video to create random maps by using a method called <a href="https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm">random walks</a>, this video was made by <a href="https://www.youtube.com/c/NADLABS">NAD LABS</a>: <a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a>. It&rsquo;s a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):</p>
+<figure id="__yafg-figure-10">
+<img alt="World map generator - Random map 1" src="images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
+<figcaption>World map generator - Random map 1</figcaption>
+</figure>
+<figure id="__yafg-figure-11">
+<img alt="World map generator - Random map 2" src="images/g/gogodot_jam3/world_generator_2.png" title="World map generator - Random map 2">
+<figcaption>World map generator - Random map 2</figcaption>
+</figure>
+<figure id="__yafg-figure-12">
+<img alt="World map generator - Random map 3" src="images/g/gogodot_jam3/world_generator_3.png" title="World map generator - Random map 3">
+<figcaption>World map generator - Random map 3</figcaption>
+</figure>
+<p>It started with just black and white tiles, but I ended up adding some sprites as it was really harsh to the eyes. My implementation is basically the same as <em>NAD LABS</em>&lsquo; with few changes, most importantly: I separated the generation in 2 diferent tilemaps (floor and wall) to have better control as well as wrapped everything in a single scene with a &ldquo;main&rdquo; script with the following important functions:</p>
+<pre><code class="language-gdscript">func get_valid_map_coords() -&gt; Array:
+    var safe_area: Array = walker_head.get_cells_around()
+    var cells_used: Array = ground_tilemap.get_used_cells()
+    for location in safe_area:
+        cells_used.erase(location)
+    return cells_used
+
+
+func get_centered_world_position(location: Vector2) -&gt; Vector2:
+    return ground_tilemap.map_to_world(location) + Vector2.ONE * Global.TILE_SIZE / 2.0
+</code></pre>
+<p>Where <code>get_cells_around</code> is just a function that gets the safe cells around the origin. And this <code>get_valid_map_coords</code> just returns used cells minus the safe cells, to place food. <code>get_centered_world_position</code> is so we can center the food in the tiles.</p>
+<p>Some signals I used for the world gen: <code>world_gen_walker_started(id)</code>, <code>world_gen_walker_finished(id)</code>, <code>world_gen_walker_died(id)</code> and <code>world_gen_spawn_walker_unit(location)</code>.</p>
+<h3 id="food-placement">Food placement</h3>
+<p>The last food algorithm doesn&rsquo;t check anything related to the world, and thus the food could spawn in the walls and outside the map.</p>
+<p>First thing is I generalized the food into a single script and added basic food and special food which inherit from base food. The most important stuff for the base food is to be able to set all necessary properties at first:</p>
+<pre><code class="language-gdscript">func update_texture() -&gt; void:
+    _sprite.texture = texture[properties[&quot;type&quot;]]
+
+
+func set_properties(pos: Vector2, loc: Vector2, special: bool, type: int, points: int=1, special_points: int=1, ttl: float = -1.0) -&gt; void:
+    properties[&quot;global_position&quot;] = pos
+    global_position = pos
+    properties[&quot;location&quot;] = loc
+    properties[&quot;special&quot;] = special
+    properties[&quot;type&quot;] = type
+
+    properties[&quot;points&quot;] = points
+    properties[&quot;special_points&quot;] = special_points
+    properties[&quot;ttl&quot;] = ttl
+    if properties[&quot;ttl&quot;] != -1.0:
+        timer.wait_time = properties[&quot;ttl&quot;]
+        timer.start()
+</code></pre>
+<p>Where the <code>update_texture</code> needs to be a separate function, because we need to create the food first, set properties, add as a child and then update the sprite; we also need to keep track of the global position, location (in tilemap coordinates) and identifiers for the type of food.</p>
+<p>Then basic/special food just extend base food, define a <code>Type</code> enum and preloads the necessary textures, for example:</p>
+<pre><code class="language-gdscript">enum Type {
+    APPLE,
+    BANANA,
+    RAT
+}
+
+
+func _ready():
+    texture[Type.APPLE] = preload(&quot;res://entities/food/sprites/apple.png&quot;)
+    texture[Type.BANANA] = preload(&quot;res://entities/food/sprites/banana.png&quot;)
+    texture[Type.RAT] = preload(&quot;res://entities/food/sprites/rat.png&quot;)
+</code></pre>
+<p>Now, some of the most important change to <code>food_manager.gd</code> is to get an actual random valid position:</p>
+<pre><code class="language-gdscript">func _get_random_pos() -&gt; Array:
+    var found_valid_loc: bool = false
+    var index: int
+    var location: Vector2
+
+    while not found_valid_loc:
+        index = randi() % possible_food_locations.size()
+        location = possible_food_locations[index]
+        if current_basic_food.find(location) == -1 and current_special_food.find(location) == -1:
+            found_valid_loc = true
+
+    return [world_generator.get_centered_world_position(location), location]
+</code></pre>
+<p>Other than that, there are some differences between placing normal and special food (specially the signal they send, and if an extra &ldquo;special points&rdquo; property is set). Some of the signals that I used that might be important: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type, location)</code> and <code>food_eaten(type, location)</code>.</p>
+<h2 id="todo">TODO</h2>
+<p>Add notes on:</p>
 <ul>
-<li>
-<p>Snake clone with evolution.</p>
+<li>Score manager stuff.</li>
+<li>Saved data and <code>Stats</code> class.</li>
+<li>State machine for player regarding abilities.</li>
+</ul>
+<h2 id="other-minor-stuff">Other minor stuff</h2>
+<p>Not as important but worth mentioning:</p>
 <ul>
-<li>Evolution on the snake itself?<ul>
-<li>Evolve after eating X amount?</li>
-<li>Evolve after eating X type of food?<ul>
-<li>Similar to Contra, where you can switch the food (not sure if this counts as evolution)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Evolution on the world?<ul>
-<li>Start with a small procedural generated map, then expand it?</li>
-</ul>
-</li>
-<li>When snake dies, it passes the genes it collected by eating some food to the next snakes?<ul>
-<li>Or similar to the Rogue Legacy system?</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>Snake clone</p>
-<ul>
-<li>Each snake has several attributes<ul>
-<li>Health</li>
-<li>Time to live (before getting food?)</li>
-</ul>
-</li>
-<li>Special food will unlock new attributes for subsequent snakes<ul>
-<li>Jumping ability (need to level it up by eating more of the same food or by using it)</li>
-<li>Crawl up walls?</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="resources">Resources</h2>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a></li>
+<li>Added restartability function.</li>
+<li>Added signals for game control: <code>game_over</code> and <code>game_start</code>, but ended not using them.</li>
+<li>Fixed issue where the <em>Curve2D</em> stayed the same even when restarting by just setting an empty curve on starting the node.</li>
+<li>Added a debug mode for drawing of the <em>Curve2D</em> instead of always drawing.</li>
+<li>Tweaked the tracking of the snake size.</li>
+<li>Tweaked the food system to contain more attributes and use a base food node.</li>
+<li>Added a HUD with mini snake sprites.</li>
+<li>Added a HUD for growth progress on snake body segments and abilities.</li>
+<li>Refactored the nodes to make it work with <code>change_scene_to</code>, and added a main menu.</li>
+<li>Added GUI for dead screen, showing the progress.</li>
 </ul>
 
   <div class="page-nav">
@@ -381,7 +444,7 @@ func _on_body_entered(body: Node) -&gt; void:
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
-    <p>Created: Thu, Jun 02, 2022 @ 08:34 UTC</p>
+    <p>Created: Wed, Jun 08, 2022 @ 08:26 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gamejam.html">gamejam</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>

@@ -310,7 +310,11 @@ And this is used in `_process` to place new food whenever needed. For now I adde
 
 It just happend that I saw a video to create random maps by using a method called [random walks](https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm), this video was made by [NAD LABS](https://www.youtube.com/c/NADLABS): [Nuclear Throne Like Map Generation In Godot](https://www.youtube.com/watch?v=ppP2Doq3p7s). It's a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):
 
-![World map generator - Random map 1](static/images/g/gogodot_jam3/world_generator_1.png "World map generator - Random map 1") ![World map generator - Random map 2](static/images/g/gogodot_jam3/world_generator_2.png "World map generator - Random map 2") ![World map generator - Random map 3](static/images/g/gogodot_jam3/world_generator_3.png "World map generator - Random map 3")
+![World map generator - Random map 1](images/g/gogodot_jam3/world_generator_1.png "World map generator - Random map 1")
+
+![World map generator - Random map 2](images/g/gogodot_jam3/world_generator_2.png "World map generator - Random map 2")
+
+![World map generator - Random map 3](images/g/gogodot_jam3/world_generator_3.png "World map generator - Random map 3")
 
 It started with just black and white tiles, but I ended up adding some sprites as it was really harsh to the eyes. My implementation is basically the same as *NAD LABS*' with few changes, most importantly: I separated the generation in 2 diferent tilemaps (floor and wall) to have better control as well as wrapped everything in a single scene with a "main" script with the following important functions:
 
