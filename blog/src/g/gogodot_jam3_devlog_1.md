@@ -9,26 +9,28 @@ tags: gamedev
 
 **IF YOU'RE SEEING THIS, THIS IS A WIP**
 
-The jam's theme is Evolution and all the details are listed [here](https://itch.io/jam/go-godot-jam-3). This time I'm logging as I go, so there might be some changes to the script or scenes along the way. Note that I'm not going to go into much details, the obvious will be ommitted.
+The jam's theme is Evolution and all the details are listed [here](https://itch.io/jam/go-godot-jam-3). ~~This time I'm logging as I go, so there might be some changes to the script or scenes along the way~~ ^^I couldn't actually do this, as I was running out of time.^^. Note that I'm not going to go into much details, the obvious will be ommitted.
 
 I wanted to do a *Snake* clone, and I'm using this jam as an excuse to do it and add something to it. The features include:
 
 - Snakes will pass their stats in some form to the next snakes.
 - Non-grid snake movement. I just hate the grid constraint, so I wanted to make it move in any direction.
-- Depending on the food you eat, you'll gain new mutations and the more you eat the more that mutation develops.
+- Depending on the food you eat, you'll gain new mutations/abilities ~~and the more you eat the more that mutation develops.~~ ^^didn't have time to add this feature, sad.^^
 - Procedural map creation.
 
 ## Initial setup
 
 Again, similar to the [FlappyBird](https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html) clone I developed, I'm using the directory structure I wrote about on [Godot project structure](https://blog.luevano.xyz/g/godot_project_structure.html) with slight modifications to test things out. Also using similar *Project settings* as those from the *FlappyBird* clone like the pixel art texture imports, keybindings, layers, etc..
 
-I've also setup [GifMaker](https://github.com/bram-dingelstad/godot-gifmaker), with slight modifications as the *AssetLib* doesn't install it correctly and contains unnecessry stuff: moved necessary files to the `res://addons` directory, deleted test scenes and files in general, and copied the license to the `res://docs` directory. Setting this up was a bit annoying because the tutorial it's bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn't find it anywhere other than by inspecting some of the code/scenes.
+I've also setup [GifMaker](https://github.com/bram-dingelstad/godot-gifmaker), with slight modifications as the *AssetLib* doesn't install it correctly and contains unnecessry stuff: moved necessary files to the `res://addons` directory, deleted test scenes and files in general, and copied the license to the `res://docs` directory. Setting this up was a bit annoying because the tutorial it's bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn't find it anywhere other than by inspecting some of the code/scenes.^^I ended up not leaving this enabled in the game as it lagged the game out, but it's an option I'll end up researching more.^^
 
 This time I'm also going to be using an [Event bus](https://www.gdquest.com/docs/guidelines/best-practices/godot-gdscript/event-bus/) singleton (which I'm going to just call *Event*) as managing signals was pretty annoying on my last project; as well as a *Global* singleton for essential stuff so I don't have to do as many cross references between nodes/scenes.
 
 ## Assets
 
 This time I'll be creating my own assets in [Aseprite](https://www.aseprite.org/), wont be that good, but enough to prototype and get things going.
+
+Other than that I used few key sprites from [vryell](https://vryell.itch.io/): [Controller & Keyboard Icons](https://vryell.itch.io/controller-keyboard-icons) and a font from [datagoblin](https://datagoblin.itch.io/): [Monogram](https://datagoblin.itch.io/monogram).
 
 ## The snake
 
@@ -234,6 +236,17 @@ func _snake_disabled(on_off: bool) -> void:
 
 Which will stop the snake node and all children.
 
+### Fix on body segments following head
+
+After a while of testing and developing, I noticed that sometimes the head "detaches" from the body when a lot of rotations happen (moving the snake left or right), because of how imprecise the *Curve2D* is. To do this I just send a signal (`snake_rotated`) whenever the snake rotates and make a small correction (in `generic_segment.gd`):
+
+```gdscript
+func _on_snake_rotated() -> void:
+	offset -= 0.75 * Global.SNAKE_SPEED * pow(get_physics_process_delta_time(), 2)
+```
+
+This is completely random, I tweaked it manually after a lot of iterations.
+
 ## The food
 
 For now I just decided to setup a simple system to see everything works fine. The idea is to make some kind of generic food node/scene and a "food manager" to spawn them, for now in totally random locations. For this I added the following signals: `food_placing_new_food(type)`, `food_placed_new_food(type)` and `food_eaten(type)`.
@@ -293,44 +306,113 @@ And this is used in `_process` to place new food whenever needed. For now I adde
 
 ![Snake - Food basic interaction](images/g/gogodot_jam3/snake_food_basic_interaction.gif "Snake - Food basic interaction")
 
+## Za warudo! (The world)
 
-## From here on just minor temp notes for now
+It just happend that I saw a video to create random maps by using a method called [random walks](https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm), this video was made by [NAD LABS](https://www.youtube.com/c/NADLABS): [Nuclear Throne Like Map Generation In Godot](https://www.youtube.com/watch?v=ppP2Doq3p7s). It's a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):
+
+![World map generator - Random map 1](static/images/g/gogodot_jam3/world_generator_1.png "World map generator - Random map 1") ![World map generator - Random map 2](static/images/g/gogodot_jam3/world_generator_2.png "World map generator - Random map 2") ![World map generator - Random map 3](static/images/g/gogodot_jam3/world_generator_3.png "World map generator - Random map 3")
+
+It started with just black and white tiles, but I ended up adding some sprites as it was really harsh to the eyes. My implementation is basically the same as *NAD LABS*' with few changes, most importantly: I separated the generation in 2 diferent tilemaps (floor and wall) to have better control as well as wrapped everything in a single scene with a "main" script with the following important functions:
+
+```gdscript
+func get_valid_map_coords() -> Array:
+	var safe_area: Array = walker_head.get_cells_around()
+	var cells_used: Array = ground_tilemap.get_used_cells()
+	for location in safe_area:
+		cells_used.erase(location)
+	return cells_used
+
+
+func get_centered_world_position(location: Vector2) -> Vector2:
+	return ground_tilemap.map_to_world(location) + Vector2.ONE * Global.TILE_SIZE / 2.0
+```
+
+Where `get_cells_around` is just a function that gets the safe cells around the origin. And this `get_valid_map_coords` just returns used cells minus the safe cells, to place food. `get_centered_world_position` is so we can center the food in the tiles.
+
+Some signals I used for the world gen: `world_gen_walker_started(id)`, `world_gen_walker_finished(id)`, `world_gen_walker_died(id)` and `world_gen_spawn_walker_unit(location)`.
+
+### Food placement
+
+The last food algorithm doesn't check anything related to the world, and thus the food could spawn in the walls and outside the map.
+
+First thing is I generalized the food into a single script and added basic food and special food which inherit from base food. The most important stuff for the base food is to be able to set all necessary properties at first:
+
+```gdscript
+func update_texture() -> void:
+	_sprite.texture = texture[properties["type"]]
+
+
+func set_properties(pos: Vector2, loc: Vector2, special: bool, type: int, points: int=1, special_points: int=1, ttl: float = -1.0) -> void:
+	properties["global_position"] = pos
+	global_position = pos
+	properties["location"] = loc
+	properties["special"] = special
+	properties["type"] = type
+
+	properties["points"] = points
+	properties["special_points"] = special_points
+	properties["ttl"] = ttl
+	if properties["ttl"] != -1.0:
+		timer.wait_time = properties["ttl"]
+		timer.start()
+```
+
+Where the `update_texture` needs to be a separate function, because we need to create the food first, set properties, add as a child and then update the sprite; we also need to keep track of the global position, location (in tilemap coordinates) and identifiers for the type of food.
+
+Then basic/special food just extend base food, define a `Type` enum and preloads the necessary textures, for example:
+
+```gdscript
+enum Type {
+	APPLE,
+	BANANA,
+	RAT
+}
+
+
+func _ready():
+	texture[Type.APPLE] = preload("res://entities/food/sprites/apple.png")
+	texture[Type.BANANA] = preload("res://entities/food/sprites/banana.png")
+	texture[Type.RAT] = preload("res://entities/food/sprites/rat.png")
+```
+
+Now, some of the most important change to `food_manager.gd` is to get an actual random valid position:
+
+```gdscript
+func _get_random_pos() -> Array:
+	var found_valid_loc: bool = false
+	var index: int
+	var location: Vector2
+
+	while not found_valid_loc:
+		index = randi() % possible_food_locations.size()
+		location = possible_food_locations[index]
+		if current_basic_food.find(location) == -1 and current_special_food.find(location) == -1:
+			found_valid_loc = true
+
+	return [world_generator.get_centered_world_position(location), location]
+```
+
+Other than that, there are some differences between placing normal and special food (specially the signal they send, and if an extra "special points" property is set). Some of the signals that I used that might be important: `food_placing_new_food(type)`, `food_placed_new_food(type, location)` and `food_eaten(type, location)`.
+
+## TODO
+
+Add notes on:
+
+- Score manager stuff.
+- Saved data and `Stats` class.
+- State machine for player regarding abilities.
+
+## Other minor stuff
+
+Not as important but worth mentioning:
 
 - Added restartability function.
-- Added signals for game control: `game_over` and `game_start`.
-- Tried fixing the snake because it keeps getting closer to the first body node because of accuarcy of the path when doing curves (the more the snake rotates, the more this is affected).
-	- Added signal `snake_rotated`
-- Fixed issue where the curve2d stayed the same even when restarting.
-- Disabled drawing of the curve2d.
-- Added world generation by implementing a "random walker" by following [Nuclear Throne Like Map Generation In Godot](https://www.youtube.com/watch?v=ppP2Doq3p7s), with minor changes to fit my needs and implemented few other things.
-	- Added several signals for the world gen: `world_gen_walker_started(id)`, `world_gen_walker_finished(id)`, `world_gen_walker_died(id)` and `world_gen_spawn_walker_unit(location)`.
-- Edited the food manager to communicate with the world gen to get actual possible tile locations.
-	- Added a location attribute to food.
-	- Added several related signals: `food_placing_new_food(type)`, `food_placed_new_food(type, location)` and `food_eaten(type, location)`.
+- Added signals for game control: `game_over` and `game_start`, but ended not using them.
+- Fixed issue where the *Curve2D* stayed the same even when restarting by just setting an empty curve on starting the node.
+- Added a debug mode for drawing of the *Curve2D* instead of always drawing.
 - Tweaked the tracking of the snake size.
 - Tweaked the food system to contain more attributes and use a base food node.
-- Added a HUD with mini snake sprites. Added necessary signals.
-- Added a HUD for growth progress. Added necessary signals.
+- Added a HUD with mini snake sprites.
+- Added a HUD for growth progress on snake body segments and abilities.
 - Refactored the nodes to make it work with `change_scene_to`, and added a main menu.
-- Added GUI for dead screen, showing the progress. Will add next mutations there.
-- Added new food and generalized a bit the food system.
-
-## Brainstorm/To-do
-
-- Snake clone with evolution.
-	- Evolution on the snake itself?
-		- Evolve after eating X amount?
-		- Evolve after eating X type of food?
-			- Similar to Contra, where you can switch the food (not sure if this counts as evolution)
-	- Evolution on the world?
-		- Start with a small procedural generated map, then expand it?
-	- When snake dies, it passes the genes it collected by eating some food to the next snakes?
-		- Or similar to the Rogue Legacy system?
-
-- Snake clone
-	- Each snake has several attributes
-		- Health
-		- Time to live (before getting food?)
-	- Special food will unlock new attributes for subsequent snakes
-		- Jumping ability (need to level it up by eating more of the same food or by using it)
-		- Crawl up walls?
+- Added GUI for dead screen, showing the progress.
