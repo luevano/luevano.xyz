@@ -5,7 +5,7 @@
     <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Creating my Go Godot Jam 3 entry devlog 1 -- Luévano's Blog</title>
+    <title>Creating my Go Godot Jam 3 entry using Godot 3.5 devlog 1 -- Luévano's Blog</title>
     <meta name="description" content"Details on the implementation for the game I created for the Go Godot Jam 3, which theme is Evolution."/>
     <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <link rel="icon" href="images/icons/favicon.ico">
@@ -31,7 +31,7 @@
     <link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
 
     <!-- og meta -->
-  <meta property="og:title" content="Creating my Go Godot Jam 3 entry devlog 1 -- Luévano's Blog"/>
+  <meta property="og:title" content="Creating my Go Godot Jam 3 entry using Godot 3.5 devlog 1 -- Luévano's Blog"/>
   <meta property="og:type" content="article"/>
   <meta property="og:url" content="https://blog.luevano.xyz/g/gogodot_jam3_devlog_1.html"/>
   <meta property="og:image" content="https://static.luevano.xyz//images/b/default.png"/>
@@ -78,10 +78,9 @@
     </header>
 
     <main>
-  <h1>Creating my Go Godot Jam 3 entry devlog 1</h1>
+  <h1>Creating my Go Godot Jam 3 entry using Godot 3.5 devlog 1</h1>
 
-  <p><strong>IF YOU&rsquo;RE SEEING THIS, THIS IS A WIP</strong></p>
-<p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. <del>This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way</del> <ins>I couldn&rsquo;t actually do this, as I was running out of time.</ins>. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
+  <p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. <del>This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way</del> <ins>I couldn&rsquo;t actually do this, as I was running out of time.</ins>. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
 <p>I wanted to do a <em>Snake</em> clone, and I&rsquo;m using this jam as an excuse to do it and add something to it. The features include:</p>
 <ul>
 <li>Snakes will pass their stats in some form to the next snakes.</li>
@@ -89,6 +88,11 @@
 <li>Depending on the food you eat, you&rsquo;ll gain new mutations/abilities <del>and the more you eat the more that mutation develops.</del> <ins>didn&rsquo;t have time to add this feature, sad.</ins></li>
 <li>Procedural map creation.</li>
 </ul>
+<p>I created this game using <em>Godot 3.5-rc3</em>. You can find the source code in my GitHub <a href="https://github.com/luevano/gogodot_jam3">here</a> which at the time of writing this it doesn&rsquo;t contain any exported files, for that you can go ahead and play it in your browser at itch.io, which you can find below:</p>
+<p style="text-align:center"><iframe src="https://itch.io/embed/1562701?dark=true" width="552" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/snake-tronic">Snake-tronic by Lorentzeus</a></iframe></p>
+
+<p>You can also find the jam entry <a href="https://itch.io/jam/go-godot-jam-3/rate/1562701">here</a>.</p>
+<p>Similarly with the my FlappyBird clone, I plan to update this to a better state.</p>
 <h2 id="initial-setup">Initial setup</h2>
 <p>Again, similar to the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird</a> clone I developed, I&rsquo;m using the directory structure I wrote about on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> with slight modifications to test things out. Also using similar <em>Project settings</em> as those from the <em>FlappyBird</em> clone like the pixel art texture imports, keybindings, layers, etc..</p>
 <p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes.<ins>I ended up not leaving this enabled in the game as it lagged the game out, but it&rsquo;s an option I&rsquo;ll end up researching more.</ins></p>
@@ -401,13 +405,258 @@ func _ready():
     return [world_generator.get_centered_world_position(location), location]
 </code></pre>
 <p>Other than that, there are some differences between placing normal and special food (specially the signal they send, and if an extra &ldquo;special points&rdquo; property is set). Some of the signals that I used that might be important: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type, location)</code> and <code>food_eaten(type, location)</code>.</p>
-<h2 id="todo">TODO</h2>
-<p>Add notes on:</p>
-<ul>
-<li>Score manager stuff.</li>
-<li>Saved data and <code>Stats</code> class.</li>
-<li>State machine for player regarding abilities.</li>
-</ul>
+<h2 id="stats-clas-and-loadingsaving-data">Stats clas and loading/saving data</h2>
+<p>I got the idea of saving the current stats (points, max body segments, etc.) in a separate <em>Stats</em> class for easier load/save data. This option I went with didn&rsquo;t work as I would liked it to work, as it was a pain in the ass to setup and each time a new property is added you have to manually setup the load/save helper functions&hellip; so not the best option. This option I used was json but saving a Node directly could work better or using resources (saving <code>tres</code> files).</p>
+<h3 id="stats-class">Stats class</h3>
+<p>The <em>Stats</em> &ldquo;class&rdquo; is just a script that extends from <em>Node</em> called <code>stats.gd</code>. It needs to define the <code>class_name</code> as <code>Stats</code>. The main content:</p>
+<pre><code class="language-gdscript"># main
+var points: int = 0
+var segments: int = 0
+
+# track of trait points
+var dash_points: int = 0
+var slow_points: int = 0
+var jump_points: int = 0
+
+# times trait achieved
+var dash_segments: int = 0
+var slow_segments: int = 0
+var jump_segments: int = 0
+
+# trait properties
+var dash_percentage: float = 0.0
+var slow_percentage: float = 0.0
+var jump_lenght: float = 0.0
+
+# trait active
+var trait_dash: bool = false
+var trait_slow: bool = false
+var trait_jump: bool = false
+</code></pre>
+<p>And with the ugliest functions:</p>
+<pre><code class="language-gdscript">func get_stats() -&gt; Dictionary:
+    return {
+        &quot;points&quot;: points,
+        &quot;segments&quot;: segments,
+        &quot;dash_points&quot;: dash_points,
+        &quot;dash_segments&quot;: dash_segments,
+        &quot;dash_percentage&quot;: dash_percentage,
+        &quot;slow_points&quot;: slow_points,
+        &quot;slow_segments&quot;: slow_segments,
+        &quot;slow_percentage&quot;: slow_percentage,
+        &quot;jump_points&quot;: jump_points,
+        &quot;jump_segments&quot;: jump_segments,
+        &quot;jump_lenght&quot;: jump_lenght,
+        &quot;trait_dash&quot;: trait_dash,
+        &quot;trait_slow&quot;: trait_slow,
+        &quot;trait_jump&quot;: trait_jump
+    }
+
+
+func set_stats(stats: Dictionary) -&gt; void:
+        points = stats[&quot;points&quot;]
+        segments = stats[&quot;segments&quot;]
+        dash_points = stats[&quot;dash_points&quot;]
+        slow_points = stats[&quot;slow_points&quot;]
+        jump_points = stats[&quot;jump_points&quot;]
+        dash_segments = stats[&quot;dash_segments&quot;]
+        slow_segments = stats[&quot;slow_segments&quot;]
+        jump_segments = stats[&quot;jump_segments&quot;]
+        dash_percentage = stats[&quot;dash_percentage&quot;]
+        slow_percentage = stats[&quot;slow_percentage&quot;]
+        jump_lenght = stats[&quot;jump_lenght&quot;]
+        trait_dash = stats[&quot;trait_dash&quot;]
+        trait_slow = stats[&quot;trait_slow&quot;]
+        trait_jump = stats[&quot;trait_jump&quot;]
+</code></pre>
+<p>And this is not scalable at all, but I had to do this at the end of the jam so no way of optimizing and/or doing it correctly, sadly.</p>
+<h3 id="loadsave-data">Load/save data</h3>
+<p>The load/save function is pretty standard. It&rsquo;s a singleton/autoload called <em>SavedData</em> with a script that extends from <em>Node</em> called <code>save_data.gd</code>:</p>
+<pre><code class="language-gdscript">const DATA_PATH: String = &quot;user://data.save&quot;
+
+var _stats: Stats
+
+
+func _ready() -&gt; void:
+    _load_data()
+
+
+# called when setting &quot;stats&quot; and thus saving
+func save_data(stats: Stats) -&gt; void:
+    _stats = stats
+    var file: File = File.new()
+    file.open(DATA_PATH, File.WRITE)
+    file.store_line(to_json(_stats.get_stats()))
+    file.close()
+
+
+func get_stats() -&gt; Stats:
+    return _stats
+
+
+func _load_data() -&gt; void:
+    # create an empty file if not present to avoid error while loading settings
+    _handle_new_file()
+
+    var file = File.new()
+    file.open(DATA_PATH, File.READ)
+    _stats = Stats.new()
+    _stats.set_stats(parse_json(file.get_line()))
+    file.close()
+
+
+func _handle_new_file() -&gt; void:
+    var file: File = File.new()
+    if not file.file_exists(DATA_PATH):
+        file.open(DATA_PATH, File.WRITE)
+        _stats = Stats.new()
+        file.store_line(to_json(_stats.get_stats()))
+        file.close()
+</code></pre>
+<p>It uses json as the file format, but I might end up changing this in the future to something else more reliable and easier to use (<em>Stats</em> class related issues).</p>
+<h2 id="scoring">Scoring</h2>
+<p>For this I created a scoring mechanisms and just called it <em>ScoreManager</em> (<code>score_manager.gd</code>) which just basically listens to <code>food_eaten</code> signal and adds points accordingly to the current <em>Stats</em> object loaded. The main function is:</p>
+<pre><code class="language-gdscript">func _on_food_eaten(properties: Dictionary) -&gt; void:
+    var is_special: bool = properties[&quot;special&quot;]
+    var type: int = properties[&quot;type&quot;]
+    var points: int = properties[&quot;points&quot;]
+    var special_points: int = properties[&quot;special_points&quot;]
+    var location: Vector2 = properties[&quot;global_position&quot;]
+    var amount_to_grow: int
+    var special_amount_to_grow: int
+
+    amount_to_grow = _process_points(points)
+    _spawn_added_score_text(points, location)
+    _spawn_added_segment_text(amount_to_grow)
+
+    if is_special:
+        special_amount_to_grow = _process_special_points(special_points, type)
+        # _spawn_added_score_text(points, location)
+        _spawn_added_special_segment_text(special_amount_to_grow, type)
+        _check_if_unlocked(type)
+</code></pre>
+<p>Where the most important function is:</p>
+<pre><code class="language-gdscript">func _process_points(points: int) -&gt; int:
+    var score_to_grow: int = (stats.segments + 1) * Global.POINTS_TO_GROW - stats.points
+    var amount_to_grow: int = 0
+    var growth_progress: int
+    stats.points += points
+    if points &gt;= score_to_grow:
+        amount_to_grow += 1
+        points -= score_to_grow
+        # maybe be careful with this
+        amount_to_grow += points / Global.POINTS_TO_GROW
+        stats.segments += amount_to_grow
+        Event.emit_signal(&quot;snake_add_new_segment&quot;, amount_to_grow)
+
+    growth_progress = Global.POINTS_TO_GROW - ((stats.segments + 1) * Global.POINTS_TO_GROW - stats.points)
+    Event.emit_signal(&quot;snake_growth_progress&quot;, growth_progress)
+    return amount_to_grow
+</code></pre>
+<p>Which will add the necessary points to <code>Stats.points</code> and return the amount of new snake segments to grow. After this <code>_spawn_added_score_segment</code> and <code>_spawn_added_segment_text</code> just spawn a <em>Label</em> with the info on the points/segments gained; this is custom UI I created, nothing fancy.</p>
+<p>Last thing is taht in <code>_process_points</code> there is a check at the end, where if the food eaten is &ldquo;special&rdquo; then a custom variation of the last 3 functions are executed. These are really similar, just specific to each kind of food.</p>
+<p>This <em>ScoreManager</em> also handles the calculation for the <code>game_over</code> signal, to calculte progress, set necessary <em>Stats</em> values and save the data:</p>
+<pre><code class="language-gdscript">func _on_game_over() -&gt; void:
+    var max_stats: Stats = _get_max_stats()
+    SaveData.save_data(max_stats)
+    Event.emit_signal(&quot;display_stats&quot;, initial_stats, stats, mutation_stats)
+
+
+func _get_max_stats() -&gt; Stats:
+    var old_stats_dict: Dictionary = initial_stats.get_stats()
+    var new_stats_dict: Dictionary = stats.get_stats()
+    var max_stats: Stats = Stats.new()
+    var max_stats_dict: Dictionary = max_stats.get_stats()
+    var bool_stats: Array = [
+        &quot;trait_dash&quot;,
+        &quot;trait_slow&quot;,
+        &quot;trait_jump&quot;
+    ]
+
+    for i in old_stats_dict:
+        if bool_stats.has(i):
+            max_stats_dict[i] = old_stats_dict[i] or new_stats_dict[i]
+        else:
+            max_stats_dict[i] = max(old_stats_dict[i], new_stats_dict[i])
+    max_stats.set_stats(max_stats_dict)
+    return max_stats
+</code></pre>
+<p>Then this sends a signal <code>display_stats</code> to activate UI elements that shows the progression.</p>
+<p>Naturally, the saved <em>Stats</em> are loaded whenever needed. For example, for the <em>Snake</em>, we load the stats and setup any value needed from there (like a flag to know if any ability is enabled), and since we&rsquo;re saving the new <em>Stats</em> at the end, then on restart we load the updated one.</p>
+<h2 id="snake-redesigned-with-the-state-machine-pattern">Snake redesigned with the state machine pattern</h2>
+<p>I redesigned the snake code (the head, actually) to use the state machine pattern by following <a href="https://gdscript.com/solutions/godot-state-machine/">this guide</a> which is definitely a great guide, straight to the point and easy to implement.</p>
+<p>Other than what is shown in the guide, I implemented some important functions in the <code>state_machine.gd</code> script itself, to be used by each of the states as needed:</p>
+<pre><code class="language-gdscript">func rotate_on_input() -&gt; void:
+    if Input.is_action_pressed(&quot;move_left&quot;):
+        player.rotate_to(player.LEFT)
+    if Input.is_action_pressed(&quot;move_right&quot;):
+        player.rotate_to(player.RIGHT)
+
+
+func slow_down_on_collisions(speed_backup: float):
+    if player.get_last_slide_collision():
+        Global.SNAKE_SPEED = player.velocity.length()
+    else:
+        Global.SNAKE_SPEED = speed_backup
+
+
+func handle_slow_speeds() -&gt; void:
+    if Global.SNAKE_SPEED &lt;= Global.SNAKE_SPEED_BACKUP / 4.0:
+        Global.SNAKE_SPEED = Global.SNAKE_SPEED_BACKUP
+        Event.emit_signal(&quot;game_over&quot;)
+</code></pre>
+<p>And then in the <em>StateMachine</em>&lsquo;s <code>_process</code>:</p>
+<pre><code class="language-gdscript">func _physics_process(delta: float) -&gt; void:
+    # state specific code, move_and_slide is called here
+    if state.has_method(&quot;physics_process&quot;):
+        state.physics_process(delta)
+
+    handle_slow_speeds()
+    player.handle_time_elapsed(delta)
+</code></pre>
+<p>And now it&rsquo;s just a matter of implementing the necessary states. I used 4: <code>normal_stage.gd</code>, <code>slow_state.gd</code>, <code>dash_state.gd</code> and <code>jump_state.gd</code>.</p>
+<p>The <code>normal_state.gd</code> contains what the original <code>head.gd</code> code contained:</p>
+<pre><code class="language-gdscript">func physics_process(delta: float) -&gt; void:
+    fsm.rotate_on_input()
+    fsm.player.velocity = fsm.player.direction * Global.SNAKE_SPEED
+    fsm.player.velocity = fsm.player.move_and_slide(fsm.player.velocity)
+
+    fsm.slow_down_on_collisions(Global.SNAKE_SPEED_BACKUP)
+
+
+func input(event: InputEvent) -&gt; void:
+    if fsm.player.can_dash and event.is_action_pressed(&quot;dash&quot;):
+        exit(&quot;DashState&quot;)
+    if fsm.player.can_slow and event.is_action_pressed(&quot;slow&quot;):
+        exit(&quot;SlowState&quot;)
+    if fsm.player.can_jump and event.is_action_pressed(&quot;jump&quot;):
+        exit(&quot;JumpState&quot;)
+</code></pre>
+<p>Here, the <code>exit</code> method is basically to change to the next state. And lastly, I&rsquo;m only gonna show the <code>dash_state.gd</code> as the other ones are pretty similar:</p>
+<pre><code class="language-gdscript">func enter():
+    if fsm.DEBUG:
+        print(&quot;Got inside %s.&quot; % name)
+    Event.emit_signal(&quot;snake_started_dash&quot;)
+    Global.SNAKE_SPEED = Global.SNAKE_DASH_SPEED
+    yield(get_tree().create_timer(Global.SNAKE_DASH_TIME), &quot;timeout&quot;)
+    exit()
+
+
+func exit():
+    Event.emit_signal(&quot;snake_finished_dash&quot;)
+    Global.SNAKE_SPEED = Global.SNAKE_SPEED_BACKUP
+    fsm.back()
+
+
+func physics_process(delta: float) -&gt; void:
+    fsm.rotate_on_input()
+    fsm.player.velocity = fsm.player.direction * Global.SNAKE_SPEED
+    fsm.player.velocity = fsm.player.move_and_slide(fsm.player.velocity)
+
+    fsm.slow_down_on_collisions(Global.SNAKE_DASH_SPEED)
+</code></pre>
+<p>Where the important parts happen in the <code>enter</code> and <code>exit</code> functions. We need to change the <code>Global.SNAKE_SPEED</code> with the <code>Global.SNAKE_DASH_SPEED</code> on <code>start</code>and start the timer for how long should the dash last. And on the <code>exit</code> we reset the <code>Global.SNAKE_SPEED</code> back to normal. There is probably a better way of updating the <code>Global.SNAKE_SPEED</code> but this works just fine.</p>
+<p>For the other ones is the same. Only difference with the <code>jump_state.gd</code> is that the collision from head to body is disabled, and no rotation is allowed (by not calling the <code>rotate_on_input</code> function).</p>
 <h2 id="other-minor-stuff">Other minor stuff</h2>
 <p>Not as important but worth mentioning:</p>
 <ul>
@@ -422,6 +671,9 @@ func _ready():
 <li>Refactored the nodes to make it work with <code>change_scene_to</code>, and added a main menu.</li>
 <li>Added GUI for dead screen, showing the progress.</li>
 </ul>
+<h2 id="final-notes">Final notes</h2>
+<p>I actually didn&rsquo;t finish this game (as how I visualized it), but I got it in a playable state which is good. My big learning during this jam is the time management that it requires to plan and design a game. I lost a lot of time trying to implement some mechanics because I was facing many issues, because of my lack of practice (which was expected) as well as trying to blog and create the necessary sprites myself. Next time I should just get an asset pack and do something with it, as well as keeping the scope of my game shorter.</p>
+<p>For exporting and everything else, I went with what I did for my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1#final-notes-and-exporting">FlappyBird Godot clone</a></p>
 
   <div class="page-nav">
 
@@ -444,7 +696,7 @@ func _ready():
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
-    <p>Created: Wed, Jun 08, 2022 @ 08:26 UTC</p>
+    <p>Created: Fri, Jun 10, 2022 @ 09:17 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gamejam.html">gamejam</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>
