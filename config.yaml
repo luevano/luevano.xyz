@@ -1,0 +1,97 @@
+%YAML 1.2
+---
+define: &root_path "$HOME/luevano.xyz/"
+
+title: "Luevano's Site"
+author: "David Luévano Alvarado"
+author_email: "david@luevano.xyz"
+description: "My personal website where I host my blog, art gallery and more."
+rss_category: "Site"
+lang: "en"
+path:
+  src: !join [*root_path, "src/luevano.xyz"]
+  dst: !join [*root_path, "live/luevano.xyz"]
+  plt: !join [*root_path, "plt"]
+  db: !join [*root_path, "db/db.psv"]
+url:
+  main: "https://luevano.xyz"
+  static: "https://static.luevano.xyz"
+  default_image: "images/default.png"
+fmt:
+  date: "%a, %b %d, %Y @ %H:%M %Z"
+  list_date: "%b %d"
+  list_sep_date: "%B %Y"
+dirs:
+  /:
+    cfg:
+      plt: "root_page.html"
+      tags: False
+      index: False
+      rss: False
+      sitemap: True
+      exclude_dirs: []
+...
+---
+define: &root_path "$HOME/luevano.xyz/"
+
+title: "Luevano's Blog"
+author: "David Luévano Alvarado"
+author_email: "david@luevano.xyz"
+description: "My personal blog where I post about my thoughts, some how-to's, or general ranting."
+rss_category: "Blog"
+lang: "en"
+path:
+  src: !join [*root_path, "src/blog"]
+  dst: !join [*root_path, "live/blog"]
+  plt: !join [*root_path, "plt"]
+  db: !join [*root_path, "db/db_blog.psv"]
+url:
+  main: "https://blog.luevano.xyz"
+  static: "https://static.luevano.xyz"
+  default_image: "images/b/default.png"
+fmt:
+  date: "%a, %b %d, %Y @ %H:%M %Z"
+  list_date: "%b %d"
+  list_sep_date: "%B %Y"
+dirs:
+  /:
+    cfg:
+      plt: "blog/page.html"
+      tags: "blog/tag.html"
+      index: "blog/index.html"
+      rss: True
+      sitemap: True
+      exclude_dirs: []
+...
+---
+define: &root_path "$HOME/luevano.xyz/"
+
+title: "Luevano's Art"
+author: "David Luévano Alvarado"
+author_email: "david@luevano.xyz"
+description: "My personal space where I post all my drawings, sketches and more art related stuff."
+rss_category: "Art"
+lang: "en"
+path:
+  src: !join [*root_path, "src/art"]
+  dst: !join [*root_path, "live/art"]
+  plt: !join [*root_path, "plt"]
+  db: !join [*root_path, "db/db_art.psv"]
+url:
+  main: "https://art.luevano.xyz"
+  static: "https://static.luevano.xyz"
+  default_image: "images/a/default.png"
+fmt:
+  date: "%a, %b %d, %Y @ %H:%M %Z"
+  list_date: "%b %d"
+  list_sep_date: "%B %Y"
+dirs:
+  /:
+    cfg:
+      plt: "art/page.html"
+      tags: "art/tag.html"
+      index: "art/index.html"
+      rss: True
+      sitemap: True
+      exclude_dirs: []
+...

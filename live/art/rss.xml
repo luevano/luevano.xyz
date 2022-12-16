@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Luevano's Art</title>
+    <link>https://art.luevano.xyz</link>
+    <atom:link href="https://art.luevano.xyz/rss.xml" rel="self" type="application/rss+xml"/>
+    <description>My personal space where I post all my drawings, sketches and more art related stuff.</description>
+    <language>en-us</language>
+    <category></category>
+    <copyright>Copyright 2023 David Luévano Alvarado</copyright>
+    <managingEditor>david@luevano.xyz (David Luévano Alvarado)</managingEditor>
+    <webMaster>david@luevano.xyz (David Luévano Alvarado)</webMaster>
+    <pubDate></pubDate>
+    <lastBuildDate></lastBuildDate>
+    <generator>pyssg v0.8.1</generator>
+    <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    <ttl>30</ttl>
+    <image>
+      <url>https://static.luevano.xyz/images/a/default.png</url>
+      <title>Luevano's Art</title>
+      <link>https://art.luevano.xyz</link>
+    </image>
+    <item>
+      <title>Hand sketches</title>
+      <link>https://art.luevano.xyz/a/hand_sketches.html</link>
+      <guid isPermaLink="true">https://art.luevano.xyz/a/hand_sketches.html</guid>
+      <pubDate>Fri, 11 Jun 2021 15:46:37 GMT</pubDate>
+      <category>Black-white</category>
+      <category>Digital</category>
+      <category>Sketch</category>
+      <category>Spanish</category>
+      <description>Sketches de mi mano para ir agarrando confianza con la tableta. Probando diferentes métodos/pinceles.</description>
+      <content:encoded><![CDATA[<p>Me dibujé la mano varias veces con un pincel que me encontré de Krita muy bueno, porque quiero ir soltando, vaya, la mano, para dibujar más agusto porque siento que le tengo mucho miedo a la tableta.</p>
+<p>Según yo probé &ldquo;métodos&rdquo; (y como dos-tres pinceles) diferentes, pero realmente están muy similares en &ldquo;procedimiento&rdquo;. Igual quedé conforme con el resultado.</p>
+<p>Ahora con el anuncio del ???Elden Ring??? se antojó hacerse un dibujo relacionado, pero aún no sé qué ni cómo, pero quizá me eche algo así.</p>
+<p>Pues ahí mero. Y por cierto que muchas gracias a quien me donó hace unos días por el dibujo pasado, se aprecia mi bro.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Elephant octopus</title>
+      <link>https://art.luevano.xyz/a/elephant_octopus.html</link>
+      <guid isPermaLink="true">https://art.luevano.xyz/a/elephant_octopus.html</guid>
+      <pubDate>Sun, 06 Jun 2021 18:55:55 GMT</pubDate>
+      <category>Black-white</category>
+      <category>Digital</category>
+      <category>Drawing</category>
+      <category>Spanish</category>
+      <description>Dibujo en digital de una combinación de elefante y pulpo.</description>
+      <content:encoded><![CDATA[<p>El último dibujo que he hecho, justo para probar la tableta que me compré y de pasada usarlo para estrenar esta nueva sección de la página.</p>
+<p>Duré más de lo que hubiera querido y de hecho se nota que le fui bajando la calidad mientras más pasaba el tiempo, pero así nomás quedó.</p>
+<p>Como side note, debí haberlo <em>firmado</em>, pero la neta se me roló porque no estoy acostumbrado, así que ni pedo por el momento.</p>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

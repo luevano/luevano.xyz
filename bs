@@ -1,0 +1,13 @@
+#!/bin/sh
+
+PYSSG_XYZ_DIR=$HOME/luevano.xyz
+
+pyssg --config $PYSSG_XYZ_DIR/config.yaml -b --debug
+
+if [ $? -ne 0 ]; then
+echo "Failed to build the site."
+exit 1
+fi
+
+echo "rsync: pushing (U) local (pyssg.xyz) to webserver (luevano.xyz). (pyssg.xyz)"
+rsync -rtuvPL --delete-after --exclude-from=$PYSSG_XYZ_DIR/.rsyncignore $PYSSG_XYZ_DIR/live/ luevanor:/var/www/luevano.xyz/

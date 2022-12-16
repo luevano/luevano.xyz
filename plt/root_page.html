@@ -1,0 +1,52 @@
+{%extends "base.html"%}
+
+{%block html_lang%}
+{{config['lang']}}
+{%endblock html_lang%}
+
+{%block head_title%}
+<title>{{config['title']}}</title>
+{%endblock head_title%}
+
+{%block head_description%}
+<meta name="description" content="{{config['description']}}"/>
+{%endblock head_description%}
+
+{%block head_rss%}
+  <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+  <link rel="alternate" type="application/rss+xml" href="https://art.luevano.xyz/rss.xml" title="Luévano's Art RSS">
+{%endblock head_rss%}
+
+{%block head_extra%}
+{%endblock head_extra%}
+
+{%block head_og%}
+  <meta property="og:title" content="{{config['title']}}"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="{{config['url']['main']}}/{{page.name}}"/>
+  <meta property="og:image" content="{{config['url']['static']}}/{{config['url']['default_image']}}"/>
+  <meta property="og:description" content="{{config['description']}}"/>
+  <meta property="og:locale" content="{{config['lang']}}"/>
+  <meta property="og:site_name" content="{{config['title']}}"/>
+{%endblock head_og%}
+
+{%block body_header%}
+{%import 'body/header.html' as body_header%}
+{{body_header.print(config)}}
+{%endblock body_header%}
+
+{%block body_content%}
+  <h1>{{page.title}}</h1>
+
+  {{page.content}}
+{%endblock body_content%}
+
+{%block body_footer%}
+{%import 'body/footer.html' as body_footer%}
+{{body_footer.contact(config)}}
+{{body_footer.donate(config)}}
+<br>
+{{body_footer.created_with()}}
+<br>
+{{body_footer.copyright()}}
+{%endblock body_footer%}

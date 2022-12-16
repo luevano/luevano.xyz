@@ -7,9 +7,4 @@ LICENSE
 
 # Rsync specific
 .rsyncignore
-lsync
-lbuild
 .venv/
-blog/
-art/
-gendata/

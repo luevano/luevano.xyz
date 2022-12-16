@@ -1,0 +1,54 @@
+{%extends "base.html"%}
+
+{%block html_lang%}
+{{config['lang']}}
+{%endblock html_lang%}
+
+{%block head_title%}
+<title>Art filtered by {{tag[0]}} -- {{config['title']}}</title>
+{%endblock head_title%}
+
+{%block head_description%}
+<meta name="description" content="Posts filtered by {{tag[0]}}"/>
+{%endblock head_description%}
+
+{%block head_rss%}
+<link rel="alternate" type="application/rss+xml" href="{{config['url']['main']}}/rss.xml" title="{{config['title']}} RSS">
+{%endblock head_rss%}
+
+{%block head_extra%}
+{%endblock head_extra%}
+
+{%block head_og%}
+  <meta property="og:title" content="{{config['title']}}"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="{{tag[1]}}"/>
+  <meta property="og:image" content="{{config['url']['static']}}/{{config['url']['default_image']}}"/>
+  <meta property="og:description" content="Art filtered by {{tag[0]}}"/>
+  <meta property="og:locale" content="{{config['lang']}}"/>
+  <meta property="og:site_name" content="{{config['title']}}"/>
+{%endblock head_og%}
+
+{%block body_header%}
+{%import 'body/header.html' as body_header%}
+{{body_header.print(config)}}
+{%endblock body_header%}
+
+{%block body_content%}
+  <h1>Art filtered by {{tag[0]}}</h1>
+
+  {%import "art/page_list.html" as page_list%}
+  {{page_list.print(tag_pages)}}
+
+{%endblock body_content%}
+
+{%block body_footer%}
+{%import 'body/footer.html' as body_footer%}
+{{body_footer.contact(config)}}
+{{body_footer.donate(config)}}
+{{body_footer.rss(config)}}
+<br>
+{{body_footer.created_with()}}
+<br>
+{{body_footer.copyright()}}
+{%endblock body_footer%}

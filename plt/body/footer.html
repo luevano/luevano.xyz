@@ -1,0 +1,33 @@
+{%macro contact(config)%}
+<span>
+  <i class="fas fa-address-card" alt="Contact"></i>
+  <a href="{{config['url']['main']}}/contact.html">Contact</a>
+</span>
+{%endmacro%}
+
+{%macro donate(config)%}
+<span>
+  <i class="fas fa-donate" alt="Donate"></i>
+  <a href="{{config['url']['main']}}/donate.html">Donate</a>
+</span>
+{%endmacro%}
+
+{%macro rss(config)%}
+<span>
+  <i class="fas fa-rss" alt="RSS"></i>
+  <a target="_blank" href="{{config['url']['main']}}/rss.xml">RSS</a>
+</span>
+{%endmacro%}
+
+{%macro created_with()%}
+<span class="created-with">
+  <i class="fas fa-hammer" alt="Hammer"></i>
+  Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+</span>
+{%endmacro%}
+
+{%macro copyright()%}
+<span class="copyright">
+  Copyright <i class="far fa-copyright" alt="Copyright"></i> 2023 David Luévano Alvarado
+</span>
+{%endmacro%}

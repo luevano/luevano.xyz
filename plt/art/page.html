@@ -1,0 +1,76 @@
+{%extends "base.html"%}
+
+{%block html_lang%}
+{{config['lang']}}
+{%endblock html_lang%}
+
+{%block head_title%}
+<title>{{page.title}} -- {{config['title']}}</title>
+{%endblock head_title%}
+
+{%block head_description%}
+{%if page.summary is not none%}
+  <meta name="description" content="{{page.summary}}"/>
+{%else%}
+  <meta name="description" content="{{config['description']}}"/>
+{%endif%}
+{%endblock head_description%}
+
+{%block head_rss%}
+<link rel="alternate" type="application/rss+xml" href="{{config['url']['main']}}/rss.xml" title="{{config['title']}} RSS">
+{%endblock head_rss%}
+
+{%block head_og%}
+  <meta property="og:title" content="{{page.title}} -- {{config['title']}}"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="{{config['url']['main']}}/{{page.name}}"/>
+  <meta property="og:image" content="{{config['url']['static']}}/{{config['url']['default_image']}}"/>
+{%if page.summary is not none%}
+  <meta property="og:description" content="{{page.summary}}"/>
+{%else%}
+  <meta property="og:description" content="{{config['description']}}"/>
+{%endif%}
+  <meta property="og:locale" content="{{config['lang']}}"/>
+  <meta property="og:site_name" content="{{config['title']}}"/>
+{%endblock head_og%}
+
+{%block body_header%}
+{%import 'body/header.html' as body_header%}
+{{body_header.print(config)}}
+{%endblock body_header%}
+
+{%block body_content%}
+  <h1>{{page.title}}</h1>
+
+  <a class="zoom-in" href="{{page.image_url}}" alt="See raw.">
+  {%if page.summary is not none%}
+    <img src="{{page.image_url}}" alt="{{page.summary}}">
+  {%else%}
+    <img src="{{page.image_url}}">
+    {%endif%}
+    </a>
+
+  {{page.content}}
+
+  {%import "page_nav.html" as page_nav%}
+  {{page_nav.print(page, config, "art-nav")}}
+
+  <hr>
+  <div class="art-info">
+    <p>By {{', '.join(page.author)}}</p>
+    <p>Posted: {{page.cdate}}</p>
+    {%import "tag_list.html" as tag_list%}
+    {{tag_list.print(page.tags, "art-tags")}}
+  </div>
+{%endblock body_content%}
+
+{%block body_footer%}
+{%import 'body/footer.html' as body_footer%}
+{{body_footer.contact(config)}}
+{{body_footer.donate(config)}}
+{{body_footer.rss(config)}}
+<br>
+{{body_footer.created_with()}}
+<br>
+{{body_footer.copyright()}}
+{%endblock body_footer%}
