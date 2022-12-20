@@ -76,7 +76,7 @@
     <main>
   <h1>Create an XMPP server with Prosody compatible with Conversations and Movim</h1>
 
-  <p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for ???<a href="https://lmcj.xyz">EL ELE EME</a>???, for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
+  <p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <mark><a href="https://lmcj.xyz">EL ELE EME</a></mark> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
 <p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, and of course the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
 <p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)</p>
 <h2 id="prerequisites">Prerequisites</h2>
@@ -411,7 +411,7 @@ Component &quot;vjud.your.domain&quot; &quot;vjud&quot;
     name = &quot;User Directory&quot;
     vjud_mode = &quot;opt-in&quot;
 </code></pre>
-<p>You ???HAVE??? to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:</p>
+<p>You <mark>HAVE</mark> to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:</p>
 <pre><code class="language-sh">luac5.2 -p /etc/prosody/prosody.cfg.lua
 </code></pre>
 <p>Notice that by default <code>prosody</code> will look up certificates that look like <code>sub.your.domain</code>, but if you get the certificates like I do, you&rsquo;ll have a single certificate for all subdomains, and by default it is in <code>/etc/letsencrypt/live</code>, which has some strict permissions. So, to import it you can run:</p>
@@ -601,7 +601,7 @@ systemctl enable prosody.service
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Wed, Jun 09, 2021 @ 05:24 UTC</p>
-      <p>Modified: Sun, Aug 01, 2021 @ 09:24 UTC</p>
+      <p>Modified: Tue, Dec 20, 2022 @ 04:33 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

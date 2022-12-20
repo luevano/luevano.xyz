@@ -6,7 +6,7 @@ a/mail_server_with_postfix.md|1616299559.6570284|1623137344.8639452|b589ec8fd628
 a/new_blogging_system.md|1622172099.117893|1622173322.4337702|b4a00df409794ab3d8e824004c2d486b|english,short,tools,update
 a/asi_nomas_esta_quedando.md|1622795043.0874712|0.0|dcbec925288c5dd8f2bd9a6e70406978|short,spanish,update
 a/acomodada_la_pagina_de_arte.md|1623006369.6071973|1623006525.2665823|50a2280134b5349bfb6d1c517e37a26f|short,spanish,update
-a/xmpp_server_with_prosody.md|1623216270.0372887|1627809865.4920528|0c539e4fb106e1355b358e8dd1b7ab46|english,server,tools,tutorial
+a/xmpp_server_with_prosody.md|1623216270.0372887|1671510819.3465965|4d2ceae4c6a6b4d723fc8a2bf5771462|english,server,tools,tutorial
 a/tenia_esto_descuidado.md|1626594710.918819|0.0|76d45ca201ef36002e0c9c87e7a800e5|short,spanish,update
 a/hoy_toco_desarrollo_personaje.md|1627452655.5560262|0.0|b891e8efe4e9a5c3f342f9e84e20437a|spanish
 a/vpn_server_with_openvpn.md|1627810022.100739|1627812788.832212|7df7d2d05cb07a5d83284f41f3ce9054|english,server,tools,tutorial
@@ -17,3 +17,4 @@ g/starting_gamedev_blogging.md|1652764794.9016073|1653179221.26956|2d6665cebea06
 g/godot_project_structure.md|1653182170.4395845|1653366918.4756405|a7b153df43631f17864cd8ab67aca60f|english,gamedev,short
 g/flappybird_godot_devlog_1.md|1653795523.5988536|1653795876.8388574|8a4f723fbb20718ad5238fd28aaf28e2|english,gamedev,godot
 g/gogodot_jam3_devlog_1.md|1654852625.58801|0.0|f8767cd4023a7a7c0ccf5388cdef049b|english,gamedev,gamejam,godot
+a/rewrote_pyssg_again.md|1671510665.5266156|0.0|9174dbccf61263045159de182e274af4|english,short,tools,update

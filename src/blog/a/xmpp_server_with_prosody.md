@@ -7,7 +7,7 @@ tags: server
 	tutorial
 	english
 
-Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for ???[EL ELE EME](https://lmcj.xyz)???, for example. So, here are the notes on how I set up the server that is compatible with the [Conversations](https://conversations.im/) app and the [Movim](https://movim.eu/) social network. You can see my addresses in [contact](https://luevano.xyz/contact.html) and the XMPP compliance/score of the server.
+Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for ==[EL ELE EME](https://lmcj.xyz)== for example. So, here are the notes on how I set up the server that is compatible with the [Conversations](https://conversations.im/) app and the [Movim](https://movim.eu/) social network. You can see my addresses in [contact](https://luevano.xyz/contact.html) and the XMPP compliance/score of the server.
 
 One of the best resources I found that helped me a lot was [Installing and Configuring Prosody XMPP Server on Debian 9](https://community.hetzner.com/tutorials/prosody-debian9), and of course the [Arch Wiki](https://wiki.archlinux.org/title/Prosody) and the [oficial documentation](https://prosody.im/).
 
@@ -358,7 +358,7 @@ Component "vjud.your.domain" "vjud"
 	vjud_mode = "opt-in"
 ```
 
-You ???HAVE??? to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:
+You ==HAVE== to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:
 
 ```sh
 luac5.2 -p /etc/prosody/prosody.cfg.lua

@@ -23,6 +23,20 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Rewrote pyssg again</title>
+      <link>https://blog.luevano.xyz/a/rewrote_pyssg_again.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/rewrote_pyssg_again.html</guid>
+      <pubDate>Tue, 20 Dec 2022 04:31:05 GMT</pubDate>
+      <category>English</category>
+      <category>Short</category>
+      <category>Tools</category>
+      <category>Update</category>
+      <description>Rewrote pyssg to make it more flexible and to work with YAML configuration files.</description>
+      <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to change the way <a href="https://github.com/luevano/pyssg">pyssg</a> reads config files and generates <code>HTML</code> files so that it is more flexible and I don&rsquo;t need to have 2 separate build commands and configs (for <a href="https://blog.luevano.xyz">blog</a> and <a href="https://art.luevano.xyz">art</a>), and also to handle other types of &ldquo;sites&rdquo;; because <code>pyssg</code> was built with blogging in mind, so it was a bit limited to how it could be used. So I had to kind of <em>rewrite</em> <code>pyssg</code>, and with the latest version I can now generate the whole site and use the same templates for everything, quite neat for my use case.</p>
+<p>Anyways, so I bought a new domain for all <code>pyssg</code> related stuff, mostly because I wanted somewhere to test live builds while developing, it is of course <a href="https://pyssg.xyz">pyssg.xyz</a>; as of now it is the same template, CSS and scripts that I use here, probably will change in the future. I&rsquo;ll be testing new features and anything <code>pyssg</code> related stuff.</p>
+<p>I should start pointing all links to <code>pyssg</code> to the actual site instead of the github repository (or my <a href="https://git.luevano.xyz">git</a> repository), but I haven&rsquo;t decided how to handle everything.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>Creating my Go Godot Jam 3 entry using Godot 3.5 devlog 1</title>
       <link>https://blog.luevano.xyz/g/gogodot_jam3_devlog_1.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/g/gogodot_jam3_devlog_1.html</guid>
@@ -1752,7 +1766,7 @@ cd $CPWD
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim.</description>
-      <content:encoded><![CDATA[<p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for ???<a href="https://lmcj.xyz">EL ELE EME</a>???, for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
+      <content:encoded><![CDATA[<p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <mark><a href="https://lmcj.xyz">EL ELE EME</a></mark> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
 <p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, and of course the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
 <p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)</p>
 <h2 id="prerequisites">Prerequisites</h2>
@@ -2087,7 +2101,7 @@ Component &quot;vjud.your.domain&quot; &quot;vjud&quot;
     name = &quot;User Directory&quot;
     vjud_mode = &quot;opt-in&quot;
 </code></pre>
-<p>You ???HAVE??? to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:</p>
+<p>You <mark>HAVE</mark> to read all of the configuration file, because there are a lot of things that you need to change to make it work with your server/domain. Test the configuration file with:</p>
 <pre><code class="language-sh">luac5.2 -p /etc/prosody/prosody.cfg.lua
 </code></pre>
 <p>Notice that by default <code>prosody</code> will look up certificates that look like <code>sub.your.domain</code>, but if you get the certificates like I do, you&rsquo;ll have a single certificate for all subdomains, and by default it is in <code>/etc/letsencrypt/live</code>, which has some strict permissions. So, to import it you can run:</p>

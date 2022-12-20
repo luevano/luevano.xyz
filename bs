@@ -2,7 +2,7 @@
 
 PYSSG_XYZ_DIR=$HOME/luevano.xyz
 
-pyssg --config $PYSSG_XYZ_DIR/config.yaml -b --debug
+pyssg --config $PYSSG_XYZ_DIR/config.yaml -b
 
 if [ $? -ne 0 ]; then
 echo "Failed to build the site."

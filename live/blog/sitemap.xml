@@ -46,6 +46,12 @@
 </url>
 
     <url>
+      <loc>https://blog.luevano.xyz/a/rewrote_pyssg_again.html</loc>
+      <lastmod>2022-12-20</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/g/gogodot_jam3_devlog_1.html</loc>
       <lastmod>2022-06-10</lastmod>
       <changefreq>weekly</changefreq>
@@ -107,7 +113,7 @@
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/xmpp_server_with_prosody.html</loc>
-      <lastmod>2021-08-01</lastmod>
+      <lastmod>2022-12-20</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>

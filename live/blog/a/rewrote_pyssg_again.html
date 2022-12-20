@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="images/icons/favicon.ico">
-<title>Posts filtered by update -- Luevano's Blog</title>
-<meta name="description" content="Posts filtered by update"/>
+<title>Rewrote pyssg again -- Luevano's Blog</title>
+  <meta name="description" content="Rewrote pyssg to make it more flexible and to work with YAML configuration files."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -18,12 +18,19 @@
     <script type="text/javascript" src="scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
     <!-- extra -->
+<!-- highlight support for code blocks -->
+<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+</script>
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+
     <!-- og meta -->
-  <meta property="og:title" content="Luevano's Blog"/>
+  <meta property="og:title" content="Rewrote pyssg again -- Luevano's Blog"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:url" content="https://blog.luevano.xyz/tag/@update.html"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/rewrote_pyssg_again.md"/>
   <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
-  <meta property="og:description" content="Posts filtered by update"/>
+  <meta property="og:description" content="Rewrote pyssg to make it more flexible and to work with YAML configuration files."/>
   <meta property="og:locale" content="en"/>
   <meta property="og:site_name" content="Luevano's Blog"/>
   </head>
@@ -67,31 +74,40 @@
     </header>
 
     <main>
-  <h1>Posts filtered by update</h1>
+  <h1>Rewrote pyssg again</h1>
 
-    <h2>Articles</h2>
-  <ul class="page-list">
-        <h3>December 2022</h3>
-      <li>Dec 20 - <a href="https://blog.luevano.xyz/a/rewrote_pyssg_again.html">Rewrote pyssg again</a></li>
-          <h3>May 2022</h3>
-      <li>May 17 - <a href="https://blog.luevano.xyz/g/starting_gamedev_blogging.html">Will start blogging about gamedev</a></li>
-      <li>May 15 - <a href="https://blog.luevano.xyz/a/devs_android_me_trozaron.html">Los devs de Android/MIUI me trozaron</a></li>
-          <h3>April 2022</h3>
-      <li>Apr 28 - <a href="https://blog.luevano.xyz/a/volviendo_a_usar_la_pagina.html">Volviendo a usar la página</a></li>
-          <h3>July 2021</h3>
-      <li>Jul 18 - <a href="https://blog.luevano.xyz/a/tenia_esto_descuidado.html">Tenia este pex algo descuidado</a></li>
-          <h3>June 2021</h3>
-      <li>Jun 06 - <a href="https://blog.luevano.xyz/a/acomodada_la_pagina_de_arte.html">Al fin ya me acomodé la página pa' los dibujos</a></li>
-      <li>Jun 04 - <a href="https://blog.luevano.xyz/a/asi_nomas_esta_quedando.html">Así nomás está quedando el página</a></li>
-          <h3>May 2021</h3>
-      <li>May 28 - <a href="https://blog.luevano.xyz/a/new_blogging_system.html">I'm using a new blogging system</a></li>
-          <h3>March 2021</h3>
-      <li>Mar 16 - <a href="https://blog.luevano.xyz/a/el_blog_ya_tiene_timestamps.html">Así es raza, el blog ya tiene timestamps</a></li>
-          <h3>February 2021</h3>
-      <li>Feb 27 - <a href="https://blog.luevano.xyz/a/first_blog_post.html">This is the first blog post, just for testing purposes</a></li>
-  </ul>
+  <p>I&rsquo;ve been wanting to change the way <a href="https://github.com/luevano/pyssg">pyssg</a> reads config files and generates <code>HTML</code> files so that it is more flexible and I don&rsquo;t need to have 2 separate build commands and configs (for <a href="https://blog.luevano.xyz">blog</a> and <a href="https://art.luevano.xyz">art</a>), and also to handle other types of &ldquo;sites&rdquo;; because <code>pyssg</code> was built with blogging in mind, so it was a bit limited to how it could be used. So I had to kind of <em>rewrite</em> <code>pyssg</code>, and with the latest version I can now generate the whole site and use the same templates for everything, quite neat for my use case.</p>
+<p>Anyways, so I bought a new domain for all <code>pyssg</code> related stuff, mostly because I wanted somewhere to test live builds while developing, it is of course <a href="https://pyssg.xyz">pyssg.xyz</a>; as of now it is the same template, CSS and scripts that I use here, probably will change in the future. I&rsquo;ll be testing new features and anything <code>pyssg</code> related stuff.</p>
+<p>I should start pointing all links to <code>pyssg</code> to the actual site instead of the github repository (or my <a href="https://git.luevano.xyz">git</a> repository), but I haven&rsquo;t decided how to handle everything.</p>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/g/gogodot_jam3_devlog_1.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
 
 
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Tue, Dec 20, 2022 @ 04:31 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>
+</div>
+
+  </div>
     </main>
 
     <footer>
