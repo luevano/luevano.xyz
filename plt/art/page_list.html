@@ -1,21 +1,21 @@
-{%macro print(pages)%}
+{%macro print(pages, config)%}
 {%import "art/page_list_entry.html" as art_entry%}
 <div class="art-grid">
   {%for p in pages%}
     {%if p.meta['tall'] is defined%}
       {%if p.meta['wide'] is defined%}
-        {{art_entry.print(p, 'tall wide')}}
+        {{art_entry.print(p, config, 'tall wide')}}
       {%else%}
-        {{art_entry.print(p, 'tall')}}
+        {{art_entry.print(p, config, 'tall')}}
       {%endif%}
     {%elif p.meta['wide'] is defined%}
       {%if p.meta['tall'] is defined%}
-        {{art_entry.print(p, 'tall wide')}}
+        {{art_entry.print(p, config, 'tall wide')}}
       {%else%}
-        {{art_entry.print(p, 'tall')}}
+        {{art_entry.print(p, config, 'tall')}}
       {%endif%}
     {%else%}
-      {{art_entry.print(p)}}
+      {{art_entry.print(p, config)}}
     {%endif%}
   {%endfor%}
 </div>

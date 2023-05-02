@@ -30,6 +30,11 @@ dirs:
       rss: False
       sitemap: True
       exclude_dirs: []
+exts:
+  pymdvar:
+    variables:
+      SURL: "https://static.luevano.xyz"
+    enable_env: False
 ...
 ---
 define: &root_path "$HOME/luevano.xyz/"
@@ -62,6 +67,11 @@ dirs:
       rss: True
       sitemap: True
       exclude_dirs: []
+exts:
+  pymdvar:
+    variables:
+      SURL: "https://static.luevano.xyz"
+    enable_env: False
 ...
 ---
 define: &root_path "$HOME/luevano.xyz/"
@@ -94,4 +104,9 @@ dirs:
       rss: True
       sitemap: True
       exclude_dirs: []
+exts:
+  pymdvar:
+    variables:
+      SURL: "https://static.luevano.xyz"
+    enable_env: False
 ...

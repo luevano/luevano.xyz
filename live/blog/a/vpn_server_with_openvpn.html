@@ -3,27 +3,26 @@
 "
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Create a VPN server with OpenVPN (IPv4) -- Luevano's Blog</title>
   <meta name="description" content="How to create a VPN server using OpenVPN on a server running Nginx. Only for IPv4."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
     <!-- extra -->
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="Create a VPN server with OpenVPN (IPv4) -- Luevano's Blog"/>
@@ -79,13 +78,13 @@
   <p>I&rsquo;ve been wanting to do this entry, but had no time to do it since I also have to set up the VPN service as well to make sure what I&rsquo;m writing makes sense, today is the day.</p>
 <p>Like with any other of my entries I based my setup on the <a href="https://wiki.archlinux.org/title/OpenVPN">Arch Wiki</a>, <a href="https://github.com/Nyr/openvpn-install">this install script</a> and <a href="https://github.com/graysky2/ovpngen">this profile generator script</a>.</p>
 <p>This will be installed and working alongside the other stuff I&rsquo;ve wrote about on other posts (see the <a href="https://blog.luevano.xyz/tag/@server.html">server</a> tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it&rsquo;s not that hard to include IPv6, but meh).</p>
-<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>Pretty simple:</p>
 <ul>
 <li>Working server with root access, and with Ufw as the firewall.</li>
 <li>Depending on what port you want to run the VPN on, the default <code>1194</code>, or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one Ufw rule.</li>
 </ul>
-<h2 id="create-pki-from-scratch">Create PKI from scratch</h2>
+<h3 id="create-pki-from-scratch">Create PKI from scratch<a class="headerlink" href="#create-pki-from-scratch" title="Permanent link">&para;</a></h3>
 <p>PKI stands for <em>Public Key Infrastructure</em> and basically it&rsquo;s required for certificates, private keys and more. This is supposed to work between two servers and one client: a server in charge of creating, signing and verifying the certificates, a server with the OpenVPN service running and the client making the request.</p>
 <p>This is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about. In a nutshell, I&rsquo;m no expert.</p>
 <p>&hellip; but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I&rsquo;m gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).</p>
@@ -129,7 +128,7 @@ openssl dhparam -out dh.pem 2048
 openvpn --genkey secret ta.key
 </code></pre>
 <p>That&rsquo;s it for the PKI stuff and general certificate configuration.</p>
-<h2 id="openvpn">OpenVPN</h2>
+<h3 id="openvpn">OpenVPN<a class="headerlink" href="#openvpn" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/OpenVPN">OpenVPN</a> is a robust and highly flexible VPN daemon, that&rsquo;s pretty complete feature wise.</p>
 <p>Install the <code>openvpn</code> package:</p>
 <pre><code class="language-sh">pacman -S openvpn
@@ -277,7 +276,7 @@ ufw reload
 systemctl enable openvpn-server@server.service
 </code></pre>
 <p>Where the <code>server</code> after <code>@</code> is the name of your configuration, <code>server.conf</code> without the <code>.conf</code> in my case.</p>
-<h3 id="create-client-configurations">Create client configurations</h3>
+<h4 id="create-client-configurations">Create client configurations<a class="headerlink" href="#create-client-configurations" title="Permanent link">&para;</a></h4>
 <p>You might notice that I didn&rsquo;t specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the <code>server.conf</code> file that we created.</p>
 <p>The real way of doing this would be to run similar steps as the ones with <code>easy-rsa</code> locally, send them to the server, sign them, and retrieve them. Nah, we&rsquo;ll just create all configuration files on the server as I was mentioning earlier.</p>
 <p>Also, the client configuration file has to match the server one (to some degree), to make this easier you can create a <code>client-common</code> file in <code>/etc/openvpn/server</code> with the following content:</p>

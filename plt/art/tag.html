@@ -38,7 +38,7 @@
   <h1>Art filtered by {{tag[0]}}</h1>
 
   {%import "art/page_list.html" as page_list%}
-  {{page_list.print(tag_pages)}}
+  {{page_list.print(tag_pages, config)}}
 
 {%endblock body_content%}
 

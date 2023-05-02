@@ -3,27 +3,26 @@
 "
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luevano's Blog</title>
   <meta name="description" content="How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
     <!-- extra -->
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luevano's Blog"/>
@@ -78,14 +77,14 @@
 
   <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
 <p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL Database. And note that most if not all commands executed here are run with root privileges.</p>
-<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>Basically the same as with the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website with Nginx and Certbot</a>, with the extras:</p>
 <ul>
 <li>You will need a <strong>CNAME</strong> for &ldquo;mail&rdquo; and (optionally) &ldquo;www.mail&rdquo;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police).</li>
 <li>An SSL certificate. You can use the SSL certificate obtained following my last post using <code>certbot</code> (just create a <code>mail.conf</code> and run <code>certbot --nginx</code> again).</li>
 <li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall.</li>
 </ul>
-<h2 id="postfix">Postfix</h2>
+<h3 id="postfix">Postfix<a class="headerlink" href="#postfix" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/postfix">Postfix</a> is a &ldquo;mail transfer agent&rdquo; which is the component of the mail server that receives and sends emails via SMTP.</p>
 <p>Install the <code>postfix</code> package:</p>
 <pre><code class="language-sh">pacman -S postfix
@@ -174,7 +173,7 @@ newaliases
 <pre><code class="language-sh">systemctl start postfix.service
 systemctl enable postfix.service
 </code></pre>
-<h2 id="dovecot">Dovecot</h2>
+<h3 id="dovecot">Dovecot<a class="headerlink" href="#dovecot" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/Dovecot">Dovecot</a> is an IMAP and POP3 server, which is what lets an email application retrieve the mail.</p>
 <p>Install the <code>dovecot</code> and <code>pigeonhole</code> (sieve for <code>dovecot</code>) packages:</p>
 <pre><code class="language-sh">pacman -S dovecot pigeonhole
@@ -289,7 +288,7 @@ account required pam_unix.so
 <pre><code class="language-sh">systemctl start dovecot.service
 systemctl enable dovecot.service
 </code></pre>
-<h2 id="opendkim">OpenDKIM</h2>
+<h3 id="opendkim">OpenDKIM<a class="headerlink" href="#opendkim" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
 <p>Install the <code>opendkim</code> package:</p>
 <pre><code class="language-sh">pacman -S opendkim
@@ -357,7 +356,7 @@ systemctl enable opendkim.service
 </li>
 </ol>
 <p>And at this point you could test your mail for spoofing and more.</p>
-<h2 id="spamassassin">SpamAssassin</h2>
+<h3 id="spamassassin">SpamAssassin<a class="headerlink" href="#spamassassin" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/SpamAssassin">SpamAssassin</a> is just <em>a mail filter to identify spam</em>.</p>
 <p>Install the <code>spamassassin</code> package (which will install a bunch of ugly <code>perl</code> packages&hellip;):</p>
 <pre><code class="language-sh">pacman -S spamassassin
@@ -410,7 +409,7 @@ ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/sp
 <pre><code class="language-sh">systemctl start spamassassin.service
 systemctl enable spamassassin.service
 </code></pre>
-<h2 id="wrapping-up">Wrapping up</h2>
+<h3 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h3>
 <p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code> for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked <em>(((it just werks on my machine)))</em>.</p>
 <p>Now, to actually use the mail service: first of all, you need a <em>normal</em> account (don&rsquo;t use root) that belongs to the <code>mail</code> group (<code>gpasswd -a user group</code> to add a user <code>user</code> to group <code>group</code>) and that has a password.</p>
 <p>Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>

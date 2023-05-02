@@ -2,20 +2,19 @@
 <html class="theme-dark" lang="{%block html_lang%}{%endblock html_lang%}"
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="{{config['url']['static']}}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="{{config['url']['static']}}/images/icons/favicon.ico">
     {%block head_title%}{%endblock head_title%}
     {%block head_description%}{%endblock head_description%}
     {%block head_rss%}{%endblock head_rss%}
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{config['url']['static']}}/css/style.css">
+    <link rel="stylesheet" type="text/css" href="{{config['url']['static']}}/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{config['url']['static']}}/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="{{config['url']['static']}}/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="{{config['url']['static']}}/css/theme.css">
     <!-- extra -->
     {%block head_extra%}{%endblock head_extra%}
     <!-- og meta -->

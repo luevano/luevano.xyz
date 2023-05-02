@@ -45,7 +45,7 @@
   {{tag_list.print(all_tags, "art-tags")}}
 
   {%import "art/page_list.html" as page_list%}
-  {{page_list.print(all_pages)}}
+  {{page_list.print(all_pages, config)}}
 {%endblock body_content%}
 
 {%block body_footer%}

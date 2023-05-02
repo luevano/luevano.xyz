@@ -3,27 +3,26 @@
 "
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Creating my Go Godot Jam 3 entry using Godot 3.5 devlog 1 -- Luevano's Blog</title>
   <meta name="description" content="Details on the implementation for the game I created for the Go Godot Jam 3, which theme is Evolution."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
     <!-- extra -->
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="Creating my Go Godot Jam 3 entry using Godot 3.5 devlog 1 -- Luevano's Blog"/>
@@ -89,20 +88,20 @@
 
 <p>You can also find the jam entry <a href="https://itch.io/jam/go-godot-jam-3/rate/1562701">here</a>.</p>
 <p>Similarly with the my FlappyBird clone, I plan to update this to a better state.</p>
-<h2 id="initial-setup">Initial setup</h2>
+<h3 id="initial-setup">Initial setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h3>
 <p>Again, similar to the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird</a> clone I developed, I&rsquo;m using the directory structure I wrote about on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> with slight modifications to test things out. Also using similar <em>Project settings</em> as those from the <em>FlappyBird</em> clone like the pixel art texture imports, keybindings, layers, etc..</p>
 <p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes.<ins>I ended up not leaving this enabled in the game as it lagged the game out, but it&rsquo;s an option I&rsquo;ll end up researching more.</ins></p>
 <p>This time I&rsquo;m also going to be using an <a href="https://www.gdquest.com/docs/guidelines/best-practices/godot-gdscript/event-bus/">Event bus</a> singleton (which I&rsquo;m going to just call <em>Event</em>) as managing signals was pretty annoying on my last project; as well as a <em>Global</em> singleton for essential stuff so I don&rsquo;t have to do as many cross references between nodes/scenes.</p>
-<h2 id="assets">Assets</h2>
+<h3 id="assets">Assets<a class="headerlink" href="#assets" title="Permanent link">&para;</a></h3>
 <p>This time I&rsquo;ll be creating my own assets in <a href="https://www.aseprite.org/">Aseprite</a>, wont be that good, but enough to prototype and get things going.</p>
 <p>Other than that I used few key sprites from <a href="https://vryell.itch.io/">vryell</a>: <a href="https://vryell.itch.io/controller-keyboard-icons">Controller &amp; Keyboard Icons</a> and a font from <a href="https://datagoblin.itch.io/">datagoblin</a>: <a href="https://datagoblin.itch.io/monogram">Monogram</a>.</p>
-<h2 id="the-snake">The snake</h2>
+<h3 id="the-snake">The snake<a class="headerlink" href="#the-snake" title="Permanent link">&para;</a></h3>
 <p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
 <figure id="__yafg-figure-32">
 <img alt="FileSystem - Snake dir structure" src="images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
 <figcaption>FileSystem - Snake dir structure</figcaption>
 </figure>
-<h3 id="basic-movement">Basic movement</h3>
+<h4 id="basic-movement">Basic movement<a class="headerlink" href="#basic-movement" title="Permanent link">&para;</a></h4>
 <p>The most basic thing is to move the head, this is what we have control of. Create a scene called <code>Head.tscn</code> and setup the basic <em>KinematicBody2D</em> with it&rsquo;s own <em>Sprite</em> and <em>CollisionShape2D</em> (I used a small circle for the tip of the head), and set the <em>Collision Layer/Mask</em> accordingly, for now just <code>layer = bit 1</code>. And all we need to do, is keep moving the snake forwards and be able to rotate left or right. Created a new script called <code>head.gd</code> attached to the root (<em>KinematicBody2D</em>) and added:</p>
 <pre><code class="language-gdscript">extends KinematicBody2D
 
@@ -136,7 +135,7 @@ func _rotate_to(direction: int) -&gt; void:
 <img alt="Snake - Basic movement (left and right controls)" src="images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
 <figcaption>Snake - Basic movement (left and right controls)</figcaption>
 </figure>
-<h3 id="setting-up-path-following">Setting up path following</h3>
+<h4 id="setting-up-path-following">Setting up path following<a class="headerlink" href="#setting-up-path-following" title="Permanent link">&para;</a></h4>
 <p>To move other snake parts by following the snake head the only solution I found was to use the <em>Path2D</em> and <em>PathFollow2D</em> nodes. <em>Path2D</em> basically just handles the curve/path that <em>PathFollow2D</em> will use to move its child node; and I say &ldquo;child node&rdquo; in singular&hellip; as <em>PathFollow2D</em> can only handle one damn child, all the other ones will have weird transformations and/or rotations. So, the next thing to do is to setup a way to compute (and draw so we can validate) the snake&rsquo;s path/curve.</p>
 <p>Added the signal <code>snake_path_new_point(coordinates)</code> to the <em>Event</em> singleton and then add the following to <code>head.gd</code>:</p>
 <pre><code class="language-gdscript">var _time_elapsed: float = 0.0
@@ -173,7 +172,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
 <img alt="Snake - Basic movement with path" src="images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
 <figcaption>Snake - Basic movement with path</figcaption>
 </figure>
-<h3 id="define-body-parts-for-the-snake">Define body parts for the snake</h3>
+<h4 id="define-body-parts-for-the-snake">Define body parts for the snake<a class="headerlink" href="#define-body-parts-for-the-snake" title="Permanent link">&para;</a></h4>
 <p>At this point the only thing to do is to add the corresponding next body parts and tail of the snake. To do so, we need a <em>PathFollow2D</em> to use the live-generating <em>Path2D</em>, the only caveat is that we need one of these per body part/tail (this took me hours to figure out, <em>thanks documentation</em>).</p>
 <p>Create a new scene called <code>Body.tscn</code> with a <em>PathFollow2D</em> as its root and an <em>Area2D</em> as its child, then just add the necessary <em>Sprite</em> and <em>CollisionShap2D</em> for the <em>Area2D</em>, I&rsquo;m using <code>layer = bit 2</code> for its collision. Create a new script called <code>generic_segment.gd</code> with the following code:</p>
 <pre><code class="language-gdscript">extends PathFollow2D
@@ -185,7 +184,7 @@ func _physics_process(delta: float) -&gt; void:
     offset += Global.SNAKE_SPEED * delta
 </code></pre>
 <p>And this can be attached to the <em>Body</em>&lsquo;s root node (<em>PathFollow2D</em>), no extra setup needed. Repeat the same steps for creating the <code>Tail.tscn</code> scene and when attaching the <code>generic_segment.gd</code> script just configure the <code>Type</code> parameter to <code>tail</code> in the GUI (by selecting the node with the script attached and editing in the <em>Inspector</em>).</p>
-<h3 id="adding-body-parts">Adding body parts</h3>
+<h4 id="adding-body-parts">Adding body parts<a class="headerlink" href="#adding-body-parts" title="Permanent link">&para;</a></h4>
 <p>Now it&rsquo;s just a matter of handling when to add new body parts in the <code>snake.gd</code> script. For now I&rsquo;ve only setup for adding body parts to fulfill the initial length of the snake (this doesn&rsquo;t include the head or tail). The extra code needed is the following:</p>
 <pre><code class="language-gdscript">export(PackedScene) var BODY_SEGMENT_NP: PackedScene
 export(PackedScene) var TAIL_SEGMENT_NP: PackedScene
@@ -269,13 +268,13 @@ func _add_segment_to_queue() -&gt; void:
     _snake.propagate_call(&quot;set_process_input&quot;, [on_off])
 </code></pre>
 <p>Which will stop the snake node and all children.</p>
-<h3 id="fix-on-body-segments-following-head">Fix on body segments following head</h3>
+<h4 id="fix-on-body-segments-following-head">Fix on body segments following head<a class="headerlink" href="#fix-on-body-segments-following-head" title="Permanent link">&para;</a></h4>
 <p>After a while of testing and developing, I noticed that sometimes the head &ldquo;detaches&rdquo; from the body when a lot of rotations happen (moving the snake left or right), because of how imprecise the <em>Curve2D</em> is. To do this I just send a signal (<code>snake_rotated</code>) whenever the snake rotates and make a small correction (in <code>generic_segment.gd</code>):</p>
 <pre><code class="language-gdscript">func _on_snake_rotated() -&gt; void:
     offset -= 0.75 * Global.SNAKE_SPEED * pow(get_physics_process_delta_time(), 2)
 </code></pre>
 <p>This is completely random, I tweaked it manually after a lot of iterations.</p>
-<h2 id="the-food">The food</h2>
+<h3 id="the-food">The food<a class="headerlink" href="#the-food" title="Permanent link">&para;</a></h3>
 <p>For now I just decided to setup a simple system to see everything works fine. The idea is to make some kind of generic food node/scene and a &ldquo;food manager&rdquo; to spawn them, for now in totally random locations. For this I added the following signals: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type)</code> and <code>food_eaten(type)</code>.</p>
 <p>First thing is creating the <code>Food.tscn</code> which is just an <em>Area2D</em> with its necessary children with an attached script called <code>food.gd</code>. The script is really simple:</p>
 <pre><code class="language-gdscript">class_name Food # needed to access Type enum outside of the script, this registers this script as a node
@@ -323,7 +322,7 @@ func _on_body_entered(body: Node) -&gt; void:
 <img alt="Snake - Food basic interaction" src="images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
 <figcaption>Snake - Food basic interaction</figcaption>
 </figure>
-<h2 id="za-warudo-the-world">Za warudo! (The world)</h2>
+<h3 id="za-warudo-the-world">Za warudo! (The world)<a class="headerlink" href="#za-warudo-the-world" title="Permanent link">&para;</a></h3>
 <p>It just happend that I saw a video to create random maps by using a method called <a href="https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm">random walks</a>, this video was made by <a href="https://www.youtube.com/c/NADLABS">NAD LABS</a>: <a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a>. It&rsquo;s a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):</p>
 <figure id="__yafg-figure-38">
 <img alt="World map generator - Random map 1" src="images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
@@ -351,7 +350,7 @@ func get_centered_world_position(location: Vector2) -&gt; Vector2:
 </code></pre>
 <p>Where <code>get_cells_around</code> is just a function that gets the safe cells around the origin. And this <code>get_valid_map_coords</code> just returns used cells minus the safe cells, to place food. <code>get_centered_world_position</code> is so we can center the food in the tiles.</p>
 <p>Some signals I used for the world gen: <code>world_gen_walker_started(id)</code>, <code>world_gen_walker_finished(id)</code>, <code>world_gen_walker_died(id)</code> and <code>world_gen_spawn_walker_unit(location)</code>.</p>
-<h3 id="food-placement">Food placement</h3>
+<h4 id="food-placement">Food placement<a class="headerlink" href="#food-placement" title="Permanent link">&para;</a></h4>
 <p>The last food algorithm doesn&rsquo;t check anything related to the world, and thus the food could spawn in the walls and outside the map.</p>
 <p>First thing is I generalized the food into a single script and added basic food and special food which inherit from base food. The most important stuff for the base food is to be able to set all necessary properties at first:</p>
 <pre><code class="language-gdscript">func update_texture() -&gt; void:
@@ -401,9 +400,9 @@ func _ready():
     return [world_generator.get_centered_world_position(location), location]
 </code></pre>
 <p>Other than that, there are some differences between placing normal and special food (specially the signal they send, and if an extra &ldquo;special points&rdquo; property is set). Some of the signals that I used that might be important: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type, location)</code> and <code>food_eaten(type, location)</code>.</p>
-<h2 id="stats-clas-and-loadingsaving-data">Stats clas and loading/saving data</h2>
+<h3 id="stats-clas-and-loadingsaving-data">Stats clas and loading/saving data<a class="headerlink" href="#stats-clas-and-loadingsaving-data" title="Permanent link">&para;</a></h3>
 <p>I got the idea of saving the current stats (points, max body segments, etc.) in a separate <em>Stats</em> class for easier load/save data. This option I went with didn&rsquo;t work as I would liked it to work, as it was a pain in the ass to setup and each time a new property is added you have to manually setup the load/save helper functions&hellip; so not the best option. This option I used was json but saving a Node directly could work better or using resources (saving <code>tres</code> files).</p>
-<h3 id="stats-class">Stats class</h3>
+<h4 id="stats-class">Stats class<a class="headerlink" href="#stats-class" title="Permanent link">&para;</a></h4>
 <p>The <em>Stats</em> &ldquo;class&rdquo; is just a script that extends from <em>Node</em> called <code>stats.gd</code>. It needs to define the <code>class_name</code> as <code>Stats</code>. The main content:</p>
 <pre><code class="language-gdscript"># main
 var points: int = 0
@@ -466,7 +465,7 @@ func set_stats(stats: Dictionary) -&gt; void:
         trait_jump = stats[&quot;trait_jump&quot;]
 </code></pre>
 <p>And this is not scalable at all, but I had to do this at the end of the jam so no way of optimizing and/or doing it correctly, sadly.</p>
-<h3 id="loadsave-data">Load/save data</h3>
+<h4 id="loadsave-data">Load/save data<a class="headerlink" href="#loadsave-data" title="Permanent link">&para;</a></h4>
 <p>The load/save function is pretty standard. It&rsquo;s a singleton/autoload called <em>SavedData</em> with a script that extends from <em>Node</em> called <code>save_data.gd</code>:</p>
 <pre><code class="language-gdscript">const DATA_PATH: String = &quot;user://data.save&quot;
 
@@ -510,7 +509,7 @@ func _handle_new_file() -&gt; void:
         file.close()
 </code></pre>
 <p>It uses json as the file format, but I might end up changing this in the future to something else more reliable and easier to use (<em>Stats</em> class related issues).</p>
-<h2 id="scoring">Scoring</h2>
+<h3 id="scoring">Scoring<a class="headerlink" href="#scoring" title="Permanent link">&para;</a></h3>
 <p>For this I created a scoring mechanisms and just called it <em>ScoreManager</em> (<code>score_manager.gd</code>) which just basically listens to <code>food_eaten</code> signal and adds points accordingly to the current <em>Stats</em> object loaded. The main function is:</p>
 <pre><code class="language-gdscript">func _on_food_eaten(properties: Dictionary) -&gt; void:
     var is_special: bool = properties[&quot;special&quot;]
@@ -579,7 +578,7 @@ func _get_max_stats() -&gt; Stats:
 </code></pre>
 <p>Then this sends a signal <code>display_stats</code> to activate UI elements that shows the progression.</p>
 <p>Naturally, the saved <em>Stats</em> are loaded whenever needed. For example, for the <em>Snake</em>, we load the stats and setup any value needed from there (like a flag to know if any ability is enabled), and since we&rsquo;re saving the new <em>Stats</em> at the end, then on restart we load the updated one.</p>
-<h2 id="snake-redesigned-with-the-state-machine-pattern">Snake redesigned with the state machine pattern</h2>
+<h3 id="snake-redesigned-with-the-state-machine-pattern">Snake redesigned with the state machine pattern<a class="headerlink" href="#snake-redesigned-with-the-state-machine-pattern" title="Permanent link">&para;</a></h3>
 <p>I redesigned the snake code (the head, actually) to use the state machine pattern by following <a href="https://gdscript.com/solutions/godot-state-machine/">this guide</a> which is definitely a great guide, straight to the point and easy to implement.</p>
 <p>Other than what is shown in the guide, I implemented some important functions in the <code>state_machine.gd</code> script itself, to be used by each of the states as needed:</p>
 <pre><code class="language-gdscript">func rotate_on_input() -&gt; void:
@@ -653,7 +652,7 @@ func physics_process(delta: float) -&gt; void:
 </code></pre>
 <p>Where the important parts happen in the <code>enter</code> and <code>exit</code> functions. We need to change the <code>Global.SNAKE_SPEED</code> with the <code>Global.SNAKE_DASH_SPEED</code> on <code>start</code>and start the timer for how long should the dash last. And on the <code>exit</code> we reset the <code>Global.SNAKE_SPEED</code> back to normal. There is probably a better way of updating the <code>Global.SNAKE_SPEED</code> but this works just fine.</p>
 <p>For the other ones is the same. Only difference with the <code>jump_state.gd</code> is that the collision from head to body is disabled, and no rotation is allowed (by not calling the <code>rotate_on_input</code> function).</p>
-<h2 id="other-minor-stuff">Other minor stuff</h2>
+<h3 id="other-minor-stuff">Other minor stuff<a class="headerlink" href="#other-minor-stuff" title="Permanent link">&para;</a></h3>
 <p>Not as important but worth mentioning:</p>
 <ul>
 <li>Added restartability function.</li>
@@ -667,7 +666,7 @@ func physics_process(delta: float) -&gt; void:
 <li>Refactored the nodes to make it work with <code>change_scene_to</code>, and added a main menu.</li>
 <li>Added GUI for dead screen, showing the progress.</li>
 </ul>
-<h2 id="final-notes">Final notes</h2>
+<h3 id="final-notes">Final notes<a class="headerlink" href="#final-notes" title="Permanent link">&para;</a></h3>
 <p>I actually didn&rsquo;t finish this game (as how I visualized it), but I got it in a playable state which is good. My big learning during this jam is the time management that it requires to plan and design a game. I lost a lot of time trying to implement some mechanics because I was facing many issues, because of my lack of practice (which was expected) as well as trying to blog and create the necessary sprites myself. Next time I should just get an asset pack and do something with it, as well as keeping the scope of my game shorter.</p>
 <p>For exporting and everything else, I went with what I did for my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1#final-notes-and-exporting">FlappyBird Godot clone</a></p>
 

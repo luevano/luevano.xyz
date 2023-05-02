@@ -42,11 +42,11 @@
 {%block body_content%}
   <h1>{{page.title}}</h1>
 
-  <a class="zoom-in" href="{{page.image_url}}" alt="See raw.">
+  <a class="zoom-in" href="{{config['url']['static']}}/{{page.meta['image_url'][0]}}" alt="See raw.">
   {%if page.summary is not none%}
-    <img src="{{page.image_url}}" alt="{{page.summary}}">
+    <img src="{{config['url']['static']}}/{{page.meta['image_url'][0]}}" alt="{{page.summary}}">
   {%else%}
-    <img src="{{page.image_url}}">
+    <img src="{{config['url']['static']}}/{{page.meta['image_url'][0]}}">
     {%endif%}
     </a>
 
@@ -58,7 +58,7 @@
   <hr>
   <div class="art-info">
     <p>By {{', '.join(page.author)}}</p>
-    <p>Posted: {{page.cdate}}</p>
+    <p>Posted: {{page.cdate('date')}}</p>
     {%import "tag_list.html" as tag_list%}
     {{tag_list.print(page.tags, "art-tags")}}
   </div>

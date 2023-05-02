@@ -1,9 +1,9 @@
-{%macro print()%}
+{%macro print(config)%}
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="{{config['url']['static']}}/hl/highlight.min.js"></script>
 {%block gdscript_hl%}{%endblock gdscript_hl%}
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="{{config['url']['static']}}/hl/styles/nord.min.css">
 {%endmacro%}

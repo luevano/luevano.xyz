@@ -3,27 +3,26 @@
 "
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Create a website with Nginx and Certbot -- Luevano's Blog</title>
   <meta name="description" content="How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
     <!-- extra -->
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="Create a website with Nginx and Certbot -- Luevano's Blog"/>
@@ -78,7 +77,7 @@
 
   <p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke&rsquo;s video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I&rsquo;m configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
 <p>As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linux distro, and I&rsquo;m doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
-<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>You will need two things:</p>
 <ul>
 <li>A domain name (duh!). I got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
@@ -92,7 +91,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="nginx">Nginx</h2>
+<h3 id="nginx">Nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/Nginx">Nginx</a> is a web (HTTP) server and reverse proxy server.</p>
 <p>You have two options: <code>nginx</code> and <code>nginx-mainline</code>. I prefer <code>nginx-mainline</code> because it&rsquo;s the &ldquo;up to date&rdquo; package even though <code>nginx</code> is labeled to be the &ldquo;stable&rdquo; version. Install the package and enable/start the service:</p>
 <pre><code class="language-sh">pacman -S nginx-mainline
@@ -181,7 +180,7 @@ systemctl restart nginx
     try_files $uri/index.html $uri.html $uri/ $uri =404;
     ...
 </code></pre>
-<h2 id="certbot">Certbot</h2>
+<h3 id="certbot">Certbot<a class="headerlink" href="#certbot" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/Certbot">Certbot</a> is what provides the SSL certificates via <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>.</p>
 <p>The only &ldquo;bad&rdquo; (bloated) thing about Certbot, is that it uses <code>python</code>, but for me it doesn&rsquo;t matter too much. You may want to look up another alternative if you prefer. Install the packages <code>certbot</code> and <code>certbot-nginx</code>:</p>
 <pre><code class="language-sh">pacman -S certbot certbot-nginx

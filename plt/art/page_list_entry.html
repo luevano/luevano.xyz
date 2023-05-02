@@ -1,5 +1,5 @@
-{%macro print(page, class='')%}
+{%macro print(page, config, class='')%}
 <a class="zoom-in {{class}}" href="{{page.url}}" alt="{{page.title}}">
-  <img src="{{page.image_url}}" alt="{{page.title}}">
+  <img src="{{config['url']['static']}}/{{page.meta['image_url'][0]}}" alt="{{page.title}}">
 </a>
 {%endmacro%}

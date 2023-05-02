@@ -3,27 +3,26 @@
 "
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Create a git server and setup cgit web app (on Nginx) -- Luevano's Blog</title>
   <meta name="description" content="How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
     <!-- extra -->
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="Create a git server and setup cgit web app (on Nginx) -- Luevano's Blog"/>
@@ -78,13 +77,13 @@
 
   <p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
 <p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of SSH. Also, most if not all commands here are run as root.</p>
-<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>I might get tired of saying this (it&rsquo;s just copy paste, basically)&hellip; but you will need the same prerequisites as before (check my <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> and <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> entries), with the extras:</p>
 <ul>
 <li>(Optional, if you want a &ldquo;front-end&rdquo;) A <strong>CNAME</strong> for &ldquo;git&rdquo; and (optionally) &ldquo;www.git&rdquo;, or some other name for your sub-domains.</li>
 <li>An SSL certificate, if you&rsquo;re following the other entries, add a <code>git.conf</code> and run <code>certbot --nginx</code> to extend the certificate.</li>
 </ul>
-<h2 id="git">Git</h2>
+<h3 id="git">Git<a class="headerlink" href="#git" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/git">Git</a> is a version control system.</p>
 <p>If not installed already, install the <code>git</code> package:</p>
 <pre><code class="language-sh">pacman -S git
@@ -122,7 +121,7 @@ chown -R git:git repo_name.git
 </code></pre>
 <p>Those two lines above will need to be run each time you want to add a new repository to your server (yeah, kinda lame&hellip; although there are options to &ldquo;automate&rdquo; this, I like it this way).</p>
 <p>After that you can already push/pull to your repository. I have my repositories (locally) set up so I can push to more than one remote at the same time (my server, GitHub, GitLab, etc.); to do so, check <a href="https://gist.github.com/rvl/c3f156e117e22a25f242">this gist</a>.</p>
-<h2 id="cgit">Cgit</h2>
+<h3 id="cgit">Cgit<a class="headerlink" href="#cgit" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/Cgit">Cgit</a> is a fast web interface for git.</p>
 <p>This is optionally since it&rsquo;s only for the web application.</p>
 <p>Install the <code>cgit</code> and <code>fcgiwrap</code> packages:</p>

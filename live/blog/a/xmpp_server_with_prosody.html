@@ -3,27 +3,26 @@
 "
   prefix="og: https://ogp.me/ns#">
   <head>
-    <base href="https://static.luevano.xyz">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="images/icons/favicon.ico">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Create an XMPP server with Prosody compatible with Conversations and Movim -- Luevano's Blog</title>
   <meta name="description" content="How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luevano's Blog RSS">
     <!-- general style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="fork-awesome/css/fork-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
     <!-- theme related -->
-    <script type="text/javascript" src="scripts/theme.js"></script>
-    <link id="theme-css" rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
     <!-- extra -->
 <!-- highlight support for code blocks -->
-<script type="text/javascript" src="hl/highlight.min.js"></script>
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="hl/styles/nord.min.css">
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
 
     <!-- og meta -->
   <meta property="og:title" content="Create an XMPP server with Prosody compatible with Conversations and Movim -- Luevano's Blog"/>
@@ -79,7 +78,7 @@
   <p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <mark><a href="https://lmcj.xyz">EL ELE EME</a></mark> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
 <p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, and of course the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
 <p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)</p>
-<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>Same as with my other entries (<a href="https://luevano.xyz/a/website_with_nginx.html">website</a>, <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> and <a href="https://blog.luevano.xyz/a/git_server_with_cgit.html">git</a>) plus:</p>
 <ul>
 <li><strong>A</strong> and (optionally) <strong>AAA</strong> DNS records for:<ul>
@@ -100,7 +99,7 @@
 <li>Email addresses for <code>admin</code>, <code>abuse</code>, <code>contact</code>, <code>security</code>, etc. Or use your own email for all of them, doesn&rsquo;t really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.</li>
 <li>Allow ports <code>5000</code>, <code>5222</code>, <code>5269</code>, <code>5280</code> and <code>5281</code> for <a href="https://prosody.im/doc/ports">Prosody</a> and, <code>3478</code> and <code>5349</code> for <a href="https://webrtc.org/getting-started/turn-server">Turnserver</a> which are the defaults for <code>coturn</code>.</li>
 </ul>
-<h2 id="prosody">Prosody</h2>
+<h3 id="prosody">Prosody<a class="headerlink" href="#prosody" title="Permanent link">&para;</a></h3>
 <p><a href="https://wiki.archlinux.org/title/Prosody">Prosody</a> is an implementation of the XMPP protocol that is flexible and extensible.</p>
 <p>Install the <code>prosody</code> package (with optional dependencies) and the <code>mercurial</code> package:</p>
 <pre><code class="language-sh">pacman -S prosody, mercurial, lua52-sec, lua52-dbi, lua52-zlib
@@ -444,7 +443,7 @@ ln -s your.domain.key SUBDOMAIN.your.domain.key
 ...
 </code></pre>
 <p>That&rsquo;s basically all the configuration that needs Prosody itself, but we still have to configure Nginx and Coturn before starting/enabling the <code>prosody</code> service.</p>
-<h2 id="nginx-configuration-file">Nginx configuration file</h2>
+<h3 id="nginx-configuration-file">Nginx configuration file<a class="headerlink" href="#nginx-configuration-file" title="Permanent link">&para;</a></h3>
 <p>Since this is not an ordinary configuration file I&rsquo;m going to describe this too. Your <code>prosody.conf</code> file should have the following location blocks under the main server block (the one that listens to HTTPS):</p>
 <pre><code class="language-nginx"># HTTPS server block
 server {
@@ -542,7 +541,7 @@ server {
 <pre><code class="language-sh">nginx -t
 systemctl restart nginx.service
 </code></pre>
-<h2 id="coturn">Coturn</h2>
+<h3 id="coturn">Coturn<a class="headerlink" href="#coturn" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/coturn/coturn">Coturn</a> is the implementation of TURN and STUN server, which in general is for (at least in the XMPP world) voice support and external service discovery.</p>
 <p>Install the <code>coturn</code> package:</p>
 <pre><code class="language-sh">pacman -S coturn
@@ -558,7 +557,7 @@ static-auth-secret=YOUR SUPER SECRET TURN PASSWORD
 systemctl enable turnserver.service
 </code></pre>
 <p>You can test if your TURN server works at <a href="https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/">Trickle ICE</a>. You may need to add a user in the <code>turnserver.conf</code> to test this.</p>
-<h2 id="wrapping-up">Wrapping up</h2>
+<h3 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h3>
 <p>At this point you should have a working XMPP server, start/enable the <code>prosody</code> service now:</p>
 <pre><code class="language-sh">systemctl start prosody.service
 systemctl enable prosody.service

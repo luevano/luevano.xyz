@@ -22,12 +22,12 @@
 
 {%block head_extra%}
 {%import "highlightjs.html" as hljs%}
-{{hljs.print()}}
+{{hljs.print(config)}}
 {%endblock head_extra%}
 
 {%block gdscript_hl%}
 <!-- Specific to GDScript -->
-<script type="text/javascript" src="hl/languages/gdscript.min.js"></script>
+<script type="text/javascript" src="{{config['url']['static']}}/hl/languages/gdscript.min.js"></script>
 {%endblock gdscript_hl%}
 
 {%block head_og%}
@@ -60,9 +60,9 @@
   <hr>
   <div class="article-info">
     <p>By {{', '.join(page.author)}}</p>
-    <p>Created: {{page.cdate}}</p>
-    {%if page.mdate is not none%}
-      <p>Modified: {{page.mdate}}</p>
+    <p>Created: {{page.cdate('date')}}</p>
+    {%if page.mdatetime is not none%}
+      <p>Modified: {{page.mdate('date')}}</p>
     {%endif%}
     {%import "tag_list.html" as tag_list%}
     {{tag_list.print(page.tags, "article-tags")}}
