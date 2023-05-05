@@ -4,6 +4,7 @@ lang: en
 summary: How to create a VPN server using OpenVPN on a server running Nginx. Only for IPv4.
 tags: server
 	tools
+    code
 	tutorial
 	english
 
@@ -11,16 +12,20 @@ I've been wanting to do this entry, but had no time to do it since I also have t
 
 Like with any other of my entries I based my setup on the [Arch Wiki](https://wiki.archlinux.org/title/OpenVPN), [this install script](https://github.com/Nyr/openvpn-install) and [this profile generator script](https://github.com/graysky2/ovpngen).
 
-This will be installed and working alongside the other stuff I've wrote about on other posts (see the [server](https://blog.luevano.xyz/tag/@server.html) tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it's not that hard to include IPv6, but meh).
+This will be installed and working alongside the other stuff I've wrote about on other posts (see the [server](https://blog.luevano.xyz/tag/@server.html) tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it's not that hard to include IPv6, but meh). As always, all commands are executed as root unless stated otherwise.
 
-## Prerequisites
+# Table of contents
+
+[TOC]
+
+# Prerequisites
 
 Pretty simple:
 
-- Working server with root access, and with Ufw as the firewall.
-- Depending on what port you want to run the VPN on, the default `1194`, or as a fallback on `443` (click [here](https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/) for more). I will do mine on port `1194` but it's just a matter of changing 2 lines of configuration and one Ufw rule.
+- Working server with root access, and with `ufw` as the firewall.
+- Depending on what port you want to run the VPN on, the default `1194`, or as a fallback on `443` (click [here](https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/) for more). I will do mine on port `1194` but it's just a matter of changing 2 lines of configuration and one `ufw` rule.
 
-## Create PKI from scratch
+# Create PKI from scratch
 
 PKI stands for *Public Key Infrastructure* and basically it's required for certificates, private keys and more. This is supposed to work between two servers and one client: a server in charge of creating, signing and verifying the certificates, a server with the OpenVPN service running and the client making the request.
 
@@ -92,9 +97,9 @@ openvpn --genkey secret ta.key
 
 That's it for the PKI stuff and general certificate configuration.
 
-## OpenVPN
+# OpenVPN
 
-[OpenVPN](https://wiki.archlinux.org/title/OpenVPN) is a robust and highly flexible VPN daemon, that's pretty complete feature wise.
+[OpenVPN](https://wiki.archlinux.org/title/OpenVPN) is a robust and highly flexible VPN daemon, that's pretty complete feature-wise.
 
 Install the `openvpn` package:
 
@@ -204,6 +209,8 @@ explicit-exit-notify 1
 
 `#` and `;` are comments. Read each and every line, you might want to change some stuff (like the logging), specially the first line which is your server public IP.
 
+### Enable forwarding
+
 Now, we need to enable *packet forwarding* (so we can access the web while connected to the VPN), which can be enabled on the interface level or globally (you can check the different options with `sysctl -a | grep forward`). I'll do it globally, run:
 
 ```sh
@@ -272,7 +279,7 @@ systemctl enable openvpn-server@server.service
 
 Where the `server` after `@` is the name of your configuration, `server.conf` without the `.conf` in my case.
 
-### Create client configurations
+## Create client configurations
 
 You might notice that I didn't specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the `server.conf` file that we created.
 
@@ -357,6 +364,6 @@ chmod o+r pki/crl.pem
 cd $CPWD
 ```
 
-And the way to use is to run `vpn_script new/rev client_name` as sudo (when revoking, it doesn't actually deletes the `.ovpn` file in `~/ovpn`). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for `easy-rsa`) and it could have errors.
+And the way to use is to run `vpn_script new/rev client_name` as sudo (when revoking, it doesn't actually delete the `.ovpn` file in `~/ovpn`). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for `easy-rsa`).
 
 Now, just get the `.ovpn` file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.

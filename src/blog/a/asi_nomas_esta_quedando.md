@@ -12,6 +12,8 @@ También me puse a acomodar un servidor de [XMPP](https://xmpp.org/) el cual, en
 
 Ahorita este server es SUMISO (*compliant* en español, jeje) para jalar con la app [conversations](https://conversations.im/) y con la red social [movim](https://movim.eu/), pero realmente funcionaría con casi cualquier cliente de XMPP, amenos que ese cliente implemente algo que no tiene mi server. Y también acomodé un server de [Matrix](https://matrix.org/) que es muy similar pero es bajo otro protocolo y se siente más como un discord/slack (al menos en el [element](https://element.io/)), muy chingón también.
 
-Si bien aún quedan cosas por hacer sobre estos dos servers que me acomodé (además de hacerles unas entradas para documentar cómo lo hice), quiero moverme a otra cosa que sería acomodar una sección de dibujos, lo cual en teoría es bien sencillo, pero como quiero poder automatizar la publicación de estos, quiero modificar un poco el [pyssg](https://github.com/luevano/pyssg) para que jale chido para este pex.
+Si bien aún quedan cosas por hacer sobre estos dos servers que me acomodé (además de hacerles unas entradas para documentar cómo lo hice), quiero moverme a otra cosa que sería acomodar una sección de dibujos, lo cual en teoría es bien sencillo, pero como quiero poder automatizar la publicación de estos, quiero modificar un poco el [`pyssg`](${PYSSG_URL}) para que jale chido para este pex.
 
 Ya por último también quiero moverle un poco al CSS, porque lo dejé en un estado muy culerón y quiero meterle/ajustar unas cosas para que quede más limpio y medianamente bonito... *dentro de lo que cabe porque evidentemente me vale verga si se ve como una página del 2000*.
+
+**Actualización**: Ya tumbé el servidor de XMPP porque consumía bastantes recursos y no lo usaba tanto, si en un futuro consigo un mejor servidor podría volver a hostearlo.

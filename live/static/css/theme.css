@@ -46,7 +46,7 @@
   --code-border: var(--color3);
   --art-border: var(--color3);
 
-  --pagenav-bg: var(--color1);
+  --pagenav-bg: var(--color5);
   --pagenav-bg-hl: var(--color2);
   --pagenav-link: var(--color8);
   --pagenav-link-hl: var(--color7);
@@ -80,7 +80,7 @@
   --code-border: var(--color4);
   --art-border: var(--color4);
 
-  --pagenav-bg: var(--color10);
+  --pagenav-bg: var(--color3);
   --pagenav-bg-hl: var(--color9);
   --pagenav-link: var(--color7);
   --pagenav-link-hl: var(--color6);
@@ -137,6 +137,24 @@ h5 {
   color: var(--fg-acc5);
 }
 
+a.headerlink {
+  color: var(--fg-acc2);
+}
+
+a.headerlink:hover {
+  color: var(--fg-acc1);
+}
+
+button.return-top {
+  background-color: var(--navitem-bg);
+  color: var(--navitem-link);
+}
+
+button.return-top:hover {
+  background-color: var(--navitem-bg-hl);
+  color: var(--navitem-link-hl);
+}
+
 body {
   background: var(--bg);
   color: var(--fg);
@@ -149,6 +167,21 @@ main {
 pre, code {
   border-radius: 5px;
   border: 1px solid var(--code-border);
+}
+
+/* TOC */
+
+div.toc {
+  border: 1px solid var(--code-border);
+  background-color: var(--bg);
+}
+
+div.toc a {
+  color: var(--fg-acc2)
+}
+
+div.toc a:hover {
+  color: var(--fg-acc1)
 }
 
 /* nav bar */

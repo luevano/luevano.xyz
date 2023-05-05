@@ -71,6 +71,7 @@ exts:
   pymdvar:
     variables:
       SURL: "https://static.luevano.xyz"
+      PYSSG_URL: "https://github.com/luevano/pyssg"
     enable_env: False
 ...
 ---

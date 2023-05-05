@@ -16,13 +16,11 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
-<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
-<script type="text/javascript">
-  hljs.initHighlightingOnLoad();
-</script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="Al fin ya me acomodé la página pa' los dibujos -- Luevano's Blog"/>
@@ -73,10 +71,15 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>Al fin ya me acomodé la página pa' los dibujos</h1>
 
   <p>Así es, ya quedó acomodado el sub-dominio <code>art.luevano.xyz</code> pos pal <a href="https://art.luevano.xyz">arte</a> veda. Entonces pues ando feliz por eso.</p>
-<p>Este pedo fue gracias a que me reescribí la forma en la que <code>pyssg</code> maneja los templates, ahora uso el sistema de <code>jinja</code> en vez del cochinero que hacía antes.</p>
+<p>Este pedo fue gracias a que me reescribí la forma en la que <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> maneja los templates, ahora uso el sistema de <a href="https://jinja.palletsprojects.com/en/3.1.x/"><code>jinja</code></a> en vez del cochinero que hacía antes.</p>
 <p>Y pues nada más eso, aquí está el <a href="https://art.luevano.xyz/a/elephant_octopus.html">primer post</a> y por supuesto acá está el link del RSS <a href="https://art.luevano.xyz/rss.xml">https://art.luevano.xyz/rss.xml</a>.</p>
 
   <div class="page-nav">
@@ -107,7 +110,7 @@
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Jun 06, 2021 @ 19:06 UTC</p>
-      <p>Modified: Sun, Jun 06, 2021 @ 19:08 UTC</p>
+      <p>Modified: Thu, May 04, 2023 @ 18:19 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@spanish.html">spanish</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>

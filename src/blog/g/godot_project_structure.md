@@ -3,6 +3,7 @@ author: David Luévano
 lang: en
 summary: Details on the project structure I'm using for Godot, based on preference and some research I did.
 tags: gamedev
+	godot
 	short
 	english
 

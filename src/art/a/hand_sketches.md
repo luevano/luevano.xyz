@@ -12,6 +12,6 @@ Me dibujé la mano varias veces con un pincel que me encontré de Krita muy buen
 
 Según yo probé "métodos" (y como dos-tres pinceles) diferentes, pero realmente están muy similares en "procedimiento". Igual quedé conforme con el resultado.
 
-Ahora con el anuncio del ???Elden Ring??? se antojó hacerse un dibujo relacionado, pero aún no sé qué ni cómo, pero quizá me eche algo así.
+Ahora con el anuncio del ==Elden Ring== se antojó hacerse un dibujo relacionado, pero aún no sé qué ni cómo, pero quizá me eche algo así.
 
 Pues ahí mero. Y por cierto que muchas gracias a quien me donó hace unos días por el dibujo pasado, se aprecia mi bro.

@@ -16,13 +16,20 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
+    <!-- highlight support for code blocks -->
 <script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
 <link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luevano's Blog"/>
@@ -73,18 +80,38 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
 
-  <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
-<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL Database. And note that most if not all commands executed here are run with root privileges.</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+  <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; <del>also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</del> <ins>I haven&rsquo;t had time to do the script so nevermind this, if I ever do it I&rsquo;ll make a new entry regarding it.</ins></p>
+<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#postfix">Postfix</a></li>
+<li><a href="#dovecot">Dovecot</a></li>
+<li><a href="#opendkim">OpenDKIM</a><ul>
+<li><a href="#opendkim-dns-txt-records">OpenDKIM DNS TXT records</a></li>
+</ul>
+</li>
+<li><a href="#spamassassin">SpamAssassin</a></li>
+<li><a href="#wrapping-up">Wrapping up</a></li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Basically the same as with the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website with Nginx and Certbot</a>, with the extras:</p>
 <ul>
 <li>You will need a <strong>CNAME</strong> for &ldquo;mail&rdquo; and (optionally) &ldquo;www.mail&rdquo;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police).</li>
 <li>An SSL certificate. You can use the SSL certificate obtained following my last post using <code>certbot</code> (just create a <code>mail.conf</code> and run <code>certbot --nginx</code> again).</li>
-<li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall.</li>
+<li>Ports <code>25</code>, <code>587</code> (SMTP), <code>465</code> (SMTPS), <code>143</code> (IMAP) and <code>993</code> (IMAPS) open on the firewall (I use <code>ufw</code>).</li>
 </ul>
-<h3 id="postfix">Postfix<a class="headerlink" href="#postfix" title="Permanent link">&para;</a></h3>
+<h2 id="postfix">Postfix<a class="headerlink" href="#postfix" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/postfix">Postfix</a> is a &ldquo;mail transfer agent&rdquo; which is the component of the mail server that receives and sends emails via SMTP.</p>
 <p>Install the <code>postfix</code> package:</p>
 <pre><code class="language-sh">pacman -S postfix
@@ -121,7 +148,7 @@ smtpd_sasl_path = private/auth
 smtpd_sasl_security_options = noanonymous, noplaintext
 smtpd_sasl_tls_security_options = noanonymous
 </code></pre>
-<p>Specify the mailbox home (this is going to be a directory inside your user&rsquo;s home containing the actual mail files):</p>
+<p>Specify the mailbox home, this is going to be a directory inside your user&rsquo;s home containing the actual mail files, for example it will end up being<code>/home/david/Mail/Inbox</code>:</p>
 <pre><code class="language-apache">home_mailbox = Mail/Inbox/
 </code></pre>
 <p>Pre-configuration to work seamlessly with <code>dovecot</code> and <code>opendkim</code>:</p>
@@ -135,8 +162,7 @@ smtpd_milters = inet:127.0.0.1:8891
 non_smtpd_milters = inet:127.0.0.1:8891
 mailbox_command = /usr/lib/dovecot/deliver
 </code></pre>
-<p>Where <code>{yourdomainname}</code> is <code>luevano.xyz</code> in my case, or if you have <code>localhost</code> configured to your domain, then use <code>localhost</code> for <code>myhostname</code> (<code>myhostname = localhost</code>).</p>
-<p>Lastly, if you don&rsquo;t want the sender&rsquo;s IP and user agent (application used to send the mail), add the following line:</p>
+<p>Where <code>{yourdomainname}</code> is <code>luevano.xyz</code> in my case. Lastly, if you don&rsquo;t want the sender&rsquo;s IP and user agent (application used to send the mail), add the following line:</p>
 <pre><code class="language-apache">smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
 </code></pre>
 <p>And create the <code>/etc/postfix/smtp_header_checks</code> file with the following content:</p>
@@ -173,7 +199,7 @@ newaliases
 <pre><code class="language-sh">systemctl start postfix.service
 systemctl enable postfix.service
 </code></pre>
-<h3 id="dovecot">Dovecot<a class="headerlink" href="#dovecot" title="Permanent link">&para;</a></h3>
+<h2 id="dovecot">Dovecot<a class="headerlink" href="#dovecot" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Dovecot">Dovecot</a> is an IMAP and POP3 server, which is what lets an email application retrieve the mail.</p>
 <p>Install the <code>dovecot</code> and <code>pigeonhole</code> (sieve for <code>dovecot</code>) packages:</p>
 <pre><code class="language-sh">pacman -S dovecot pigeonhole
@@ -288,8 +314,8 @@ account required pam_unix.so
 <pre><code class="language-sh">systemctl start dovecot.service
 systemctl enable dovecot.service
 </code></pre>
-<h3 id="opendkim">OpenDKIM<a class="headerlink" href="#opendkim" title="Permanent link">&para;</a></h3>
-<p><a href="https://wiki.archlinux.org/title/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
+<h2 id="opendkim">OpenDKIM<a class="headerlink" href="#opendkim" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/OpenDKIM">OpenDKIM</a> is needed so services like G**gle don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
 <p>Install the <code>opendkim</code> package:</p>
 <pre><code class="language-sh">pacman -S opendkim
 </code></pre>
@@ -338,7 +364,8 @@ chmod g+r /etc/postfix/dkim/*
 <pre><code class="language-sh">systemctl start opendkim.service
 systemctl enable opendkim.service
 </code></pre>
-<p>And don&rsquo;t forget to add the following <strong>TXT</strong> records on your domain registrar (these examples are for Epik):</p>
+<h3 id="opendkim-dns-txt-records">OpenDKIM DNS TXT records<a class="headerlink" href="#opendkim-dns-txt-records" title="Permanent link">&para;</a></h3>
+<p>Add the following <strong>TXT</strong> records on your domain registrar (these examples are for Epik):</p>
 <ol>
 <li><em>DKIM</em> entry: look up your <code>{yoursubdomain}.txt</code> file, it should look something like:</li>
 </ol>
@@ -346,7 +373,7 @@ systemctl enable opendkim.service
     &quot;p=...&quot;
     &quot;...&quot; )  ; ----- DKIM key mail for {yourdomain}
 </code></pre>
-<p>In the TXT record you will place <code>{yoursubdomain}._domainkey</code> as the &ldquo;Host&rdquo; and <code>"v=DKIM1; k=rsa; s=email; " "p=..." "..."</code> in the &ldquo;TXT Value&rdquo; (replace the dots with the actual value you see in your file).</p>
+<p>In the <strong>TXT</strong> record you will place <code>{yoursubdomain}._domainkey</code> as the &ldquo;Host&rdquo; and <code>"v=DKIM1; k=rsa; s=email; " "p=..." "..."</code> in the &ldquo;TXT Value&rdquo; (replace the dots with the actual value you see in your file).</p>
 <ol start="2">
 <li>
 <p><em>DMARC</em> entry: just <code>_dmarc.{yourdomain}</code> as the &ldquo;Host&rdquo; and <code>"v=DMARC1; p=reject; rua=mailto:dmarc@{yourdomain}; fo=1"</code> as the &ldquo;TXT Value&rdquo;.</p>
@@ -356,7 +383,7 @@ systemctl enable opendkim.service
 </li>
 </ol>
 <p>And at this point you could test your mail for spoofing and more.</p>
-<h3 id="spamassassin">SpamAssassin<a class="headerlink" href="#spamassassin" title="Permanent link">&para;</a></h3>
+<h2 id="spamassassin">SpamAssassin<a class="headerlink" href="#spamassassin" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/SpamAssassin">SpamAssassin</a> is just <em>a mail filter to identify spam</em>.</p>
 <p>Install the <code>spamassassin</code> package (which will install a bunch of ugly <code>perl</code> packages&hellip;):</p>
 <pre><code class="language-sh">pacman -S spamassassin
@@ -409,10 +436,10 @@ ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/sp
 <pre><code class="language-sh">systemctl start spamassassin.service
 systemctl enable spamassassin.service
 </code></pre>
-<h3 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h3>
-<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code> for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked <em>(((it just werks on my machine)))</em>.</p>
+<h2 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h2>
+<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code> for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere because all the settings and steps detailed here just worked; I literally just finished doing everything on a new server as of the writing of this text, <mark>it just werks on my machine</mark>.</p>
 <p>Now, to actually use the mail service: first of all, you need a <em>normal</em> account (don&rsquo;t use root) that belongs to the <code>mail</code> group (<code>gpasswd -a user group</code> to add a user <code>user</code> to group <code>group</code>) and that has a password.</p>
-<p>Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>
+<p>Next, to actually login into a mail app/program, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>
 <ul>
 <li>* server: subdomain.domain (mail.luevano.xyz in my case)</li>
 <li><strong>SMTP</strong> port: 587</li>
@@ -426,10 +453,9 @@ systemctl enable spamassassin.service
 </ul>
 <p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
 <figure id="__yafg-figure-3">
-<img alt="DKIM Test successful" src="images/b/notes/mail/dkim_test_successful.png" title="DKIM Test successful">
+<img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png" title="DKIM Test successful">
 <figcaption>DKIM Test successful</figcaption>
 </figure>
-<p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you can <a href="https://luevano.xyz/contact.html">contact me</a>.</p>
 
   <div class="page-nav">
     <span class="next">
@@ -459,10 +485,10 @@ systemctl enable spamassassin.service
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
-      <p>Modified: Tue, Jun 08, 2021 @ 07:29 UTC</p>
+      <p>Modified: Fri, May 05, 2023 @ 08:35 UTC</p>
     <div class="article-tags">
   <p>Tags:
-<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
 </div>
 
   </div>

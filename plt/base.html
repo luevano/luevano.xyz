@@ -15,6 +15,8 @@
     <!-- theme related -->
     <script type="text/javascript" src="{{config['url']['static']}}/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="{{config['url']['static']}}/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="{{config['url']['static']}}/scripts/return_top.js"></script>
     <!-- extra -->
     {%block head_extra%}{%endblock head_extra%}
     <!-- og meta -->
@@ -27,6 +29,11 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
       {%block body_content%}{%endblock body_content%}
     </main>
 

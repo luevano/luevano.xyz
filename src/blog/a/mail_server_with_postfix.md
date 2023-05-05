@@ -4,22 +4,27 @@ lang: en
 summary: How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot.
 tags: server
 	tools
+	code
 	tutorial
 	english
 
-The entry is going to be long because it's a *tedious* process. This is also based on [Luke Smith's script](https://github.com/LukeSmithxyz/emailwiz), but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; also I'm going to be writing a script that does everything in one go (for Arch Linux), that will be hosted [here](https://git.luevano.xyz/server_scripts.git).
+The entry is going to be long because it's a *tedious* process. This is also based on [Luke Smith's script](https://github.com/LukeSmithxyz/emailwiz), but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; ~~also I'm going to be writing a script that does everything in one go (for Arch Linux), that will be hosted [here](https://git.luevano.xyz/server_scripts.git).~~ ^^I haven't had time to do the script so nevermind this, if I ever do it I'll make a new entry regarding it.^^
 
-This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL Database. And note that most if not all commands executed here are run with root privileges.
+This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.
 
-## Prerequisites
+# Table of contents
+
+[TOC]
+
+# Prerequisites
 
 Basically the same as with the [website with Nginx and Certbot](https://blog.luevano.xyz/a/website_with_nginx.html), with the extras:
 
 - You will need a **CNAME** for "mail" and (optionally) "www.mail", or whatever you want to call the sub-domains (although the [RFC 2181](https://tools.ietf.org/html/rfc2181#section-10.3) states that it NEEDS to be an **A** record, fuck the police).
 - An SSL certificate. You can use the SSL certificate obtained following my last post using `certbot` (just create a `mail.conf` and run `certbot --nginx` again).
-- Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall.
+- Ports `25`, `587` (SMTP), `465` (SMTPS), `143` (IMAP) and `993` (IMAPS) open on the firewall (I use `ufw`).
 
-## Postfix
+# Postfix
 
 [Postfix](https://wiki.archlinux.org/title/postfix) is a "mail transfer agent" which is the component of the mail server that receives and sends emails via SMTP.
 
@@ -70,7 +75,7 @@ smtpd_sasl_security_options = noanonymous, noplaintext
 smtpd_sasl_tls_security_options = noanonymous
 ```
 
-Specify the mailbox home (this is going to be a directory inside your user's home containing the actual mail files):
+Specify the mailbox home, this is going to be a directory inside your user's home containing the actual mail files, for example it will end up being`/home/david/Mail/Inbox`:
 
 ```apache
 home_mailbox = Mail/Inbox/
@@ -90,9 +95,7 @@ non_smtpd_milters = inet:127.0.0.1:8891
 mailbox_command = /usr/lib/dovecot/deliver
 ```
 
-Where `{yourdomainname}` is `luevano.xyz` in my case, or if you have `localhost` configured to your domain, then use `localhost` for `myhostname` (`myhostname = localhost`).
-
-Lastly, if you don't want the sender's IP and user agent (application used to send the mail), add the following line:
+Where `{yourdomainname}` is `luevano.xyz` in my case. Lastly, if you don't want the sender's IP and user agent (application used to send the mail), add the following line:
 
 ```apache
 smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
@@ -149,7 +152,7 @@ systemctl start postfix.service
 systemctl enable postfix.service
 ```
 
-## Dovecot
+# Dovecot
 
 [Dovecot](https://wiki.archlinux.org/title/Dovecot) is an IMAP and POP3 server, which is what lets an email application retrieve the mail.
 
@@ -310,9 +313,9 @@ systemctl start dovecot.service
 systemctl enable dovecot.service
 ```
 
-## OpenDKIM
+# OpenDKIM
 
-[OpenDKIM](https://wiki.archlinux.org/title/OpenDKIM) is needed so services like G\*\*gle (we don't mention that name here \[\[\[this is a meme\]\]\]) don't throw the mail to the trash. DKIM stands for "DomainKeys Identified Mail".
+[OpenDKIM](https://wiki.archlinux.org/title/OpenDKIM) is needed so services like G\*\*gle don't throw the mail to the trash. DKIM stands for "DomainKeys Identified Mail".
 
 Install the `opendkim` package:
 
@@ -395,7 +398,9 @@ systemctl start opendkim.service
 systemctl enable opendkim.service
 ```
 
-And don't forget to add the following **TXT** records on your domain registrar (these examples are for Epik):
+## OpenDKIM DNS TXT records
+
+Add the following **TXT** records on your domain registrar (these examples are for Epik):
 
 1. *DKIM* entry: look up your `{yoursubdomain}.txt` file, it should look something like:
 
@@ -405,7 +410,7 @@ And don't forget to add the following **TXT** records on your domain registrar (
 	"..." )  ; ----- DKIM key mail for {yourdomain}
 ```
 
-In the TXT record you will place `{yoursubdomain}._domainkey` as the "Host" and `"v=DKIM1; k=rsa; s=email; " "p=..." "..."` in the "TXT Value" (replace the dots with the actual value you see in your file).
+In the **TXT** record you will place `{yoursubdomain}._domainkey` as the "Host" and `"v=DKIM1; k=rsa; s=email; " "p=..." "..."` in the "TXT Value" (replace the dots with the actual value you see in your file).
 
 2. *DMARC* entry: just `_dmarc.{yourdomain}` as the "Host" and `"v=DMARC1; p=reject; rua=mailto:dmarc@{yourdomain}; fo=1"` as the "TXT Value".
 
@@ -413,7 +418,7 @@ In the TXT record you will place `{yoursubdomain}._domainkey` as the "Host" and 
 
 And at this point you could test your mail for spoofing and more.
 
-## SpamAssassin
+# SpamAssassin
 
 [SpamAssassin](https://wiki.archlinux.org/title/SpamAssassin) is just *a mail filter to identify spam*.
 
@@ -492,13 +497,13 @@ systemctl start spamassassin.service
 systemctl enable spamassassin.service
 ```
 
-## Wrapping up
+# Wrapping up
 
-We should have a working mail server by now. Before continuing check your journal logs (`journalctl -xe --unit={unit}`, where `{unit}` could be `spamassassin.service` for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked *(((it just werks on my machine)))*.
+We should have a working mail server by now. Before continuing check your journal logs (`journalctl -xe --unit={unit}`, where `{unit}` could be `spamassassin.service` for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere because all the settings and steps detailed here just worked; I literally just finished doing everything on a new server as of the writing of this text, ==it just werks on my machine==.
 
 Now, to actually use the mail service: first of all, you need a *normal* account (don't use root) that belongs to the `mail` group (`gpasswd -a user group` to add a user `user` to group `group`) and that has a password.
 
-Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for `thunderdbird`(I tested in windows default mail app and you don't need a lot of settings):
+Next, to actually login into a mail app/program, you will use the following settings, at least for `thunderdbird`(I tested in windows default mail app and you don't need a lot of settings):
 
 - \* server: subdomain.domain (mail.luevano.xyz in my case)
 - **SMTP** port: 587
@@ -512,6 +517,4 @@ Next, to actually login into a mail app/program/whateveryouwanttocallit, you wil
 
 All that's left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to [DKIM Test](https://www.appmaildev.com/en/dkim) and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:
 
-![DKIM Test successful](images/b/notes/mail/dkim_test_successful.png "DKIM Test successful")
-
-Finally, that's actually it for this entry, if you have any problem whatsoever you can [contact me](https://luevano.xyz/contact.html).
+![DKIM Test successful](${SURL}/images/b/notes/mail/dkim_test_successful.png "DKIM Test successful")

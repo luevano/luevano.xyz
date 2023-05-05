@@ -16,13 +16,12 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
-<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
-<script type="text/javascript">
-  hljs.initHighlightingOnLoad();
-</script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="Así es raza, el blog ya tiene timestamps -- Luevano's Blog"/>
@@ -73,12 +72,19 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>Así es raza, el blog ya tiene timestamps</h1>
 
   <p>Pues eso, esta entrada es sólo para tirar update sobre mi <a href="https://blog.luevano.xyz/a/first_blog_post.html">primer post</a>. Ya modifiqué el <code>ssg</code> lo suficiente como para que maneje los <em>timestamps</em>, y ya estoy más familiarizado con este script entonces ya lo podré extender más, pero por ahora las entradas ya tienen su fecha de creación (y modificación en dado caso) al final y en el índice ya están organizados por fecha, que por ahora está algo simple pero está sencillo de extender.</p>
 <p>Ya lo único que queda es cambiar un poco el formato del blog (y de la página en general), porque en un momento de desesperación puse todo el texto en justificado y pues no se ve chido siempre, entonces queda corregir eso. <em>Y aunque me tomó más tiempo del que quisiera, así nomás quedó, diría un cierto personaje.</em></p>
-<p>El <code>ssg</code> modificado está en mis <a href="https://git.luevano.xyz/.dots">dotfiles</a> (o directamente <a href="https://git.luevano.xyz/.dots/tree/.local/bin/ssg">aquí</a>).</p>
-<p>Por último, también quité las extensiones <code>.html</code> de las URLs, porque se veía bien pitero, pero igual los links con <code>.html</code> al final redirigen a su link sin <code>.html</code>, así que no hay rollo alguno.</p>
+<p><del>El <code>ssg</code> modificado está en mis <a href="https://git.luevano.xyz/.dots">dotfiles</a> (o directamente <a href="https://git.luevano.xyz/.dots/tree/.local/bin/ssg">aquí</a>).</del>
+<ins>Como al final ya no usé el <code>ssg</code> modificado, este pex ya no existe.</ins></p>
+<p>Por último, también quité las extensiones <code>.html</code> de las URLs, porque se ve bien pitero, pero igual los links con <code>.html</code> al final redirigen a su link sin <code>.html</code>, así que no hay rollo alguno.</p>
+<p><strong>Actualización</strong>: Ahora estoy usando mi propia solución en vez de <code>ssg</code>, que la llamé <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, de la cual empiezo a hablar <a href="https://blog.luevano.xyz/a/new_blogging_system.html">acá</a>.</p>
 
   <div class="page-nav">
     <span class="next">
@@ -108,7 +114,7 @@
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Tue, Mar 16, 2021 @ 02:46 UTC</p>
-      <p>Modified: Mon, May 17, 2021 @ 20:53 UTC</p>
+      <p>Modified: Thu, May 04, 2023 @ 18:15 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@spanish.html">spanish</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>

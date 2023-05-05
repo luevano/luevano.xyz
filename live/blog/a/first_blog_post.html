@@ -16,13 +16,12 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
-<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
-<script type="text/javascript">
-  hljs.initHighlightingOnLoad();
-</script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="This is the first blog post, just for testing purposes -- Luevano's Blog"/>
@@ -73,11 +72,17 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>This is the first blog post, just for testing purposes</h1>
 
-  <p>I&rsquo;m making this post just to figure out how <a href="https://www.romanzolotarev.com/ssg.html"><code>ssg5</code></a> and <a href="https://kristaps.bsd.lv/lowdown/"><code>lowdown</code></a> are supposed to work (and eventually also <a href="https://www.romanzolotarev.com/rssg.html"><code>rssg</code></a>).</p>
-<p>At the moment, I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> (and there&rsquo;s also the problem with the ordering of the entries&hellip;). And all of this just because I didn&rsquo;t want to use <a href="https://github.com/LukeSmithxyz/lb">Luke&rsquo;s</a> solution (don&rsquo;t really like that much how he handles the scripts&hellip; <em>but they just work</em>).</p>
+  <p>I&rsquo;m making this post just to figure out how <a href="https://www.romanzolotarev.com/ssg.html"><code>ssg5</code></a> and <a href="https://kristaps.bsd.lv/lowdown/"><code>lowdown</code></a> are supposed to work, and eventually <a href="https://www.romanzolotarev.com/rssg.html"><code>rssg</code></a>.</p>
+<p>At the moment I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> which also has a problem with the ordering of the entries. And all of this just because I didn&rsquo;t want to use Luke&rsquo;s <a href="https://github.com/LukeSmithxyz/lb">lb</a> solution as I don&rsquo;t really like that much how he handles the scripts (<em>but they just work</em>).</p>
 <p>Hopefully, for tomorrow all of this will be sorted out and I&rsquo;ll have a working blog system.</p>
+<p><strong>Update</strong>: I&rsquo;m now using my own solution which I called <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, of which I talk about <a href="https://blog.luevano.xyz/a/new_blogging_system.html">here</a>.</p>
 
   <div class="page-nav">
     <span class="next">
@@ -101,7 +106,7 @@
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sat, Feb 27, 2021 @ 13:08 UTC</p>
-      <p>Modified: Mon, May 17, 2021 @ 20:53 UTC</p>
+      <p>Modified: Thu, May 04, 2023 @ 18:14 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>

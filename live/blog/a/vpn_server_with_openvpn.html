@@ -16,13 +16,20 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
+    <!-- highlight support for code blocks -->
 <script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
 <link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="Create a VPN server with OpenVPN (IPv4) -- Luevano's Blog"/>
@@ -73,18 +80,36 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>Create a VPN server with OpenVPN (IPv4)</h1>
 
   <p>I&rsquo;ve been wanting to do this entry, but had no time to do it since I also have to set up the VPN service as well to make sure what I&rsquo;m writing makes sense, today is the day.</p>
 <p>Like with any other of my entries I based my setup on the <a href="https://wiki.archlinux.org/title/OpenVPN">Arch Wiki</a>, <a href="https://github.com/Nyr/openvpn-install">this install script</a> and <a href="https://github.com/graysky2/ovpngen">this profile generator script</a>.</p>
-<p>This will be installed and working alongside the other stuff I&rsquo;ve wrote about on other posts (see the <a href="https://blog.luevano.xyz/tag/@server.html">server</a> tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it&rsquo;s not that hard to include IPv6, but meh).</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<p>This will be installed and working alongside the other stuff I&rsquo;ve wrote about on other posts (see the <a href="https://blog.luevano.xyz/tag/@server.html">server</a> tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it&rsquo;s not that hard to include IPv6, but meh). As always, all commands are executed as root unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#create-pki-from-scratch">Create PKI from scratch</a></li>
+<li><a href="#openvpn">OpenVPN</a><ul>
+<li><a href="#enable-forwarding">Enable forwarding</a></li>
+<li><a href="#create-client-configurations">Create client configurations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Pretty simple:</p>
 <ul>
-<li>Working server with root access, and with Ufw as the firewall.</li>
-<li>Depending on what port you want to run the VPN on, the default <code>1194</code>, or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one Ufw rule.</li>
+<li>Working server with root access, and with <code>ufw</code> as the firewall.</li>
+<li>Depending on what port you want to run the VPN on, the default <code>1194</code>, or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one <code>ufw</code> rule.</li>
 </ul>
-<h3 id="create-pki-from-scratch">Create PKI from scratch<a class="headerlink" href="#create-pki-from-scratch" title="Permanent link">&para;</a></h3>
+<h2 id="create-pki-from-scratch">Create PKI from scratch<a class="headerlink" href="#create-pki-from-scratch" title="Permanent link">&para;</a></h2>
 <p>PKI stands for <em>Public Key Infrastructure</em> and basically it&rsquo;s required for certificates, private keys and more. This is supposed to work between two servers and one client: a server in charge of creating, signing and verifying the certificates, a server with the OpenVPN service running and the client making the request.</p>
 <p>This is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about. In a nutshell, I&rsquo;m no expert.</p>
 <p>&hellip; but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I&rsquo;m gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).</p>
@@ -128,8 +153,8 @@ openssl dhparam -out dh.pem 2048
 openvpn --genkey secret ta.key
 </code></pre>
 <p>That&rsquo;s it for the PKI stuff and general certificate configuration.</p>
-<h3 id="openvpn">OpenVPN<a class="headerlink" href="#openvpn" title="Permanent link">&para;</a></h3>
-<p><a href="https://wiki.archlinux.org/title/OpenVPN">OpenVPN</a> is a robust and highly flexible VPN daemon, that&rsquo;s pretty complete feature wise.</p>
+<h2 id="openvpn">OpenVPN<a class="headerlink" href="#openvpn" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/OpenVPN">OpenVPN</a> is a robust and highly flexible VPN daemon, that&rsquo;s pretty complete feature-wise.</p>
 <p>Install the <code>openvpn</code> package:</p>
 <pre><code class="language-sh">pacman -S openvpn
 </code></pre>
@@ -231,6 +256,7 @@ verb 3
 explicit-exit-notify 1
 </code></pre>
 <p><code>#</code> and <code>;</code> are comments. Read each and every line, you might want to change some stuff (like the logging), specially the first line which is your server public IP.</p>
+<h4 id="enable-forwarding">Enable forwarding<a class="headerlink" href="#enable-forwarding" title="Permanent link">&para;</a></h4>
 <p>Now, we need to enable <em>packet forwarding</em> (so we can access the web while connected to the VPN), which can be enabled on the interface level or globally (you can check the different options with <code>sysctl -a | grep forward</code>). I&rsquo;ll do it globally, run:</p>
 <pre><code class="language-sh">sysctl net.ipv4.ip_forward=1
 </code></pre>
@@ -276,7 +302,7 @@ ufw reload
 systemctl enable openvpn-server@server.service
 </code></pre>
 <p>Where the <code>server</code> after <code>@</code> is the name of your configuration, <code>server.conf</code> without the <code>.conf</code> in my case.</p>
-<h4 id="create-client-configurations">Create client configurations<a class="headerlink" href="#create-client-configurations" title="Permanent link">&para;</a></h4>
+<h3 id="create-client-configurations">Create client configurations<a class="headerlink" href="#create-client-configurations" title="Permanent link">&para;</a></h3>
 <p>You might notice that I didn&rsquo;t specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the <code>server.conf</code> file that we created.</p>
 <p>The real way of doing this would be to run similar steps as the ones with <code>easy-rsa</code> locally, send them to the server, sign them, and retrieve them. Nah, we&rsquo;ll just create all configuration files on the server as I was mentioning earlier.</p>
 <p>Also, the client configuration file has to match the server one (to some degree), to make this easier you can create a <code>client-common</code> file in <code>/etc/openvpn/server</code> with the following content:</p>
@@ -349,7 +375,7 @@ chown nobody:nobody pki/crl.pem
 chmod o+r pki/crl.pem
 cd $CPWD
 </code></pre>
-<p>And the way to use is to run <code>vpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually deletes the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for <code>easy-rsa</code>) and it could have errors.</p>
+<p>And the way to use is to run <code>vpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually delete the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for <code>easy-rsa</code>).</p>
 <p>Now, just get the <code>.ovpn</code> file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.</p>
 
   <div class="page-nav">
@@ -380,10 +406,10 @@ cd $CPWD
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Aug 01, 2021 @ 09:27 UTC</p>
-      <p>Modified: Sun, Aug 01, 2021 @ 10:13 UTC</p>
+      <p>Modified: Fri, May 05, 2023 @ 08:36 UTC</p>
     <div class="article-tags">
   <p>Tags:
-<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
 </div>
 
   </div>

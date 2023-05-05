@@ -16,13 +16,20 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
+    <!-- highlight support for code blocks -->
 <script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
 <script type="text/javascript">
   hljs.initHighlightingOnLoad();
 </script>
 <link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="Create an XMPP server with Prosody compatible with Conversations and Movim -- Luevano's Blog"/>
@@ -73,12 +80,29 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>Create an XMPP server with Prosody compatible with Conversations and Movim</h1>
 
-  <p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <mark><a href="https://lmcj.xyz">EL ELE EME</a></mark> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
-<p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, and of course the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
-<p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+  <p><strong>Update</strong>: I no longer host this XMPP server as it consumed a lot of resources and I wasn&rsquo;t using it that much. I&rsquo;ll probably re-create it in the future, though.</p>
+<p>Recently I set up an <a href="https://xmpp.org/">XMPP</a> server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <a href="https://lmcj.xyz"><mark>EL ELE EME</mark></a> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses at <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
+<p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
+<p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root, unless specified otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#prosody">Prosody</a></li>
+<li><a href="#nginx-configuration-file">Nginx configuration file</a></li>
+<li><a href="#coturn">Coturn</a></li>
+<li><a href="#wrapping-up">Wrapping up</a></li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Same as with my other entries (<a href="https://luevano.xyz/a/website_with_nginx.html">website</a>, <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> and <a href="https://blog.luevano.xyz/a/git_server_with_cgit.html">git</a>) plus:</p>
 <ul>
 <li><strong>A</strong> and (optionally) <strong>AAA</strong> DNS records for:<ul>
@@ -90,16 +114,16 @@
 </ul>
 </li>
 <li>(Optionally, but recommended) the following <strong>SRV</strong> DNS records; make sure it is pointing to an <strong>A</strong> or <strong>AAA</strong> record (matching the records from the last point, for example):<ul>
-<li><code>_xmpp-client._tcp.**your.domain**.</code> for port <code>5222</code> pointing to <code>xmpp.**your.domain**.</code></li>
-<li><code>_xmpp-server._tcp.**your.domain**.</code> for port <code>5269</code> pointing to <code>xmpp.**your.domain**.</code></li>
-<li><code>_xmpp-server._tcp.muc.**your.domain**.</code> for port <code>5269</code> pointing to <code>xmpp.**your.domain**.</code></li>
+<li><code>_xmpp-client._tcp.{your.domain}.</code> for port <code>5222</code> pointing to <code>xmpp.{your.domain}.</code></li>
+<li><code>_xmpp-server._tcp.{your.domain}.</code> for port <code>5269</code> pointing to <code>xmpp.{your.domain}.</code></li>
+<li><code>_xmpp-server._tcp.muc.{your.domain}.</code> for port <code>5269</code> pointing to <code>xmpp.{your.domain}.</code></li>
 </ul>
 </li>
 <li>SSL certificates for the previous subdomains; similar that with my other entries just create the appropriate <code>prosody.conf</code> (where <code>server_name</code> will be all the subdomains defined above) file and run <code>certbot --nginx</code>. You can find the example configuration file almost at the end of this entry.</li>
 <li>Email addresses for <code>admin</code>, <code>abuse</code>, <code>contact</code>, <code>security</code>, etc. Or use your own email for all of them, doesn&rsquo;t really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.</li>
 <li>Allow ports <code>5000</code>, <code>5222</code>, <code>5269</code>, <code>5280</code> and <code>5281</code> for <a href="https://prosody.im/doc/ports">Prosody</a> and, <code>3478</code> and <code>5349</code> for <a href="https://webrtc.org/getting-started/turn-server">Turnserver</a> which are the defaults for <code>coturn</code>.</li>
 </ul>
-<h3 id="prosody">Prosody<a class="headerlink" href="#prosody" title="Permanent link">&para;</a></h3>
+<h2 id="prosody">Prosody<a class="headerlink" href="#prosody" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Prosody">Prosody</a> is an implementation of the XMPP protocol that is flexible and extensible.</p>
 <p>Install the <code>prosody</code> package (with optional dependencies) and the <code>mercurial</code> package:</p>
 <pre><code class="language-sh">pacman -S prosody, mercurial, lua52-sec, lua52-dbi, lua52-zlib
@@ -111,11 +135,11 @@ mkdir modules-enabled
 </code></pre>
 <p>You can see that I follow a similar approach that I used with Nginx and the server configuration, where I have all the modules available in a directory, and make a symlink to another to keep track of what is being used. You can update the repository by running <code>hg pull --update</code> while inside the <code>modules-available</code> directory (similar to Git).</p>
 <p>Make symbolic links to the following modules:</p>
-<pre><code>ln -s /var/lib/prosody/modules-available/MODULE_NAME /var/lib/prosody/modules-enabled/
+<pre><code>ln -s /var/lib/prosody/modules-available/{module_name} /var/lib/prosody/modules-enabled/
 ...
 </code></pre>
 <ul>
-<li>Modules:<ul>
+<li>Modules (<code>{module_name}</code>):<ul>
 <li><code>mod_bookmarks</code></li>
 <li><code>mod_cache_c2s_caps</code></li>
 <li><code>mod_checkcerts</code></li>
@@ -443,8 +467,8 @@ ln -s your.domain.key SUBDOMAIN.your.domain.key
 ...
 </code></pre>
 <p>That&rsquo;s basically all the configuration that needs Prosody itself, but we still have to configure Nginx and Coturn before starting/enabling the <code>prosody</code> service.</p>
-<h3 id="nginx-configuration-file">Nginx configuration file<a class="headerlink" href="#nginx-configuration-file" title="Permanent link">&para;</a></h3>
-<p>Since this is not an ordinary configuration file I&rsquo;m going to describe this too. Your <code>prosody.conf</code> file should have the following location blocks under the main server block (the one that listens to HTTPS):</p>
+<h2 id="nginx-configuration-file">Nginx configuration file<a class="headerlink" href="#nginx-configuration-file" title="Permanent link">&para;</a></h2>
+<p>Since this is not an ordinary configuration file I&rsquo;m going to describe this, too. Your <code>prosody.conf</code> file should have the following location blocks under the main server block (the one that listens to HTTPS):</p>
 <pre><code class="language-nginx"># HTTPS server block
 server {
     root /var/www/prosody/;
@@ -537,11 +561,11 @@ server {
     ]
 }
 </code></pre>
-<p>Remember to have your <code>prosody.conf</code> file symlinked (or discoverable by Nginx) to the <code>sites-enabled</code> directory. You can now restart your <code>nginx</code> service (and test the configuration, optionally):</p>
+<p>Remember to have your <code>prosody.conf</code> file symlinked (or discoverable by Nginx) to the <code>sites-enabled</code> directory. You can now test and restart your <code>nginx</code> service (and test the configuration, optionally):</p>
 <pre><code class="language-sh">nginx -t
 systemctl restart nginx.service
 </code></pre>
-<h3 id="coturn">Coturn<a class="headerlink" href="#coturn" title="Permanent link">&para;</a></h3>
+<h2 id="coturn">Coturn<a class="headerlink" href="#coturn" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/coturn/coturn">Coturn</a> is the implementation of TURN and STUN server, which in general is for (at least in the XMPP world) voice support and external service discovery.</p>
 <p>Install the <code>coturn</code> package:</p>
 <pre><code class="language-sh">pacman -S coturn
@@ -557,7 +581,7 @@ static-auth-secret=YOUR SUPER SECRET TURN PASSWORD
 systemctl enable turnserver.service
 </code></pre>
 <p>You can test if your TURN server works at <a href="https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/">Trickle ICE</a>. You may need to add a user in the <code>turnserver.conf</code> to test this.</p>
-<h3 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h3>
+<h2 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h2>
 <p>At this point you should have a working XMPP server, start/enable the <code>prosody</code> service now:</p>
 <pre><code class="language-sh">systemctl start prosody.service
 systemctl enable prosody.service
@@ -570,7 +594,7 @@ systemctl enable prosody.service
 <p>Additionally, you can test the security of your server in <a href="https://xmpp.net/index.php">IM Observatory</a>, here you only need to specify your <code>domain.name</code> (not <code>xmpp.domain.name</code>, if you set up the <strong>SRV</strong> DNS records correctly). Again, it should have a similar score to mine:</p>
 <p><a href='https://xmpp.net/result.php?domain=luevano.xyz&amp;type=client'><img src='https://xmpp.net/badge.php?domain=luevano.xyz' alt='xmpp.net score' /></a></p>
 <p>You can now log in into your XMPP client of choice, if it asks for the server it should be <code>xmpp.your.domain</code> (or <code>your.domain</code> for some clients) and your login credentials <code>you@your.domain</code> and the password you chose (which you can change in most clients).</p>
-<p>That&rsquo;s it, send me a message <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.</p>
+<p>That&rsquo;s it, send me a message at <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.</p>
 
   <div class="page-nav">
     <span class="next">
@@ -600,10 +624,10 @@ systemctl enable prosody.service
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Wed, Jun 09, 2021 @ 05:24 UTC</p>
-      <p>Modified: Tue, Dec 20, 2022 @ 04:33 UTC</p>
+      <p>Modified: Fri, May 05, 2023 @ 08:36 UTC</p>
     <div class="article-tags">
   <p>Tags:
-<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
 </div>
 
   </div>

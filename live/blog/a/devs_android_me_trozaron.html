@@ -16,13 +16,11 @@
     <!-- theme related -->
     <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
     <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
     <!-- extra -->
-<!-- highlight support for code blocks -->
-<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
-<script type="text/javascript">
-  hljs.initHighlightingOnLoad();
-</script>
-<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
 
     <!-- og meta -->
   <meta property="og:title" content="Los devs de Android/MIUI me trozaron -- Luevano's Blog"/>
@@ -73,6 +71,11 @@
     </header>
 
     <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
   <h1>Los devs de Android/MIUI me trozaron</h1>
 
   <p>Llevo dos semanas posponiendo esta entrada porque andaba bien enojado (todavía, pero ya se anda pasando) y me daba <em>zzz</em>. Pero bueno, antes que nada este pex ocupa un poco de contexto sobre dos cositas:</p>

@@ -4,16 +4,23 @@ lang: en
 summary: How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim.
 tags: server
 	tools
+	code
 	tutorial
 	english
 
-Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for ==[EL ELE EME](https://lmcj.xyz)== for example. So, here are the notes on how I set up the server that is compatible with the [Conversations](https://conversations.im/) app and the [Movim](https://movim.eu/) social network. You can see my addresses in [contact](https://luevano.xyz/contact.html) and the XMPP compliance/score of the server.
+**Update**: I no longer host this XMPP server as it consumed a lot of resources and I wasn't using it that much. I'll probably re-create it in the future, though.
 
-One of the best resources I found that helped me a lot was [Installing and Configuring Prosody XMPP Server on Debian 9](https://community.hetzner.com/tutorials/prosody-debian9), and of course the [Arch Wiki](https://wiki.archlinux.org/title/Prosody) and the [oficial documentation](https://prosody.im/).
+Recently I set up an [XMPP](https://xmpp.org/) server (and a Matrix one, too) for my personal use and for friends if they want one; made one for [==EL ELE EME==](https://lmcj.xyz) for example. So, here are the notes on how I set up the server that is compatible with the [Conversations](https://conversations.im/) app and the [Movim](https://movim.eu/) social network. You can see my addresses at [contact](https://luevano.xyz/contact.html) and the XMPP compliance/score of the server.
 
-As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)
+One of the best resources I found that helped me a lot was [Installing and Configuring Prosody XMPP Server on Debian 9](https://community.hetzner.com/tutorials/prosody-debian9), the [Arch Wiki](https://wiki.archlinux.org/title/Prosody) and the [oficial documentation](https://prosody.im/).
 
-## Prerequisites
+As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root, unless specified otherwise.
+
+# Table of contents
+
+[TOC]
+
+# Prerequisites
 
 Same as with my other entries ([website](https://luevano.xyz/a/website_with_nginx.html), [mail](https://blog.luevano.xyz/a/mail_server_with_postfix.html) and [git](https://blog.luevano.xyz/a/git_server_with_cgit.html)) plus:
 
@@ -24,14 +31,14 @@ Same as with my other entries ([website](https://luevano.xyz/a/website_with_ngin
 	- `proxy`: a proxy in case one of the users needs it.
 	- `vjud`: user directory.
 - (Optionally, but recommended) the following **SRV** DNS records; make sure it is pointing to an **A** or **AAA** record (matching the records from the last point, for example):
-	- `_xmpp-client._tcp.**your.domain**.` for port `5222` pointing to `xmpp.**your.domain**.`
-	- `_xmpp-server._tcp.**your.domain**.` for port `5269` pointing to `xmpp.**your.domain**.`
-	- `_xmpp-server._tcp.muc.**your.domain**.` for port `5269` pointing to `xmpp.**your.domain**.`
+	- `_xmpp-client._tcp.{your.domain}.` for port `5222` pointing to `xmpp.{your.domain}.`
+	- `_xmpp-server._tcp.{your.domain}.` for port `5269` pointing to `xmpp.{your.domain}.`
+	- `_xmpp-server._tcp.muc.{your.domain}.` for port `5269` pointing to `xmpp.{your.domain}.`
 * SSL certificates for the previous subdomains; similar that with my other entries just create the appropriate `prosody.conf` (where `server_name` will be all the subdomains defined above) file and run `certbot --nginx`. You can find the example configuration file almost at the end of this entry.
 - Email addresses for `admin`, `abuse`, `contact`, `security`, etc. Or use your own email for all of them, doesn't really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.
 - Allow ports `5000`, `5222`, `5269`, `5280` and `5281` for [Prosody](https://prosody.im/doc/ports) and, `3478` and `5349` for [Turnserver](https://webrtc.org/getting-started/turn-server) which are the defaults for `coturn`.
 
-## Prosody
+# Prosody
 
 [Prosody](https://wiki.archlinux.org/title/Prosody) is an implementation of the XMPP protocol that is flexible and extensible.
 
@@ -54,11 +61,11 @@ You can see that I follow a similar approach that I used with Nginx and the serv
 Make symbolic links to the following modules:
 
 ```
-ln -s /var/lib/prosody/modules-available/MODULE_NAME /var/lib/prosody/modules-enabled/
+ln -s /var/lib/prosody/modules-available/{module_name} /var/lib/prosody/modules-enabled/
 ...
 ```
 
-- Modules:
+- Modules (`{module_name}`):
 	- `mod_bookmarks`
 	- `mod_cache_c2s_caps`
 	- `mod_checkcerts`
@@ -407,9 +414,9 @@ ln -s your.domain.key SUBDOMAIN.your.domain.key
 
 That's basically all the configuration that needs Prosody itself, but we still have to configure Nginx and Coturn before starting/enabling the `prosody` service.
 
-## Nginx configuration file
+# Nginx configuration file
 
-Since this is not an ordinary configuration file I'm going to describe this too. Your `prosody.conf` file should have the following location blocks under the main server block (the one that listens to HTTPS):
+Since this is not an ordinary configuration file I'm going to describe this, too. Your `prosody.conf` file should have the following location blocks under the main server block (the one that listens to HTTPS):
 
 ```nginx
 # HTTPS server block
@@ -515,14 +522,14 @@ And `host-meta.json` file:
 }
 ```
 
-Remember to have your `prosody.conf` file symlinked (or discoverable by Nginx) to the `sites-enabled` directory. You can now restart your `nginx` service (and test the configuration, optionally):
+Remember to have your `prosody.conf` file symlinked (or discoverable by Nginx) to the `sites-enabled` directory. You can now test and restart your `nginx` service (and test the configuration, optionally):
 
 ```sh
 nginx -t
 systemctl restart nginx.service
 ```
 
-## Coturn
+# Coturn
 
 [Coturn](https://github.com/coturn/coturn) is the implementation of TURN and STUN server, which in general is for (at least in the XMPP world) voice support and external service discovery.
 
@@ -551,7 +558,7 @@ systemctl enable turnserver.service
 
 You can test if your TURN server works at [Trickle ICE](https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/). You may need to add a user in the `turnserver.conf` to test this.
 
-## Wrapping up
+# Wrapping up
 
 At this point you should have a working XMPP server, start/enable the `prosody` service now:
 
@@ -576,4 +583,4 @@ Additionally, you can test the security of your server in [IM Observatory](https
 
 You can now log in into your XMPP client of choice, if it asks for the server it should be `xmpp.your.domain` (or `your.domain` for some clients) and your login credentials `you@your.domain` and the password you chose (which you can change in most clients).
 
-That's it, send me a message <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.
+That's it, send me a message at <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.

@@ -32,7 +32,7 @@
       <category>Tools</category>
       <category>Update</category>
       <description>Rewrote pyssg to make it more flexible and to work with YAML configuration files.</description>
-      <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to change the way <a href="https://github.com/luevano/pyssg">pyssg</a> reads config files and generates <code>HTML</code> files so that it is more flexible and I don&rsquo;t need to have 2 separate build commands and configs (for <a href="https://blog.luevano.xyz">blog</a> and <a href="https://art.luevano.xyz">art</a>), and also to handle other types of &ldquo;sites&rdquo;; because <code>pyssg</code> was built with blogging in mind, so it was a bit limited to how it could be used. So I had to kind of <em>rewrite</em> <code>pyssg</code>, and with the latest version I can now generate the whole site and use the same templates for everything, quite neat for my use case.</p>
+      <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to change the way <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> reads config files and generates <code>HTML</code> files so that it is more flexible and I don&rsquo;t need to have 2 separate build commands and configs (for <a href="https://blog.luevano.xyz">blog</a> and <a href="https://art.luevano.xyz">art</a>), and also to handle other types of &ldquo;sites&rdquo;; because <code>pyssg</code> was built with blogging in mind, so it was a bit limited to how it could be used. So I had to kind of <em>rewrite</em> <code>pyssg</code>, and with the latest version I can now generate the whole site and use the same templates for everything, quite neat for my use case.</p>
 <p>Anyways, so I bought a new domain for all <code>pyssg</code> related stuff, mostly because I wanted somewhere to test live builds while developing, it is of course <a href="https://pyssg.xyz">pyssg.xyz</a>; as of now it is the same template, CSS and scripts that I use here, probably will change in the future. I&rsquo;ll be testing new features and anything <code>pyssg</code> related stuff.</p>
 <p>I should start pointing all links to <code>pyssg</code> to the actual site instead of the github repository (or my <a href="https://git.luevano.xyz">git</a> repository), but I haven&rsquo;t decided how to handle everything.</p>]]></content:encoded>
     </item>
@@ -44,35 +44,66 @@
       <category>English</category>
       <category>Gamedev</category>
       <category>Gamejam</category>
+      <category>Gdscript</category>
       <category>Godot</category>
       <description>Details on the implementation for the game I created for the Go Godot Jam 3, which theme is Evolution.</description>
-      <content:encoded><![CDATA[<p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. <del>This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way</del> <ins>I couldn&rsquo;t actually do this, as I was running out of time.</ins>. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
+      <content:encoded><![CDATA[<p>The jam&rsquo;s theme is Evolution and all the details are listed <a href="https://itch.io/jam/go-godot-jam-3">here</a>. <del>This time I&rsquo;m logging as I go, so there might be some changes to the script or scenes along the way.</del> <ins>I couldn&rsquo;t actually do this, as I was running out of time</ins>. Note that I&rsquo;m not going to go into much details, the obvious will be ommitted.</p>
 <p>I wanted to do a <em>Snake</em> clone, and I&rsquo;m using this jam as an excuse to do it and add something to it. The features include:</p>
 <ul>
 <li>Snakes will pass their stats in some form to the next snakes.</li>
 <li>Non-grid snake movement. I just hate the grid constraint, so I wanted to make it move in any direction.</li>
-<li>Depending on the food you eat, you&rsquo;ll gain new mutations/abilities <del>and the more you eat the more that mutation develops.</del> <ins>didn&rsquo;t have time to add this feature, sad.</ins></li>
+<li>Depending on the food you eat, you&rsquo;ll gain new mutations/abilities <del>and the more you eat the more that mutation develops</del> <ins>didn&rsquo;t have time to add this feature, sad</ins>.</li>
 <li>Procedural map creation.</li>
 </ul>
-<p>I created this game using <em>Godot 3.5-rc3</em>. You can find the source code in my GitHub <a href="https://github.com/luevano/gogodot_jam3">here</a> which at the time of writing this it doesn&rsquo;t contain any exported files, for that you can go ahead and play it in your browser at itch.io, which you can find below:</p>
-<p style="text-align:center"><iframe src="https://itch.io/embed/1562701?dark=true" width="552" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/snake-tronic">Snake-tronic by Lorentzeus</a></iframe></p>
+<p>I created this game using <em>Godot 3.5-rc3</em>. You can find the source code in my GitHub <a href="https://github.com/luevano/gogodot_jam3">here</a> which at the time of writing this it doesn&rsquo;t contain any exported files, for that you can go ahead and play it in your browser at <a href="https://lorentzeus.itch.io/snake-tronic">itch.io</a>, which you can find below:</p>
+<p style="text-align:center"><iframe src="https://itch.io/embed/1562701?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/snake-tronic">Snake-tronic by Lorentzeus</a></iframe></p>
 
 <p>You can also find the jam entry <a href="https://itch.io/jam/go-godot-jam-3/rate/1562701">here</a>.</p>
 <p>Similarly with the my FlappyBird clone, I plan to update this to a better state.</p>
-<h3 id="initial-setup">Initial setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h3>
-<p>Again, similar to the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird</a> clone I developed, I&rsquo;m using the directory structure I wrote about on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> with slight modifications to test things out. Also using similar <em>Project settings</em> as those from the <em>FlappyBird</em> clone like the pixel art texture imports, keybindings, layers, etc..</p>
-<p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes.<ins>I ended up not leaving this enabled in the game as it lagged the game out, but it&rsquo;s an option I&rsquo;ll end up researching more.</ins></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#initial-setup">Initial setup</a></li>
+<li><a href="#assets">Assets</a></li>
+<li><a href="#the-snake">The snake</a><ul>
+<li><a href="#basic-movement">Basic movement</a></li>
+<li><a href="#setting-up-path-following">Setting up path following</a></li>
+<li><a href="#define-body-parts-for-the-snake">Define body parts for the snake</a></li>
+<li><a href="#adding-body-parts">Adding body parts</a></li>
+<li><a href="#fix-on-body-segments-following-head">Fix on body segments following head</a></li>
+</ul>
+</li>
+<li><a href="#the-food">The food</a></li>
+<li><a href="#za-warudo-the-world">Za warudo! (The world)</a><ul>
+<li><a href="#food-placement">Food placement</a></li>
+</ul>
+</li>
+<li><a href="#stats-clas-and-loadingsaving-data">Stats clas and loading/saving data</a><ul>
+<li><a href="#stats-class">Stats class</a></li>
+<li><a href="#loadsave-data">Load/save data</a></li>
+</ul>
+</li>
+<li><a href="#scoring">Scoring</a></li>
+<li><a href="#snake-redesigned-with-the-state-machine-pattern">Snake redesigned with the state machine pattern</a></li>
+<li><a href="#other-minor-stuff">Other minor stuff</a></li>
+<li><a href="#final-notes">Final notes</a></li>
+</ul>
+</div>
+<h2 id="initial-setup">Initial setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h2>
+<p>Again, similar to the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird</a> clone I created, I&rsquo;m using the directory structure I wrote about on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> with slight modifications to test things out. Also using similar <em>Project settings</em> as those from the <em>FlappyBird</em> clone like the pixel art texture imports, keybindings, layers, etc..</p>
+<p>I&rsquo;ve also setup <a href="https://github.com/bram-dingelstad/godot-gifmaker">GifMaker</a>, with slight modifications as the <em>AssetLib</em> doesn&rsquo;t install it correctly and contains unnecessry stuff: moved necessary files to the <code>res://addons</code> directory, deleted test scenes and files in general, and copied the license to the <code>res://docs</code> directory. Setting this up was a bit annoying because the tutorial it&rsquo;s bad (with all due respect). I might do a separate entry just to explain how to set it up, because I couldn&rsquo;t find it anywhere other than by inspecting some of the code/scenes. <ins>I ended up leaving this disabled in the game as it hit the performance by a lot, but it&rsquo;s an option I&rsquo;ll end up researching more</ins>.</p>
 <p>This time I&rsquo;m also going to be using an <a href="https://www.gdquest.com/docs/guidelines/best-practices/godot-gdscript/event-bus/">Event bus</a> singleton (which I&rsquo;m going to just call <em>Event</em>) as managing signals was pretty annoying on my last project; as well as a <em>Global</em> singleton for essential stuff so I don&rsquo;t have to do as many cross references between nodes/scenes.</p>
-<h3 id="assets">Assets<a class="headerlink" href="#assets" title="Permanent link">&para;</a></h3>
+<h2 id="assets">Assets<a class="headerlink" href="#assets" title="Permanent link">&para;</a></h2>
 <p>This time I&rsquo;ll be creating my own assets in <a href="https://www.aseprite.org/">Aseprite</a>, wont be that good, but enough to prototype and get things going.</p>
 <p>Other than that I used few key sprites from <a href="https://vryell.itch.io/">vryell</a>: <a href="https://vryell.itch.io/controller-keyboard-icons">Controller &amp; Keyboard Icons</a> and a font from <a href="https://datagoblin.itch.io/">datagoblin</a>: <a href="https://datagoblin.itch.io/monogram">Monogram</a>.</p>
-<h3 id="the-snake">The snake<a class="headerlink" href="#the-snake" title="Permanent link">&para;</a></h3>
+<h2 id="the-snake">The snake<a class="headerlink" href="#the-snake" title="Permanent link">&para;</a></h2>
 <p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
 <figure id="__yafg-figure-32">
-<img alt="FileSystem - Snake dir structure" src="images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
+<img alt="FileSystem - Snake dir structure" src="https://static.luevano.xyz/images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
 <figcaption>FileSystem - Snake dir structure</figcaption>
 </figure>
-<h4 id="basic-movement">Basic movement<a class="headerlink" href="#basic-movement" title="Permanent link">&para;</a></h4>
+<h3 id="basic-movement">Basic movement<a class="headerlink" href="#basic-movement" title="Permanent link">&para;</a></h3>
 <p>The most basic thing is to move the head, this is what we have control of. Create a scene called <code>Head.tscn</code> and setup the basic <em>KinematicBody2D</em> with it&rsquo;s own <em>Sprite</em> and <em>CollisionShape2D</em> (I used a small circle for the tip of the head), and set the <em>Collision Layer/Mask</em> accordingly, for now just <code>layer = bit 1</code>. And all we need to do, is keep moving the snake forwards and be able to rotate left or right. Created a new script called <code>head.gd</code> attached to the root (<em>KinematicBody2D</em>) and added:</p>
 <pre><code class="language-gdscript">extends KinematicBody2D
 
@@ -103,10 +134,10 @@ func _rotate_to(direction: int) -&gt; void:
 </code></pre>
 <p>After tunning all the necessary parameters you should get something like this:</p>
 <figure id="__yafg-figure-33">
-<img alt="Snake - Basic movement (left and right controls)" src="images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
+<img alt="Snake - Basic movement (left and right controls)" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
 <figcaption>Snake - Basic movement (left and right controls)</figcaption>
 </figure>
-<h4 id="setting-up-path-following">Setting up path following<a class="headerlink" href="#setting-up-path-following" title="Permanent link">&para;</a></h4>
+<h3 id="setting-up-path-following">Setting up path following<a class="headerlink" href="#setting-up-path-following" title="Permanent link">&para;</a></h3>
 <p>To move other snake parts by following the snake head the only solution I found was to use the <em>Path2D</em> and <em>PathFollow2D</em> nodes. <em>Path2D</em> basically just handles the curve/path that <em>PathFollow2D</em> will use to move its child node; and I say &ldquo;child node&rdquo; in singular&hellip; as <em>PathFollow2D</em> can only handle one damn child, all the other ones will have weird transformations and/or rotations. So, the next thing to do is to setup a way to compute (and draw so we can validate) the snake&rsquo;s path/curve.</p>
 <p>Added the signal <code>snake_path_new_point(coordinates)</code> to the <em>Event</em> singleton and then add the following to <code>head.gd</code>:</p>
 <pre><code class="language-gdscript">var _time_elapsed: float = 0.0
@@ -140,10 +171,10 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
 </code></pre>
 <p>With this, we&rsquo;re now populating the <em>Path2D</em> curve points with the position of the snake head. You should be able to see it because of the <code>_draw</code> call. If you run it you should see something like this:</p>
 <figure id="__yafg-figure-34">
-<img alt="Snake - Basic movement with path" src="images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
+<img alt="Snake - Basic movement with path" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
 <figcaption>Snake - Basic movement with path</figcaption>
 </figure>
-<h4 id="define-body-parts-for-the-snake">Define body parts for the snake<a class="headerlink" href="#define-body-parts-for-the-snake" title="Permanent link">&para;</a></h4>
+<h3 id="define-body-parts-for-the-snake">Define body parts for the snake<a class="headerlink" href="#define-body-parts-for-the-snake" title="Permanent link">&para;</a></h3>
 <p>At this point the only thing to do is to add the corresponding next body parts and tail of the snake. To do so, we need a <em>PathFollow2D</em> to use the live-generating <em>Path2D</em>, the only caveat is that we need one of these per body part/tail (this took me hours to figure out, <em>thanks documentation</em>).</p>
 <p>Create a new scene called <code>Body.tscn</code> with a <em>PathFollow2D</em> as its root and an <em>Area2D</em> as its child, then just add the necessary <em>Sprite</em> and <em>CollisionShap2D</em> for the <em>Area2D</em>, I&rsquo;m using <code>layer = bit 2</code> for its collision. Create a new script called <code>generic_segment.gd</code> with the following code:</p>
 <pre><code class="language-gdscript">extends PathFollow2D
@@ -155,7 +186,7 @@ func _physics_process(delta: float) -&gt; void:
     offset += Global.SNAKE_SPEED * delta
 </code></pre>
 <p>And this can be attached to the <em>Body</em>&lsquo;s root node (<em>PathFollow2D</em>), no extra setup needed. Repeat the same steps for creating the <code>Tail.tscn</code> scene and when attaching the <code>generic_segment.gd</code> script just configure the <code>Type</code> parameter to <code>tail</code> in the GUI (by selecting the node with the script attached and editing in the <em>Inspector</em>).</p>
-<h4 id="adding-body-parts">Adding body parts<a class="headerlink" href="#adding-body-parts" title="Permanent link">&para;</a></h4>
+<h3 id="adding-body-parts">Adding body parts<a class="headerlink" href="#adding-body-parts" title="Permanent link">&para;</a></h3>
 <p>Now it&rsquo;s just a matter of handling when to add new body parts in the <code>snake.gd</code> script. For now I&rsquo;ve only setup for adding body parts to fulfill the initial length of the snake (this doesn&rsquo;t include the head or tail). The extra code needed is the following:</p>
 <pre><code class="language-gdscript">export(PackedScene) var BODY_SEGMENT_NP: PackedScene
 export(PackedScene) var TAIL_SEGMENT_NP: PackedScene
@@ -184,7 +215,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
 </code></pre>
 <p>Select the <em>Snake</em> node and add the <em>Body</em> and <em>Tail</em> scene to the parameters, respectively. Then when running you should see something like this:</p>
 <figure id="__yafg-figure-35">
-<img alt="Snake - Basic movement with all body parts" src="images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
+<img alt="Snake - Basic movement with all body parts" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
 <figcaption>Snake - Basic movement with all body parts</figcaption>
 </figure>
 <p>Now, we need to handle adding body parts after the snake is complete and already moved for a bit, this will require a queue so we can add part by part in the case that we eat multiple pieces of food in a short period of time. For this we need to add some signals: <code>snake_adding_new_segment(type)</code>, <code>snake_added_new_segment(type)</code>, <code>snake_added_initial_segments</code> and use them when makes sense. Now we need to add the following:</p>
@@ -225,9 +256,9 @@ func _add_segment_to_queue() -&gt; void:
     else:
         body_segment_queue.append(body_segment_queue.back() + Global.SNAKE_SEGMENT_SIZE)
 </code></pre>
-<p>With everything implemented and connected accordingly then we can add segments on demand (for testing I&rsquo;m adding with a keystroke), it should look like this:</p>
+<p>With everything implemented and connected accordingly then we can add segments on demand (for testing I&rsquo;m adding with a key press), it should look like this:</p>
 <figure id="__yafg-figure-36">
-<img alt="Snake - Basic movement with dynamic addition of new segments" src="images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
+<img alt="Snake - Basic movement with dynamic addition of new segments" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
 <figcaption>Snake - Basic movement with dynamic addition of new segments</figcaption>
 </figure>
 <p>For now, this should be enough, I&rsquo;ll add more stuff as needed as I go. Last thing is that after finished testing that the movement felt ok, I just added a way to stop the snake whenever it collides with itself by using the following code (and the signal <code>snake_segment_body_entered(body)</code>) in a <code>main.gd</code> script that is the entry point for the game:</p>
@@ -239,13 +270,13 @@ func _add_segment_to_queue() -&gt; void:
     _snake.propagate_call(&quot;set_process_input&quot;, [on_off])
 </code></pre>
 <p>Which will stop the snake node and all children.</p>
-<h4 id="fix-on-body-segments-following-head">Fix on body segments following head<a class="headerlink" href="#fix-on-body-segments-following-head" title="Permanent link">&para;</a></h4>
+<h3 id="fix-on-body-segments-following-head">Fix on body segments following head<a class="headerlink" href="#fix-on-body-segments-following-head" title="Permanent link">&para;</a></h3>
 <p>After a while of testing and developing, I noticed that sometimes the head &ldquo;detaches&rdquo; from the body when a lot of rotations happen (moving the snake left or right), because of how imprecise the <em>Curve2D</em> is. To do this I just send a signal (<code>snake_rotated</code>) whenever the snake rotates and make a small correction (in <code>generic_segment.gd</code>):</p>
 <pre><code class="language-gdscript">func _on_snake_rotated() -&gt; void:
     offset -= 0.75 * Global.SNAKE_SPEED * pow(get_physics_process_delta_time(), 2)
 </code></pre>
 <p>This is completely random, I tweaked it manually after a lot of iterations.</p>
-<h3 id="the-food">The food<a class="headerlink" href="#the-food" title="Permanent link">&para;</a></h3>
+<h2 id="the-food">The food<a class="headerlink" href="#the-food" title="Permanent link">&para;</a></h2>
 <p>For now I just decided to setup a simple system to see everything works fine. The idea is to make some kind of generic food node/scene and a &ldquo;food manager&rdquo; to spawn them, for now in totally random locations. For this I added the following signals: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type)</code> and <code>food_eaten(type)</code>.</p>
 <p>First thing is creating the <code>Food.tscn</code> which is just an <em>Area2D</em> with its necessary children with an attached script called <code>food.gd</code>. The script is really simple:</p>
 <pre><code class="language-gdscript">class_name Food # needed to access Type enum outside of the script, this registers this script as a node
@@ -290,21 +321,21 @@ func _on_body_entered(body: Node) -&gt; void:
 </code></pre>
 <p>And this is used in <code>_process</code> to place new food whenever needed. For now I added a condition to add food until 10 pieces are in place, and keep adding whenever the food is is lower than 10. After setting everything up, this is the result:</p>
 <figure id="__yafg-figure-37">
-<img alt="Snake - Food basic interaction" src="images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
+<img alt="Snake - Food basic interaction" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
 <figcaption>Snake - Food basic interaction</figcaption>
 </figure>
-<h3 id="za-warudo-the-world">Za warudo! (The world)<a class="headerlink" href="#za-warudo-the-world" title="Permanent link">&para;</a></h3>
+<h2 id="za-warudo-the-world">Za warudo! (The world)<a class="headerlink" href="#za-warudo-the-world" title="Permanent link">&para;</a></h2>
 <p>It just happend that I saw a video to create random maps by using a method called <a href="https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm">random walks</a>, this video was made by <a href="https://www.youtube.com/c/NADLABS">NAD LABS</a>: <a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a>. It&rsquo;s a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):</p>
 <figure id="__yafg-figure-38">
-<img alt="World map generator - Random map 1" src="images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
+<img alt="World map generator - Random map 1" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
 <figcaption>World map generator - Random map 1</figcaption>
 </figure>
 <figure id="__yafg-figure-39">
-<img alt="World map generator - Random map 2" src="images/g/gogodot_jam3/world_generator_2.png" title="World map generator - Random map 2">
+<img alt="World map generator - Random map 2" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_2.png" title="World map generator - Random map 2">
 <figcaption>World map generator - Random map 2</figcaption>
 </figure>
 <figure id="__yafg-figure-40">
-<img alt="World map generator - Random map 3" src="images/g/gogodot_jam3/world_generator_3.png" title="World map generator - Random map 3">
+<img alt="World map generator - Random map 3" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_3.png" title="World map generator - Random map 3">
 <figcaption>World map generator - Random map 3</figcaption>
 </figure>
 <p>It started with just black and white tiles, but I ended up adding some sprites as it was really harsh to the eyes. My implementation is basically the same as <em>NAD LABS</em>&lsquo; with few changes, most importantly: I separated the generation in 2 diferent tilemaps (floor and wall) to have better control as well as wrapped everything in a single scene with a &ldquo;main&rdquo; script with the following important functions:</p>
@@ -321,7 +352,7 @@ func get_centered_world_position(location: Vector2) -&gt; Vector2:
 </code></pre>
 <p>Where <code>get_cells_around</code> is just a function that gets the safe cells around the origin. And this <code>get_valid_map_coords</code> just returns used cells minus the safe cells, to place food. <code>get_centered_world_position</code> is so we can center the food in the tiles.</p>
 <p>Some signals I used for the world gen: <code>world_gen_walker_started(id)</code>, <code>world_gen_walker_finished(id)</code>, <code>world_gen_walker_died(id)</code> and <code>world_gen_spawn_walker_unit(location)</code>.</p>
-<h4 id="food-placement">Food placement<a class="headerlink" href="#food-placement" title="Permanent link">&para;</a></h4>
+<h3 id="food-placement">Food placement<a class="headerlink" href="#food-placement" title="Permanent link">&para;</a></h3>
 <p>The last food algorithm doesn&rsquo;t check anything related to the world, and thus the food could spawn in the walls and outside the map.</p>
 <p>First thing is I generalized the food into a single script and added basic food and special food which inherit from base food. The most important stuff for the base food is to be able to set all necessary properties at first:</p>
 <pre><code class="language-gdscript">func update_texture() -&gt; void:
@@ -371,10 +402,10 @@ func _ready():
     return [world_generator.get_centered_world_position(location), location]
 </code></pre>
 <p>Other than that, there are some differences between placing normal and special food (specially the signal they send, and if an extra &ldquo;special points&rdquo; property is set). Some of the signals that I used that might be important: <code>food_placing_new_food(type)</code>, <code>food_placed_new_food(type, location)</code> and <code>food_eaten(type, location)</code>.</p>
-<h3 id="stats-clas-and-loadingsaving-data">Stats clas and loading/saving data<a class="headerlink" href="#stats-clas-and-loadingsaving-data" title="Permanent link">&para;</a></h3>
-<p>I got the idea of saving the current stats (points, max body segments, etc.) in a separate <em>Stats</em> class for easier load/save data. This option I went with didn&rsquo;t work as I would liked it to work, as it was a pain in the ass to setup and each time a new property is added you have to manually setup the load/save helper functions&hellip; so not the best option. This option I used was json but saving a Node directly could work better or using resources (saving <code>tres</code> files).</p>
-<h4 id="stats-class">Stats class<a class="headerlink" href="#stats-class" title="Permanent link">&para;</a></h4>
-<p>The <em>Stats</em> &ldquo;class&rdquo; is just a script that extends from <em>Node</em> called <code>stats.gd</code>. It needs to define the <code>class_name</code> as <code>Stats</code>. The main content:</p>
+<h2 id="stats-clas-and-loadingsaving-data">Stats clas and loading/saving data<a class="headerlink" href="#stats-clas-and-loadingsaving-data" title="Permanent link">&para;</a></h2>
+<p>I got the idea of saving the current stats (points, max body segments, etc.) in a separate <code>Stats</code> class for easier load/save data. This option I went with didn&rsquo;t work as I would liked it to work, as it was a pain in the ass to setup and each time a new property is added you have to manually setup the load/save helper functions&hellip; so not the best option. This option I used was json but saving a Node directly could work better or using resources (saving <code>tres</code> files).</p>
+<h3 id="stats-class">Stats class<a class="headerlink" href="#stats-class" title="Permanent link">&para;</a></h3>
+<p>The <code>Stats</code> &ldquo;class&rdquo; is just a script that extends from <em>Node</em> called <code>stats.gd</code>. It needs to define the <code>class_name</code> as <code>Stats</code>. The main content:</p>
 <pre><code class="language-gdscript"># main
 var points: int = 0
 var segments: int = 0
@@ -436,8 +467,8 @@ func set_stats(stats: Dictionary) -&gt; void:
         trait_jump = stats[&quot;trait_jump&quot;]
 </code></pre>
 <p>And this is not scalable at all, but I had to do this at the end of the jam so no way of optimizing and/or doing it correctly, sadly.</p>
-<h4 id="loadsave-data">Load/save data<a class="headerlink" href="#loadsave-data" title="Permanent link">&para;</a></h4>
-<p>The load/save function is pretty standard. It&rsquo;s a singleton/autoload called <em>SavedData</em> with a script that extends from <em>Node</em> called <code>save_data.gd</code>:</p>
+<h3 id="loadsave-data">Load/save data<a class="headerlink" href="#loadsave-data" title="Permanent link">&para;</a></h3>
+<p>The load/save function is pretty standard. It&rsquo;s a singleton/autoload called <code>SavedData</code> with a script that extends from <em>Node</em> called <code>save_data.gd</code>:</p>
 <pre><code class="language-gdscript">const DATA_PATH: String = &quot;user://data.save&quot;
 
 var _stats: Stats
@@ -479,9 +510,9 @@ func _handle_new_file() -&gt; void:
         file.store_line(to_json(_stats.get_stats()))
         file.close()
 </code></pre>
-<p>It uses json as the file format, but I might end up changing this in the future to something else more reliable and easier to use (<em>Stats</em> class related issues).</p>
-<h3 id="scoring">Scoring<a class="headerlink" href="#scoring" title="Permanent link">&para;</a></h3>
-<p>For this I created a scoring mechanisms and just called it <em>ScoreManager</em> (<code>score_manager.gd</code>) which just basically listens to <code>food_eaten</code> signal and adds points accordingly to the current <em>Stats</em> object loaded. The main function is:</p>
+<p>It uses json as the file format, but I might end up changing this in the future to something else more reliable and easier to use (<code>Stats</code> class related issues).</p>
+<h2 id="scoring">Scoring<a class="headerlink" href="#scoring" title="Permanent link">&para;</a></h2>
+<p>For this I created a scoring mechanisms and just called it <code>ScoreManager</code> (<code>score_manager.gd</code>) which just basically listens to <code>food_eaten</code> signal and adds points accordingly to the current <em>Stats</em> object loaded. The main function is:</p>
 <pre><code class="language-gdscript">func _on_food_eaten(properties: Dictionary) -&gt; void:
     var is_special: bool = properties[&quot;special&quot;]
     var type: int = properties[&quot;type&quot;]
@@ -521,7 +552,7 @@ func _handle_new_file() -&gt; void:
 </code></pre>
 <p>Which will add the necessary points to <code>Stats.points</code> and return the amount of new snake segments to grow. After this <code>_spawn_added_score_segment</code> and <code>_spawn_added_segment_text</code> just spawn a <em>Label</em> with the info on the points/segments gained; this is custom UI I created, nothing fancy.</p>
 <p>Last thing is taht in <code>_process_points</code> there is a check at the end, where if the food eaten is &ldquo;special&rdquo; then a custom variation of the last 3 functions are executed. These are really similar, just specific to each kind of food.</p>
-<p>This <em>ScoreManager</em> also handles the calculation for the <code>game_over</code> signal, to calculte progress, set necessary <em>Stats</em> values and save the data:</p>
+<p>This <code>ScoreManager</code> also handles the calculation for the <code>game_over</code> signal, to calculte progress, set necessary <code>Stats</code> values and save the data:</p>
 <pre><code class="language-gdscript">func _on_game_over() -&gt; void:
     var max_stats: Stats = _get_max_stats()
     SaveData.save_data(max_stats)
@@ -548,8 +579,8 @@ func _get_max_stats() -&gt; Stats:
     return max_stats
 </code></pre>
 <p>Then this sends a signal <code>display_stats</code> to activate UI elements that shows the progression.</p>
-<p>Naturally, the saved <em>Stats</em> are loaded whenever needed. For example, for the <em>Snake</em>, we load the stats and setup any value needed from there (like a flag to know if any ability is enabled), and since we&rsquo;re saving the new <em>Stats</em> at the end, then on restart we load the updated one.</p>
-<h3 id="snake-redesigned-with-the-state-machine-pattern">Snake redesigned with the state machine pattern<a class="headerlink" href="#snake-redesigned-with-the-state-machine-pattern" title="Permanent link">&para;</a></h3>
+<p>Naturally, the saved <code>Stats</code> are loaded whenever needed. For example, for the <code>Snake</code>, we load the stats and setup any value needed from there (like a flag to know if any ability is enabled), and since we&rsquo;re saving the new <code>Stats</code> at the end, then on restart we load the updated one.</p>
+<h2 id="snake-redesigned-with-the-state-machine-pattern">Snake redesigned with the state machine pattern<a class="headerlink" href="#snake-redesigned-with-the-state-machine-pattern" title="Permanent link">&para;</a></h2>
 <p>I redesigned the snake code (the head, actually) to use the state machine pattern by following <a href="https://gdscript.com/solutions/godot-state-machine/">this guide</a> which is definitely a great guide, straight to the point and easy to implement.</p>
 <p>Other than what is shown in the guide, I implemented some important functions in the <code>state_machine.gd</code> script itself, to be used by each of the states as needed:</p>
 <pre><code class="language-gdscript">func rotate_on_input() -&gt; void:
@@ -571,7 +602,7 @@ func handle_slow_speeds() -&gt; void:
         Global.SNAKE_SPEED = Global.SNAKE_SPEED_BACKUP
         Event.emit_signal(&quot;game_over&quot;)
 </code></pre>
-<p>And then in the <em>StateMachine</em>&lsquo;s <code>_process</code>:</p>
+<p>And then in the <code>StateMachine</code>&lsquo;s <code>_process</code>:</p>
 <pre><code class="language-gdscript">func _physics_process(delta: float) -&gt; void:
     # state specific code, move_and_slide is called here
     if state.has_method(&quot;physics_process&quot;):
@@ -623,7 +654,7 @@ func physics_process(delta: float) -&gt; void:
 </code></pre>
 <p>Where the important parts happen in the <code>enter</code> and <code>exit</code> functions. We need to change the <code>Global.SNAKE_SPEED</code> with the <code>Global.SNAKE_DASH_SPEED</code> on <code>start</code>and start the timer for how long should the dash last. And on the <code>exit</code> we reset the <code>Global.SNAKE_SPEED</code> back to normal. There is probably a better way of updating the <code>Global.SNAKE_SPEED</code> but this works just fine.</p>
 <p>For the other ones is the same. Only difference with the <code>jump_state.gd</code> is that the collision from head to body is disabled, and no rotation is allowed (by not calling the <code>rotate_on_input</code> function).</p>
-<h3 id="other-minor-stuff">Other minor stuff<a class="headerlink" href="#other-minor-stuff" title="Permanent link">&para;</a></h3>
+<h2 id="other-minor-stuff">Other minor stuff<a class="headerlink" href="#other-minor-stuff" title="Permanent link">&para;</a></h2>
 <p>Not as important but worth mentioning:</p>
 <ul>
 <li>Added restartability function.</li>
@@ -637,9 +668,9 @@ func physics_process(delta: float) -&gt; void:
 <li>Refactored the nodes to make it work with <code>change_scene_to</code>, and added a main menu.</li>
 <li>Added GUI for dead screen, showing the progress.</li>
 </ul>
-<h3 id="final-notes">Final notes<a class="headerlink" href="#final-notes" title="Permanent link">&para;</a></h3>
-<p>I actually didn&rsquo;t finish this game (as how I visualized it), but I got it in a playable state which is good. My big learning during this jam is the time management that it requires to plan and design a game. I lost a lot of time trying to implement some mechanics because I was facing many issues, because of my lack of practice (which was expected) as well as trying to blog and create the necessary sprites myself. Next time I should just get an asset pack and do something with it, as well as keeping the scope of my game shorter.</p>
-<p>For exporting and everything else, I went with what I did for my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1#final-notes-and-exporting">FlappyBird Godot clone</a></p>]]></content:encoded>
+<h2 id="final-notes">Final notes<a class="headerlink" href="#final-notes" title="Permanent link">&para;</a></h2>
+<p>I actually didn&rsquo;t finish this game (as how I visualized it), but I got it in a <em>semi-playable</em> state which is good. My big learning during this jam is the time management that it requires to plan and design a game. I lost a lot of time trying to implement some mechanics because I was facing many issues, because of my lack of practice (which was expected) as well as trying to blog and create the necessary sprites myself. Next time I should just get an asset pack and do something with it, as well as keeping the scope of my game shorter.</p>
+<p>For exporting and everything else, I went with what I did for my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1#final-notes-and-exporting">FlappyBird Godot clone: final notes and exporting</a></p>]]></content:encoded>
     </item>
     <item>
       <title>Creating a FlappyBird clone in Godot 3.5 devlog 1</title>
@@ -648,9 +679,10 @@ func physics_process(delta: float) -&gt; void:
       <pubDate>Sun, 29 May 2022 03:38:43 GMT</pubDate>
       <category>English</category>
       <category>Gamedev</category>
+      <category>Gdscript</category>
       <category>Godot</category>
       <description>Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff.</description>
-      <content:encoded><![CDATA[<p>I just have a bit of experience with Godot and with gamedev in general, so I started with this game as it is pretty straight forward. On a high level the main characteristics of the game are:</p>
+      <content:encoded><![CDATA[<p>I just have a bit of experience with <em>Godot</em> and with gamedev in general, so I started with this game as it is pretty straight forward. On a high level the main characteristics of the game are:</p>
 <ul>
 <li>Literally just one sprite going up and down.</li>
 <li>Constant horizontal move of the world/player.</li>
@@ -660,189 +692,246 @@ func physics_process(delta: float) -&gt; void:
 <p>The game was originally developed with <em>Godot 4.0 alpha 8</em>, but it didn&rsquo;t support HTML5 (webassembly) export&hellip; so I backported to <em>Godot 3.5 rc1</em>.</p>
 <p>Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of <em>Godot</em> in general. Usually when I mention that a set/change of something it usually it&rsquo;s a property and it can be found under the <em>Inspector</em> on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in <em>snake_case</em> (scenes/nodes in <em>PascalCase</em>).</p>
 <p>One thing to note, is that I started writing this when I finished the game, so it&rsquo;s hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I&rsquo;ll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.</p>
-<p>The source code can be found in my GitHub <a href="https://github.com/luevano/flappybird_godot">here</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the itch.io page I setup where it&rsquo;s playable in the browser:</p>
-<p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="552" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
+<p>The source code can be found in my GitHub <a href="https://github.com/luevano/flappybird_godot">here</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
+<p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
-<h3 id="initial-project-setup">Initial project setup<a class="headerlink" href="#initial-project-setup" title="Permanent link">&para;</a></h3>
-<h4 id="directory-structure">Directory structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h4>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#initial-setup">Initial setup</a><ul>
+<li><a href="#directory-structure">Directory structure</a></li>
+<li><a href="#config">Config</a><ul>
+<li><a href="#default-import-settings">Default import settings</a></li>
+<li><a href="#general-settings">General settings</a></li>
+<li><a href="#keybindings">Keybindings</a></li>
+<li><a href="#layers">Layers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#assets">Assets</a><ul>
+<li><a href="#importing">Importing</a></li>
+</ul>
+</li>
+<li><a href="#scenes">Scenes</a><ul>
+<li><a href="#tilemaps">TileMaps</a><ul>
+<li><a href="#default-ground-tiles">Default ground tiles</a></li>
+</ul>
+</li>
+<li><a href="#player">Player</a></li>
+<li><a href="#other">Other</a></li>
+<li><a href="#game">Game</a></li>
+<li><a href="#ui">UI</a><ul>
+<li><a href="#fonts">Fonts</a></li>
+<li><a href="#scene-setup">Scene setup</a></li>
+</ul>
+</li>
+<li><a href="#main">Main</a></li>
+</ul>
+</li>
+<li><a href="#scripting">Scripting</a><ul>
+<li><a href="#player_1">Player</a></li>
+<li><a href="#worlddetector">WorldDetector</a></li>
+<li><a href="#worldtiles">WorldTiles</a><ul>
+<li><a href="#groundtilemap">GroundTileMap</a></li>
+<li><a href="#pipetilemap">PipeTileMap</a></li>
+</ul>
+</li>
+<li><a href="#saved-data">Saved data</a></li>
+<li><a href="#game_1">Game</a></li>
+<li><a href="#ui_1">UI</a></li>
+<li><a href="#main_1">Main</a></li>
+</ul>
+</li>
+<li><a href="#final-notes-and-exporting">Final notes and exporting</a><ul>
+<li><a href="#preparing-the-files">Preparing the files</a></li>
+<li><a href="#exporting">Exporting</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="initial-setup">Initial setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h2>
+<h3 id="directory-structure">Directory structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
 <p>I&rsquo;m basically going with what I wrote on <a href="https://blog.luevano.xyz/g/godot_project_structure.html">Godot project structure</a> recently, and probably with minor changes depending on the situation.</p>
-<h4 id="config">Config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h4>
-<h5 id="default-import-settings">Default import settings<a class="headerlink" href="#default-import-settings" title="Permanent link">&para;</a></h5>
+<h3 id="config">Config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h3>
+<h4 id="default-import-settings">Default import settings<a class="headerlink" href="#default-import-settings" title="Permanent link">&para;</a></h4>
 <p>Since this is just pixel art, the importing settings for textures needs to be adjusted so the sprites don&rsquo;t look blurry. Go to <em>Project -&gt; Project settings&hellip; -&gt; Import defaults</em> and on the drop down select <code>Texture</code>, untick everything and make sure <em>Compress/Mode</em> is set to <code>Lossless</code>.</p>
 <figure id="__yafg-figure-4">
-<img alt="Project settings - Import defaults - Texture settings" src="images/g/flappybird_godot/project_settings_import_texture.png" title="Project settings - Import defaults - Texture settings">
+<img alt="Project settings - Import defaults - Texture settings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_import_texture.png" title="Project settings - Import defaults - Texture settings">
 <figcaption>Project settings - Import defaults - Texture settings</figcaption>
 </figure>
-<h5 id="general-settings">General settings<a class="headerlink" href="#general-settings" title="Permanent link">&para;</a></h5>
+<h4 id="general-settings">General settings<a class="headerlink" href="#general-settings" title="Permanent link">&para;</a></h4>
 <p>It&rsquo;s also a good idea to setup some config variables project-wide. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Application/config</em> and add a new property (there is a text box at the top of the project settings window) for game scale: <code>application/config/game_scale</code> for the type use <code>float</code> and then click on add; configure the new property to <code>3.0</code>; On the same window, also add <code>application/config/version</code> as a <code>string</code>, and make it <code>1.0.0</code> (or whatever number you want).</p>
 <figure id="__yafg-figure-5">
-<img alt="Project settings - General - Game scale and version properties" src="images/g/flappybird_godot/project_settings_config_properties.png" title="Project settings - General - Game scale and version properties">
+<img alt="Project settings - General - Game scale and version properties" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_config_properties.png" title="Project settings - General - Game scale and version properties">
 <figcaption>Project settings - General - Game scale and version properties</figcaption>
 </figure>
-<p>For my personal preferences, also disable some of the <em>GDScript</em> debug warnings that are annoying, this is done at <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Debug/GDScript</em> and toggle off &ldquo;Unused arguments&rdquo;, &ldquo;Unused signal&rdquo; and &ldquo;Return value discarded&rdquo;, and any other that might come up too often and don&rsquo;t want to see.</p>
+<p>For my personal preferences, also disable some of the <em>GDScript</em> debug warnings that are annoying, this is done at <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Debug/GDScript</em> and toggle off <code>Unused arguments</code>, <code>Unused signal</code> and <code>Return value discarded</code>, and any other that might come up too often and don&rsquo;t want to see.</p>
 <figure id="__yafg-figure-6">
-<img alt="Project settings - General - GDScript debug warnings" src="images/g/flappybird_godot/project_settings_debug_gdscript.png" title="Project settings - General - GDScript debug warnings">
+<img alt="Project settings - General - GDScript debug warnings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_debug_gdscript.png" title="Project settings - General - GDScript debug warnings">
 <figcaption>Project settings - General - GDScript debug warnings</figcaption>
 </figure>
-<p>Finally, set the initial window size in <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Display/Window</em> and set <em>Size/Width</em> and <em>Size/Height</em> to <code>600</code> and <code>800</code>, respectively. As well as the <em>Stretch/Mode</em> to &ldquo;viewport&rdquo;, and <em>Stretch/Aspect</em> to &ldquo;keep&rdquo;:</p>
+<p>Finally, set the initial window size in <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Display/Window</em> and set <em>Size/Width</em> and <em>Size/Height</em> to <code>600</code> and <code>800</code>, respectively. As well as the <em>Stretch/Mode</em> to <code>viewport</code> , and <em>Stretch/Aspect</em> to <code>keep</code>:</p>
 <figure id="__yafg-figure-7">
-<img alt="Project settings - General - Initial window size" src="images/g/flappybird_godot/project_settings_window_settings.png" title="Project settings - General - Initial window size">
+<img alt="Project settings - General - Initial window size" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_window_settings.png" title="Project settings - General - Initial window size">
 <figcaption>Project settings - General - Initial window size</figcaption>
 </figure>
-<h5 id="keybindings">Keybindings<a class="headerlink" href="#keybindings" title="Permanent link">&para;</a></h5>
-<p>I only used 3 actions (keybindings): jump, restart and toggle_debug (optional). To add custom keybindings (so that the <code>Input.something()</code> API can be used), go to <em>Project -&gt; Project settings&hellip; -&gt; Input Map</em> and on the text box write &ldquo;jump&rdquo; and click add, then it will be added to the list and it&rsquo;s just a matter of clicking the <code>+</code> sign to add a &ldquo;Physical key&rdquo;, press any key you want to be used to jump and click ok. Do the same for the rest of the actions.</p>
+<h4 id="keybindings">Keybindings<a class="headerlink" href="#keybindings" title="Permanent link">&para;</a></h4>
+<p>I only used 3 actions (keybindings): jump, restart and toggle_debug (optional). To add custom keybindings (so that the <code>Input.something()</code> API can be used), go to <em>Project -&gt; Project settings&hellip; -&gt; Input Map</em> and on the text box write <code>jump</code> and click add, then it will be added to the list and it&rsquo;s just a matter of clicking the <code>+</code> sign to add a <em>Physical key</em>, press any key you want to be used to jump and click ok. Do the same for the rest of the actions.</p>
 <figure id="__yafg-figure-8">
-<img alt="Project settings - Input Map - Adding necessary keybindings" src="images/g/flappybird_godot/project_settings_input_map.png" title="Project settings - Input Map - Adding necessary keybindings">
+<img alt="Project settings - Input Map - Adding necessary keybindings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_input_map.png" title="Project settings - Input Map - Adding necessary keybindings">
 <figcaption>Project settings - Input Map - Adding necessary keybindings</figcaption>
 </figure>
-<h5 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h5>
-<p>Finally, rename the physics layers so we don&rsquo;t lose track of which layer is which. Go to <em>Project -&gt; Layer Names -&gt; 2d Physics</em> and change the first 5 layer names to (in order): &ldquo;player&rdquo;, &ldquo;ground&rdquo;, &ldquo;pipe&rdquo;, &ldquo;ceiling&rdquo; and &ldquo;score&rdquo;.</p>
+<h4 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h4>
+<p>Finally, rename the physics layers so we don&rsquo;t lose track of which layer is which. Go to <em>Project -&gt; Layer Names -&gt; 2d Physics</em> and change the first 5 layer names to (in order): <code>player</code>, <code>ground</code>, <code>pipe</code>, <code>ceiling</code> and <code>score</code>.</p>
 <figure id="__yafg-figure-9">
-<img alt="Project settings - Layer Names - 2D Physics" src="images/g/flappybird_godot/project_settings_layer_names_2d_physics.png" title="Project settings - Layer Names - 2D Physics">
+<img alt="Project settings - Layer Names - 2D Physics" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_layer_names_2d_physics.png" title="Project settings - Layer Names - 2D Physics">
 <figcaption>Project settings - Layer Names - 2D Physics</figcaption>
 </figure>
-<h3 id="assets">Assets<a class="headerlink" href="#assets" title="Permanent link">&para;</a></h3>
+<h2 id="assets">Assets<a class="headerlink" href="#assets" title="Permanent link">&para;</a></h2>
 <p>For the assets I found out about a pack that contains just what I need: <a href="https://megacrash.itch.io/flappy-bird-assets">flappy-bird-assets</a> by <a href="https://megacrash.itch.io/">MegaCrash</a>; I just did some minor modifications on the naming of the files. For the font I used <a href="https://poppyworks.itch.io/silver">Silver</a>, and for the sound the resources from <a href="https://github.com/meeq/FlappyBird-N64">FlappyBird-N64</a> (which seems to be taken from <a href="https://www.101soundboards.com/boards/10178-flappy-bird-sounds">101soundboards.com</a> which the orignal copyright holder is <a href="https://dotgears.com/">.Gears</a> anyways).</p>
-<h4 id="importing">Importing<a class="headerlink" href="#importing" title="Permanent link">&para;</a></h4>
-<p>Create the necessary directories to hold the respective assets and it&rsquo;s just a matter of dragging and dropping, I used directories: <code>res://entities/actors/player/sprites/</code>, <code>res://fonts/</code>, <code>res://levels/world/background/sprites/</code>, <code>res://levels/world/ground/sprites/</code>, <code>res://levels/world/pipe/sprites/</code>, <code>res://sfx/</code>. For the player sprites, the &ldquo;FileSystem&rdquo; window looks like this (<code>entities/actor</code> directories are really not necessary):</p>
+<h3 id="importing">Importing<a class="headerlink" href="#importing" title="Permanent link">&para;</a></h3>
+<p>Create the necessary directories to hold the respective assets and it&rsquo;s just a matter of dragging and dropping, I used directories: <code>res://entities/actors/player/sprites/</code>, <code>res://fonts/</code>, <code>res://levels/world/background/sprites/</code>, <code>res://levels/world/ground/sprites/</code>, <code>res://levels/world/pipe/sprites/</code>, <code>res://sfx/</code>. For the player sprites, the 
+<em>FileSystem</em> window looks like this (<code>entities/actor</code> directories are really not necessary):</p>
 <figure id="__yafg-figure-10">
-<img alt="FileSystem - Player sprite imports" src="images/g/flappybird_godot/player_sprite_imports.png" title="FileSystem - Player sprite imports">
+<img alt="FileSystem - Player sprite imports" src="https://static.luevano.xyz/images/g/flappybird_godot/player_sprite_imports.png" title="FileSystem - Player sprite imports">
 <figcaption>FileSystem - Player sprite imports</figcaption>
 </figure>
 <p>It should look similar for other directories, except maybe for the file extensions. For example, for the sfx:</p>
 <figure id="__yafg-figure-11">
-<img alt="FileSystem - SFX imports" src="images/g/flappybird_godot/sfx_imports.png" title="FileSystem - SFX imports">
+<img alt="FileSystem - SFX imports" src="https://static.luevano.xyz/images/g/flappybird_godot/sfx_imports.png" title="FileSystem - SFX imports">
 <figcaption>FileSystem - SFX imports</figcaption>
 </figure>
-<h3 id="scenes">Scenes<a class="headerlink" href="#scenes" title="Permanent link">&para;</a></h3>
+<h2 id="scenes">Scenes<a class="headerlink" href="#scenes" title="Permanent link">&para;</a></h2>
 <p>Now it&rsquo;s time to actually create the game, by creating the basic scenes that will make up the game. The hardest part and the most confusing is going to be the <em>TileMaps</em>, so that goes first.</p>
-<h4 id="tilemaps">TileMaps<a class="headerlink" href="#tilemaps" title="Permanent link">&para;</a></h4>
-<p>I&rsquo;m using a scene called &ldquo;WorldTiles&rdquo; with a <em>Node2D</em> node as root called the same. With 2 different <em>TileMap</em> nodes as children named &ldquo;GroundTileMap&rdquo; and &ldquo;PipeTileMap&rdquo; (these are their own scene); yes 2 different <em>TileMaps</em> because we need 2 different physics colliders (In Godot 4.0 you can have a single <em>TileMap</em> with different physics colliders in it). Each node has its own script. It should look something like this:</p>
+<h3 id="tilemaps">TileMaps<a class="headerlink" href="#tilemaps" title="Permanent link">&para;</a></h3>
+<p>I&rsquo;m using a scene called <code>WorldTiles</code> with a <em>Node2D</em> node as root called the same. With 2 different <em>TileMap</em> nodes as children named <code>GroundTileMap</code> and <code>PipeTileMap</code> (these are their own scene); yes 2 different <em>TileMaps</em> because we need 2 different physics colliders (in <em>Godot 4.0</em> you can have a single <em>TileMap</em> with different physics colliders in it). Each node has its own script. It should look something like this:</p>
 <figure id="__yafg-figure-12">
-<img alt="Scene - WorldTiles (TileMaps)" src="images/g/flappybird_godot/scene_world_tiles.png" title="Scene - WorldTiles (TileMaps)">
+<img alt="Scene - WorldTiles (TileMaps)" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_world_tiles.png" title="Scene - WorldTiles (TileMaps)">
 <figcaption>Scene - WorldTiles (TileMaps)</figcaption>
 </figure>
 <p>I used the following directory structure:</p>
 <figure id="__yafg-figure-13">
-<img alt="Scene - WorldTiles - Directory structure" src="images/g/flappybird_godot/scene_world_tiles_directory_structure.png" title="Scene - WorldTiles - Directory structure">
+<img alt="Scene - WorldTiles - Directory structure" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_world_tiles_directory_structure.png" title="Scene - WorldTiles - Directory structure">
 <figcaption>Scene - WorldTiles - Directory structure</figcaption>
 </figure>
-<p>To configure the GroundTileMap, select the node and click on &ldquo;(empty)&rdquo; on the <em>TileMap/Tile set</em> property and then click on &ldquo;New TileSet&rdquo;, then click where the &ldquo;(empty)&rdquo; used to be, a new window should open on the bottom:</p>
+<p>To configure the <code>GroundTileMap</code>, select the node and click on <code>(empty)</code> on the <em>TileMap/Tile set</em> property and then click on <code>New TileSet</code>, then click where the <code>(empty)</code> used to be, a new window should open on the bottom:</p>
 <figure id="__yafg-figure-14">
-<img alt="TileSet - Configuration window" src="images/g/flappybird_godot/tile_set_config_window.png" title="TileSet - Configuration window">
+<img alt="TileSet - Configuration window" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_config_window.png" title="TileSet - Configuration window">
 <figcaption>TileSet - Configuration window</figcaption>
 </figure>
-<p>Click on the plus on the bottom left and you can now select the specific tile set to use. Now click on the yellow &ldquo;+ New Single Tile&rdquo;, activate the grid and select any of the tiles. Should look like this:</p>
+<p>Click on the plus on the bottom left and you can now select the specific tile set to use. Now click on the yellow <code>+ New Single Tile</code>, activate the grid and select any of the tiles. Should look like this:</p>
 <figure id="__yafg-figure-15">
-<img alt="TileSet - New single tile" src="images/g/flappybird_godot/tile_set_new_single_tile.png" title="TileSet - New single tile">
+<img alt="TileSet - New single tile" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_new_single_tile.png" title="TileSet - New single tile">
 <figcaption>TileSet - New single tile</figcaption>
 </figure>
-<p>We need to do this because for some reason we can&rsquo;t change the snap options before selecting a tile. After selecting a random tile, set up the <em>Snap Options/Step</em> (in the <em>Inspector</em>) and set it to 16x16 (or if using a different tile set, to it&rsquo;s tile size):</p>
+<p>We need to do this because for some reason we can&rsquo;t change the snap options before selecting a tile. After selecting a random tile, set up the <em>Snap Options/Step</em> (in the <em>Inspector</em>) and set it to <code>16x16</code> (or if using a different tile set, to it&rsquo;s tile size):</p>
 <figure id="__yafg-figure-16">
-<img alt="TileSet - Tile - Step snap options" src="images/g/flappybird_godot/tile_set_tile_step_snap_options.png" title="TileSet - Tile - Step snap options">
+<img alt="TileSet - Tile - Step snap options" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_tile_step_snap_options.png" title="TileSet - Tile - Step snap options">
 <figcaption>TileSet - Tile - Step snap options</figcaption>
 </figure>
-<p>Now you can select the actual single tile. Once selected click on &ldquo;Collision&rdquo;, use the rectangle tool and draw the rectangle corresponding to that tile&rsquo;s collision:</p>
+<p>Now you can select the actual single tile. Once selected click on <code>Collision</code>, use the rectangle tool and draw the rectangle corresponding to that tile&rsquo;s collision:</p>
 <figure id="__yafg-figure-17">
-<img alt="TileSet - Tile - Selection and collision" src="images/g/flappybird_godot/tile_set_tile_selection_collision.png" title="TileSet - Tile - Selection and collision">
+<img alt="TileSet - Tile - Selection and collision" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_tile_selection_collision.png" title="TileSet - Tile - Selection and collision">
 <figcaption>TileSet - Tile - Selection and collision</figcaption>
 </figure>
 <p>Do the same for the other 3 tiles. If you select the <em>TileMap</em> itself again, it should look like this on the right (on default layout it&rsquo;s on the left of the <em>Inspector</em>):</p>
 <figure id="__yafg-figure-18">
-<img alt="TileSet - Available tiles" src="images/g/flappybird_godot/tile_set_available_tiles.png" title="TileSet - Available tiles">
+<img alt="TileSet - Available tiles" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_available_tiles.png" title="TileSet - Available tiles">
 <figcaption>TileSet - Available tiles</figcaption>
 </figure>
 <p>The ordering is important only for the &ldquo;underground tile&rdquo;, which is the filler ground, it should be at the end (index 3); if this is not the case, repeat the process (it&rsquo;s possible to rearrange them but it&rsquo;s hard to explain as it&rsquo;s pretty weird).</p>
-<p>At this point the tilemap doesn&rsquo;t have any physics and the cell size is wrong. Select the &ldquo;GroundTileMap&rdquo;, set the <em>TileMap/Cell/Size</em> to 16x16, the <em>TileMap/Collision/Layer</em> set to <code>bit 2</code> only (ground layer) and disable any <em>TileMap/Collision/Mask</em> bits. Should look something like this:</p>
+<p>At this point the tilemap doesn&rsquo;t have any physics and the cell size is wrong. Select the <code>GroundTileMap</code>, set the <em>TileMap/Cell/Size</em> to <code>16x16</code>, the <em>TileMap/Collision/Layer</em> set to <code>bit 2</code> only (ground layer) and disable any <em>TileMap/Collision/Mask</em> bits. Should look something like this:</p>
 <figure id="__yafg-figure-19">
-<img alt="TileMap - Cell size and collision configuration" src="images/g/flappybird_godot/tile_map_cell_collision_configuration.png" title="TileMap - Cell size and collision configuration">
+<img alt="TileMap - Cell size and collision configuration" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_map_cell_collision_configuration.png" title="TileMap - Cell size and collision configuration">
 <figcaption>TileMap - Cell size and collision configuration</figcaption>
 </figure>
-<p>Now it&rsquo;s just a matter of repeating the same for the pipes (&ldquo;PipeTileMap&rdquo;), only difference is that when selecting the tiles you need to select 2 tiles, as the pipe is 2 tiles wide, or just set the <em>Snap Options/Step</em> to 32x16, for example, just keep the cell size to 16x16.</p>
-<h5 id="default-ground-tiles">Default ground tiles<a class="headerlink" href="#default-ground-tiles" title="Permanent link">&para;</a></h5>
-<p>I added few default ground tiles to the scene, just for testing purposes but I left them there. These could be place programatically, but I was too lazy to change things. On the &ldquo;WorldTiles&rdquo; scene, while selecting the &ldquo;GroundTileMap&rdquo;, you can select the tiles you want to paint with, and left click in the grid to paint with the selected tile. Need to place tiles from <code>(-8, 7)</code> to <code>(10, 7)</code> as well as the tile below with the filler ground (the tile position/coordinates show at the bottom left, refer to the image below):</p>
+<p>Now it&rsquo;s just a matter of repeating the same for the pipes (<code>PipeTileMap</code>), only difference is that when selecting the tiles you need to select 2 tiles, as the pipe is 2 tiles wide, or just set the <em>Snap Options/Step</em> to <code>32x16</code>, for example, just keep the cell size to <code>16x16</code>.</p>
+<h4 id="default-ground-tiles">Default ground tiles<a class="headerlink" href="#default-ground-tiles" title="Permanent link">&para;</a></h4>
+<p>I added few default ground tiles to the scene, just for testing purposes but I left them there. These could be place programatically, but I was too lazy to change things. On the <code>WorldTiles</code> scene, while selecting the <code>GroundTileMap</code>, you can select the tiles you want to paint with, and left click in the grid to paint with the selected tile. Need to place tiles from <code>(-8, 7)</code> to <code>(10, 7)</code> as well as the tile below with the filler ground (the tile position/coordinates show at the bottom left, refer to the image below):</p>
 <figure id="__yafg-figure-20">
-<img alt="Scene - WorldTiles - Default ground tiles" src="images/g/flappybird_godot/world_tiles_default_tiles.png" title="Scene - WorldTiles - Default ground tiles">
+<img alt="Scene - WorldTiles - Default ground tiles" src="https://static.luevano.xyz/images/g/flappybird_godot/world_tiles_default_tiles.png" title="Scene - WorldTiles - Default ground tiles">
 <figcaption>Scene - WorldTiles - Default ground tiles</figcaption>
 </figure>
-<h4 id="player">Player<a class="headerlink" href="#player" title="Permanent link">&para;</a></h4>
-<p>On a new scene called &ldquo;Player&rdquo; with a <em>KinematicBody2D</em> node named &ldquo;Player&rdquo; as the root of the scene, then for the children: <em>AnimatedSprite</em> as &ldquo;Sprite&rdquo;, <em>CollisionShape2D</em> as &ldquo;Collision&rdquo; (with a circle shape) and 3 <em>AudioStreamPlayers</em> for &ldquo;JumpSound&rdquo;, &ldquo;DeadSound&rdquo; and &ldquo;HitSound&rdquo;. Not sure if it&rsquo;s a good practice to have the audio here, since I did that at the end, pretty lazy. Then, attach a script to the &ldquo;Player&rdquo; node and then it should look like this:</p>
+<h3 id="player">Player<a class="headerlink" href="#player" title="Permanent link">&para;</a></h3>
+<p>On a new scene called <code>Player</code> with a <em>KinematicBody2D</em> node named <code>Player</code> as the root of the scene, then for the children: <em>AnimatedSprite</em> as <code>Sprite</code>, <em>CollisionShape2D</em> as <code>Collision</code> (with a circle shape) and 3 <em>AudioStreamPlayers</em> for <code>JumpSound</code>, <code>DeadSound</code> and <code>HitSound</code>. Not sure if it&rsquo;s a good practice to have the audio here, since I did that at the end, pretty lazy. Then, attach a script to the <code>Player</code> node and then it should look like this:</p>
 <figure id="__yafg-figure-21">
-<img alt="Scene - Player - Node setup" src="images/g/flappybird_godot/scene_player_node_setup.png" title="Scene - Player - Node setup">
+<img alt="Scene - Player - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_node_setup.png" title="Scene - Player - Node setup">
 <figcaption>Scene - Player - Node setup</figcaption>
 </figure>
-<p>Select the &ldquo;Player&rdquo; node and set the <em>CollisionShape2D/Collision/Layer</em> to 1 and the <em>CollisionObject2D/Collision/Mask</em> to 2 and 3 (ground and pipe).</p>
-<p>For the &ldquo;Sprite&rdquo; node, when selecting it click on the &ldquo;(empty)&rdquo; for the <em>AnimatedSprite/Frames</em> property and click &ldquo;New SpriteFrames&rdquo;, click again where the &ldquo;(empty)&rdquo; used to be and ane window should open on the bottom:</p>
+<p>Select the <code>Player</code> node and set the <em>CollisionShape2D/Collision/Layer</em> to <code>1</code> and the <em>CollisionObject2D/Collision/Mask</em> to <code>2</code> and <code>3</code> (ground and pipe).</p>
+<p>For the <code>Sprite</code> node, when selecting it click on the <code>(empty)</code> for the <em>AnimatedSprite/Frames</em> property and click <code>New SpriteFrames</code>, click again where the <code>(empty)</code> used to be and ane window should open on the bottom:</p>
 <figure id="__yafg-figure-22">
-<img alt="Scene - Player - SpriteFrames window" src="images/g/flappybird_godot/scene_player_spriteframes_window.png" title="Scene - Player - SpriteFrames window">
+<img alt="Scene - Player - SpriteFrames window" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_spriteframes_window.png" title="Scene - Player - SpriteFrames window">
 <figcaption>Scene - Player - SpriteFrames window</figcaption>
 </figure>
-<p>Right off the bat, set the &ldquo;Speed&rdquo; to <code>10 FPS</code> (bottom left) and rename &ldquo;default&rdquo; to &ldquo;bird_1&rdquo;. With the &ldquo;bird_1&rdquo; selected, click on the &ldquo;Add frames from a Sprite Sheet&rdquo;, which is the second button under &ldquo;Animation Frames:&rdquo; which looks has an icon of a small grid (next to the folder icon), a new window will popup where you need to select the respective sprite sheet to use and configure it for importing. On the &ldquo;Select Frames&rdquo; window, change the &ldquo;Vertical&rdquo; to 1, and then select all 4 frames (<em>Ctrl + Scroll</em> wheel to zoom in):</p>
+<p>Right off the bat, set the <code>Speed</code> to <code>10 FPS</code> (bottom left) and rename <code>default</code> to <code>bird_1</code>. With the <code>bird_1</code> selected, click on the <code>Add frames from a Sprite Sheet</code>, which is the second button under <code>Animation Frames:</code> which looks has an icon of a small grid (next to the folder icon), a new window will popup where you need to select the respective sprite sheet to use and configure it for importing. On the <code>Select Frames</code> window, change the <code>Vertical</code> to <code>1</code>, and then select all 4 frames (<em>Ctrl + Scroll</em> wheel to zoom in):</p>
 <figure id="__yafg-figure-23">
-<img alt="Scene - Player - Sprite sheet importer" src="images/g/flappybird_godot/scene_player_sprite_sheet_importer.png" title="Scene - Player - Sprite sheet importer">
+<img alt="Scene - Player - Sprite sheet importer" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_sprite_sheet_importer.png" title="Scene - Player - Sprite sheet importer">
 <figcaption>Scene - Player - Sprite sheet importer</figcaption>
 </figure>
 <p>After that, the <em>SpriteFrames</em> window should look like this:</p>
 <figure id="__yafg-figure-24">
-<img alt="Scene - Player - SpriteFrames window with sprite sheet configured" src="images/g/flappybird_godot/scene_player_spriteframes_window_with_sprite_sheet.png" title="Scene - Player - SpriteFrames window with sprite sheet configured">
+<img alt="Scene - Player - SpriteFrames window with sprite sheet configured" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_spriteframes_window_with_sprite_sheet.png" title="Scene - Player - SpriteFrames window with sprite sheet configured">
 <figcaption>Scene - Player - SpriteFrames window with sprite sheet configured</figcaption>
 </figure>
-<p>Finally, make sure the &ldquo;Sprite&rdquo; node has the <em>AnimatedSprite/Animation</em> is set to &ldquo;bird_1&rdquo; and that the &ldquo;Collision&rdquo; node is configured correctly for its size and position (I just have it as a radius of 7). As well as dropping the SFX files into the corresponding <em>AudioStreamPlayer</em> (into the <em>AudioStreamPlayer/Stream</em> property).</p>
-<h4 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h4>
+<p>Finally, make sure the <code>Sprite</code> node has the <em>AnimatedSprite/Animation</em> is set to <code>bird_1</code> and that the <code>Collision</code> node is configured correctly for its size and position (I just have it as a radius of <code>7</code>). As well as dropping the SFX files into the corresponding <em>AudioStreamPlayer</em> (into the <em>AudioStreamPlayer/Stream</em> property).</p>
+<h3 id="other">Other<a class="headerlink" href="#other" title="Permanent link">&para;</a></h3>
 <p>These are really simple scenes that don&rsquo;t require much setup:</p>
 <ul>
-<li>&ldquo;CeilingDetector&rdquo;: just an <em>Area2D</em> node with a <em>CollisionShape2D</em> in the form of a rectangle (<em>CollisionShape2D/Shape/extents</em> to <code>(120, 10)</code>), stretched horizontally so it fits the whole screen. <em>CollisionObject2D/Collision/Layer</em> set to <code>bit 4</code> (ceiling) and <em>CollisionObject2D/Collision/Mask</em> set to bit 1 (player).</li>
-<li>&ldquo;ScoreDetector&rdquo;: similar to the &ldquo;CeilingDetector&rdquo;, but vertical (<em>CollisionShape2D/Shape/extents</em> to <code>(2.5, 128)</code>) and <em>CollisionObject2D/Collision/Layer</em> set to <code>bit 1</code> (player).</li>
-<li>&ldquo;WorldDetector&rdquo;: <em>Node2D</em> with a script attached, and 3 <em>RayCast2D</em> as children:<ul>
-<li>&ldquo;NewTile&rdquo;: <em>Raycast2D/Enabled</em> to true (checked), <em>Raycast2D/Cast To</em> <code>(0, 400)</code>, <em>Raycast2D/Collision Mask</em> to <code>bit 2</code> (ground) and <em>Node2D/Transform/Position</em> to <code>(152, -200)</code></li>
-<li>&ldquo;OldTile&rdquo;: same as &ldquo;NewTile&rdquo;, except for the <em>Node2D/Transform/Position</em>, set it to <code>(-152, -200)</code>.</li>
-<li>&ldquo;OldPipe&rdquo;: same as &ldquo;OldTile&rdquo;, except for the <em>Raycast2D/Collision Mask</em>, set it to <code>bit 3</code> (pipe).</li>
+<li><code>CeilingDetector</code>: just an <em>Area2D</em> node with a <em>CollisionShape2D</em> in the form of a rectangle (<em>CollisionShape2D/Shape/extents</em> to <code>(120, 10)</code>), stretched horizontally so it fits the whole screen. <em>CollisionObject2D/Collision/Layer</em> set to <code>bit 4</code> (ceiling) and <em>CollisionObject2D/Collision/Mask</em> set to <code>bit 1</code> (player).</li>
+<li><code>ScoreDetector</code>: similar to the <code>CeilingDetector</code>, but vertical (<em>CollisionShape2D/Shape/extents</em> to <code>(2.5, 128)</code>) and <em>CollisionObject2D/Collision/Layer</em> set to <code>bit 1</code> (player).</li>
+<li><code>WorldDetector</code>: <em>Node2D</em> with a script attached, and 3 <em>RayCast2D</em> as children:<ul>
+<li><code>NewTile</code>: <em>Raycast2D/Enabled</em> to true (checked), <em>Raycast2D/Cast To</em> <code>(0, 400)</code>, <em>Raycast2D/Collision Mask</em> to <code>bit 2</code> (ground) and <em>Node2D/Transform/Position</em> to <code>(152, -200)</code></li>
+<li><code>OldTile</code>: same as &ldquo;NewTile&rdquo;, except for the <em>Node2D/Transform/Position</em>, set it to <code>(-152, -200)</code>.</li>
+<li><code>OldPipe</code>: same as &ldquo;OldTile&rdquo;, except for the <em>Raycast2D/Collision Mask</em>, set it to <code>bit 3</code> (pipe).</li>
 </ul>
 </li>
 </ul>
-<h4 id="game">Game<a class="headerlink" href="#game" title="Permanent link">&para;</a></h4>
-<p>This is the actual &ldquo;Game&rdquo; scene that holds all the playable stuff, here we will drop in all the previous scenes; the root node is a <em>Node2D</em> and also has an attached script. Also need to add 2 additional <em>AudioStreamPlayers</em> for the &ldquo;start&rdquo; and &ldquo;score&rdquo; sounds, as well as a <em>Sprite</em> for the background (<em>Sprite/Offset/Offset</em> set to <code>(0, 10)</code>) and a <em>Camera2D</em> (<em>Camera2D/Current</em> set to true (checked)). It should look something like this:</p>
+<h3 id="game">Game<a class="headerlink" href="#game" title="Permanent link">&para;</a></h3>
+<p>This is the actual <code>Game</code> scene that holds all the playable stuff, here we will drop in all the previous scenes; the root node is a <em>Node2D</em> and also has an attached script. Also need to add 2 additional <em>AudioStreamPlayers</em> for the &ldquo;start&rdquo; and &ldquo;score&rdquo; sounds, as well as a <em>Sprite</em> for the background (<em>Sprite/Offset/Offset</em> set to <code>(0, 10)</code>) and a <em>Camera2D</em> (<em>Camera2D/Current</em> set to true (checked)). It should look something like this:</p>
 <figure id="__yafg-figure-25">
-<img alt="Scene - Game - Node setup" src="images/g/flappybird_godot/scene_game_node_setup.png" title="Scene - Game - Node setup">
+<img alt="Scene - Game - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_game_node_setup.png" title="Scene - Game - Node setup">
 <figcaption>Scene - Game - Node setup</figcaption>
 </figure>
 <p>The scene viewport should look something like the following:</p>
 <figure id="__yafg-figure-26">
-<img alt="Scene - Game - Viewport" src="images/g/flappybird_godot/scene_game_viewport.png" title="Scene - Game - Viewport">
+<img alt="Scene - Game - Viewport" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_game_viewport.png" title="Scene - Game - Viewport">
 <figcaption>Scene - Game - Viewport</figcaption>
 </figure>
-<h4 id="ui">UI<a class="headerlink" href="#ui" title="Permanent link">&para;</a></h4>
-<h5 id="fonts">Fonts<a class="headerlink" href="#fonts" title="Permanent link">&para;</a></h5>
-<p>We need some font &ldquo;Resources&rdquo; to style the <em>Label</em> fonts. Under the <em>FileSystem</em> window, right click on the fonts directory (create one if needed) and click on &ldquo;New Resource&hellip;&rdquo; and select <em>DynamicFontData</em>, save it in the &ldquo;fonts&rdquo; directory as &ldquo;SilverDynamicFontData.tres&rdquo; (&ldquo;Silver&rdquo; as it is the font I&rsquo;m using) then double click the just created resource and set the <em>DynamicFontData/Font Path</em> to the actual &ldquo;Silver.ttf&rdquo; font (or whatever you want).</p>
-<p>Then create a new resource and this time select <em>DynamicFont</em>, name it &ldquo;SilverDynamicFont.tres&rdquo;, then double click to edit and add the &ldquo;SilverDynamicFontData.tres&rdquo; to the <em>DynamicFont/Font/Font Data</em> property (and I personally toggled off the <em>DynamicFont/Font/Antialiased</em> property), now just set the <em>DynamicFont/Settings/(Size, Outline Size, Outline Color)</em> to 32, 1 and black, respectively (or any other values you want). It should look something like this:</p>
+<h3 id="ui">UI<a class="headerlink" href="#ui" title="Permanent link">&para;</a></h3>
+<h4 id="fonts">Fonts<a class="headerlink" href="#fonts" title="Permanent link">&para;</a></h4>
+<p>We need some font <code>Resources</code> to style the <em>Label</em> fonts. Under the <em>FileSystem</em> window, right click on the fonts directory (create one if needed) and click on <code>New Resource...</code> and select <em>DynamicFontData</em>, save it in the &ldquo;fonts&rdquo; directory as <code>SilverDynamicFontData.tres</code> (<code>Silver</code> as it is the font I&rsquo;m using) then double click the just created resource and set the <em>DynamicFontData/Font Path</em> to the actual <code>Silver.ttf</code> font (or whatever you want).</p>
+<p>Then create a new resource and this time select <em>DynamicFont</em>, name it <code>SilverDynamicFont.tres</code>, then double click to edit and add the <code>SilverDynamicFontData.tres</code> to the <em>DynamicFont/Font/Font Data</em> property (and I personally toggled off the <em>DynamicFont/Font/Antialiased</em> property), now just set the <em>DynamicFont/Settings/(Size, Outline Size, Outline Color)</em> to <code>32</code>, <code>1</code> and <code>black</code>, respectively (or any other values you want). It should look something like this:</p>
 <figure id="__yafg-figure-27">
-<img alt="Resource - DynamicFont - Default font" src="images/g/flappybird_godot/resource_dynamic_font.png" title="Resource - DynamicFont - Default font">
+<img alt="Resource - DynamicFont - Default font" src="https://static.luevano.xyz/images/g/flappybird_godot/resource_dynamic_font.png" title="Resource - DynamicFont - Default font">
 <figcaption>Resource - DynamicFont - Default font</figcaption>
 </figure>
-<p>Do the same for another <em>DynamicFont</em> which will be used for the score label, named &ldquo;SilverScoreDynamicFont.tres&rdquo;. Only changes are <em>Dynamic/Settings/(Size, Outline Size)</em> which are set to 128 and 2, respectively. The final files for the fonts should look something like this:</p>
+<p>Do the same for another <em>DynamicFont</em> which will be used for the score label, named <code>SilverScoreDynamicFont.tres</code>. Only changes are <em>Dynamic/Settings/(Size, Outline Size)</em> which are set to <code>128</code> and <code>2</code>, respectively. The final files for the fonts should look something like this:</p>
 <figure id="__yafg-figure-28">
-<img alt="Resource - Dynamicfont - Directory structure" src="images/g/flappybird_godot/resource_dynamic_font_directory_structure.png" title="Resource - Dynamicfont - Directory structure">
+<img alt="Resource - Dynamicfont - Directory structure" src="https://static.luevano.xyz/images/g/flappybird_godot/resource_dynamic_font_directory_structure.png" title="Resource - Dynamicfont - Directory structure">
 <figcaption>Resource - Dynamicfont - Directory structure</figcaption>
 </figure>
-<h5 id="scene-setup">Scene setup<a class="headerlink" href="#scene-setup" title="Permanent link">&para;</a></h5>
-<p>This has a bunch of nested nodes, so I&rsquo;ll try to be concise here. The root node is a <em>CanvasLayer</em> named &ldquo;UI&rdquo; with its own script attached, and for the children:</p>
+<h4 id="scene-setup">Scene setup<a class="headerlink" href="#scene-setup" title="Permanent link">&para;</a></h4>
+<p>This has a bunch of nested nodes, so I&rsquo;ll try to be concise here. The root node is a <em>CanvasLayer</em> named <code>UI</code> with its own script attached, and for the children:</p>
 <ul>
-<li>&ldquo;MarginContainer&rdquo;: <em>MarginContainer</em> with <em>Control/Margin/(Left, Top)</em> set to <code>10</code> and <em>Control/Margin/(Right, Bottom)</em> set to <code>-10</code>.<ul>
-<li>&ldquo;InfoContainer&rdquo;: <em>VBoxContainer</em> with <em>Control/Theme Overrides/Constants/Separation</em> set to <code>250</code>.<ul>
-<li>&ldquo;ScoreContainer&rdquo;: <em>VBoxContainer</em>.<ul>
-<li>&ldquo;Score&rdquo;: <em>Label</em> with <em>Label/Align</em> set to &ldquo;Center&rdquo;, <em>Control/Theme Overrides/Fonts/Font</em> to the &ldquo;SilverScoreDynamicFont.tres&rdquo;, if needed adjust the <em>DynamicFont</em> settings.</li>
-<li>&ldquo;HighScore: same as &ldquo;Score&rdquo;, escept for the <em>Control/Theme Overrides/Fonts/Font</em> which is set to &ldquo;SilverDynamicFont.tres&rdquo;.</li>
+<li><code>MarginContainer</code>: <em>MarginContainer</em> with <em>Control/Margin/(Left, Top)</em> set to <code>10</code> and <em>Control/Margin/(Right, Bottom)</em> set to <code>-10</code>.<ul>
+<li><code>InfoContainer</code>: <em>VBoxContainer</em> with <em>Control/Theme Overrides/Constants/Separation</em> set to <code>250</code>.<ul>
+<li><code>ScoreContainer</code>: <em>VBoxContainer</em>.<ul>
+<li><code>Score</code>: <em>Label</em> with <em>Label/Align</em> set to <code>Center</code>, <em>Control/Theme Overrides/Fonts/Font</em> to the <code>SilverScoreDynamicFont.tres</code>, if needed adjust the <em>DynamicFont</em> settings.</li>
+<li><code>HighScore</code>: same as <code>Score</code>, escept for the <em>Control/Theme Overrides/Fonts/Font</em> which is set to <code>SilverDynamicFont.tres</code>.</li>
 </ul>
 </li>
-<li>&ldquo;StartGame&rdquo;: Same as &ldquo;HighScore&rdquo;.</li>
+<li><code>StartGame</code>: Same as <code>HighScore</code>.</li>
 </ul>
 </li>
-<li>&ldquo;DebugContainer&rdquo;: <em>VBoxContainer</em>.<ul>
-<li>&ldquo;FPS&rdquo;: <em>Label</em>.</li>
+<li><code>DebugContainer</code>: <em>VBoxContainer</em>.<ul>
+<li><code>FPS</code>: <em>Label</em>.</li>
 </ul>
 </li>
-<li>&ldquo;VersionContainer&rdquo;: <em>VBoxContainer</em> with <em>BoxContainer/Alignment</em> set to &ldquo;Begin&rdquo;.<ul>
-<li>&ldquo;Version&rdquo;: <em>Label</em> with <em>Label/Align</em> set to &ldquo;Right&rdquo;.</li>
+<li><code>VersionContainer</code>: <em>VBoxContainer</em> with <em>BoxContainer/Alignment</em> set to <code>Begin</code>.<ul>
+<li><code>Version</code>: <em>Label</em> with <em>Label/Align</em> set to <code>Right</code>.</li>
 </ul>
 </li>
 </ul>
@@ -850,17 +939,17 @@ func physics_process(delta: float) -&gt; void:
 </ul>
 <p>The scene ends up looking like this:</p>
 <figure id="__yafg-figure-29">
-<img alt="Scene - UI - Node setup" src="images/g/flappybird_godot/scene_ui.png" title="Scene - UI - Node setup">
+<img alt="Scene - UI - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_ui.png" title="Scene - UI - Node setup">
 <figcaption>Scene - UI - Node setup</figcaption>
 </figure>
-<h4 id="main">Main<a class="headerlink" href="#main" title="Permanent link">&para;</a></h4>
-<p>This is the final scene where we connect the Game and the UI. It&rsquo;s made of a <em>Node2D</em> with it&rsquo;s own script attached and an instance of &ldquo;Game&rdquo; and &ldquo;UI&rdquo; as it&rsquo;s children.</p>
-<p>This is a good time to set the default scene when we run the game by going to <em>Project -&gt; Project settings&hellip; -&gt; General</em> and in <em>Application/Run</em> set the <em>Main Scene</em> to the &ldquo;Main.tscn&rdquo; scene.</p>
-<h3 id="scripting">Scripting<a class="headerlink" href="#scripting" title="Permanent link">&para;</a></h3>
+<h3 id="main">Main<a class="headerlink" href="#main" title="Permanent link">&para;</a></h3>
+<p>This is the final scene where we connect the <code>Game</code> and the <code>UI</code>. It&rsquo;s made of a <em>Node2D</em> with it&rsquo;s own script attached and an instance of <code>Game</code> and <code>UI</code> as it&rsquo;s children.</p>
+<p>This is a good time to set the default scene when we run the game by going to <em>Project -&gt; Project settings&hellip; -&gt; General</em> and in <em>Application/Run</em> set the <em>Main Scene</em> to the <code>Main.tscn</code> scene.</p>
+<h2 id="scripting">Scripting<a class="headerlink" href="#scripting" title="Permanent link">&para;</a></h2>
 <p>I&rsquo;m going to keep this scripting part to the most basic code blocks, as it&rsquo;s too much code, for a complete view you can head to the <a href="https://github.com/luevano/flappybird_godot">source code</a>.</p>
 <p>As of now, the game itself doesn&rsquo;t do anything if we hit play. The first thing to do so we have something going on is to do the minimal player scripting.</p>
-<h4 id="player_1">Player<a class="headerlink" href="#player_1" title="Permanent link">&para;</a></h4>
-<p>The most basic code needed so the bird goes up and down is to just detect &ldquo;jump&rdquo; key presses and add a negative jump velocity so it goes up (<code>y</code> coordinate is reversed in godot&hellip;), we also check the velocity sign of the <code>y</code> coordinate to decide if the animation is playing or not.</p>
+<h3 id="player_1">Player<a class="headerlink" href="#player_1" title="Permanent link">&para;</a></h3>
+<p>The most basic code needed so the bird goes up and down is to just detect <code>jump</code> key presses and add a negative jump velocity so it goes up (<code>y</code> coordinate is reversed in godot&hellip;), we also check the velocity sign of the <code>y</code> coordinate to decide if the animation is playing or not.</p>
 <pre><code class="language-gdscript">class_name Player
 extends KinematicBody2D
 
@@ -909,7 +998,7 @@ func _physics_process(delta: float) -&gt; void:
     dead_sound.play()
 </code></pre>
 <p>Finally need to add the actual checks for when the player dies (like collision with ground or pipe) as well as a function that listens to a signal for when the player goes to the ceiling.</p>
-<h4 id="worlddetector">WorldDetector<a class="headerlink" href="#worlddetector" title="Permanent link">&para;</a></h4>
+<h3 id="worlddetector">WorldDetector<a class="headerlink" href="#worlddetector" title="Permanent link">&para;</a></h3>
 <p>The code is pretty simple, we just need a way of detecting if we ran out of ground and send a signal, as well as sending as signal when we start detecting ground/pipes behind us (to remove it) because the world is being generated as we move. The most basic functions needed are:</p>
 <pre><code class="language-gdscript">func _was_colliding(detector: RayCast2D, flag: bool, signal_name: String) -&gt; bool:
     if detector.is_colliding():
@@ -928,8 +1017,8 @@ func _now_colliding(detector: RayCast2D, flag: bool, signal_name: String) -&gt; 
     return false
 </code></pre>
 <p>We need to keep track of 3 &ldquo;flags&rdquo;: <code>ground_was_colliding</code>, <code>ground_now_colliding</code> and <code>pipe_now_colliding</code> (and their respective signals), which are going to be used to do the checks inside <code>_physics_process</code>. For example for checking for new ground: <code>ground_now_colliding = _now_colliding(old_ground, ground_now_colliding, "ground_started_colliding")</code>.</p>
-<h4 id="worldtiles">WorldTiles<a class="headerlink" href="#worldtiles" title="Permanent link">&para;</a></h4>
-<p>This script is what handles the &ldquo;GroundTileMap&rdquo; as well as the &ldquo;PipeTileMap&rdquo; and just basically functions as a &ldquo;Signal bus&rdquo; connecting a bunch of signals from the &ldquo;WorldDetector&rdquo; with the <em>TileMaps</em> and just tracking how many pipes have been placed:</p>
+<h3 id="worldtiles">WorldTiles<a class="headerlink" href="#worldtiles" title="Permanent link">&para;</a></h3>
+<p>This script is what handles the <code>GroundTileMap</code> as well as the <code>PipeTileMap</code> and just basically functions as a &ldquo;Signal bus&rdquo; connecting a bunch of signals from the <code>WorldDetector</code> with the <em>TileMaps</em> and just tracking how many pipes have been placed:</p>
 <pre><code class="language-gdscript">export(int, 2, 20, 2) var PIPE_SEP: int = 6
 var tiles_since_last_pipe: int = PIPE_SEP - 1
 
@@ -950,7 +1039,7 @@ func _on_WorldDetector_ground_started_colliding() -&gt; void:
 func _on_WorldDetector_pipe_started_colliding() -&gt; void:
     emit_signal(&quot;remove_pipe&quot;)
 </code></pre>
-<h5 id="groundtilemap">GroundTileMap<a class="headerlink" href="#groundtilemap" title="Permanent link">&para;</a></h5>
+<h4 id="groundtilemap">GroundTileMap<a class="headerlink" href="#groundtilemap" title="Permanent link">&para;</a></h4>
 <p>This is the node that actually places the ground tiles upong receiving a signal. In general, what you want is to keep track of the newest tile that you need to place (empty spot) as well as the last tile that is in the tilemap (technically the first one if you count from left to right). I was experimenting with <code>enum</code>s so I used them to define the possible <code>Ground</code> tiles:</p>
 <pre><code class="language-gdscript">enum Ground {
     TILE_1,
@@ -981,10 +1070,10 @@ func _remove_first_ground() -&gt; void:
     old_tile_position += Vector2.RIGHT
 </code></pre>
 <p>Where you might notice that the <code>_initial_new_tile_x</code> is <code>11</code>, instead of <code>10</code>, refer to <a href="#default-ground-tiles">Default ground tiles</a> where we placed tiles from <code>-8</code> to <code>10</code>, so the next empty one is <code>11</code>. These <code>_place_new_ground</code> and <code>_remove_first_ground</code> functions are called upon receiving the signal.</p>
-<h5 id="pipetilemap">PipeTileMap<a class="headerlink" href="#pipetilemap" title="Permanent link">&para;</a></h5>
-<p>This is really similar to the &ldquo;GroundTileMap&rdquo; code, instead of defining an <code>enum</code> for the ground tiles, we define it for the pipe patterns (because each pipe is composed of multiple pipe tiles). If your pipe tile set looks like this (notice the index):</p>
+<h4 id="pipetilemap">PipeTileMap<a class="headerlink" href="#pipetilemap" title="Permanent link">&para;</a></h4>
+<p>This is really similar to the <code>GroundTileMap</code> code, instead of defining an <code>enum</code> for the ground tiles, we define it for the pipe patterns (because each pipe is composed of multiple pipe tiles). If your pipe tile set looks like this (notice the index):</p>
 <figure id="__yafg-figure-30">
-<img alt="PipeTileMap - Tile set indexes" src="images/g/flappybird_godot/tile_set_pipes_indexes.png" title="PipeTileMap - Tile set indexes">
+<img alt="PipeTileMap - Tile set indexes" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_pipes_indexes.png" title="PipeTileMap - Tile set indexes">
 <figcaption>PipeTileMap - Tile set indexes</figcaption>
 </figure>
 <p>Then you can use the following &ldquo;pipe patterns&rdquo;:</p>
@@ -997,7 +1086,7 @@ func _remove_first_ground() -&gt; void:
     PipePattern.PIPE_6: [0, 1, 2, 3, 4, -1, -1, -1, 0, 1, 2, 2, 2, 2, 2, 2]
 }
 </code></pre>
-<p>Now, the pipe system requires a bit more of tracking as we need to instantiate a &ldquo;ScoreDetector&rdquo; here, too. I ended up keeping track of the placed pipes/detectors by using a &ldquo;pipe stack&rdquo; (and &ldquo;detector stack&rdquo;) which is just an array of placed objects from which I pop the first when deleting them:</p>
+<p>Now, the pipe system requires a bit more of tracking as we need to instantiate a <code>ScoreDetector</code> here, too. I ended up keeping track of the placed pipes/detectors by using a &ldquo;pipe stack&rdquo; (and &ldquo;detector stack&rdquo;) which is just an array of placed objects from which I pop the first when deleting them:</p>
 <pre><code class="language-gdscript">onready var _pipe_sep: int = get_parent().PIPE_SEP
 const _pipe_size: int = 16
 const _ground_level: int = 7
@@ -1013,7 +1102,7 @@ var detector_scene: PackedScene = preload(&quot;res://levels/detectors/score_det
 var detector_offset: Vector2 = Vector2(16.0, -(_pipe_size / 2.0) * 16.0)
 var detector_stack: Array
 </code></pre>
-<p>The <code>detector_offset</code> is just me being picky. For placing a new pipe, we get the starting position (bottom pipe tile) and build upwards, then instantiate a new &ldquo;ScoreDetector&rdquo; (<code>detector_scene</code>) and set it&rsquo;s position to the pipe starting position plus the offset, so it&rsquo;s centered in the pipe, then just need to connect the &ldquo;body_entered&rdquo; signal from the detector with the game, so we keep track of the scoring. Finally just add the placed pipe and detector to their corresponding stacks:</p>
+<p>The <code>detector_offset</code> is just me being picky. For placing a new pipe, we get the starting position (bottom pipe tile) and build upwards, then instantiate a new <code>ScoreDetector</code> (<code>detector_scene</code>) and set it&rsquo;s position to the pipe starting position plus the offset, so it&rsquo;s centered in the pipe, then just need to connect the <code>body_entered</code> signal from the detector with the game, so we keep track of the scoring. Finally just add the placed pipe and detector to their corresponding stacks:</p>
 <pre><code class="language-gdscript">func _place_new_pipe() -&gt; void:
     var current_pipe: Vector2 = new_pipe_starting_position
     for tile in pipe[_get_random_pipe()]:
@@ -1043,8 +1132,8 @@ var detector_stack: Array
     detector.queue_free()
 </code></pre>
 <p>These functions are called when receiving the signal to place/remove pipes.</p>
-<h4 id="saved-data">Saved data<a class="headerlink" href="#saved-data" title="Permanent link">&para;</a></h4>
-<p>Before proceeding, we require a way to save/load data (for the high scores). We&rsquo;re going to use the <em>ConfigFile</em> node that uses a custom version of the &ldquo;ini&rdquo; file format. Need to define where to save the data:</p>
+<h3 id="saved-data">Saved data<a class="headerlink" href="#saved-data" title="Permanent link">&para;</a></h3>
+<p>Before proceeding, we require a way to save/load data (for the high scores). We&rsquo;re going to use the <em>ConfigFile</em> node that uses a custom version of the <code>ini</code> file format. Need to define where to save the data:</p>
 <pre><code class="language-gdscript">const DATA_PATH: String = &quot;user://data.cfg&quot;
 const SCORE_SECTION: String = &quot;score&quot;
 var _data: ConfigFile
@@ -1084,12 +1173,12 @@ func get_high_score() -&gt; int:
         set_new_high_score(0)
         save_data()
 </code></pre>
-<p>Now, this script in particular will need to be a <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html">Singleton (AutoLoad)</a>, which means that there will be only one instance and will be available across all scripts. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; AutoLoad</em> and select this script in the &ldquo;Path:&rdquo; and add a &ldquo;Node Name:&rdquo; (I used &ldquo;SavedData&rdquo;, if you use something else, be careful while following this devlog) which will be the name we&rsquo;ll use to access the singleton. Toggle on &ldquo;Enable&rdquo; if needed, it should look like this:</p>
+<p>Now, this script in particular will need to be a <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html">Singleton (AutoLoad)</a>, which means that there will be only one instance and will be available across all scripts. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; AutoLoad</em> and select this script in the <code>Path:</code> and add a <code>Node Name:</code> (I used <code>SavedData</code>, if you use something else, be careful while following this devlog) which will be the name we&rsquo;ll use to access the singleton. Toggle on <code>Enable</code> if needed, it should look like this:</p>
 <figure id="__yafg-figure-31">
-<img alt="Project settings - AutoLoad - SavedData singleton" src="images/g/flappybird_godot/project_settings_autoload_saved_data.png" title="Project settings - AutoLoad - SavedData singleton">
+<img alt="Project settings - AutoLoad - SavedData singleton" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_autoload_saved_data.png" title="Project settings - AutoLoad - SavedData singleton">
 <figcaption>Project settings - AutoLoad - SavedData singleton</figcaption>
 </figure>
-<h4 id="game_1">Game<a class="headerlink" href="#game_1" title="Permanent link">&para;</a></h4>
+<h3 id="game_1">Game<a class="headerlink" href="#game_1" title="Permanent link">&para;</a></h3>
 <p>The game script it&rsquo;s also like a &ldquo;Signal bus&rdquo; in the sense that it connects all its childs&rsquo; signals together, and also has the job of starting/stopping the <code>_process</code> and <code>_physics_process</code> methods from the childs as needed. First, we need to define the signals and and references to all child nodes:</p>
 <pre><code class="language-gdscript">signal game_started
 signal game_over
@@ -1104,7 +1193,7 @@ onready var camera: Camera2D = $Camera
 onready var start_sound: AudioStreamPlayer = $StartSound
 onready var score_sound: AudioStreamPlayer = $ScoreSound
 </code></pre>
-<p>It&rsquo;s important to get the actual &ldquo;player speed&rdquo;, as we&rsquo;re using a scale to make the game look bigger (remember, pixel art), to do so we need a reference to the &ldquo;game_scale&rdquo; we setup at the beginning and compute the <code>player_speed</code>:</p>
+<p>It&rsquo;s important to get the actual &ldquo;player speed&rdquo;, as we&rsquo;re using a scale to make the game look bigger (remember, pixel art), to do so we need a reference to the <code>game_scale</code> we setup at the beginning and compute the <code>player_speed</code>:</p>
 <pre><code class="language-gdscript">var _game_scale: float = ProjectSettings.get_setting(&quot;application/config/game_scale&quot;)
 var player_speed: float
 
@@ -1114,7 +1203,7 @@ func _ready() -&gt; void:
     # so we move at the actual speed of the player
     player_speed = player.SPEED / _game_scale
 </code></pre>
-<p>This <code>player_speed</code> will be needed as we need to move all the nodes (&ldquo;Background&rdquo;, &ldquo;Camera&rdquo;, etc.) in the <code>x</code> axis as the player is moving. This is done in the <code>_physics_process</code>:</p>
+<p>This <code>player_speed</code> will be needed as we need to move all the nodes (<code>Background</code>, <code>Camera</code>, etc.) in the <code>x</code> axis as the player is moving. This is done in the <code>_physics_process</code>:</p>
 <pre><code class="language-gdscript">func _physics_process(delta: float) -&gt; void:
     ceiling_detector.move_local_x(player_speed * delta)
     world_detector.move_local_x(player_speed * delta)
@@ -1159,8 +1248,8 @@ func _on_ScoreDetector_body_entered(body: Node2D) -&gt; void:
     emit_signal(&quot;new_score&quot;, score, high_score)
     score_sound.play()
 </code></pre>
-<p>When the <code>player</code> dies, we set all processing to <code>false</code>, except for the player itself (so it can drop all the way to the ground). Also, when receiving a &ldquo;scoring&rdquo; signal, we manage the current score, as well as saving the new high score when applicable, note that we need to read the <code>high_score</code> at the beginning by calling <code>SavedData.get_high_score()</code>. This signal we emit will be received by the UI so it updates accordingly.</p>
-<h4 id="ui_1">UI<a class="headerlink" href="#ui_1" title="Permanent link">&para;</a></h4>
+<p>When the <code>player</code> dies, we set all processing to <code>false</code>, except for the player itself (so it can drop all the way to the ground). Also, when receiving a &ldquo;scoring&rdquo; signal, we manage the current score, as well as saving the new high score when applicable, note that we need to read the <code>high_score</code> at the beginning by calling <code>SavedData.get_high_score()</code>. This signal we emit will be received by the <code>UI</code> so it updates accordingly.</p>
+<h3 id="ui_1">UI<a class="headerlink" href="#ui_1" title="Permanent link">&para;</a></h3>
 <p>First thing is to get a reference to all the child <em>Labels</em>, an initial reference to the high score as well as the version defined in the project settings:</p>
 <pre><code class="language-gdscript">onready var fps_label: Label = $MarginContainer/DebugContainer/FPS
 onready var version_label: Label = $MarginContainer/VersionContainer/Version
@@ -1204,8 +1293,8 @@ func _on_Game_new_score(score: int, high_score: int) -&gt; void:
     score_label.set_text(String(score))
     high_score_label.set_text(&quot;High score: %s&quot; % high_score)
 </code></pre>
-<h4 id="main_1">Main<a class="headerlink" href="#main_1" title="Permanent link">&para;</a></h4>
-<p>This is the shortest script, it just connects the signals between the &ldquo;Game&rdquo; and the &ldquo;UI&rdquo;:</p>
+<h3 id="main_1">Main<a class="headerlink" href="#main_1" title="Permanent link">&para;</a></h3>
+<p>This is the shortest script, it just connects the signals between the <code>Game</code> and the <code>UI</code>:</p>
 <pre><code class="language-gdscript">onready var game: Game = $Game
 onready var ui: UI = $UI
 
@@ -1217,15 +1306,15 @@ func _ready() -&gt; void:
     game.connect(&quot;game_over&quot;, ui, &quot;_on_Game_game_over&quot;)
     game.connect(&quot;new_score&quot;, ui, &quot;_on_Game_new_score&quot;)
 </code></pre>
-<h3 id="final-notes-and-exporting">Final notes and exporting<a class="headerlink" href="#final-notes-and-exporting" title="Permanent link">&para;</a></h3>
+<h2 id="final-notes-and-exporting">Final notes and exporting<a class="headerlink" href="#final-notes-and-exporting" title="Permanent link">&para;</a></h2>
 <p>At this point the game should be fully playable (if any detail missing feel free to look into the source code linked at the beginning). Only thing missing is an icon for the game; I did one pretty quicly with the assets I had.</p>
-<h4 id="preparing-the-files">Preparing the files<a class="headerlink" href="#preparing-the-files" title="Permanent link">&para;</a></h4>
+<h3 id="preparing-the-files">Preparing the files<a class="headerlink" href="#preparing-the-files" title="Permanent link">&para;</a></h3>
 <p>If you followed the directory structure I used, then only thing needed is to transform the icon to a native Windows <code>ico</code> format (if exporting to Windows, else ignore this part). For this you need <a href="https://imagemagick.org/index.php">ImageMagick</a> or some other program that can transform <code>png</code> (or whatever file format you used for the icon) to <code>ico</code>. I used [Chocolatey][https://chocolatey.org/] to install <code>imagemagick</code>, then to convert the icon itself used: <code>magick convert icon.png -define icon:auto-resize=256,128,64,48,32,16 icon.ico</code> as detailed in <em>Godot</em>&lsquo;s <a href="https://docs.godotengine.org/en/stable/tutorials/export/changing_application_icon_for_windows.html">Changing application icon for Windows</a>.</p>
-<h4 id="exporting">Exporting<a class="headerlink" href="#exporting" title="Permanent link">&para;</a></h4>
-<p>You need to download the templates for exporting as detailed in <em>Godot</em>&lsquo;s <a href="https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html">Exporting projects</a>. Basically you go to <em>Editor -&gt; Manage Export Templates&hellip;</em> and download the latest one specific to your <em>Godot</em> version by clicking on &ldquo;Download and Install&rdquo;.</p>
+<h3 id="exporting">Exporting<a class="headerlink" href="#exporting" title="Permanent link">&para;</a></h3>
+<p>You need to download the templates for exporting as detailed in <em>Godot</em>&lsquo;s <a href="https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html">Exporting projects</a>. Basically you go to <em>Editor -&gt; Manage Export Templates&hellip;</em> and download the latest one specific to your <em>Godot</em> version by clicking on <code>Download and Install</code>.</p>
 <p>If exporting for Windows then you also need to download <code>rcedit</code> from <a href="https://github.com/electron/rcedit/releases/latest">here</a>. Just place it wherever you want (I put it next to the <em>Godot</em> executable).</p>
-<p>Then go to <em>Project -&gt; Export&hellip;</em> and the Window should be empty, add a new template by clicking on &ldquo;Add&hellip;&rdquo; at the top and then select the template you want. I used HTML5, Windows Desktop and Linux/X11. Really the only thing you need to set is the &ldquo;Export Path&rdquo; for each template, which is te location of where the executable will be written to, and in the case of the Windows Desktop template you could also setup stuff like &ldquo;Company Name&rdquo;, &ldquo;Product Name&rdquo;, &ldquo;File/Product Version&rdquo;, etc..</p>
-<p>Once the templates are setup, select any and click on &ldquo;Export Project&rdquo; at the bottom, and make sure to untoggle &ldquo;Export With Debug&rdquo; in the window that pops up, this checkbox should be at the bottom of the new window.</p>]]></content:encoded>
+<p>Then go to <em>Project -&gt; Export&hellip;</em> and the Window should be empty, add a new template by clicking on <code>Add...</code> at the top and then select the template you want. I used HTML5, Windows Desktop and Linux/X11. Really the only thing you need to set is the &ldquo;Export Path&rdquo; for each template, which is te location of where the executable will be written to, and in the case of the <em>Windows Desktop</em> template you could also setup stuff like <code>Company Name</code>, <code>Product Name</code>, <code>File/Product Version</code>, etc..</p>
+<p>Once the templates are setup, select any and click on <code>Export Project</code> at the bottom, and make sure to untoggle <code>Export With Debug</code> in the window that pops up, this checkbox should be at the bottom of the new window.</p>]]></content:encoded>
     </item>
     <item>
       <title>General Godot project structure</title>
@@ -1234,6 +1323,7 @@ func _ready() -&gt; void:
       <pubDate>Sun, 22 May 2022 01:16:10 GMT</pubDate>
       <category>English</category>
       <category>Gamedev</category>
+      <category>Godot</category>
       <category>Short</category>
       <description>Details on the project structure I'm using for Godot, based on preference and some research I did.</description>
       <content:encoded><![CDATA[<p>One of my first issues when starting a project is how to structure everything. So I had to spend some time researching best practices and go with what I like the most and after trying some of them I wanted to write down somewhere what I&rsquo;m sticking with.</p>
@@ -1366,12 +1456,14 @@ func _ready() -&gt; void:
       <pubDate>Tue, 17 May 2022 05:19:54 GMT</pubDate>
       <category>English</category>
       <category>Gamedev</category>
+      <category>Godot</category>
       <category>Short</category>
       <category>Update</category>
       <description>Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent.</description>
-      <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to get into gamedev for a while now, but it&rsquo;s always a pain to stay consistent. I just recently started to get into gamedev again, and this time I&rsquo;m trying to actually do stuff.</p>
+      <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to get into gamedev for a while now, but it&rsquo;s always a pain to stay consistent. I just recently started to get into it again, and this time I&rsquo;m trying to actually do stuff.</p>
 <p>So, the plan is to blog about my progress and clone some simple games just to get started. I&rsquo;m thinking on sticking with <a href="https://godotengine.org/">Godot</a> just because I like that it&rsquo;s open source, it&rsquo;s getting better and better overtime (big rewrite happening right now) and I already like how the engine works. <del>Specifically I&rsquo;ll start using <em>Godot 4</em> even though it&rsquo;s not done yet, to get used to the new features, specifically pumped for <a href="https://godotengine.org/article/gdscript-progress-report-feature-complete-40">GDScript 2.0</a>.</del> <ins>Actually&hellip; (for the small clones/ripoffs) I&rsquo;ll need to use <em>Godot 3.X</em> (probably 3.5), as <em>Godot 4</em> doesn&rsquo;t have support to export to webassembly (HTML5) yet, and I want that to publish to <a href="https://itch.io/">itch.io</a> and my website. I&rsquo;ll continue to use <em>Godot 4</em> for bigger projects, as they will take longer and I hope that by the time I need to publish, there&rsquo;s no issues to export.</ins></p>
-<p>For a moment I almost started a new subdomain just for gamedev stuff, but decided to just use a different directory for subtleness; this directory and use of tags should be enough. I&rsquo;ll be posting the entry about the first rip-off I&rsquo;m <em>developing</em> (FlappyBird L O L) shortly.</p>]]></content:encoded>
+<p>For a moment I almost started a new subdomain just for gamedev stuff, but decided to just use a different directory for subtleness; this directory and use of tags should be enough. I&rsquo;ll be posting the entry about the first rip-off I&rsquo;m <em>developing</em> (FlappyBird L O L) shortly.</p>
+<p><strong>Update</strong>: <a href="https://godotengine.org/article/godot-4-0-sets-sail/">Godot 4</a> already released and it now has HTML5 support, so back to the original plan.</p>]]></content:encoded>
     </item>
     <item>
       <title>My setup for a password manager and MFA authenticator</title>
@@ -1383,7 +1475,7 @@ func _ready() -&gt; void:
       <category>Tools</category>
       <description>A short description on my personal setup regarding a password manager and alternatives to G\*\*gl\* authenticator.</description>
       <content:encoded><![CDATA[<p><strong>Disclaimer</strong>: I won&rsquo;t go into many technical details here of how to install/configure/use the software, this is just supposed to be a short description on my setup.</p>
-<p>It&rsquo;s been a while since I started using a password manager at all, and I&rsquo;m happy that I started with <a href="https://keepassxc.org/">KeePassXC</a> (open source, multiplatform password manager that it&rsquo;s completely offline) as a direct recommendation from <a href="https://www.lmcj.xyz/">lm</a>; before this I was using the same password for everything (like a lot of people), which is a well know privacy issue as noted in detail by <a href="https://askleo.com/different-passwords-for-everything/">Leo</a> (I don&rsquo;t personally recommed LastPass as Leo does). Note that you will still need a <em>master password</em> to lock/unlock your password database (you can additionally use a hardware key and a key file).</p>
+<p>It&rsquo;s been a while since I started using a password manager at all, and I&rsquo;m happy that I started with <a href="https://keepassxc.org/">KeePassXC</a> (open source, multiplatform password manager that it&rsquo;s completely offline) as a direct recommendation from <a href="https://www.lmcj.xyz/"><mark>EL ELE EME</mark></a>; before this I was using the same password for everything (like a lot of people), which is a well know privacy issue as noted in detail by <a href="https://askleo.com/different-passwords-for-everything/">Leo</a> (I don&rsquo;t personally recommed LastPass as Leo does). Note that you will still need a <em>master password</em> to lock/unlock your password database (you can additionally use a hardware key and a key file).</p>
 <p>Anyways, setting up <em>keepass</em> is pretty simple, as there is a client for almost any device; note that <em>keepass</em> is basically just the format and the base for all of the clients, as its common with pretty much any open source software. In my case I&rsquo;m using <a href="https://keepassxc.org/">KeePassXC</a> in my computer and <a href="https://www.keepassdx.com/">KeePassDX</a> in my phone (Android). The only concern is keeping everything in sync because <em>keepass</em> doesn&rsquo;t have any automatic method of synchronizing between devices because of security reasons (as far as I know), meaning that you have to manage that yourself.</p>
 <p>Usually you can use something like G**gl* drive, dropbox, mega, nextcloud, or any other cloud solution that you like to sync your <em>keepass</em> database between devices; I personally prefer to use <a href="https://syncthing.net/">Syncthing</a> as it&rsquo;s open source, it&rsquo;s really easy to setup and has worked wonders for me since I started using it, also it keeps versions of your files that can serve as backups in any scenario where the database gets corrupted or something.</p>
 <p>Finally, when I went through the issue with the micro SD and the <em>adoptable storage</em> bullshit (you can find the rant <a href="https://blog.luevano.xyz/a/devs_android_me_trozaron.html">here</a>, in spanish) I had to also migrate from <em>G**gl* authenticator</em> (<em>gauth</em>) to something else for the simple reason that <em>gauth</em> doesn&rsquo;t even let you do backups, nor it&rsquo;s synched with your account&hellip; nothing, it is just standalone and if you ever lose your phone you&rsquo;re fucked; so I decided to go with <a href="https://getaegis.app/">Aegis authenticator</a>, as it is open source, you have control over all your secret keys, you can do backups directly to the filesystem, you can secure your database with an extra password, etc., etc.. In general <em>aegis</em> is the superior MFA authenticator (at least compared with <em>gauth</em>) and everything that&rsquo;s compatible with <em>gauth</em> is compatible with <em>aegis</em> as the format is a standard (as a matter of fact, <em>keepass</em> also has this MFA feature which is called TOPT and is also compatible, but I prefer to have things separate). I also use <em>syncthing</em> to keep a backup of my <em>aegis</em> database.</p>
@@ -1429,15 +1521,16 @@ func _ready() -&gt; void:
       <category>Update</category>
       <description>Actualización en el estado de la página, después de mucho tiempo de ausencia.</description>
       <content:encoded><![CDATA[<p>Después de mucho tiempo de estar luchando con querer volver a usar este pex (maldita <em>d</em> word y demás), ya me volví a acomodar el setup para agregar nuevas entradas.</p>
-<p>Entre las cosas que tuve que hacer fue actualizar el <a href="https://github.com/luevano/pyssg">pyssg</a> porque no lo podía usar de una como estaba; y de pasado le agregue una que otra feature nueva. Luego quiero agregarle más funcionalidad para poder <em>buildear</em> la página completa; por ahora se hace en segmentos: todo lo de <a href="https://luevano.xyz">luevano.xyz</a> está hecho manual, mientras que <a href="https://blog.luevano.xyz">blog</a> y <a href="https://art.luevano.xyz">art</a> usan <a href="https://github.com/luevano/pyssghttps://github.com/luevano/pyssg">pyssg</a>.</p>
+<p>Entre las cosas que tuve que hacer fue actualizar el <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> porque no lo podía usar de una como estaba; y de pasado le agregue una que otra feature nueva. Luego quiero agregarle más funcionalidad para poder <em>buildear</em> la página completa; por ahora se hace en segmentos: todo lo de <a href="https://luevano.xyz">luevano.xyz</a> está hecho manual, mientras que <a href="https://blog.luevano.xyz">blog</a> y <a href="https://art.luevano.xyz">art</a> usan <a href="https://github.com/luevano/pyssg">pyssg</a>.</p>
 <p>Otra cosa es que quizá me devuelva a editar alguans entradas nada más para homogeneizar las entradas específicas a <em>Create a&hellip;</em> (tiene más sentido que sean <em>Setup x&hellip;</em> o algo similar).</p>
-<p>En otras noticias, estoy muy agusto en el jale que tengo actualmente aunque lleve alrededor de 3 semanas de un infierno por problemas debidos a varias razones (del jale). Debo pensar en si debo omitir cosas personales o del trabajo aquí, ya que quién sabe quién se pueda llegar a topar con esto <em>*thinking emoji*</em>.</p>]]></content:encoded>
+<p>En otras noticias, estoy muy agusto en el jale que tengo actualmente aunque lleve alrededor de 3 semanas de un infierno en el jale. Debo pensar en si debo omitir cosas personales o del trabajo aquí, ya que quién sabe quién se pueda llegar a topar con esto <em>*thinking emoji*</em>.</p>]]></content:encoded>
     </item>
     <item>
       <title>Create a VPN server with OpenVPN (IPv4)</title>
       <link>https://blog.luevano.xyz/a/vpn_server_with_openvpn.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/vpn_server_with_openvpn.html</guid>
       <pubDate>Sun, 01 Aug 2021 09:27:02 GMT</pubDate>
+      <category>Code</category>
       <category>English</category>
       <category>Server</category>
       <category>Tools</category>
@@ -1445,14 +1538,27 @@ func _ready() -&gt; void:
       <description>How to create a VPN server using OpenVPN on a server running Nginx. Only for IPv4.</description>
       <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to do this entry, but had no time to do it since I also have to set up the VPN service as well to make sure what I&rsquo;m writing makes sense, today is the day.</p>
 <p>Like with any other of my entries I based my setup on the <a href="https://wiki.archlinux.org/title/OpenVPN">Arch Wiki</a>, <a href="https://github.com/Nyr/openvpn-install">this install script</a> and <a href="https://github.com/graysky2/ovpngen">this profile generator script</a>.</p>
-<p>This will be installed and working alongside the other stuff I&rsquo;ve wrote about on other posts (see the <a href="https://blog.luevano.xyz/tag/@server.html">server</a> tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it&rsquo;s not that hard to include IPv6, but meh).</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<p>This will be installed and working alongside the other stuff I&rsquo;ve wrote about on other posts (see the <a href="https://blog.luevano.xyz/tag/@server.html">server</a> tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it&rsquo;s not that hard to include IPv6, but meh). As always, all commands are executed as root unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#create-pki-from-scratch">Create PKI from scratch</a></li>
+<li><a href="#openvpn">OpenVPN</a><ul>
+<li><a href="#enable-forwarding">Enable forwarding</a></li>
+<li><a href="#create-client-configurations">Create client configurations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Pretty simple:</p>
 <ul>
-<li>Working server with root access, and with Ufw as the firewall.</li>
-<li>Depending on what port you want to run the VPN on, the default <code>1194</code>, or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one Ufw rule.</li>
+<li>Working server with root access, and with <code>ufw</code> as the firewall.</li>
+<li>Depending on what port you want to run the VPN on, the default <code>1194</code>, or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one <code>ufw</code> rule.</li>
 </ul>
-<h3 id="create-pki-from-scratch">Create PKI from scratch<a class="headerlink" href="#create-pki-from-scratch" title="Permanent link">&para;</a></h3>
+<h2 id="create-pki-from-scratch">Create PKI from scratch<a class="headerlink" href="#create-pki-from-scratch" title="Permanent link">&para;</a></h2>
 <p>PKI stands for <em>Public Key Infrastructure</em> and basically it&rsquo;s required for certificates, private keys and more. This is supposed to work between two servers and one client: a server in charge of creating, signing and verifying the certificates, a server with the OpenVPN service running and the client making the request.</p>
 <p>This is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about. In a nutshell, I&rsquo;m no expert.</p>
 <p>&hellip; but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I&rsquo;m gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).</p>
@@ -1496,8 +1602,8 @@ openssl dhparam -out dh.pem 2048
 openvpn --genkey secret ta.key
 </code></pre>
 <p>That&rsquo;s it for the PKI stuff and general certificate configuration.</p>
-<h3 id="openvpn">OpenVPN<a class="headerlink" href="#openvpn" title="Permanent link">&para;</a></h3>
-<p><a href="https://wiki.archlinux.org/title/OpenVPN">OpenVPN</a> is a robust and highly flexible VPN daemon, that&rsquo;s pretty complete feature wise.</p>
+<h2 id="openvpn">OpenVPN<a class="headerlink" href="#openvpn" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/OpenVPN">OpenVPN</a> is a robust and highly flexible VPN daemon, that&rsquo;s pretty complete feature-wise.</p>
 <p>Install the <code>openvpn</code> package:</p>
 <pre><code class="language-sh">pacman -S openvpn
 </code></pre>
@@ -1599,6 +1705,7 @@ verb 3
 explicit-exit-notify 1
 </code></pre>
 <p><code>#</code> and <code>;</code> are comments. Read each and every line, you might want to change some stuff (like the logging), specially the first line which is your server public IP.</p>
+<h4 id="enable-forwarding">Enable forwarding<a class="headerlink" href="#enable-forwarding" title="Permanent link">&para;</a></h4>
 <p>Now, we need to enable <em>packet forwarding</em> (so we can access the web while connected to the VPN), which can be enabled on the interface level or globally (you can check the different options with <code>sysctl -a | grep forward</code>). I&rsquo;ll do it globally, run:</p>
 <pre><code class="language-sh">sysctl net.ipv4.ip_forward=1
 </code></pre>
@@ -1644,7 +1751,7 @@ ufw reload
 systemctl enable openvpn-server@server.service
 </code></pre>
 <p>Where the <code>server</code> after <code>@</code> is the name of your configuration, <code>server.conf</code> without the <code>.conf</code> in my case.</p>
-<h4 id="create-client-configurations">Create client configurations<a class="headerlink" href="#create-client-configurations" title="Permanent link">&para;</a></h4>
+<h3 id="create-client-configurations">Create client configurations<a class="headerlink" href="#create-client-configurations" title="Permanent link">&para;</a></h3>
 <p>You might notice that I didn&rsquo;t specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the <code>server.conf</code> file that we created.</p>
 <p>The real way of doing this would be to run similar steps as the ones with <code>easy-rsa</code> locally, send them to the server, sign them, and retrieve them. Nah, we&rsquo;ll just create all configuration files on the server as I was mentioning earlier.</p>
 <p>Also, the client configuration file has to match the server one (to some degree), to make this easier you can create a <code>client-common</code> file in <code>/etc/openvpn/server</code> with the following content:</p>
@@ -1717,7 +1824,7 @@ chown nobody:nobody pki/crl.pem
 chmod o+r pki/crl.pem
 cd $CPWD
 </code></pre>
-<p>And the way to use is to run <code>vpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually deletes the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for <code>easy-rsa</code>) and it could have errors.</p>
+<p>And the way to use is to run <code>vpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually delete the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for <code>easy-rsa</code>).</p>
 <p>Now, just get the <code>.ovpn</code> file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.</p>]]></content:encoded>
     </item>
     <item>
@@ -1741,7 +1848,7 @@ cd $CPWD
 <p>Y pues ya, este pex ya me sirvió para desahogarme, una disculpa por la redacción tan <em>pitera</em>. Sobres.</p>]]></content:encoded>
     </item>
     <item>
-      <title>Tenia este pex algo descuidado</title>
+      <title>Tenía este pex algo descuidado</title>
       <link>https://blog.luevano.xyz/a/tenia_esto_descuidado.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/tenia_esto_descuidado.html</guid>
       <pubDate>Sun, 18 Jul 2021 07:51:50 GMT</pubDate>
@@ -1750,10 +1857,10 @@ cd $CPWD
       <category>Update</category>
       <description>Nada más un update en el estado del blog y lo que he andado haciendo.</description>
       <content:encoded><![CDATA[<p>Así es, tenía un poco descuidado este pex, siendo la razón principal que andaba ocupado con cosas de <em>la vida profesional</em>, ayay. Pero ya que ando un poco más despejado y menos estresado voy a seguir usando el blog y a ver qué más hago.</p>
-<p>Tengo unas entradas pendientes que quiero hacer del estilo de &ldquo;tutorial&rdquo; o &ldquo;how-to&rdquo;, pero me lo he estado debatiendo, porque Luke ya empezó a hacerlo más de verdad en <a href="https://landchad.net/">landchad.net</a>, lo cual recomiendo bastante pues igual yo empecé a hacer esto por él (y por <a href="https://lmcj.xyz/">lm</a>); aunque la verdad pues es muy específico a como él hace las cosas y quizá sí puede haber diferencias, pero ya veré en estos días. La próxima que quiero hacer es sobre el VPN, porque no lo he <em>setupeado</em> desde que reinicié El Página Web y La Servidor, entonces acomodaré el VPN de nuevo y de pasada tiro entrada de eso.</p>
-<p>También dejé un dibujo pendiente, que la neta lo dejé por 2 cosas: está bien cabrón (porque también lo quiero colorear) y porque estaba ocupado; de lo cuál ya sólo queda el <em>está bien cabrón</em> pero no he tenido el valor de retomarlo. Lo triste es que ya pasó el tiempo del hype y ya no tengo mucha motivación para terminarlo más que el hecho de que cuando lo termine empezaré a usar Clip Studio Paint en vez de Krita, porque compré una licencia ahora que estuvo en 50% de descuento (sí, me mamé).</p>
+<p>Tengo unas entradas pendientes que quiero hacer del estilo de &ldquo;tutorial&rdquo; o &ldquo;how-to&rdquo;, pero me lo he estado debatiendo, porque Luke ya empezó a hacerlo más de verdad en <a href="https://landchad.net/">landchad.net</a>, lo cual recomiendo bastante pues igual yo empecé a hacer esto por él (y por <a href="https://lmcj.xyz/"><mark>EL ELE EME</mark></a>); aunque la verdad pues es muy específico a como él hace las cosas y quizá sí puede haber diferencias, pero ya veré en estos días. La próxima que quiero hacer es sobre el VPN, porque no lo he <em>setupeado</em> desde que reinicié El Página Web y La Servidor, entonces acomodaré el VPN de nuevo y de pasada tiro entrada de eso.</p>
+<p>También dejé un dibujo pendiente, que la neta lo dejé por 2 cosas: está bien cabrón (porque también lo quiero colorear) y porque estaba ocupado; de lo cuál ya sólo queda el <em>está bien cabrón</em> pero no he tenido el valor de retomarlo. Lo triste es que ya pasó el tiempo del hype y ya no tengo mucha motivación para terminarlo más que el hecho de que cuando lo termine empezaré a usar Clip Studio Paint en vez de Krita, porque compré una licencia ahora que estuvo en 50% de descuento.</p>
 <p>Algo bueno es que me he estado sintiendo muy bien conmigo mismo últimamente, aunque casi no hable de eso. Sí hay una razón en específico, pero es una razón algo tonta. Espero así siga.</p>
-<p>Ah, y también quería acomodarme una sección de comentarios, pero como siempre, todas las opciones están bien <em>bloated</em>, entonces pues me voy a hacer una en corto seguramente en Python para <em>el back</em>, MySQL para la base de datos y Javascript para la conexión acá en <em>el front</em>, algo tranqui.</p>
+<p><del>Ah, y también quería acomodarme una sección de comentarios, pero como siempre, todas las opciones están bien <em>bloated</em>, entonces pues me voy a hacer una en corto seguramente en Python para <em>el back</em>, MySQL para la base de datos y Javascript para la conexión acá en <em>el front</em>, algo tranqui.</del> <ins>Nel, siempre no ocupo esto, pa&rsquo; qué.</ins></p>
 <p>Sobres pues.</p>]]></content:encoded>
     </item>
     <item>
@@ -1761,15 +1868,28 @@ cd $CPWD
       <link>https://blog.luevano.xyz/a/xmpp_server_with_prosody.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/xmpp_server_with_prosody.html</guid>
       <pubDate>Wed, 09 Jun 2021 05:24:30 GMT</pubDate>
+      <category>Code</category>
       <category>English</category>
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim.</description>
-      <content:encoded><![CDATA[<p>Recently I set up an XMPP server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <mark><a href="https://lmcj.xyz">EL ELE EME</a></mark> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses in <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
-<p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, and of course the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
-<p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root (unless specified otherwise)</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+      <content:encoded><![CDATA[<p><strong>Update</strong>: I no longer host this XMPP server as it consumed a lot of resources and I wasn&rsquo;t using it that much. I&rsquo;ll probably re-create it in the future, though.</p>
+<p>Recently I set up an <a href="https://xmpp.org/">XMPP</a> server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <a href="https://lmcj.xyz"><mark>EL ELE EME</mark></a> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses at <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
+<p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
+<p>As with my other entries, this is under a server running Arch Linux, with the Nginx web server and Certbot certificates. And all commands here are executed as root, unless specified otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#prosody">Prosody</a></li>
+<li><a href="#nginx-configuration-file">Nginx configuration file</a></li>
+<li><a href="#coturn">Coturn</a></li>
+<li><a href="#wrapping-up">Wrapping up</a></li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Same as with my other entries (<a href="https://luevano.xyz/a/website_with_nginx.html">website</a>, <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> and <a href="https://blog.luevano.xyz/a/git_server_with_cgit.html">git</a>) plus:</p>
 <ul>
 <li><strong>A</strong> and (optionally) <strong>AAA</strong> DNS records for:<ul>
@@ -1781,16 +1901,16 @@ cd $CPWD
 </ul>
 </li>
 <li>(Optionally, but recommended) the following <strong>SRV</strong> DNS records; make sure it is pointing to an <strong>A</strong> or <strong>AAA</strong> record (matching the records from the last point, for example):<ul>
-<li><code>_xmpp-client._tcp.**your.domain**.</code> for port <code>5222</code> pointing to <code>xmpp.**your.domain**.</code></li>
-<li><code>_xmpp-server._tcp.**your.domain**.</code> for port <code>5269</code> pointing to <code>xmpp.**your.domain**.</code></li>
-<li><code>_xmpp-server._tcp.muc.**your.domain**.</code> for port <code>5269</code> pointing to <code>xmpp.**your.domain**.</code></li>
+<li><code>_xmpp-client._tcp.{your.domain}.</code> for port <code>5222</code> pointing to <code>xmpp.{your.domain}.</code></li>
+<li><code>_xmpp-server._tcp.{your.domain}.</code> for port <code>5269</code> pointing to <code>xmpp.{your.domain}.</code></li>
+<li><code>_xmpp-server._tcp.muc.{your.domain}.</code> for port <code>5269</code> pointing to <code>xmpp.{your.domain}.</code></li>
 </ul>
 </li>
 <li>SSL certificates for the previous subdomains; similar that with my other entries just create the appropriate <code>prosody.conf</code> (where <code>server_name</code> will be all the subdomains defined above) file and run <code>certbot --nginx</code>. You can find the example configuration file almost at the end of this entry.</li>
 <li>Email addresses for <code>admin</code>, <code>abuse</code>, <code>contact</code>, <code>security</code>, etc. Or use your own email for all of them, doesn&rsquo;t really matter much as long as you define them in the configuration and are valid, I have aliases so those emails are forwarded to me.</li>
 <li>Allow ports <code>5000</code>, <code>5222</code>, <code>5269</code>, <code>5280</code> and <code>5281</code> for <a href="https://prosody.im/doc/ports">Prosody</a> and, <code>3478</code> and <code>5349</code> for <a href="https://webrtc.org/getting-started/turn-server">Turnserver</a> which are the defaults for <code>coturn</code>.</li>
 </ul>
-<h3 id="prosody">Prosody<a class="headerlink" href="#prosody" title="Permanent link">&para;</a></h3>
+<h2 id="prosody">Prosody<a class="headerlink" href="#prosody" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Prosody">Prosody</a> is an implementation of the XMPP protocol that is flexible and extensible.</p>
 <p>Install the <code>prosody</code> package (with optional dependencies) and the <code>mercurial</code> package:</p>
 <pre><code class="language-sh">pacman -S prosody, mercurial, lua52-sec, lua52-dbi, lua52-zlib
@@ -1802,11 +1922,11 @@ mkdir modules-enabled
 </code></pre>
 <p>You can see that I follow a similar approach that I used with Nginx and the server configuration, where I have all the modules available in a directory, and make a symlink to another to keep track of what is being used. You can update the repository by running <code>hg pull --update</code> while inside the <code>modules-available</code> directory (similar to Git).</p>
 <p>Make symbolic links to the following modules:</p>
-<pre><code>ln -s /var/lib/prosody/modules-available/MODULE_NAME /var/lib/prosody/modules-enabled/
+<pre><code>ln -s /var/lib/prosody/modules-available/{module_name} /var/lib/prosody/modules-enabled/
 ...
 </code></pre>
 <ul>
-<li>Modules:<ul>
+<li>Modules (<code>{module_name}</code>):<ul>
 <li><code>mod_bookmarks</code></li>
 <li><code>mod_cache_c2s_caps</code></li>
 <li><code>mod_checkcerts</code></li>
@@ -2134,8 +2254,8 @@ ln -s your.domain.key SUBDOMAIN.your.domain.key
 ...
 </code></pre>
 <p>That&rsquo;s basically all the configuration that needs Prosody itself, but we still have to configure Nginx and Coturn before starting/enabling the <code>prosody</code> service.</p>
-<h3 id="nginx-configuration-file">Nginx configuration file<a class="headerlink" href="#nginx-configuration-file" title="Permanent link">&para;</a></h3>
-<p>Since this is not an ordinary configuration file I&rsquo;m going to describe this too. Your <code>prosody.conf</code> file should have the following location blocks under the main server block (the one that listens to HTTPS):</p>
+<h2 id="nginx-configuration-file">Nginx configuration file<a class="headerlink" href="#nginx-configuration-file" title="Permanent link">&para;</a></h2>
+<p>Since this is not an ordinary configuration file I&rsquo;m going to describe this, too. Your <code>prosody.conf</code> file should have the following location blocks under the main server block (the one that listens to HTTPS):</p>
 <pre><code class="language-nginx"># HTTPS server block
 server {
     root /var/www/prosody/;
@@ -2228,11 +2348,11 @@ server {
     ]
 }
 </code></pre>
-<p>Remember to have your <code>prosody.conf</code> file symlinked (or discoverable by Nginx) to the <code>sites-enabled</code> directory. You can now restart your <code>nginx</code> service (and test the configuration, optionally):</p>
+<p>Remember to have your <code>prosody.conf</code> file symlinked (or discoverable by Nginx) to the <code>sites-enabled</code> directory. You can now test and restart your <code>nginx</code> service (and test the configuration, optionally):</p>
 <pre><code class="language-sh">nginx -t
 systemctl restart nginx.service
 </code></pre>
-<h3 id="coturn">Coturn<a class="headerlink" href="#coturn" title="Permanent link">&para;</a></h3>
+<h2 id="coturn">Coturn<a class="headerlink" href="#coturn" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/coturn/coturn">Coturn</a> is the implementation of TURN and STUN server, which in general is for (at least in the XMPP world) voice support and external service discovery.</p>
 <p>Install the <code>coturn</code> package:</p>
 <pre><code class="language-sh">pacman -S coturn
@@ -2248,7 +2368,7 @@ static-auth-secret=YOUR SUPER SECRET TURN PASSWORD
 systemctl enable turnserver.service
 </code></pre>
 <p>You can test if your TURN server works at <a href="https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/">Trickle ICE</a>. You may need to add a user in the <code>turnserver.conf</code> to test this.</p>
-<h3 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h3>
+<h2 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h2>
 <p>At this point you should have a working XMPP server, start/enable the <code>prosody</code> service now:</p>
 <pre><code class="language-sh">systemctl start prosody.service
 systemctl enable prosody.service
@@ -2261,7 +2381,7 @@ systemctl enable prosody.service
 <p>Additionally, you can test the security of your server in <a href="https://xmpp.net/index.php">IM Observatory</a>, here you only need to specify your <code>domain.name</code> (not <code>xmpp.domain.name</code>, if you set up the <strong>SRV</strong> DNS records correctly). Again, it should have a similar score to mine:</p>
 <p><a href='https://xmpp.net/result.php?domain=luevano.xyz&amp;type=client'><img src='https://xmpp.net/badge.php?domain=luevano.xyz' alt='xmpp.net score' /></a></p>
 <p>You can now log in into your XMPP client of choice, if it asks for the server it should be <code>xmpp.your.domain</code> (or <code>your.domain</code> for some clients) and your login credentials <code>you@your.domain</code> and the password you chose (which you can change in most clients).</p>
-<p>That&rsquo;s it, send me a message <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.</p>]]></content:encoded>
+<p>That&rsquo;s it, send me a message at <a href="xmpp:david@luevano.xyz">david@luevano.xyz</a> if you were able to set up the server successfully.</p>]]></content:encoded>
     </item>
     <item>
       <title>Al fin ya me acomodé la página pa' los dibujos</title>
@@ -2273,7 +2393,7 @@ systemctl enable prosody.service
       <category>Update</category>
       <description>Actualización en el estado de la página, en este caso sobre la existencia de una nueva página para los dibujos y arte en general.</description>
       <content:encoded><![CDATA[<p>Así es, ya quedó acomodado el sub-dominio <code>art.luevano.xyz</code> pos pal <a href="https://art.luevano.xyz">arte</a> veda. Entonces pues ando feliz por eso.</p>
-<p>Este pedo fue gracias a que me reescribí la forma en la que <code>pyssg</code> maneja los templates, ahora uso el sistema de <code>jinja</code> en vez del cochinero que hacía antes.</p>
+<p>Este pedo fue gracias a que me reescribí la forma en la que <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> maneja los templates, ahora uso el sistema de <a href="https://jinja.palletsprojects.com/en/3.1.x/"><code>jinja</code></a> en vez del cochinero que hacía antes.</p>
 <p>Y pues nada más eso, aquí está el <a href="https://art.luevano.xyz/a/elephant_octopus.html">primer post</a> y por supuesto acá está el link del RSS <a href="https://art.luevano.xyz/rss.xml">https://art.luevano.xyz/rss.xml</a>.</p>]]></content:encoded>
     </item>
     <item>
@@ -2288,8 +2408,9 @@ systemctl enable prosody.service
       <content:encoded><![CDATA[<p>Estuve acomodando un poco más el <em>sItIo</em>, al fin agregué la &ldquo;sección&rdquo; de <a href="https://luevano.xyz/contact.html">contact</a> y de <a href="https://luevano.xyz/donate.html">donate</a> por si hay algún loco que quiere tirar varo.</p>
 <p>También me puse a acomodar un servidor de <a href="https://xmpp.org/">XMPP</a> el cual, en pocas palabras, es un protocolo de mensajería instantánea (y más) descentralizado, por lo cual cada quien puede hacer una cuenta en el servidor que quiera y conectarse con cuentas creadas en otro servidor&hellip; exacto, como con los correos electrónicos. Y esto está perro porque si tú tienes tu propio server, así como con uno de correo electrónico, puedes controlar qué características tiene, quiénes pueden hacer cuenta, si hay <em>end-to-end encryption</em> (o mínimo <em>end-to-server</em>), entre un montón de otras cosas.</p>
 <p>Ahorita este server es SUMISO (<em>compliant</em> en español, jeje) para jalar con la app <a href="https://conversations.im/">conversations</a> y con la red social <a href="https://movim.eu/">movim</a>, pero realmente funcionaría con casi cualquier cliente de XMPP, amenos que ese cliente implemente algo que no tiene mi server. Y también acomodé un server de <a href="https://matrix.org/">Matrix</a> que es muy similar pero es bajo otro protocolo y se siente más como un discord/slack (al menos en el <a href="https://element.io/">element</a>), muy chingón también.</p>
-<p>Si bien aún quedan cosas por hacer sobre estos dos servers que me acomodé (además de hacerles unas entradas para documentar cómo lo hice), quiero moverme a otra cosa que sería acomodar una sección de dibujos, lo cual en teoría es bien sencillo, pero como quiero poder automatizar la publicación de estos, quiero modificar un poco el <a href="https://github.com/luevano/pyssg">pyssg</a> para que jale chido para este pex.</p>
-<p>Ya por último también quiero moverle un poco al CSS, porque lo dejé en un estado muy culerón y quiero meterle/ajustar unas cosas para que quede más limpio y medianamente bonito&hellip; <em>dentro de lo que cabe porque evidentemente me vale verga si se ve como una página del 2000</em>.</p>]]></content:encoded>
+<p>Si bien aún quedan cosas por hacer sobre estos dos servers que me acomodé (además de hacerles unas entradas para documentar cómo lo hice), quiero moverme a otra cosa que sería acomodar una sección de dibujos, lo cual en teoría es bien sencillo, pero como quiero poder automatizar la publicación de estos, quiero modificar un poco el <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> para que jale chido para este pex.</p>
+<p>Ya por último también quiero moverle un poco al CSS, porque lo dejé en un estado muy culerón y quiero meterle/ajustar unas cosas para que quede más limpio y medianamente bonito&hellip; <em>dentro de lo que cabe porque evidentemente me vale verga si se ve como una página del 2000</em>.</p>
+<p><strong>Actualización</strong>: Ya tumbé el servidor de XMPP porque consumía bastantes recursos y no lo usaba tanto, si en un futuro consigo un mejor servidor podría volver a hostearlo.</p>]]></content:encoded>
     </item>
     <item>
       <title>I'm using a new blogging system</title>
@@ -2305,28 +2426,42 @@ systemctl enable prosody.service
 <p>The solution? Write a new program &ldquo;from scratch&rdquo; in <em>pYtHoN</em>. Yes it is bloated, yes it is in its early stages, but it works just as I want it to work, and I&rsquo;m pretty happy so far with the results and have with even more ideas in mind to &ldquo;optimize&rdquo; and generally clean my wOrKfLoW to post new blog entries. I even thought of using it for posting into a &ldquo;feed&rdquo; like gallery for drawings or pictures in general.</p>
 <p>I called it <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, because it sounds nice and it wasn&rsquo;t taken in the PyPi. It is just a terminal program that reads either a configuration file or the options passed as flags when calling the program.</p>
 <p>It still uses Markdown files because I find them very easy to work with. And instead of just having a &ldquo;header&rdquo; and a &ldquo;footer&rdquo; applied to each parsed entry, you will have templates (generated with the program) for each piece that I thought made sense (idea taken from <code>blogit</code>): the common header and footer, the common header and footer for each entry and, header, footer and list elements for articles and tags. When parsing the Markdown file these templates are applied and stitched together to make a single HTML file. Also generates an RSS feed and the <code>sitemap.xml</code> file, which is nice.</p>
-<p>It might sound convoluted, but it works pretty well, with of course room to improve; I&rsquo;m open to suggestions, issue reporting or direct contributions <a href="https://github.com/luevano/pyssg">here</a>. BTW, it only works on Linux for now (and don&rsquo;t think on making it work on windows, but feel free to do PR for the compatibility).</p>
-<p>That&rsquo;s it for now, the new RSS feed is available here: <a href="https://blog.luevano.xyz/rss.xml">https://blog.luevano.xyz/rss.xml</a>.</p>]]></content:encoded>
+<p>It might sound convoluted, but it works pretty well, with of course room to improve; I&rsquo;m open to suggestions, issue reporting or direct contributions <a href="https://github.com/luevano/pyssg">here</a>. For now, it is only tested on Linux (and don&rsquo;t think on making it work on windows, but feel free to do PR for the compatibility).</p>
+<p>That&rsquo;s it for now, the new RSS feed is available here: <a href="https://blog.luevano.xyz/rss.xml">https://blog.luevano.xyz/rss.xml</a>.</p>
+<p><strong>Update</strong>: Since writing this entry, <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> has evolved quite a bit, so not everything described here is still true. For the latest updates check the newest entries or the git repository itself.</p>]]></content:encoded>
     </item>
     <item>
       <title>Create a git server and setup cgit web app (on Nginx)</title>
       <link>https://blog.luevano.xyz/a/git_server_with_cgit.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/git_server_with_cgit.html</guid>
       <pubDate>Sun, 21 Mar 2021 19:00:29 GMT</pubDate>
+      <category>Code</category>
       <category>English</category>
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.</description>
-      <content:encoded><![CDATA[<p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for (btw i use) Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
-<p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of SSH. Also, most if not all commands here are run as root.</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+      <content:encoded><![CDATA[<p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for <mark>btw i use</mark> Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
+<p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of normal <code>ssh</code>. And as with the other entries, most if not all commands here are run as root unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#git">Git</a></li>
+<li><a href="#cgit">Cgit</a><ul>
+<li><a href="#cgits-file-rendering">Cgit&rsquo;s file rendering</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>I might get tired of saying this (it&rsquo;s just copy paste, basically)&hellip; but you will need the same prerequisites as before (check my <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> and <a href="https://blog.luevano.xyz/a/mail_server_with_postfix.html">mail</a> entries), with the extras:</p>
 <ul>
 <li>(Optional, if you want a &ldquo;front-end&rdquo;) A <strong>CNAME</strong> for &ldquo;git&rdquo; and (optionally) &ldquo;www.git&rdquo;, or some other name for your sub-domains.</li>
 <li>An SSL certificate, if you&rsquo;re following the other entries, add a <code>git.conf</code> and run <code>certbot --nginx</code> to extend the certificate.</li>
 </ul>
-<h3 id="git">Git<a class="headerlink" href="#git" title="Permanent link">&para;</a></h3>
+<h2 id="git">Git<a class="headerlink" href="#git" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/git">Git</a> is a version control system.</p>
 <p>If not installed already, install the <code>git</code> package:</p>
 <pre><code class="language-sh">pacman -S git
@@ -2360,11 +2495,11 @@ systemctl enable git-daemon.socket
 </code></pre>
 <p>You&rsquo;re basically done. Now you should be able to push/pull repositories to your server&hellip; except, you haven&rsquo;t created any repository in your server, that&rsquo;s right, they&rsquo;re not created automatically when trying to push. To do so, you have to run (while inside <code>/home/git</code>):</p>
 <pre><code class="language-sh">git init --bare {repo_name}.git
-chown -R git:git repo_name.git
+chown -R git:git {repo_name}.git
 </code></pre>
-<p>Those two lines above will need to be run each time you want to add a new repository to your server (yeah, kinda lame&hellip; although there are options to &ldquo;automate&rdquo; this, I like it this way).</p>
+<p><mark>Those two lines above will need to be run each time you want to add a new repository to your server</mark>. There are options to &ldquo;automate&rdquo; this but I like it this way.</p>
 <p>After that you can already push/pull to your repository. I have my repositories (locally) set up so I can push to more than one remote at the same time (my server, GitHub, GitLab, etc.); to do so, check <a href="https://gist.github.com/rvl/c3f156e117e22a25f242">this gist</a>.</p>
-<h3 id="cgit">Cgit<a class="headerlink" href="#cgit" title="Permanent link">&para;</a></h3>
+<h2 id="cgit">Cgit<a class="headerlink" href="#cgit" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Cgit">Cgit</a> is a fast web interface for git.</p>
 <p>This is optionally since it&rsquo;s only for the web application.</p>
 <p>Install the <code>cgit</code> and <code>fcgiwrap</code> packages:</p>
@@ -2405,10 +2540,9 @@ repo.url={url}
 repo.path={dir_path}
 repo.owner={owner}
 repo.desc={short_description}
-
 ...
 </code></pre>
-<p>Where you can uncomment the <code>robots</code> line to let web crawlers (like Google&rsquo;s) to index your <code>git</code> web app. And at the end keep all your repositories (the ones you want to make public), for example for my <a href="https://git.luevano.xyz/.dots"><em>dotfiles</em></a> I have:</p>
+<p>Where you can uncomment the <code>robots</code> line to not let web crawlers (like Google&rsquo;s) to index your <code>git</code> web app. And at the end keep all your repositories (the ones you want to make public), for example for my <a href="https://git.luevano.xyz/.dots"><em>dotfiles</em></a> I have:</p>
 <pre><code class="language-apache">...
 repo.url=.dots
 repo.path=/home/git/.dots.git
@@ -2417,6 +2551,7 @@ repo.desc=These are my personal dotfiles.
 ...
 </code></pre>
 <p>Otherwise you could let <code>cgit</code> to automatically detect your repositories (you have to be careful if you want to keep &ldquo;private&rdquo; repos) using the option <code>scan-path</code> and setup <code>.git/description</code> for each repository. For more, you can check <a href="https://man.archlinux.org/man/cgitrc.5">cgitrc(5)</a>.</p>
+<h3 id="cgits-file-rendering">Cgit&rsquo;s file rendering<a class="headerlink" href="#cgits-file-rendering" title="Permanent link">&para;</a></h3>
 <p>By default you can&rsquo;t see the files on the site, you need a highlighter to render the files, I use <code>highlight</code>. Install the <code>highlight</code> package:</p>
 <pre><code class="language-sh">pacman -S highlight
 </code></pre>
@@ -2442,21 +2577,37 @@ exec highlight --force --inline-css -f -I -O xhtml -S &quot;$EXTENSION&quot; 2&g
       <link>https://blog.luevano.xyz/a/mail_server_with_postfix.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/mail_server_with_postfix.html</guid>
       <pubDate>Sun, 21 Mar 2021 04:05:59 GMT</pubDate>
+      <category>Code</category>
       <category>English</category>
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot.</description>
-      <content:encoded><![CDATA[<p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</p>
-<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL Database. And note that most if not all commands executed here are run with root privileges.</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+      <content:encoded><![CDATA[<p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; <del>also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</del> <ins>I haven&rsquo;t had time to do the script so nevermind this, if I ever do it I&rsquo;ll make a new entry regarding it.</ins></p>
+<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#postfix">Postfix</a></li>
+<li><a href="#dovecot">Dovecot</a></li>
+<li><a href="#opendkim">OpenDKIM</a><ul>
+<li><a href="#opendkim-dns-txt-records">OpenDKIM DNS TXT records</a></li>
+</ul>
+</li>
+<li><a href="#spamassassin">SpamAssassin</a></li>
+<li><a href="#wrapping-up">Wrapping up</a></li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Basically the same as with the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website with Nginx and Certbot</a>, with the extras:</p>
 <ul>
 <li>You will need a <strong>CNAME</strong> for &ldquo;mail&rdquo; and (optionally) &ldquo;www.mail&rdquo;, or whatever you want to call the sub-domains (although the <a href="https://tools.ietf.org/html/rfc2181#section-10.3">RFC 2181</a> states that it NEEDS to be an <strong>A</strong> record, fuck the police).</li>
 <li>An SSL certificate. You can use the SSL certificate obtained following my last post using <code>certbot</code> (just create a <code>mail.conf</code> and run <code>certbot --nginx</code> again).</li>
-<li>Ports 25, 587 (SMTP), 465 (SMTPS), 143 (IMAP) and 993 (IMAPS) open on the firewall.</li>
+<li>Ports <code>25</code>, <code>587</code> (SMTP), <code>465</code> (SMTPS), <code>143</code> (IMAP) and <code>993</code> (IMAPS) open on the firewall (I use <code>ufw</code>).</li>
 </ul>
-<h3 id="postfix">Postfix<a class="headerlink" href="#postfix" title="Permanent link">&para;</a></h3>
+<h2 id="postfix">Postfix<a class="headerlink" href="#postfix" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/postfix">Postfix</a> is a &ldquo;mail transfer agent&rdquo; which is the component of the mail server that receives and sends emails via SMTP.</p>
 <p>Install the <code>postfix</code> package:</p>
 <pre><code class="language-sh">pacman -S postfix
@@ -2493,7 +2644,7 @@ smtpd_sasl_path = private/auth
 smtpd_sasl_security_options = noanonymous, noplaintext
 smtpd_sasl_tls_security_options = noanonymous
 </code></pre>
-<p>Specify the mailbox home (this is going to be a directory inside your user&rsquo;s home containing the actual mail files):</p>
+<p>Specify the mailbox home, this is going to be a directory inside your user&rsquo;s home containing the actual mail files, for example it will end up being<code>/home/david/Mail/Inbox</code>:</p>
 <pre><code class="language-apache">home_mailbox = Mail/Inbox/
 </code></pre>
 <p>Pre-configuration to work seamlessly with <code>dovecot</code> and <code>opendkim</code>:</p>
@@ -2507,8 +2658,7 @@ smtpd_milters = inet:127.0.0.1:8891
 non_smtpd_milters = inet:127.0.0.1:8891
 mailbox_command = /usr/lib/dovecot/deliver
 </code></pre>
-<p>Where <code>{yourdomainname}</code> is <code>luevano.xyz</code> in my case, or if you have <code>localhost</code> configured to your domain, then use <code>localhost</code> for <code>myhostname</code> (<code>myhostname = localhost</code>).</p>
-<p>Lastly, if you don&rsquo;t want the sender&rsquo;s IP and user agent (application used to send the mail), add the following line:</p>
+<p>Where <code>{yourdomainname}</code> is <code>luevano.xyz</code> in my case. Lastly, if you don&rsquo;t want the sender&rsquo;s IP and user agent (application used to send the mail), add the following line:</p>
 <pre><code class="language-apache">smtp_header_checks = regexp:/etc/postfix/smtp_header_checks
 </code></pre>
 <p>And create the <code>/etc/postfix/smtp_header_checks</code> file with the following content:</p>
@@ -2545,7 +2695,7 @@ newaliases
 <pre><code class="language-sh">systemctl start postfix.service
 systemctl enable postfix.service
 </code></pre>
-<h3 id="dovecot">Dovecot<a class="headerlink" href="#dovecot" title="Permanent link">&para;</a></h3>
+<h2 id="dovecot">Dovecot<a class="headerlink" href="#dovecot" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Dovecot">Dovecot</a> is an IMAP and POP3 server, which is what lets an email application retrieve the mail.</p>
 <p>Install the <code>dovecot</code> and <code>pigeonhole</code> (sieve for <code>dovecot</code>) packages:</p>
 <pre><code class="language-sh">pacman -S dovecot pigeonhole
@@ -2660,8 +2810,8 @@ account required pam_unix.so
 <pre><code class="language-sh">systemctl start dovecot.service
 systemctl enable dovecot.service
 </code></pre>
-<h3 id="opendkim">OpenDKIM<a class="headerlink" href="#opendkim" title="Permanent link">&para;</a></h3>
-<p><a href="https://wiki.archlinux.org/title/OpenDKIM">OpenDKIM</a> is needed so services like G**gle (we don&rsquo;t mention that name here [[[this is a meme]]]) don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
+<h2 id="opendkim">OpenDKIM<a class="headerlink" href="#opendkim" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/OpenDKIM">OpenDKIM</a> is needed so services like G**gle don&rsquo;t throw the mail to the trash. DKIM stands for &ldquo;DomainKeys Identified Mail&rdquo;.</p>
 <p>Install the <code>opendkim</code> package:</p>
 <pre><code class="language-sh">pacman -S opendkim
 </code></pre>
@@ -2710,7 +2860,8 @@ chmod g+r /etc/postfix/dkim/*
 <pre><code class="language-sh">systemctl start opendkim.service
 systemctl enable opendkim.service
 </code></pre>
-<p>And don&rsquo;t forget to add the following <strong>TXT</strong> records on your domain registrar (these examples are for Epik):</p>
+<h3 id="opendkim-dns-txt-records">OpenDKIM DNS TXT records<a class="headerlink" href="#opendkim-dns-txt-records" title="Permanent link">&para;</a></h3>
+<p>Add the following <strong>TXT</strong> records on your domain registrar (these examples are for Epik):</p>
 <ol>
 <li><em>DKIM</em> entry: look up your <code>{yoursubdomain}.txt</code> file, it should look something like:</li>
 </ol>
@@ -2718,7 +2869,7 @@ systemctl enable opendkim.service
     &quot;p=...&quot;
     &quot;...&quot; )  ; ----- DKIM key mail for {yourdomain}
 </code></pre>
-<p>In the TXT record you will place <code>{yoursubdomain}._domainkey</code> as the &ldquo;Host&rdquo; and <code>"v=DKIM1; k=rsa; s=email; " "p=..." "..."</code> in the &ldquo;TXT Value&rdquo; (replace the dots with the actual value you see in your file).</p>
+<p>In the <strong>TXT</strong> record you will place <code>{yoursubdomain}._domainkey</code> as the &ldquo;Host&rdquo; and <code>"v=DKIM1; k=rsa; s=email; " "p=..." "..."</code> in the &ldquo;TXT Value&rdquo; (replace the dots with the actual value you see in your file).</p>
 <ol start="2">
 <li>
 <p><em>DMARC</em> entry: just <code>_dmarc.{yourdomain}</code> as the &ldquo;Host&rdquo; and <code>"v=DMARC1; p=reject; rua=mailto:dmarc@{yourdomain}; fo=1"</code> as the &ldquo;TXT Value&rdquo;.</p>
@@ -2728,7 +2879,7 @@ systemctl enable opendkim.service
 </li>
 </ol>
 <p>And at this point you could test your mail for spoofing and more.</p>
-<h3 id="spamassassin">SpamAssassin<a class="headerlink" href="#spamassassin" title="Permanent link">&para;</a></h3>
+<h2 id="spamassassin">SpamAssassin<a class="headerlink" href="#spamassassin" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/SpamAssassin">SpamAssassin</a> is just <em>a mail filter to identify spam</em>.</p>
 <p>Install the <code>spamassassin</code> package (which will install a bunch of ugly <code>perl</code> packages&hellip;):</p>
 <pre><code class="language-sh">pacman -S spamassassin
@@ -2781,10 +2932,10 @@ ExecStart=/usr/bin/vendor_perl/spamd -x -u spamd -g spamd --listen=/run/spamd/sp
 <pre><code class="language-sh">systemctl start spamassassin.service
 systemctl enable spamassassin.service
 </code></pre>
-<h3 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h3>
-<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code> for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere (the logs are generally really descriptive) because all the settings and steps detailed here just (literally just finished doing everything on a new server as of the writing of this text) worked <em>(((it just werks on my machine)))</em>.</p>
+<h2 id="wrapping-up">Wrapping up<a class="headerlink" href="#wrapping-up" title="Permanent link">&para;</a></h2>
+<p>We should have a working mail server by now. Before continuing check your journal logs (<code>journalctl -xe --unit={unit}</code>, where <code>{unit}</code> could be <code>spamassassin.service</code> for example) to see if there was any error whatsoever and try to debug it, it should be a typo somewhere because all the settings and steps detailed here just worked; I literally just finished doing everything on a new server as of the writing of this text, <mark>it just werks on my machine</mark>.</p>
 <p>Now, to actually use the mail service: first of all, you need a <em>normal</em> account (don&rsquo;t use root) that belongs to the <code>mail</code> group (<code>gpasswd -a user group</code> to add a user <code>user</code> to group <code>group</code>) and that has a password.</p>
-<p>Next, to actually login into a mail app/program/whateveryouwanttocallit, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>
+<p>Next, to actually login into a mail app/program, you will use the following settings, at least for <code>thunderdbird</code>(I tested in windows default mail app and you don&rsquo;t need a lot of settings):</p>
 <ul>
 <li>* server: subdomain.domain (mail.luevano.xyz in my case)</li>
 <li><strong>SMTP</strong> port: 587</li>
@@ -2798,38 +2949,47 @@ systemctl enable spamassassin.service
 </ul>
 <p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
 <figure id="__yafg-figure-3">
-<img alt="DKIM Test successful" src="images/b/notes/mail/dkim_test_successful.png" title="DKIM Test successful">
+<img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png" title="DKIM Test successful">
 <figcaption>DKIM Test successful</figcaption>
-</figure>
-<p>Finally, that&rsquo;s actually it for this entry, if you have any problem whatsoever you can <a href="https://luevano.xyz/contact.html">contact me</a>.</p>]]></content:encoded>
+</figure>]]></content:encoded>
     </item>
     <item>
       <title>Create a website with Nginx and Certbot</title>
       <link>https://blog.luevano.xyz/a/website_with_nginx.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/website_with_nginx.html</guid>
       <pubDate>Fri, 19 Mar 2021 02:58:15 GMT</pubDate>
+      <category>Code</category>
       <category>English</category>
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
       <description>How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics.</description>
       <content:encoded><![CDATA[<p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke&rsquo;s video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I&rsquo;m configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
-<p>As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linux distro, and I&rsquo;m doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<p>As a side note, <mark>i use arch btw</mark> so everything here es aimed at an Arch Linux distro, and I&rsquo;m doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#nginx">Nginx</a></li>
+<li><a href="#certbot">Certbot</a></li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>You will need two things:</p>
 <ul>
 <li>A domain name (duh!). I got mine on <a href="https://www.epik.com/?affid=da5ne9ru4">Epik</a> (affiliate link, btw).<ul>
-<li>With the corresponding <strong>A</strong> and <strong>AAA</strong> records pointing to the VPS&rsquo; IPs (&ldquo;A&rdquo; record points to the ipv4 address and &ldquo;AAA&rdquo; to the ipv6, basically). I have three records for each type: empty one, &ldquo;www&rdquo; and &ldquo;*&rdquo; for a wildcard, that way &ldquo;domain.name&rdquo;, &ldquo;www.domain.name&rdquo;, &ldquo;anythingelse.domain.name&rdquo; point to the same VPS (meaning that you can have several VPS for different sub-domains).</li>
+<li>With the corresponding <strong>A</strong> and <strong>AAA</strong> records pointing to the VPS&rsquo; IPs. I have three records for each type: empty string, &ldquo;www&rdquo; and &ldquo;*&rdquo; for a wildcard, that way &ldquo;domain.name&rdquo;, &ldquo;www.domain.name&rdquo;, &ldquo;anythingelse.domain.name&rdquo; point to the same VPS (meaning that you can have several VPS for different sub-domains). These depend on the VPS provider.</li>
 </ul>
 </li>
-<li>A VPS or somewhere else to host it. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link).<ul>
+<li>A VPS or somewhere else to host it. I&rsquo;m using <a href="https://www.vultr.com/?ref=8732849">Vultr</a> (also an affiliate link, btw).<ul>
 <li>With <code>ssh</code> already configured both on the local machine and on the remote machine.</li>
-<li>Firewall already configured to allow ports 80 (HTTP) and 443 (HTTPS). I use <code>ufw</code> so it&rsquo;s just a matter of doing <code>ufw allow 80,443/tcp</code> as root and you&rsquo;re golden.</li>
-<li><code>cron</code> installed if you follow along (you could use <code>systemd</code> timers, or some other method you prefer to automate running commands every X time).</li>
+<li>Firewall already configured to allow ports <code>80</code> (HTTP) and <code>443</code> (HTTPS). I use <code>ufw</code> so it&rsquo;s just a matter of doing <code>ufw allow 80,443/tcp</code> (for example) as root and you&rsquo;re golden.</li>
+<li><code>cron</code> installed if you follow along (you could use <code>systemd</code> timers, or some other method you prefer to automate running commands every certain time).</li>
 </ul>
 </li>
 </ul>
-<h3 id="nginx">Nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h3>
+<h2 id="nginx">Nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Nginx">Nginx</a> is a web (HTTP) server and reverse proxy server.</p>
 <p>You have two options: <code>nginx</code> and <code>nginx-mainline</code>. I prefer <code>nginx-mainline</code> because it&rsquo;s the &ldquo;up to date&rdquo; package even though <code>nginx</code> is labeled to be the &ldquo;stable&rdquo; version. Install the package and enable/start the service:</p>
 <pre><code class="language-sh">pacman -S nginx-mainline
@@ -2838,7 +2998,7 @@ systemctl start nginx.service
 </code></pre>
 <p>And that&rsquo;s it, at this point you can already look at the default initial page of Nginx if you enter the IP of your server in a web browser. You should see something like this:</p>
 <figure id="__yafg-figure-1">
-<img alt="Nginx welcome page" src="images/b/notes/nginx/nginx_welcome_page.png" title="Nginx welcome page">
+<img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png" title="Nginx welcome page">
 <figcaption>Nginx welcome page</figcaption>
 </figure>
 <p>As stated in the welcome page, configuration is needed, head to the directory of Nginx:</p>
@@ -2905,7 +3065,7 @@ systemctl restart nginx
 </code></pre>
 <p>If everything goes correctly, you can now go to your website by typing <code>domain.name</code> on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different Nginx version):</p>
 <figure id="__yafg-figure-2">
-<img alt="Nginx 404 Not Found page" src="images/b/notes/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
+<img alt="Nginx 404 Not Found page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
 <figcaption>Nginx 404 Not Found page</figcaption>
 </figure>
 <p>That&rsquo;s no problem, because it means that the web server it&rsquo;s actually working. Just add an <code>index.html</code> file with something simple to see it in action (in the <code>/var/www/some_folder</code> that you decided upon). If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>
@@ -2918,7 +3078,7 @@ systemctl restart nginx
     try_files $uri/index.html $uri.html $uri/ $uri =404;
     ...
 </code></pre>
-<h3 id="certbot">Certbot<a class="headerlink" href="#certbot" title="Permanent link">&para;</a></h3>
+<h2 id="certbot">Certbot<a class="headerlink" href="#certbot" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/Certbot">Certbot</a> is what provides the SSL certificates via <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>.</p>
 <p>The only &ldquo;bad&rdquo; (bloated) thing about Certbot, is that it uses <code>python</code>, but for me it doesn&rsquo;t matter too much. You may want to look up another alternative if you prefer. Install the packages <code>certbot</code> and <code>certbot-nginx</code>:</p>
 <pre><code class="language-sh">pacman -S certbot certbot-nginx
@@ -2930,7 +3090,7 @@ systemctl restart nginx
 <p>Now, the certificate given by <code>certbot</code> expires every 3 months or something like that, so you want to renew this certificate every once in a while. Using <code>cron</code>, you can do this by running:</p>
 <pre><code class="language-sh">crontab -e
 </code></pre>
-<p>And a file will be opened where you need to add a new rule for Certbot, just append the line: <code>1 1 1 * * certbot renew</code> (renew on the first day of every month) and you&rsquo;re good. Alternatively use <code>systemd</code> timers as stated in the <a href="https://wiki.archlinux.org/title/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
+<p>And a file will be opened where you need to add a new rule for Certbot, just append the line: <code>1 1 1 * * certbot renew --quiet --agree-tos --deploy-hook "systemctl reload nginx.service"</code> (renew on the first day of every month) and you&rsquo;re good. Alternatively use <code>systemd</code> timers as stated in the <a href="https://wiki.archlinux.org/title/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
 <p>That&rsquo;s it, you now have a website with SSL certificate.</p>]]></content:encoded>
     </item>
     <item>
@@ -2945,8 +3105,10 @@ systemctl restart nginx
       <description>Actualización en el estado del blog y el sistema usado para crearlo.</description>
       <content:encoded><![CDATA[<p>Pues eso, esta entrada es sólo para tirar update sobre mi <a href="https://blog.luevano.xyz/a/first_blog_post.html">primer post</a>. Ya modifiqué el <code>ssg</code> lo suficiente como para que maneje los <em>timestamps</em>, y ya estoy más familiarizado con este script entonces ya lo podré extender más, pero por ahora las entradas ya tienen su fecha de creación (y modificación en dado caso) al final y en el índice ya están organizados por fecha, que por ahora está algo simple pero está sencillo de extender.</p>
 <p>Ya lo único que queda es cambiar un poco el formato del blog (y de la página en general), porque en un momento de desesperación puse todo el texto en justificado y pues no se ve chido siempre, entonces queda corregir eso. <em>Y aunque me tomó más tiempo del que quisiera, así nomás quedó, diría un cierto personaje.</em></p>
-<p>El <code>ssg</code> modificado está en mis <a href="https://git.luevano.xyz/.dots">dotfiles</a> (o directamente <a href="https://git.luevano.xyz/.dots/tree/.local/bin/ssg">aquí</a>).</p>
-<p>Por último, también quité las extensiones <code>.html</code> de las URLs, porque se veía bien pitero, pero igual los links con <code>.html</code> al final redirigen a su link sin <code>.html</code>, así que no hay rollo alguno.</p>]]></content:encoded>
+<p><del>El <code>ssg</code> modificado está en mis <a href="https://git.luevano.xyz/.dots">dotfiles</a> (o directamente <a href="https://git.luevano.xyz/.dots/tree/.local/bin/ssg">aquí</a>).</del>
+<ins>Como al final ya no usé el <code>ssg</code> modificado, este pex ya no existe.</ins></p>
+<p>Por último, también quité las extensiones <code>.html</code> de las URLs, porque se ve bien pitero, pero igual los links con <code>.html</code> al final redirigen a su link sin <code>.html</code>, así que no hay rollo alguno.</p>
+<p><strong>Actualización</strong>: Ahora estoy usando mi propia solución en vez de <code>ssg</code>, que la llamé <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, de la cual empiezo a hablar <a href="https://blog.luevano.xyz/a/new_blogging_system.html">acá</a>.</p>]]></content:encoded>
     </item>
     <item>
       <title>This is the first blog post, just for testing purposes</title>
@@ -2958,9 +3120,10 @@ systemctl restart nginx
       <category>Tools</category>
       <category>Update</category>
       <description>Just my first blog post where I state what tools I'm using to build this blog.</description>
-      <content:encoded><![CDATA[<p>I&rsquo;m making this post just to figure out how <a href="https://www.romanzolotarev.com/ssg.html"><code>ssg5</code></a> and <a href="https://kristaps.bsd.lv/lowdown/"><code>lowdown</code></a> are supposed to work (and eventually also <a href="https://www.romanzolotarev.com/rssg.html"><code>rssg</code></a>).</p>
-<p>At the moment, I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> (and there&rsquo;s also the problem with the ordering of the entries&hellip;). And all of this just because I didn&rsquo;t want to use <a href="https://github.com/LukeSmithxyz/lb">Luke&rsquo;s</a> solution (don&rsquo;t really like that much how he handles the scripts&hellip; <em>but they just work</em>).</p>
-<p>Hopefully, for tomorrow all of this will be sorted out and I&rsquo;ll have a working blog system.</p>]]></content:encoded>
+      <content:encoded><![CDATA[<p>I&rsquo;m making this post just to figure out how <a href="https://www.romanzolotarev.com/ssg.html"><code>ssg5</code></a> and <a href="https://kristaps.bsd.lv/lowdown/"><code>lowdown</code></a> are supposed to work, and eventually <a href="https://www.romanzolotarev.com/rssg.html"><code>rssg</code></a>.</p>
+<p>At the moment I&rsquo;m not satisfied because there&rsquo;s no automatic date insertion into the 1) html file, 2) the blog post itself and 3) the listing system in the <a href="https://blog.luevano.xyz/">blog homepage</a> which also has a problem with the ordering of the entries. And all of this just because I didn&rsquo;t want to use Luke&rsquo;s <a href="https://github.com/LukeSmithxyz/lb">lb</a> solution as I don&rsquo;t really like that much how he handles the scripts (<em>but they just work</em>).</p>
+<p>Hopefully, for tomorrow all of this will be sorted out and I&rsquo;ll have a working blog system.</p>
+<p><strong>Update</strong>: I&rsquo;m now using my own solution which I called <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a>, of which I talk about <a href="https://blog.luevano.xyz/a/new_blogging_system.html">here</a>.</p>]]></content:encoded>
     </item>
   </channel>
 </rss>

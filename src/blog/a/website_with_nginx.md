@@ -4,25 +4,30 @@ lang: en
 summary: How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics.
 tags: server
 	tools
+	code
 	tutorial
 	english
 
 These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from [Luke's video](https://www.youtube.com/watch?v=OWAqilIVNgE) and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I'm configuring the web server again on a new VPS instance, so this is going to be fresh.
 
-As a side note, (((i use arch btw))) so everything here es aimed at an Arch Linux distro, and I'm doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.
+As a side note, ==i use arch btw== so everything here es aimed at an Arch Linux distro, and I'm doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.
 
-## Prerequisites
+# Table of contents
+
+[TOC]
+
+# Prerequisites
 
 You will need two things:
 
 - A domain name (duh!). I got mine on [Epik](https://www.epik.com/?affid=da5ne9ru4) (affiliate link, btw).
-	- With the corresponding **A** and **AAA** records pointing to the VPS' IPs ("A" record points to the ipv4 address and "AAA" to the ipv6, basically). I have three records for each type: empty one, "www" and "\*" for a wildcard, that way "domain.name", "www.domain.name", "anythingelse.domain.name" point to the same VPS (meaning that you can have several VPS for different sub-domains).
-- A VPS or somewhere else to host it. I'm using [Vultr](https://www.vultr.com/?ref=8732849) (also an affiliate link).
+	- With the corresponding **A** and **AAA** records pointing to the VPS' IPs. I have three records for each type: empty string, "www" and "\*" for a wildcard, that way "domain.name", "www.domain.name", "anythingelse.domain.name" point to the same VPS (meaning that you can have several VPS for different sub-domains). These depend on the VPS provider.
+- A VPS or somewhere else to host it. I'm using [Vultr](https://www.vultr.com/?ref=8732849) (also an affiliate link, btw).
 	- With `ssh` already configured both on the local machine and on the remote machine.
-	- Firewall already configured to allow ports 80 (HTTP) and 443 (HTTPS). I use `ufw` so it's just a matter of doing `ufw allow 80,443/tcp` as root and you're golden.
-	- `cron` installed if you follow along (you could use `systemd` timers, or some other method you prefer to automate running commands every X time).
+	- Firewall already configured to allow ports `80` (HTTP) and `443` (HTTPS). I use `ufw` so it's just a matter of doing `ufw allow 80,443/tcp` (for example) as root and you're golden.
+	- `cron` installed if you follow along (you could use `systemd` timers, or some other method you prefer to automate running commands every certain time).
 
-## Nginx
+# Nginx
 
 [Nginx](https://wiki.archlinux.org/title/Nginx) is a web (HTTP) server and reverse proxy server.
 
@@ -36,7 +41,7 @@ systemctl start nginx.service
 
 And that's it, at this point you can already look at the default initial page of Nginx if you enter the IP of your server in a web browser. You should see something like this:
 
-![Nginx welcome page](images/b/notes/nginx/nginx_welcome_page.png "Nginx welcome page")
+![Nginx welcome page](${SURL}/images/b/notes/nginx/nginx_welcome_page.png "Nginx welcome page")
 
 As stated in the welcome page, configuration is needed, head to the directory of Nginx:
 
@@ -121,7 +126,7 @@ systemctl restart nginx
 
 If everything goes correctly, you can now go to your website by typing `domain.name` on a web browser. But you will see a "404 Not Found" page like the following (maybe with different Nginx version):
 
-![Nginx 404 Not Found page](images/b/notes/nginx/nginx_404_page.png "Nginx 404 Not Found page")
+![Nginx 404 Not Found page](${SURL}/images/b/notes/nginx/nginx_404_page.png "Nginx 404 Not Found page")
 
 That's no problem, because it means that the web server it's actually working. Just add an `index.html` file with something simple to see it in action (in the `/var/www/some_folder` that you decided upon). If you keep seeing the 404 page make sure your `root` line is correct and that the directory/index file exists.
 
@@ -137,7 +142,7 @@ server {
 	...
 ```
 
-## Certbot
+# Certbot
 
 [Certbot](https://wiki.archlinux.org/title/Certbot) is what provides the SSL certificates via [Let's Encrypt](https://letsencrypt.org/).
 
@@ -161,6 +166,6 @@ Now, the certificate given by `certbot` expires every 3 months or something like
 crontab -e
 ```
 
-And a file will be opened where you need to add a new rule for Certbot, just append the line: `1 1 1 * * certbot renew` (renew on the first day of every month) and you're good. Alternatively use `systemd` timers as stated in the [Arch Linux Wiki](https://wiki.archlinux.org/title/Certbot#Automatic_renewal).
+And a file will be opened where you need to add a new rule for Certbot, just append the line: `1 1 1 * * certbot renew --quiet --agree-tos --deploy-hook "systemctl reload nginx.service"` (renew on the first day of every month) and you're good. Alternatively use `systemd` timers as stated in the [Arch Linux Wiki](https://wiki.archlinux.org/title/Certbot#Automatic_renewal).
 
 That's it, you now have a website with SSL certificate.

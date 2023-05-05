@@ -21,14 +21,18 @@
 {%endblock head_rss%}
 
 {%block head_extra%}
-{%import "highlightjs.html" as hljs%}
-{{hljs.print(config)}}
-{%endblock head_extra%}
+{%for t in page.tags%}
+  {%if t[0] == "code" or t[0] == "gdscript" %}
+    {%import "highlightjs.html" as hljs%}
+    {{hljs.print(config)}}
+  {%endif%}
 
-{%block gdscript_hl%}
-<!-- Specific to GDScript -->
-<script type="text/javascript" src="{{config['url']['static']}}/hl/languages/gdscript.min.js"></script>
-{%endblock gdscript_hl%}
+  {%if t[0] == "gdscript" %}
+    <!-- Specific to GDScript -->
+    <script type="text/javascript" src="{{config['url']['static']}}/hl/languages/gdscript.min.js"></script>
+  {%endif%}
+{%endfor%}
+{%endblock head_extra%}
 
 {%block head_og%}
   <meta property="og:title" content="{{page.title}} -- {{config['title']}}"/>
