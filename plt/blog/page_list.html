@@ -9,7 +9,7 @@
       {%else%}
         <h3>{{p.cdate('list_sep_date')}}</h3>
       {%endif%}
-      <li>{{p.cdate('list_date')}} - <a href="{{p.url}}">{{p.title}}</a></li>
+      <li><span class="page-list-item">{{p.cdate('list_date')}}</span> - <a href="{{p.url}}">{{p.title}}</a></li>
     {%endfor%}
   </ul>
 {%endmacro%}

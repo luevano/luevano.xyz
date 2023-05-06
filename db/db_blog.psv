@@ -8,7 +8,7 @@ a/asi_nomas_esta_quedando.md|1622795043.0874712|1683224323.4442492|a036daaa7940f
 a/acomodada_la_pagina_de_arte.md|1623006369.6071973|1683224355.424242|e1aceca92dc98af9e4c3a0b1cec61fb3|short,spanish,update
 a/xmpp_server_with_prosody.md|1623216270.0372887|1683275798.657081|55ae01ca67dde1ff6331d2660c9df69e|code,english,server,tools,tutorial
 a/tenia_esto_descuidado.md|1626594710.918819|1683224450.4442203|801d9caadef53ea30c82c2e8ca5692e6|short,spanish,update
-a/hoy_toco_desarrollo_personaje.md|1627452655.5560262|0.0|b891e8efe4e9a5c3f342f9e84e20437a|spanish
+a/hoy_toco_desarrollo_personaje.md|1627452655.5560262|1683377790.7414637|d1520b814b83470e61ec930f7aaaf0b2|rant,spanish,update
 a/vpn_server_with_openvpn.md|1627810022.100739|1683275819.5970778|e9dfb0d4649057a300a88cdfb2ea3f88|code,english,server,tools,tutorial
 a/volviendo_a_usar_la_pagina.md|1651116062.9191298|1683224582.1841908|0ff1dcfe9edd9ed8f764d3fde061cf35|short,spanish,update
 a/devs_android_me_trozaron.md|1652608264.4901433|1652609027.0201497|41c897ac0c6e0bd66f67ddc8286f4413|rant,spanish,update
@@ -17,4 +17,5 @@ g/starting_gamedev_blogging.md|1652764794.9016073|1683275869.3270695|dad847b8565
 g/godot_project_structure.md|1653182170.4395845|1683275847.2870727|8b04f0ba5c8afb92d19c1898f4f9186b|english,gamedev,godot,short
 g/flappybird_godot_devlog_1.md|1653795523.5988536|1683224765.2741501|8c7a5ff4f32dad0887ce70c2d2f58ac8|english,gamedev,gdscript,godot
 g/gogodot_jam3_devlog_1.md|1654852625.58801|1683219939.7152278|89b18f87b523d721bdf8b7fd752e47a6|english,gamedev,gamejam,gdscript,godot
-a/rewrote_pyssg_again.md|1671510665.5266156|1683172648.173672|924824d40b90ab85a091316d788d9e35|english,short,tools,update
+a/rewrote_pyssg_again.md|1671510665.5266156|1683375981.802067|e7d3dc8a4a2cd2abda2f653c9cbd3049|english,short,tools,update
+a/updated_pyssg_pymdvar_and_website.md|1683376754.7018104|0.0|442ad5da7342439101abcc076a73cb22|english,short,tools,update

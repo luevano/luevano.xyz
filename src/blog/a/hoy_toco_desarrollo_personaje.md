@@ -3,6 +3,8 @@ author: David Luévano
 lang: es
 summary: Una breve historia sobre cómo estuvo mi día, porque me tocó desarrollo de personaje y lo quiero sacar del coraje que traigo.
 tags: spanish
+    update
+    rant
 
 Sabía que hoy no iba a ser un día tan bueno, pero no sabía que iba a estar tan horrible; me tocó desarrollo de personaje y saqué el *bad ending*.
 

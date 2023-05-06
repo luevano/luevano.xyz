@@ -1,6 +1,6 @@
 title: Donate
 
-<img class="wrap-right" src="images/gifs/dollar_sign_spin_1.gif" alt="Donate">
+<img class="wrap-right" src="https://static.luevano.xyz/images/gifs/dollar_sign_spin_1.gif" alt="Donate">
 
 I don't really do much on the internet nor do I provide any type of service, but still, if for some reason you want to donate, you can do it via my <i class="fab fa-paypal" alt="Paypal"></i> [PayPal](https://paypal.me/dlvna), either by its link or using my email <code class="email">david@luevano.xyz</code>.
 
@@ -13,15 +13,15 @@ I wanted to add more *fiat* options but I don't have access to them *down here*.
 
 <div class="crypto-grid">
   <figure>
-    <a target="_blank" href="images/crypto/monero.png">
-      <img class="qr" src="images/crypto/monero.png" alt="XMR QR">
+    <a target="_blank" href="https://static.luevano.xyz/images/crypto/monero.png">
+      <img class="qr" src="https://static.luevano.xyz/images/crypto/monero.png" alt="XMR QR">
     </a>
     <figcaption><i class="fab fa-monero" alt="Monero"></i> Monero</figcaption>
   </figure>
 
   <figure>
-    <a target="_blank" href="images/crypto/bitcoin.png">
-      <img class="qr" src="images/crypto/bitcoin.png" alt="BTC QR">
+    <a target="_blank" href="https://static.luevano.xyz/images/crypto/bitcoin.png">
+      <img class="qr" src="https://static.luevano.xyz/images/crypto/bitcoin.png" alt="BTC QR">
     </a>
     <figcaption><i class="fab fa-bitcoin" alt="Bitcoin"></i> Bitcoin</figcaption>
   </figure>

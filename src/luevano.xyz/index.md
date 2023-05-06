@@ -4,15 +4,15 @@ title: Luévano's Site
 
 ==Currently recreating the site with the updated pyssg, things might be broken.==
 
-My name is David Luévano and this is my little piece of internet. I'm into alot of stuff, but mostly technology, drawing sometimes and... of course, gaming.
+My name is David Luévano and this is my little piece of internet. I'm into alot of stuff, but mostly technology in general, drawing sometimes and... of course, gaming.
 
-I have some sites setup here, such as a working [blog](https://blog.luevano.xyz/) where I post about whatever, an [art](https://art.luevano.xyz/) gallery, and other stuff (check the nav bar).
+I have some sites setup here, such as a working [blog](https://blog.luevano.xyz/) where I post every once in a while and an [art](https://art.luevano.xyz/) gallery; I've also got some other minor stuff too, such as a [git](https://git.luevano.xyz/) server. All of these also available on the top navigation bar.
 
-Also, yes, yes it is supposed to look like this. This isn't supposed to be a bloated *mOdErN* website; I use plain HTML and CSS and sometimes a bit of JS (meaning that I use no *rEaCt* nor *bOoTsTrAp*).
+I use plain HTML, CSS and a bit of raw JS for the site, nothing modern or bloated. Everything is built as a static site using my own tool [`pyssg`](${PYSSG_URL}) which is still a work in progress.
 
 ## <i class="fas fa-rss" alt="RSS"></i> RSS feeds
 
-Get updates about me or what I'm doing via RSS feeds. If you don't know what an RSS feed is: [RSS 2.0 Specification](https://www.rssboard.org/rss-specification), or *google is your friend*.
+Get updates about me or what I'm doing via RSS feeds.
 
 - <i class="fas fa-book-open" alt="Blog"></i> Blog: [https://blog.luevano.xyz/rss.xml](https://blog.luevano.xyz/rss.xml)
 - <i class="fas fa-paint-brush" alt="Art"></i> Art: [https://art.luevano.xyz/rss.xml](https://art.luevano.xyz/rss.xml)

@@ -2,7 +2,7 @@
 ---
 define: &root_path "$HOME/luevano.xyz/"
 
-title: "Luevano's Site"
+title: "Luévano's Site"
 author: "David Luévano Alvarado"
 author_email: "david@luevano.xyz"
 description: "My personal website where I host my blog, art gallery and more."
@@ -20,7 +20,8 @@ url:
 fmt:
   date: "%a, %b %d, %Y @ %H:%M %Z"
   list_date: "%b %d"
-  list_sep_date: "%B %Y"
+  # list_sep_date: "%B %Y"
+  list_sep_date: "%Y"
 dirs:
   /:
     cfg:
@@ -39,7 +40,7 @@ exts:
 ---
 define: &root_path "$HOME/luevano.xyz/"
 
-title: "Luevano's Blog"
+title: "Luévano's Blog"
 author: "David Luévano Alvarado"
 author_email: "david@luevano.xyz"
 description: "My personal blog where I post about my thoughts, some how-to's, or general ranting."
@@ -57,7 +58,8 @@ url:
 fmt:
   date: "%a, %b %d, %Y @ %H:%M %Z"
   list_date: "%b %d"
-  list_sep_date: "%B %Y"
+  # list_sep_date: "%B %Y"
+  list_sep_date: "%Y"
 dirs:
   /:
     cfg:
@@ -77,7 +79,7 @@ exts:
 ---
 define: &root_path "$HOME/luevano.xyz/"
 
-title: "Luevano's Art"
+title: "Luévano's Art"
 author: "David Luévano Alvarado"
 author_email: "david@luevano.xyz"
 description: "My personal space where I post all my drawings, sketches and more art related stuff."
@@ -95,7 +97,8 @@ url:
 fmt:
   date: "%a, %b %d, %Y @ %H:%M %Z"
   list_date: "%b %d"
-  list_sep_date: "%B %Y"
+  # list_sep_date: "%B %Y"
+  list_sep_date: "%Y"
 dirs:
   /:
     cfg:

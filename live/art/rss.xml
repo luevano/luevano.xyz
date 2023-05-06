@@ -3,7 +3,7 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Luevano's Art</title>
+    <title>Luévano's Art</title>
     <link>https://art.luevano.xyz</link>
     <atom:link href="https://art.luevano.xyz/rss.xml" rel="self" type="application/rss+xml"/>
     <description>My personal space where I post all my drawings, sketches and more art related stuff.</description>
@@ -19,7 +19,7 @@
     <ttl>30</ttl>
     <image>
       <url>https://static.luevano.xyz/images/a/default.png</url>
-      <title>Luevano's Art</title>
+      <title>Luévano's Art</title>
       <link>https://art.luevano.xyz</link>
     </image>
     <item>

@@ -1,6 +1,6 @@
 title: Contact
 
-<img class="wrap-right" src="images/gifs/head_talking_1_trans.gif" width="100px" alt="Contact info">
+<img class="wrap-right" src="https://static.luevano.xyz/images/gifs/head_talking_1_trans.gif" width="100px" alt="Contact info">
 
 You can contact me through:
 

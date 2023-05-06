@@ -6,8 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
-<title>Volviendo a usar la página -- Luévano's Blog</title>
-  <meta name="description" content="Actualización en el estado de la página, después de mucho tiempo de ausencia."/>
+<title>Updated pyssg to include pymdvar and the website -- Luévano's Blog</title>
+  <meta name="description" content="Worked on another update of pyssg which now includes my extension pymdvar and updated the website overall."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <!-- general style -->
     <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
@@ -22,12 +22,13 @@
 
 
 
+
     <!-- og meta -->
-  <meta property="og:title" content="Volviendo a usar la página -- Luévano's Blog"/>
+  <meta property="og:title" content="Updated pyssg to include pymdvar and the website -- Luévano's Blog"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:url" content="https://blog.luevano.xyz/a/volviendo_a_usar_la_pagina.md"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.md"/>
   <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
-  <meta property="og:description" content="Actualización en el estado de la página, después de mucho tiempo de ausencia."/>
+  <meta property="og:description" content="Worked on another update of pyssg which now includes my extension pymdvar and updated the website overall."/>
   <meta property="og:locale" content="en"/>
   <meta property="og:site_name" content="Luévano's Blog"/>
   </head>
@@ -76,20 +77,14 @@
         <i class="fas fa-arrow-up" alt="Return to top"></i>
         </button>
       </div>
-  <h1>Volviendo a usar la página</h1>
+  <h1>Updated pyssg to include pymdvar and the website</h1>
 
-  <p>Después de mucho tiempo de estar luchando con querer volver a usar este pex (maldita <em>d</em> word y demás), ya me volví a acomodar el setup para agregar nuevas entradas.</p>
-<p>Entre las cosas que tuve que hacer fue actualizar el <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> porque no lo podía usar de una como estaba; y de pasado le agregue una que otra feature nueva. Luego quiero agregarle más funcionalidad para poder <em>buildear</em> la página completa; por ahora se hace en segmentos: todo lo de <a href="https://luevano.xyz">luevano.xyz</a> está hecho manual, mientras que <a href="https://blog.luevano.xyz">blog</a> y <a href="https://art.luevano.xyz">art</a> usan <a href="https://github.com/luevano/pyssg">pyssg</a>.</p>
-<p>Otra cosa es que quizá me devuelva a editar alguans entradas nada más para homogeneizar las entradas específicas a <em>Create a&hellip;</em> (tiene más sentido que sean <em>Setup x&hellip;</em> o algo similar).</p>
-<p>En otras noticias, estoy muy agusto en el jale que tengo actualmente aunque lleve alrededor de 3 semanas de un infierno en el jale. Debo pensar en si debo omitir cosas personales o del trabajo aquí, ya que quién sabe quién se pueda llegar a topar con esto <em>*thinking emoji*</em>.</p>
+  <p>Again, I&rsquo;ve updated <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> to add a bit of unit-testing as well as to include my extension <a href="https://github.com/luevano/pymdvar"><code>pymdvar</code></a> which is used to convert <code>${some_variables}</code> into their respective <code>values</code> based on a config file and/or environment variables. With this I also updated a bit of the CSS of the site as well as basically all the entries and base templates, a much needed update (for me, because externally doesn&rsquo;t look like much). Along with this I also added a &ldquo;return to top&rdquo; button, once you scroll enough on the site, a new button appears on the bottom right to get back to the top, also added table of contents to entries taht could use them (as well as a bit of CSS to them).</p>
+<p>This update took a long time because I had a fundamental issue with how I was managing the &ldquo;static&rdquo; website, where I host all assets such as CSS, JS, images, etc.. Because I was using the <code>&lt;base&gt;</code> HTML tag. The issue is that this tag affects everything and there is no &ldquo;opt-out&rdquo; on some body tags, meaning that I would have to write the whole URL for all static assets. So I tried looking into changing how the image extension for <a href="https://python-markdown.github.io/"><code>python-markdown</code></a> works, so that it includes this &ldquo;base&rdquo; URL I needed. But it was too much hassle, so I ended up developing my own extension mentioned earlier. Just as a side note, I noticed that my extension doesn&rsquo;t cover all my needs, so probably it wont cover yours, if you end up using it just test it out a bit yourself and then go ahead, PRs are welcomed.</p>
+<p>One thing led to another so I ended up changing a lot of stuff, and with changes comes tireness and eded up leaving the project for a while (again). This also led to not wanting to write or add anything else to the site until I sorted things out. But I&rsquo;m again reviving it I guess, and up to the next cycle.</p>
+<p>The next things I&rsquo;ll be doing are continuing with my <a href="https://blog.luevano.xyz/tag/@gamedev">@gamedev</a> journey and probably upload some drawings if I feel like doing some.</p>
 
   <div class="page-nav">
-    <span class="next">
-      <a href="https://blog.luevano.xyz/a/devs_android_me_trozaron.html" alt="Next">
-        <i class="fas fa-arrow-left" alt="Arrow left"></i>
-        <span>Next</span>
-      </a>
-    </span>
 
     <span class="index">
       <a href="https://blog.luevano.xyz" alt="Index">
@@ -99,7 +94,7 @@
     </span>
 
     <span class="previous">
-      <a href="https://blog.luevano.xyz/a/vpn_server_with_openvpn.html" alt="Previous">
+      <a href="https://blog.luevano.xyz/a/rewrote_pyssg_again.html" alt="Previous">
         <i class="fas fa-arrow-right" alt="Arrow right"></i>
         <span>Previous</span>
       </a>
@@ -110,11 +105,10 @@
   <hr>
   <div class="article-info">
     <p>By David Luévano</p>
-    <p>Created: Thu, Apr 28, 2022 @ 03:21 UTC</p>
-      <p>Modified: Thu, May 04, 2023 @ 18:23 UTC</p>
+    <p>Created: Sat, May 06, 2023 @ 12:39 UTC</p>
     <div class="article-tags">
   <p>Tags:
-<a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@spanish.html">spanish</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>
+<a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@short.html">short</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@update.html">update</a>  </p>
 </div>
 
   </div>

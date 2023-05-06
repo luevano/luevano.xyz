@@ -3,7 +3,7 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Luevano's Blog</title>
+    <title>Luévano's Blog</title>
     <link>https://blog.luevano.xyz</link>
     <atom:link href="https://blog.luevano.xyz/rss.xml" rel="self" type="application/rss+xml"/>
     <description>My personal blog where I post about my thoughts, some how-to's, or general ranting.</description>
@@ -19,9 +19,24 @@
     <ttl>30</ttl>
     <image>
       <url>https://static.luevano.xyz/images/b/default.png</url>
-      <title>Luevano's Blog</title>
+      <title>Luévano's Blog</title>
       <link>https://blog.luevano.xyz</link>
     </image>
+    <item>
+      <title>Updated pyssg to include pymdvar and the website</title>
+      <link>https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.html</guid>
+      <pubDate>Sat, 06 May 2023 12:39:14 GMT</pubDate>
+      <category>English</category>
+      <category>Short</category>
+      <category>Tools</category>
+      <category>Update</category>
+      <description>Worked on another update of pyssg which now includes my extension pymdvar and updated the website overall.</description>
+      <content:encoded><![CDATA[<p>Again, I&rsquo;ve updated <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> to add a bit of unit-testing as well as to include my extension <a href="https://github.com/luevano/pymdvar"><code>pymdvar</code></a> which is used to convert <code>${some_variables}</code> into their respective <code>values</code> based on a config file and/or environment variables. With this I also updated a bit of the CSS of the site as well as basically all the entries and base templates, a much needed update (for me, because externally doesn&rsquo;t look like much). Along with this I also added a &ldquo;return to top&rdquo; button, once you scroll enough on the site, a new button appears on the bottom right to get back to the top, also added table of contents to entries taht could use them (as well as a bit of CSS to them).</p>
+<p>This update took a long time because I had a fundamental issue with how I was managing the &ldquo;static&rdquo; website, where I host all assets such as CSS, JS, images, etc.. Because I was using the <code>&lt;base&gt;</code> HTML tag. The issue is that this tag affects everything and there is no &ldquo;opt-out&rdquo; on some body tags, meaning that I would have to write the whole URL for all static assets. So I tried looking into changing how the image extension for <a href="https://python-markdown.github.io/"><code>python-markdown</code></a> works, so that it includes this &ldquo;base&rdquo; URL I needed. But it was too much hassle, so I ended up developing my own extension mentioned earlier. Just as a side note, I noticed that my extension doesn&rsquo;t cover all my needs, so probably it wont cover yours, if you end up using it just test it out a bit yourself and then go ahead, PRs are welcomed.</p>
+<p>One thing led to another so I ended up changing a lot of stuff, and with changes comes tireness and eded up leaving the project for a while (again). This also led to not wanting to write or add anything else to the site until I sorted things out. But I&rsquo;m again reviving it I guess, and up to the next cycle.</p>
+<p>The next things I&rsquo;ll be doing are continuing with my <a href="https://blog.luevano.xyz/tag/@gamedev">@gamedev</a> journey and probably upload some drawings if I feel like doing some.</p>]]></content:encoded>
+    </item>
     <item>
       <title>Rewrote pyssg again</title>
       <link>https://blog.luevano.xyz/a/rewrote_pyssg_again.html</link>
@@ -1832,7 +1847,9 @@ cd $CPWD
       <link>https://blog.luevano.xyz/a/hoy_toco_desarrollo_personaje.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/hoy_toco_desarrollo_personaje.html</guid>
       <pubDate>Wed, 28 Jul 2021 06:10:55 GMT</pubDate>
+      <category>Rant</category>
       <category>Spanish</category>
+      <category>Update</category>
       <description>Una breve historia sobre cómo estuvo mi día, porque me tocó desarrollo de personaje y lo quiero sacar del coraje que traigo.</description>
       <content:encoded><![CDATA[<p>Sabía que hoy no iba a ser un día tan bueno, pero no sabía que iba a estar tan horrible; me tocó desarrollo de personaje y saqué el <em>bad ending</em>.</p>
 <p>Básicamente tenía que cumplir dos misiones hoy: ir al banco a un trámite y vacunarme contra el Covid-19. Muy sencillas tareas.</p>

@@ -155,6 +155,17 @@ button.return-top:hover {
   color: var(--navitem-link-hl);
 }
 
+ul.page-list span.page-list-item {
+  color: var(--fg-acc1)
+}
+
+ul.page-list a {
+  color: var(--fg-acc4)
+}
+
+ul.page-list a:hover {
+  color: var(--fg-acc1)
+}
 body {
   background: var(--bg);
   color: var(--fg);

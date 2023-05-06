@@ -46,8 +46,14 @@
 </url>
 
     <url>
+      <loc>https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.html</loc>
+      <lastmod>2023-05-06</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/a/rewrote_pyssg_again.html</loc>
-      <lastmod>2023-05-04</lastmod>
+      <lastmod>2023-05-06</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>
@@ -101,7 +107,7 @@
     </url>
     <url>
       <loc>https://blog.luevano.xyz/a/hoy_toco_desarrollo_personaje.html</loc>
-      <lastmod>2021-07-28</lastmod>
+      <lastmod>2023-05-06</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>

@@ -52,6 +52,21 @@ button.return-top {
   padding-right: 0.4em;
 }
 
+/* page lists */
+
+ul.page-list {
+  list-style-type: none;
+  padding-left: 0.5em;
+}
+
+ul.page-list h3 {
+  padding-left: 1em;
+}
+
+ul.page-list span.page-list-item {
+  display: inline-block;
+  min-width: 4em;
+}
 
 body,
 html {
