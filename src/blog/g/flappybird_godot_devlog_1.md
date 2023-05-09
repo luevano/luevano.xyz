@@ -20,7 +20,7 @@ Not going to specify all the details, only the needed parts and what could be co
 
 One thing to note, is that I started writing this when I finished the game, so it's hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I'll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.
 
-The source code can be found in my GitHub [here](https://github.com/luevano/flappybird_godot), it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added), or you could also go to the [itch.io](https://lorentzeus.itch.io/flappybirdgodot) page I setup where it's playable in the browser:
+The source code can be found at [luevano/flappybird_godot#godot-3.5](https://github.com/luevano/flappybird_godot/tree/godot-3.5), it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added), or you could also go to the [itch.io](https://lorentzeus.itch.io/flappybirdgodot) page I setup where it's playable in the browser:
 
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
@@ -215,7 +215,7 @@ This is a good time to set the default scene when we run the game by going to *P
 
 # Scripting
 
-I'm going to keep this scripting part to the most basic code blocks, as it's too much code, for a complete view you can head to the [source code](https://github.com/luevano/flappybird_godot).
+I'm going to keep this scripting part to the most basic code blocks, as it's too much code, for a complete view you can head to the [source code](https://github.com/luevano/flappybird_godot/tree/godot-3.5).
 
 As of now, the game itself doesn't do anything if we hit play. The first thing to do so we have something going on is to do the minimal player scripting.
 

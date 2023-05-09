@@ -23,6 +23,21 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Al fin tengo fibra ópticona</title>
+      <link>https://blog.luevano.xyz/a/al_fin_tengo_fibra_opticona.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/al_fin_tengo_fibra_opticona.html</guid>
+      <pubDate>Tue, 09 May 2023 08:59:00 GMT</pubDate>
+      <category>Rant</category>
+      <category>Short</category>
+      <category>Spanish</category>
+      <category>Update</category>
+      <description>Por fin pude contratar fibra óptica simétrica y ya no sufro con el cobre de cierta compañía horrible.</description>
+      <content:encoded><![CDATA[<p>Quienes me conocen sabrán que llevo como 2 años intentando contratar internet de fibra óptica (específicamente el de T*lm*x). El problema es que nunca había <em>nodos/terminales</em> disponibles o, la verdad, que los técnicos ni querían hacer su jale porque están acostumbrados a que les debes soltar una feria para que te la instalen.</p>
+<p>Pues bueno, el punto es que me tocó estar aguantando la compañía horrible de *zz*, que sólo tiene cobre; el servicio es malo y a cada rato le suben de precio. Por esto último volví a checar precios de otras compañías para comparar y resulta que me estaban cobrando como $100 - $150 pesos extra con el mismo paquete que ya tenía/tengo. Hasta ahí estaba encabronado, y no ayudó nada que intenté hablar con los muy incompetentes de <em>soporte</em> y no pudieron digamos &ldquo;resolverme&rdquo;, porque ¿cómo es posible que siendo cliente de como 5 años ni si quiera pueden avisarme que ya tienen mejores paquetes (que la neta es el mismo paquete pero más barato)?</p>
+<p>Intenté pedirles que me cambien al paquete actual (mismo todo, única diferencia el precio), pero resulta que me meterían a plazo forzoso. Obviamente esto me prendió un cuete en la cola y por eso chequé con T*lm*x, que a mi sorpresa salía que sí había fibra óptica disponible en mi cantón. Inicié el proceso de portabilidad y me dijeron que en como dos semanas me la instalaban, pero resulta que el basado del técnico me marcó al día siguiente para decirme que <mark>YA ESTABA AFUERA DE MI CASA</mark> para instalarlo. Gané.</p>
+<p>Resulta que ahora sí hay <em>nodos/terminales</em>, de hecho instalaron 3 nuevos y están completamente vacíos, me tocó muy buena suerte y el muy basado del técnico se lo aventó en medio segundo sin ningún pedo, no me pidió nada más que detalles de dónde quería el módem. No tenía efectivo si no le soltaba un varo, se portó muy chingón.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>Updated pyssg to include pymdvar and the website</title>
       <link>https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.html</guid>
@@ -707,7 +722,7 @@ func physics_process(delta: float) -&gt; void:
 <p>The game was originally developed with <em>Godot 4.0 alpha 8</em>, but it didn&rsquo;t support HTML5 (webassembly) export&hellip; so I backported to <em>Godot 3.5 rc1</em>.</p>
 <p>Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of <em>Godot</em> in general. Usually when I mention that a set/change of something it usually it&rsquo;s a property and it can be found under the <em>Inspector</em> on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in <em>snake_case</em> (scenes/nodes in <em>PascalCase</em>).</p>
 <p>One thing to note, is that I started writing this when I finished the game, so it&rsquo;s hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I&rsquo;ll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.</p>
-<p>The source code can be found in my GitHub <a href="https://github.com/luevano/flappybird_godot">here</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
+<p>The source code can be found at <a href="https://github.com/luevano/flappybird_godot/tree/godot-3.5">luevano/flappybird_godot#godot-3.5</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
@@ -961,7 +976,7 @@ func physics_process(delta: float) -&gt; void:
 <p>This is the final scene where we connect the <code>Game</code> and the <code>UI</code>. It&rsquo;s made of a <em>Node2D</em> with it&rsquo;s own script attached and an instance of <code>Game</code> and <code>UI</code> as it&rsquo;s children.</p>
 <p>This is a good time to set the default scene when we run the game by going to <em>Project -&gt; Project settings&hellip; -&gt; General</em> and in <em>Application/Run</em> set the <em>Main Scene</em> to the <code>Main.tscn</code> scene.</p>
 <h2 id="scripting">Scripting<a class="headerlink" href="#scripting" title="Permanent link">&para;</a></h2>
-<p>I&rsquo;m going to keep this scripting part to the most basic code blocks, as it&rsquo;s too much code, for a complete view you can head to the <a href="https://github.com/luevano/flappybird_godot">source code</a>.</p>
+<p>I&rsquo;m going to keep this scripting part to the most basic code blocks, as it&rsquo;s too much code, for a complete view you can head to the <a href="https://github.com/luevano/flappybird_godot/tree/godot-3.5">source code</a>.</p>
 <p>As of now, the game itself doesn&rsquo;t do anything if we hit play. The first thing to do so we have something going on is to do the minimal player scripting.</p>
 <h3 id="player_1">Player<a class="headerlink" href="#player_1" title="Permanent link">&para;</a></h3>
 <p>The most basic code needed so the bird goes up and down is to just detect <code>jump</code> key presses and add a negative jump velocity so it goes up (<code>y</code> coordinate is reversed in godot&hellip;), we also check the velocity sign of the <code>y</code> coordinate to decide if the animation is playing or not.</p>

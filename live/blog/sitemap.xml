@@ -46,6 +46,12 @@
 </url>
 
     <url>
+      <loc>https://blog.luevano.xyz/a/al_fin_tengo_fibra_opticona.html</loc>
+      <lastmod>2023-05-09</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/a/updated_pyssg_pymdvar_and_website.html</loc>
       <lastmod>2023-05-06</lastmod>
       <changefreq>weekly</changefreq>
@@ -65,7 +71,7 @@
     </url>
     <url>
       <loc>https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html</loc>
-      <lastmod>2023-05-04</lastmod>
+      <lastmod>2023-05-09</lastmod>
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
     </url>

@@ -98,7 +98,7 @@
 <p>The game was originally developed with <em>Godot 4.0 alpha 8</em>, but it didn&rsquo;t support HTML5 (webassembly) export&hellip; so I backported to <em>Godot 3.5 rc1</em>.</p>
 <p>Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of <em>Godot</em> in general. Usually when I mention that a set/change of something it usually it&rsquo;s a property and it can be found under the <em>Inspector</em> on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in <em>snake_case</em> (scenes/nodes in <em>PascalCase</em>).</p>
 <p>One thing to note, is that I started writing this when I finished the game, so it&rsquo;s hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I&rsquo;ll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.</p>
-<p>The source code can be found in my GitHub <a href="https://github.com/luevano/flappybird_godot">here</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
+<p>The source code can be found at <a href="https://github.com/luevano/flappybird_godot/tree/godot-3.5">luevano/flappybird_godot#godot-3.5</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
@@ -352,7 +352,7 @@
 <p>This is the final scene where we connect the <code>Game</code> and the <code>UI</code>. It&rsquo;s made of a <em>Node2D</em> with it&rsquo;s own script attached and an instance of <code>Game</code> and <code>UI</code> as it&rsquo;s children.</p>
 <p>This is a good time to set the default scene when we run the game by going to <em>Project -&gt; Project settings&hellip; -&gt; General</em> and in <em>Application/Run</em> set the <em>Main Scene</em> to the <code>Main.tscn</code> scene.</p>
 <h2 id="scripting">Scripting<a class="headerlink" href="#scripting" title="Permanent link">&para;</a></h2>
-<p>I&rsquo;m going to keep this scripting part to the most basic code blocks, as it&rsquo;s too much code, for a complete view you can head to the <a href="https://github.com/luevano/flappybird_godot">source code</a>.</p>
+<p>I&rsquo;m going to keep this scripting part to the most basic code blocks, as it&rsquo;s too much code, for a complete view you can head to the <a href="https://github.com/luevano/flappybird_godot/tree/godot-3.5">source code</a>.</p>
 <p>As of now, the game itself doesn&rsquo;t do anything if we hit play. The first thing to do so we have something going on is to do the minimal player scripting.</p>
 <h3 id="player_1">Player<a class="headerlink" href="#player_1" title="Permanent link">&para;</a></h3>
 <p>The most basic code needed so the bird goes up and down is to just detect <code>jump</code> key presses and add a negative jump velocity so it goes up (<code>y</code> coordinate is reversed in godot&hellip;), we also check the velocity sign of the <code>y</code> coordinate to decide if the animation is playing or not.</p>
@@ -750,7 +750,7 @@ func _ready() -&gt; void:
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, May 29, 2022 @ 03:38 UTC</p>
-      <p>Modified: Thu, May 04, 2023 @ 18:26 UTC</p>
+      <p>Modified: Tue, May 09, 2023 @ 08:28 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gdscript.html">gdscript</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>
