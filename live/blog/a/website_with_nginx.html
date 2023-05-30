@@ -210,11 +210,10 @@ systemctl restart nginx
 <pre><code class="language-sh">certbot --nginx
 </code></pre>
 <p>It will ask you for some information, for you to accept some agreements and the names to activate HTTPS for. Also, you will want to &ldquo;say yes&rdquo; to the redirection from HTTP to HTTPS. And that&rsquo;s it, you can now go to your website and see that you have HTTPS active.</p>
-<p>Now, the certificate given by <code>certbot</code> expires every 3 months or something like that, so you want to renew this certificate every once in a while. Using <code>cron</code>, you can do this by running:</p>
-<pre><code class="language-sh">crontab -e
+<p>Now, the certificate given by <code>certbot</code> expires every 3 months or something like that, so you want to renew this certificate every once in a while. I did this before using <code>cron</code> or manually creating a <code>systemd</code> timer and service, but now it&rsquo;s just a matter of enabling the <code>certbot-renew.timer</code>:</p>
+<pre><code class="language-sh">systemctl start certbot-renew.timer
 </code></pre>
-<p>And a file will be opened where you need to add a new rule for Certbot, just append the line: <code>1 1 1 * * certbot renew --quiet --agree-tos --deploy-hook "systemctl reload nginx.service"</code> (renew on the first day of every month) and you&rsquo;re good. Alternatively use <code>systemd</code> timers as stated in the <a href="https://wiki.archlinux.org/title/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
-<p>That&rsquo;s it, you now have a website with SSL certificate.</p>
+<p>The <code>deploy-hook</code> is not needed anymore, only for plugins. For more, visit the <a href="https://wiki.archlinux.org/title/Certbot#Automatic_renewal">Arch Linux Wiki</a>.</p>
 
   <div class="page-nav">
     <span class="next">
@@ -244,7 +243,7 @@ systemctl restart nginx
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Fri, Mar 19, 2021 @ 02:58 UTC</p>
-      <p>Modified: Fri, May 05, 2023 @ 08:34 UTC</p>
+      <p>Modified: Sun, May 28, 2023 @ 00:05 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

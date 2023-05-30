@@ -35,6 +35,7 @@ exts:
   pymdvar:
     variables:
       SURL: "https://static.luevano.xyz"
+      PYSSG_URL: "https://github.com/luevano/pyssg"
     enable_env: False
 ...
 ---
@@ -68,7 +69,7 @@ dirs:
       index: "blog/index.html"
       rss: True
       sitemap: True
-      exclude_dirs: []
+      exclude_dirs: ["temp"]
 exts:
   pymdvar:
     variables:

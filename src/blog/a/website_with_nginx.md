@@ -160,12 +160,10 @@ certbot --nginx
 
 It will ask you for some information, for you to accept some agreements and the names to activate HTTPS for. Also, you will want to "say yes" to the redirection from HTTP to HTTPS. And that's it, you can now go to your website and see that you have HTTPS active.
 
-Now, the certificate given by `certbot` expires every 3 months or something like that, so you want to renew this certificate every once in a while. Using `cron`, you can do this by running:
+Now, the certificate given by `certbot` expires every 3 months or something like that, so you want to renew this certificate every once in a while. I did this before using `cron` or manually creating a `systemd` timer and service, but now it's just a matter of enabling the `certbot-renew.timer`:
 
 ```sh
-crontab -e
+systemctl start certbot-renew.timer
 ```
 
-And a file will be opened where you need to add a new rule for Certbot, just append the line: `1 1 1 * * certbot renew --quiet --agree-tos --deploy-hook "systemctl reload nginx.service"` (renew on the first day of every month) and you're good. Alternatively use `systemd` timers as stated in the [Arch Linux Wiki](https://wiki.archlinux.org/title/Certbot#Automatic_renewal).
-
-That's it, you now have a website with SSL certificate.
+The `deploy-hook` is not needed anymore, only for plugins. For more, visit the [Arch Linux Wiki](https://wiki.archlinux.org/title/Certbot#Automatic_renewal).
