@@ -163,6 +163,8 @@ Then just create the library in Komga (the `+` sign next to *Libraries*), choose
 
 The real important part (for me) is the permissions of the `/mnt/d/mangal` directory (and for any future directory for extra libraries for the matter), as I want to have write access for `komga` so I can manage from the web interface itself. It looks like it's just a matter of giving ownership to the `komga` user either for owner or for group (or to all for that matter), but since I'm going to use a separate user to download manga then I need to choose carefully.
 
+### Set default directory permissions
+
 The desired behaviour is: set `komga` as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. I found out via [this](https://unix.stackexchange.com/a/1315) stack exchange answer how to do it. So for me:
 
 ```sh
@@ -234,6 +236,10 @@ mangal config info
 ```
 
 With this we can already start using `mangal` to download via the TUI or the *inline* option.
+
+### Headless browser scrapper
+
+BULLSHIT STUFF HERE
 
 ### TUI
 
