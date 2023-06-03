@@ -23,6 +23,28 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>I had to learn Go and Lua the hard way</title>
+      <link>https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html</guid>
+      <pubDate>Sat, 03 Jun 2023 03:32:17 GMT</pubDate>
+      <category>English</category>
+      <category>Rant</category>
+      <category>Short</category>
+      <category>Tools</category>
+      <description>Thanks to the issues of a program (mangal) I'm starting to use for my manga media server, I had to learn Go and Lua the hard way so that I can fix it and use it.</description>
+      <content:encoded><![CDATA[<p><mark>TL;DR</mark>: I learned Go and Lua the hard way by forking (for fixing):</p>
+<ul>
+<li><a href="https://github.com/luevano/mangal">mangal</a>: main manga scraper written in Go.</li>
+<li><a href="https://github.com/luevano/mangal-lua-libs">mangal-lua-libs</a>: <a href="https://github.com/yuin/gopher-lua">gopher-lua</a> libraries for mangal.</li>
+<li><a href="https://github.com/luevano/mangal-scrapers">mangal-scrapers</a>: custom mangal scrapers written in Lua.</li>
+</ul>
+<p>In the last couple of days I&rsquo;ve been setting up a <a href="https://komga.org/">Komga</a> server for manga downloaded using <a href="https://github.com/metafates/mangal">metafates/mangal</a> (upcoming set up entry about it) and everything was fine so far until I tried to download One Piece from <a href="https://mangadex.org/">MangaDex</a> of which <code>mangal</code> has a built-in scraper. Long story short the issue was that MangaDex&rsquo;s API only allows requesting manga chapters on chunks of 500 and the way that was being handled was completely wrong, specifics can be found on my <a href="https://github.com/luevano/mangal/commit/395bce96e439ee828d0180328a5cf9204bfd818a">commit</a> (and the subsequent minor fix <a href="https://github.com/luevano/mangal/commit/6bf709fe9b333ec9d4375ed80f9b055d07a40c1c">commit</a>).</p>
+<p>I tried to do a PR, but the project hasn&rsquo;t been active since Feb 2023 (same reason I didn&rsquo;t even try to do PRs on the other repos) so I closed it and will start working on my own <a href="https://github.com/luevano/mangal">fork</a>, probaly just merging everything <a href="https://github.com/Belphemur">Belphemur</a>&lsquo;s <a href="https://github.com/Belphemur/mangal">fork</a> has to offer, as he&rsquo;s been working on <code>mangal</code> actively. I could probably just fork from him and/or just submit PR requests to him, but I think I saw some changes I didn&rsquo;t really like, will have to look more into it.</p>
+<p>Also, while trying to use some of the custom scrapers I ran into issues with the headless chrome explorer implementation where it didn&rsquo;t close on each manga chapter download, causig my CPU and Mem usage to get maxed out and losing control of the system, so I had to also <a href="https://github.com/luevano/mangal-lua-libs">fork</a> the <a href="https://github.com/metafates/mangal-lua-libs">metafates/mangal-lua-libs</a> and &ldquo;fixed&rdquo; (I say fixed because that wasn&rsquo;t the issue at the end, it was how the custom scrapers where using it, shitty documentation) the issue by adding the <code>browser.Close()</code> function to the <code>headless</code> Lua API (<a href="https://github.com/luevano/mangal-lua-libs/commit/97fba97ab23efe88278dfacbeed2dd83c5472de0">commit</a>) and merged some commits from the original <a href="https://github.com/vadv/gopher-lua-libs">vadv/gopher-lua-libs</a> just to include any features added to the Lua libs needed.</p>
+<p>Finally I <a href="https://github.com/luevano/mangal-scrapers">forked</a> the <a href="https://github.com/metafates/mangal-scrapers">metafates/mangal-scrapers</a> (which I actually forked <a href="https://github.com/NotPhantomX">NotPhantomX</a>&lsquo;s <a href="https://github.com/NotPhantomX/mangal-scrapers">fork</a> as they had included more scrapers from some pull requests) to be able to have updated custom Lua scrapers (in which I also fixed the <code>headless</code> bullshit) and use them on my <code>mangal</code>.</p>
+<p>So, I went into the rabbit hole of manga scrapping because I wanted to set up my Komga server, and more importantly I had to quickly learn Go and Lua (Lua was easier) and I have to say that Go is super convoluted on the module management, all research I did lead me to totally different responses, but it is just because of different Go versions and the year of the responses.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>Al fin tengo fibra ópticona</title>
       <link>https://blog.luevano.xyz/a/al_fin_tengo_fibra_opticona.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/al_fin_tengo_fibra_opticona.html</guid>
