@@ -6,8 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
-<title>Create a git server and setup cgit web app (on Nginx) -- Luévano's Blog</title>
-  <meta name="description" content="How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot."/>
+<title>Set up a Git server and cgit front-end -- Luévano's Blog</title>
+  <meta name="description" content="How to create a Git server using cgit on a server running Nginx, on Arch. This is a follow up on post about creating a website with Nginx and Certbot."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <!-- general style -->
     <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
@@ -32,11 +32,11 @@
 
 
     <!-- og meta -->
-  <meta property="og:title" content="Create a git server and setup cgit web app (on Nginx) -- Luévano's Blog"/>
+  <meta property="og:title" content="Set up a Git server and cgit front-end -- Luévano's Blog"/>
   <meta property="og:type" content="article"/>
   <meta property="og:url" content="https://blog.luevano.xyz/a/git_server_with_cgit.md"/>
   <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
-  <meta property="og:description" content="How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot."/>
+  <meta property="og:description" content="How to create a Git server using cgit on a server running Nginx, on Arch. This is a follow up on post about creating a website with Nginx and Certbot."/>
   <meta property="og:locale" content="en"/>
   <meta property="og:site_name" content="Luévano's Blog"/>
   </head>
@@ -85,7 +85,7 @@
         <i class="fas fa-arrow-up" alt="Return to top"></i>
         </button>
       </div>
-  <h1>Create a git server and setup cgit web app (on Nginx)</h1>
+  <h1>Set up a Git server and cgit front-end</h1>
 
   <p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for <mark>btw i use</mark> Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
 <p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of normal <code>ssh</code>. And as with the other entries, most if not all commands here are run as root unless stated otherwise.</p>
@@ -246,7 +246,7 @@ exec highlight --force --inline-css -f -I -O xhtml -S &quot;$EXTENSION&quot; 2&g
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Mar 21, 2021 @ 19:00 UTC</p>
-      <p>Modified: Fri, May 05, 2023 @ 08:35 UTC</p>
+      <p>Modified: Sat, Jun 03, 2023 @ 03:52 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

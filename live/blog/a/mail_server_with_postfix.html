@@ -6,8 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
-<title>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luévano's Blog</title>
-  <meta name="description" content="How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot."/>
+<title>Set up a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luévano's Blog</title>
+  <meta name="description" content="How to set up a Mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM, on Arch. This is a follow up on post about creating a website with Nginx and Certbot."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <!-- general style -->
     <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
@@ -32,11 +32,11 @@
 
 
     <!-- og meta -->
-  <meta property="og:title" content="Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luévano's Blog"/>
+  <meta property="og:title" content="Set up a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM -- Luévano's Blog"/>
   <meta property="og:type" content="article"/>
   <meta property="og:url" content="https://blog.luevano.xyz/a/mail_server_with_postfix.md"/>
   <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
-  <meta property="og:description" content="How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot."/>
+  <meta property="og:description" content="How to set up a Mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM, on Arch. This is a follow up on post about creating a website with Nginx and Certbot."/>
   <meta property="og:locale" content="en"/>
   <meta property="og:site_name" content="Luévano's Blog"/>
   </head>
@@ -85,7 +85,7 @@
         <i class="fas fa-arrow-up" alt="Return to top"></i>
         </button>
       </div>
-  <h1>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
+  <h1>Set up a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
 
   <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; <del>also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</del> <ins>I haven&rsquo;t had time to do the script so nevermind this, if I ever do it I&rsquo;ll make a new entry regarding it.</ins></p>
 <p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.</p>
@@ -485,7 +485,7 @@ systemctl enable spamassassin.service
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
-      <p>Modified: Fri, May 05, 2023 @ 08:35 UTC</p>
+      <p>Modified: Sat, Jun 03, 2023 @ 03:54 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

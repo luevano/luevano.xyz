@@ -23,6 +23,18 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Updated the how-to entries titles</title>
+      <link>https://blog.luevano.xyz/a/updating_creating_entries_titles_to_setup.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/updating_creating_entries_titles_to_setup.html</guid>
+      <pubDate>Sat, 03 Jun 2023 03:46:44 GMT</pubDate>
+      <category>English</category>
+      <category>Short</category>
+      <category>Update</category>
+      <description>Just a small update on the title for some old entries.</description>
+      <content:encoded><![CDATA[<p>One of the main reasons I started &ldquo;blogging&rdquo; was basically just to document how I set up stuff up so I can reference them later in the future if I ever needed to replicate the steps or just to show somebody, and these entries had helped to do so multiple times. I&rsquo;ll keep creating these entries but after a while the <em>Creating a</em> title started to feel weird, because we&rsquo;re not <em>creating</em> anything really, it is just a set up/configuration/how-to/etc. So I think that using <em>Set up a</em> for the titles is better and makes more sense; probably using <em>How to set up a</em> is better for the SEO bullshit.</p>
+<p>Anyways, so I&rsquo;ll start using <em>Set up a</em> instead of <em>Creating a</em> and will retroactively change the titles for these entries (by this entry the change should be applied already). This might impact some RSS feeds as they keep up a cache of the feed and might duplicate the entries, heads up if for some reason somebody is using it.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>I had to learn Go and Lua the hard way</title>
       <link>https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html</guid>
@@ -1918,7 +1930,7 @@ cd $CPWD
 <p>Sobres pues.</p>]]></content:encoded>
     </item>
     <item>
-      <title>Create an XMPP server with Prosody compatible with Conversations and Movim</title>
+      <title>Set up an XMPP server with Prosody compatible with Conversations and Movim</title>
       <link>https://blog.luevano.xyz/a/xmpp_server_with_prosody.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/xmpp_server_with_prosody.html</guid>
       <pubDate>Wed, 09 Jun 2021 05:24:30 GMT</pubDate>
@@ -1927,7 +1939,7 @@ cd $CPWD
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
-      <description>How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim.</description>
+      <description>How to set up an XMPP server using Prosody on a server running Nginx, on Arch. This server will be compatible with at least Conversations and Movim.</description>
       <content:encoded><![CDATA[<p><strong>Update</strong>: I no longer host this XMPP server as it consumed a lot of resources and I wasn&rsquo;t using it that much. I&rsquo;ll probably re-create it in the future, though.</p>
 <p>Recently I set up an <a href="https://xmpp.org/">XMPP</a> server (and a Matrix one, too) for my personal use and for friends if they want one; made one for <a href="https://lmcj.xyz"><mark>EL ELE EME</mark></a> for example. So, here are the notes on how I set up the server that is compatible with the <a href="https://conversations.im/">Conversations</a> app and the <a href="https://movim.eu/">Movim</a> social network. You can see my addresses at <a href="https://luevano.xyz/contact.html">contact</a> and the XMPP compliance/score of the server.</p>
 <p>One of the best resources I found that helped me a lot was <a href="https://community.hetzner.com/tutorials/prosody-debian9">Installing and Configuring Prosody XMPP Server on Debian 9</a>, the <a href="https://wiki.archlinux.org/title/Prosody">Arch Wiki</a> and the <a href="https://prosody.im/">oficial documentation</a>.</p>
@@ -2485,7 +2497,7 @@ systemctl enable prosody.service
 <p><strong>Update</strong>: Since writing this entry, <a href="https://github.com/luevano/pyssg"><code>pyssg</code></a> has evolved quite a bit, so not everything described here is still true. For the latest updates check the newest entries or the git repository itself.</p>]]></content:encoded>
     </item>
     <item>
-      <title>Create a git server and setup cgit web app (on Nginx)</title>
+      <title>Set up a Git server and cgit front-end</title>
       <link>https://blog.luevano.xyz/a/git_server_with_cgit.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/git_server_with_cgit.html</guid>
       <pubDate>Sun, 21 Mar 2021 19:00:29 GMT</pubDate>
@@ -2494,7 +2506,7 @@ systemctl enable prosody.service
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
-      <description>How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.</description>
+      <description>How to create a Git server using cgit on a server running Nginx, on Arch. This is a follow up on post about creating a website with Nginx and Certbot.</description>
       <content:encoded><![CDATA[<p>My git server is all I need to setup to actually <em>kill</em> my other server (I&rsquo;ve been moving from servers on these last 2-3 blog entries), that&rsquo;s why I&rsquo;m already doing this entry. I&rsquo;m basically following <a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server">git&rsquo;s guide on setting up a server</a> plus some specific stuff for <mark>btw i use</mark> Arch Linux (<a href="https://wiki.archlinux.org/index.php/Git_server#Web_interfaces">Arch Linux Wiki: Git server</a> and <a href="https://miracoin.wordpress.com/2014/11/25/step-by-step-guide-on-setting-up-git-server-in-arch-linux-pushable/">Step by step guide on setting up git server in arch linux (pushable)</a>).</p>
 <p>Note that this is mostly for personal use, so there&rsquo;s no user/authentication control other than that of normal <code>ssh</code>. And as with the other entries, most if not all commands here are run as root unless stated otherwise.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
@@ -2627,7 +2639,7 @@ exec highlight --force --inline-css -f -I -O xhtml -S &quot;$EXTENSION&quot; 2&g
 <p>That would be everything. If you need support for more stuff like compressed snapshots or support for markdown, check the optional dependencies for <code>cgit</code>.</p>]]></content:encoded>
     </item>
     <item>
-      <title>Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</title>
+      <title>Set up a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</title>
       <link>https://blog.luevano.xyz/a/mail_server_with_postfix.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/mail_server_with_postfix.html</guid>
       <pubDate>Sun, 21 Mar 2021 04:05:59 GMT</pubDate>
@@ -2636,7 +2648,7 @@ exec highlight --force --inline-css -f -I -O xhtml -S &quot;$EXTENSION&quot; 2&g
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
-      <description>How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot.</description>
+      <description>How to set up a Mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM, on Arch. This is a follow up on post about creating a website with Nginx and Certbot.</description>
       <content:encoded><![CDATA[<p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; <del>also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</del> <ins>I haven&rsquo;t had time to do the script so nevermind this, if I ever do it I&rsquo;ll make a new entry regarding it.</ins></p>
 <p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
@@ -3008,7 +3020,7 @@ systemctl enable spamassassin.service
 </figure>]]></content:encoded>
     </item>
     <item>
-      <title>Create a website with Nginx and Certbot</title>
+      <title>Set up a website with Nginx and Certbot</title>
       <link>https://blog.luevano.xyz/a/website_with_nginx.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/website_with_nginx.html</guid>
       <pubDate>Fri, 19 Mar 2021 02:58:15 GMT</pubDate>
@@ -3017,7 +3029,7 @@ systemctl enable spamassassin.service
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
-      <description>How to create website that runs on Nginx and uses Certbot for SSL certificates. This is a base for future blog posts about similar topics.</description>
+      <description>How to set up a website using Nginx for web server and Certbot for SSL certificates, on Arch. This is a base for future blog posts about similar topics.</description>
       <content:encoded><![CDATA[<p>These are general notes on how to setup a Nginx web server plus Certbot for SSL certificates, initially learned from <a href="https://www.youtube.com/watch?v=OWAqilIVNgE">Luke&rsquo;s video</a> and after some use and research I added more stuff to the mix. And, actually at the time of writing this entry, I&rsquo;m configuring the web server again on a new VPS instance, so this is going to be fresh.</p>
 <p>As a side note, <mark>i use arch btw</mark> so everything here es aimed at an Arch Linux distro, and I&rsquo;m doing everything on a VPS. Also note that most if not all commands here are executed with root privileges.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>

@@ -1,12 +1,12 @@
-a/website_with_nginx.md|1616122695.085315|1685232308.4036176|da8bcc1c7f5693dbd023f212bc11cc85|code,english,server,tools,tutorial
-a/git_server_with_cgit.md|1616353229.8983006|1683275738.97709|64f9cfb1385b550b8bf614805594de9a|code,english,server,tools,tutorial
+a/website_with_nginx.md|1616122695.085315|1685764385.7777424|c96f99661fff26a051a8c90a313f4452|code,english,server,tools,tutorial
+a/git_server_with_cgit.md|1616353229.8983006|1685764373.0277462|69dbfe83102414824ccc52be085c8271|code,english,server,tools,tutorial
 a/el_blog_ya_tiene_timestamps.md|1615862784.9032707|1683224100.6342998|935866045bf6c35cbb2a4c2fbc2f0eb1|short,spanish,tools,update
 a/first_blog_post.md|1614431313.2090824|1683224048.8343117|d613be2d506a0f7ce03f8fa54f772717|english,short,tools,update
-a/mail_server_with_postfix.md|1616299559.6570284|1683275726.3870916|0ee413182e336947a3cb63715f43523e|code,english,server,tools,tutorial
+a/mail_server_with_postfix.md|1616299559.6570284|1685764466.5177166|e7fd807fa9d82b37efc8afbfbea658f6|code,english,server,tools,tutorial
 a/new_blogging_system.md|1622172099.117893|1683224290.3242564|8370fc65f367886bcfa805cbb8770e01|english,short,tools,update
 a/asi_nomas_esta_quedando.md|1622795043.0874712|1683224323.4442492|a036daaa7940f2567057a775078c418c|short,spanish,update
 a/acomodada_la_pagina_de_arte.md|1623006369.6071973|1683224355.424242|e1aceca92dc98af9e4c3a0b1cec61fb3|short,spanish,update
-a/xmpp_server_with_prosody.md|1623216270.0372887|1683275798.657081|55ae01ca67dde1ff6331d2660c9df69e|code,english,server,tools,tutorial
+a/xmpp_server_with_prosody.md|1623216270.0372887|1685764494.9077075|fe15449fc7093efd2157f88b78d4f1b4|code,english,server,tools,tutorial
 a/tenia_esto_descuidado.md|1626594710.918819|1683224450.4442203|801d9caadef53ea30c82c2e8ca5692e6|short,spanish,update
 a/hoy_toco_desarrollo_personaje.md|1627452655.5560262|1683377790.7414637|d1520b814b83470e61ec930f7aaaf0b2|rant,spanish,update
 a/vpn_server_with_openvpn.md|1627810022.100739|1683275819.5970778|e9dfb0d4649057a300a88cdfb2ea3f88|code,english,server,tools,tutorial
@@ -21,3 +21,4 @@ a/rewrote_pyssg_again.md|1671510665.5266156|1683375981.802067|e7d3dc8a4a2cd2abda
 a/updated_pyssg_pymdvar_and_website.md|1683376754.7018104|0.0|442ad5da7342439101abcc076a73cb22|english,short,tools,update
 a/al_fin_tengo_fibra_opticona.md|1683622740.1853704|0.0|949b8fd2aca929d74d8217474c990515|rant,short,spanish,update
 a/learned_go_and_lua_hard_way.md|1685763137.7581403|0.0|493f86ce317f7b182b62c3438e5f7a8a|english,rant,short,tools
+a/updating_creating_entries_titles_to_setup.md|1685764004.1478639|0.0|2bcf247ed5c2aa9fd5f4b542043123fe|english,short,update
