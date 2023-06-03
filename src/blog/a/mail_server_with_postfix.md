@@ -1,7 +1,7 @@
-title: Create a mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM
+title: Set up a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM
 author: David Luévano
 lang: en
-summary: How to create mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM. This is a follow up on post about creating a website with Nginx and Certbot.
+summary: How to set up a Mail server using Postfix, Dovecot, SpamAssassin and OpenDKIM, on Arch. This is a follow up on post about creating a website with Nginx and Certbot.
 tags: server
 	tools
 	code

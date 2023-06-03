@@ -1,7 +1,7 @@
-title: Create a git server and setup cgit web app (on Nginx)
+title: Set up a Git server and cgit front-end
 author: David Luévano
 lang: en
-summary: How to create a git server using cgit on a server running Nginx. This is a follow up on post about creating a website with Nginx and Certbot.
+summary: How to create a Git server using cgit on a server running Nginx, on Arch. This is a follow up on post about creating a website with Nginx and Certbot.
 tags: server
 	tools
 	code

@@ -1,7 +1,7 @@
 title: Set up a manga server with Komga and mangal
 author: David Luévano
 lang: en
-summary: How to set up a manga server with Komga as media server and mangal for downloading with Tachiyomi integration.
+summary: How to set up a manga server with Komga as media server and mangal for downloading manga, on Arch. Tachiyomi integration is available thanks to Komga.
 tags: server
 	tools
 	code

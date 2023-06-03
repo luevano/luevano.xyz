@@ -1,7 +1,7 @@
-title: Create an XMPP server with Prosody compatible with Conversations and Movim
+title: Set up an XMPP server with Prosody compatible with Conversations and Movim
 author: David Luévano
 lang: en
-summary: How to create an XMPP server using Prosody on a server running Nginx. This server will be compatible with at least Conversations and Movim.
+summary: How to set up an XMPP server using Prosody on a server running Nginx, on Arch. This server will be compatible with at least Conversations and Movim.
 tags: server
 	tools
 	code
