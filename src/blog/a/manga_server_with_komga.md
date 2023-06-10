@@ -369,7 +369,76 @@ So, what I do is manually edit the metadata for the manga, by changing whatever 
 
 ### Automation
 
-==WIP==
+The straight forward approach for automation is just to bundle a bunch of `mangal inline` commands in a shell script and automate either via [cron](https://wiki.archlinux.org/title/cron) or [systemd/Timers](https://wiki.archlinux.org/title/systemd/Timers). But, as always, I overcomplicated/overengineered my approach, which is the following:
+
+1. Group manga names per source.
+2. Have a way to track the changes/updates on each run.
+3. Use that tracker to know where to start downloading chapters from.
+    - This is optional, as you can just do `--chapters "all"` and it will work. This is mostly to keep the logs/output cleaner/shorter.
+4. Do any configuration needed beforehand.
+5. Download/update each manga using `mangal inline`.
+6. Wrap everything in a `systemd` service and timer.
+
+Manga list example:
+
+```sh
+mangapill="Berserk|Chainsaw Man|Dandadan|Jujutsu Kaisen|etc..."
+```
+
+Bash function that handles the download per manga in the list:
+
+```sh
+mangal_src_dl () {
+    source_name=$1
+    manga_list=$(echo "$2" | tr '|' '\n')
+
+    while IFS= read -r line; do
+        # By default download all chapters
+        chapters="all"
+        last_chapter_n=$(grep -e "$line" "$TRACKER_FILE" | cut -d'|' -f2 | grep -v -e '^$' | tail -n 1)
+        if [ -n "${last_chapter_n}" ]; then
+            chapters="$last_chapter_n-9999"
+            echo "Downloading [${last_chapter_n}-] chapters for $line from $source_name..."
+        else
+            echo "Downloading all chapters for $line from $source_name..."
+        fi
+        dl_output=$(mangal inline -S "$source_name" -q "$line" -m "exact" -F "$DOWNLOAD_FORMAT" -c "$chapters" -d)
+
+        if [ $? -ne 0 ]; then
+            echo "Failed to download chapters for $line."
+            continue
+        fi
+
+        line_count=$(echo "$dl_output" | grep -v -e '^$' | wc -l)
+        if [ $line_count -gt 0 ]; then
+            echo "Downloaded $line_count chapters for $line:"
+            echo "$dl_output"
+            new_last_chapter_n=$(echo "$dl_output" | tail -n 1 | cut -d'[' -f2 | cut -d']' -f1)
+            # manga_name|last_chapter_number|downloaded_chapters_on_this_update|manga_source
+            echo "$line|$new_last_chapter_n|$line_count|$source_name" >> $TRACKER_FILE
+        else
+            echo "No new chapters for $line."
+        fi
+    done <<< "$manga_list"
+}
+```
+
+Where `$TRACKER_FILE` is just a variable holding a path to some file where you can store the tracking and `$DOWNLOAD_FORMAT` the format for the mangas, for me it's `cbz`. Then the usage would be something like `mangal_src_dl "Mangapill" "$mangapill"`, meaning that it is a function call per source.
+
+The tracker file would have a format like follows:
+
+```
+# Updated: 06/10/23 10:53:15 AM CST
+Berserk|0392|392|Mangapill
+Dandadan|0110|110|Mangapill
+...
+```
+
+And note that if you already had manga downloaded and you run the script for the first time, then it will show as if it downloaded everything from the first chapter, but that's just how `mangal` works, it will actually just discover downloaded chapters and only download anything missing.
+
+Any configuration the downloader/updater might need needs to be done before the `mangal_src_dl` calls. I like to configure mangal for download path, format, etc.. To clear the `mangal` cache and `rod` browser (headless browser used in some custom sources) as well as set up any anilist bindings. An example of an anilist binding I had to do is for Mushoku Tensei, as it has both a light novel and manga version, both having different information, for me it was `mangal inline anilist set --name "Mushoku Tensei - Isekai Ittara Honki Dasu" --id 85564`.
+
+Finally is just a matter of using your prefered way of scheduling, I'll use `systemd/Timers` but anything is fine. You could make the downloader script more sophisticated and only running every week on which each manga gets released usually, but that's too much work, so I'll just run it once daily probably, or 2-3 times daily.
 
 ## Alternative downloaders
 

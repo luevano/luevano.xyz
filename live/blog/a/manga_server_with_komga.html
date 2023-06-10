@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en
+"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
+<title>Set up a manga server with Komga and mangal -- Luévano's Blog</title>
+  <meta name="description" content="How to set up a manga server with Komga as media server and mangal for downloading manga, on Arch. Tachiyomi integration is available thanks to Komga."/>
+<link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
+    <!-- theme related -->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
+    <!-- extra -->
+    <!-- highlight support for code blocks -->
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+</script>
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
+
+    <!-- og meta -->
+  <meta property="og:title" content="Set up a manga server with Komga and mangal -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/manga_server_with_komga.md"/>
+  <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
+  <meta property="og:description" content="How to set up a manga server with Komga as media server and mangal for downloading manga, on Arch. Tachiyomi integration is available thanks to Komga."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+<nav>
+  <ul>
+    <li>
+      <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+    </li>
+
+    <li>
+      <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+    </li>
+
+    <li>
+      <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+    </li>
+
+    <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+      <ul>
+        <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+        <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+        <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+      </ul>
+    </li>
+
+    <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+      <ul>
+        <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+
+    </header>
+
+    <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
+  <h1>Set up a manga server with Komga and mangal</h1>
+
+  <p>I&rsquo;ve been wanting to set up a manga media server to hoard some mangas/comics and access them via Tachiyomi, but I didn&rsquo;t have enough space in my vultr VPS. Now that I have symmetric fiber optic at home and my spare PC to use as a server I decided to go ahead and create one. As always, <mark>i use arch btw</mark> so these instructions are specifically for it, I&rsquo;m not sure how easier/harder it is for other distros, I&rsquo;m just too comfortable with arch honestly.</p>
+<p>I&rsquo;m going to run it as an exposed service using a subdomain of my own, so the steps are taking that into account, if you want to run it locally (or on a LAN/VPN) then it is going to be easier/with less steps (you&rsquo;re on your own). Also, as you might notice I don&rsquo;t like to use D*ck*r images or anything (ew).</p>
+<p>As always, all commands are run as root unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#aur-yay">AUR - yay</a><ul>
+<li><a href="#install">Install</a></li>
+<li><a href="#usage">Usage</a></li>
+</ul>
+</li>
+<li><a href="#komga">Komga</a><ul>
+<li><a href="#reverse-proxy">Reverse proxy</a></li>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+<li><a href="#starting-using-komga">Starting using Komga</a></li>
+<li><a href="#library-creation">Library creation</a><ul>
+<li><a href="#set-default-directory-permissions">Set default directory permissions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mangal">mangal</a><ul>
+<li><a href="#install-from-source">Install from source</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#usage_1">Usage</a><ul>
+<li><a href="#headless-browser">Headless browser</a></li>
+<li><a href="#tui">TUI</a></li>
+<li><a href="#inline">Inline</a></li>
+<li><a href="#komga-library">Komga library</a></li>
+<li><a href="#automation">Automation</a></li>
+</ul>
+</li>
+<li><a href="#alternative-downloaders">Alternative downloaders</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Similar to my early <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a> entries, if you want it as a subdomain:</p>
+<ul>
+<li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>komga</code> (or whatever you want).</li>
+<li>An SSL certificate, if you&rsquo;re following the other entries (specially the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> entry), add a <code>komga.conf</code> and run <code>certbot --nginx</code> (or similar) to extend/create the certificate. More details below: <a href="#reverse-proxy">Reverse proxy</a> and <a href="#ssl-certificate">SSL certificate</a>.</li>
+</ul>
+<h2 id="aur-yay">AUR - yay<a class="headerlink" href="#aur-yay" title="Permanent link">&para;</a></h2>
+<p>This is the first time I mention the <strong>AUR</strong> (and <code>yay</code>) in my entries, so I might as well just write a bit about it.</p>
+<p>The <a href="https://aur.archlinux.org/">AUR</a> is the <strong>A</strong>rch Linux <strong>U</strong>ser <strong>R</strong>epository and it&rsquo;s basically like an extension of the official one which is supported by the community, the only thing is that it requires a different package manager. The one I use (and I think everyone does, too) is <code>yay</code>, which as far as I know is like a wrapper of <code>pacman</code>.</p>
+<h3 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h3>
+<p>To install and use <code>yay</code> we need a normal account with sudo access, <mark>all the commands related to <code>yay</code> are run as normal user and then it asks for sudo password</mark>. <a href="https://github.com/Jguer/yay#installation">Installation</a> its straight forward: clone <code>yay</code> repo and install. Only dependencies are <code>git</code> and <code>base-devel</code>:</p>
+<p>Install dependencies:</p>
+<pre><code class="language-sh">sudo pacman -S git base-devel
+</code></pre>
+<p>Clone <code>yay</code> and install it (I also like to delete the cloned git repo):</p>
+<pre><code class="language-sh">git clone git@github.com:Jguer/yay.git
+cd yay
+makepkg -si
+cd ..
+sudo rm -r yay
+</code></pre>
+<h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
+<p><code>yay</code> is used basically the same as <code>pacman</code> with the difference that it is run as normal user (then later requiring sudo password) and that it asks extra input when installing something, such as if we want to build the package from source or if we want to show package diffs.</p>
+<p>To install a package (for example Komga in this blog entry), run:</p>
+<pre><code class="language-sh">yay -S komga
+</code></pre>
+<h2 id="komga">Komga<a class="headerlink" href="#komga" title="Permanent link">&para;</a></h2>
+<p><a href="https://komga.org/">Komga</a> is a comics/mangas media server.</p>
+<p>Install from the AUR:</p>
+<pre><code class="language-sh">yay -S komga
+</code></pre>
+<p>This <code>komga</code> package creates a <code>komga</code> (service) user and group which is tied to the also included <code>komga.service</code>.</p>
+<p>Configure it by editing <code>/etc/komga.conf</code>:</p>
+<pre><code class="language-conf">SERVER_PORT=8989
+SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
+
+KOMGA_LIBRARIES_SCAN_CRON=&quot;0 0 * * * ?&quot;
+KOMGA_LIBRARIES_SCAN_STARTUP=false
+KOMGA_LIBRARIES_SCAN_DIRECTORY_EXCLUSIONS='#recycle,@eaDir,@Recycle'
+KOMGA_FILESYSTEM_SCANNER_FORCE_DIRECTORY_MODIFIED_TIME=false
+KOMGA_REMEMBERME_KEY=USE-WHATEVER-YOU-WANT-HERE
+KOMGA_REMEMBERME_VALIDITY=2419200
+
+KOMGA_DATABASE_BACKUP_ENABLED=true
+KOMGA_DATABASE_BACKUP_STARTUP=true
+KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
+</code></pre>
+<p>My changes (shown above):</p>
+<ul>
+<li>Port on <code>8989</code> because <code>8080</code> its too generic.</li>
+<li><code>cron</code> schedules<ul>
+<li>It&rsquo;s not actually <code>cron</code> but rather a <code>cron</code>-like syntax used by <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html">Spring</a> as stated in the <a href="https://komga.org/installation/configuration.html#optional-configuration">Komga config</a>.</li>
+</ul>
+</li>
+<li>Added the remember me key.</li>
+<li>For more check out <a href="https://komga.org/installation/configuration.html">Komga: Configuration options</a>.</li>
+</ul>
+<p>If you&rsquo;re going to run it locally (or LAN/VPN) you can start the <code>komga.service</code> and access it via IP at <code>http://&lt;your-server-ip&gt;:&lt;port&gt;(/base_url)</code> as stated at <a href="https://komga.org/installation/webui.html">Komga: Accessing the web interface</a>, else continue with the next steps for the reverse proxy and certificate.</p>
+<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>Create the reverse proxy configuration (this is for <code>nginx</code>). In my case I&rsquo;ll use a subdomain, so this is a new config called <code>komga.conf</code> at the usual <code>sites-available/enabled</code> path:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name komga.yourdomain.com; # change accordingly to your wanted subdomain and domain name
+
+    location / {
+        proxy_pass http://localhost:8989; # change 8989 to the port you want to use
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+    }
+}
+</code></pre>
+<p>If it&rsquo;s going to be used as a subdir on another domain then just change the <code>location</code> (with <code>/subdir</code> instead of <code>/</code>) directive to the corresponding <code>.conf</code> file; be careful with the <code>proxy_pass</code> directive, it has to match what you configured at <code>/etc/komga.conf</code> for the <code>SERVER_SERVLET_CONTEXT_PATH</code> regardless of the <code>/subdir</code> you selected at <code>location</code>.</p>
+<h3 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h3>
+<p>If using a subdir then the same certificate for the subdomain/domain should work fine and no extra stuff is needed, else if following along me then we can create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>That will automatically detect the new subdomain config and create/extend your existing certificate(s). In my case I manage each certificate&rsquo;s subdomain:</p>
+<pre><code class="language-sh">certbot --nginx -d domainname.com -d subdomain.domainname.com -d komga.domainname.com
+</code></pre>
+<h3 id="starting-using-komga">Starting using Komga<a class="headerlink" href="#starting-using-komga" title="Permanent link">&para;</a></h3>
+<p>We can now <code>start</code>/<code>enable</code> the <code>komga.service</code>:</p>
+<pre><code class="language-sh">systemctl enable komga.service
+systemctl start komga.service
+</code></pre>
+<p>And access the web interface at <code>https://komga.domainname.com</code> which should show the login page for Komga. The first time it will ask to create an account as shown in <a href="https://komga.org/installation/webui.html#create-user-account">Komga: Create user account</a>, this will be an admin account. Fill in the email and password (can be changed later). The email doesn&rsquo;t have to be an actual email, for now it&rsquo;s just for management purposes.</p>
+<p>Next thing would be to add any extra account (for read-only/download manga permissions), add/import libraries, etc.. For now I&rsquo;ll leave it here until we start downloading manga on the next steps.</p>
+<h3 id="library-creation">Library creation<a class="headerlink" href="#library-creation" title="Permanent link">&para;</a></h3>
+<p>Creating a library is as simple as creating a directory somewhere and point to it in Komga. The folowing examples are for my use case, change accordingly. I&rsquo;ll be using <code>/mnt/d/mangal</code> for my library:</p>
+<pre><code class="language-sh">mkdir /mnt/d/mangal
+</code></pre>
+<p>Where I chose the name <code>mangal</code> as its the name of the downloader/scrapper I&rsquo;m going to use, it could be anything, this is just how I like to organize stuff.</p>
+<p>For the most part, the permissions don&rsquo;t matter much (as long as it&rsquo;s readable by the <code>komga</code> user) unless you want to delete some manga, then <code>komga</code> user also needs write permissions.</p>
+<p>Then just create the library in Komga web interface (the <code>+</code> sign next to <em>Libraries</em>), choose a name <em>&ldquo;Mangal&rdquo;</em> and point to the root folder <code>/mnt/d/mangal</code>, then just click <em>Next</em>, <em>Next</em> and <em>Add</em> for the defaults (that&rsquo;s how I&rsquo;ve been using it so far). This is well explained at <a href="https://komga.org/guides/libraries.html">Komga: Libraries</a>.</p>
+<p>The real important part (for me) is the permissions of the <code>/mnt/d/mangal</code> directory, as I want to have write access for <code>komga</code> so I can manage from the web interface itself. It looks like it&rsquo;s just a matter of giving ownership to the <code>komga</code> user either for owner or for group (or to all for that matter), but since I&rsquo;m going to use a separate user to download manga then I need to choose carefully.</p>
+<h4 id="set-default-directory-permissions">Set default directory permissions<a class="headerlink" href="#set-default-directory-permissions" title="Permanent link">&para;</a></h4>
+<p>The desired behaviour is: set <code>komga</code> as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. I found out via <a href="https://unix.stackexchange.com/a/1315">this</a> stack exchange answer how to do it. So, for me:</p>
+<pre><code class="language-sh">chown manga-dl:komga /mnt/d/mangal # required for group ownership for komga
+chmod g+s /mnt/d/mangal # required for group permission inheritance
+setfacl -d -m g::rwx /mnt/d/mangal # default permissions for group
+setfacl -d -m o::rx /mnt/d/mangal # default permissions for other (as normal, I think this command can be excluded)
+</code></pre>
+<p>Where <code>manga-dl</code> is the user I created to download manga with. Optionally add <code>-R</code> flag to those 4 commands in case it already has subdirectories/files (this might mess file permissions, but it&rsquo;s not an issue as far as I konw).</p>
+<p>Checking that the permissions are set correctly (<code>getfacl /mnt/d/mangal</code>):</p>
+<pre><code>getfacl: Removing leading '/' from absolute path names
+# file: mnt/d/mangal
+# owner: manga-dl
+# group: komga
+# flags: -s-
+user::rwx
+group::rwx
+other::r-x
+default:user::rwx
+default:group::rwx
+default:other::r-x
+</code></pre>
+<p>You can then check by creating a new subdirectory (in <code>/mnt/d/mangal</code>) and it should have the same group permissions.</p>
+<h2 id="mangal">mangal<a class="headerlink" href="#mangal" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/metafates/mangal">mangal</a> is a cli/tui manga downloader with anilist integration and custom Lua scrapers.</p>
+<p>Similar to Komga, you could install it from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S mangal-bin
+</code></pre>
+<p>But I&rsquo;ll use my <a href="https://github.com/luevano/mangal">fork</a> as it contains some fixes and extra stuff.</p>
+<h3 id="install-from-source">Install from source<a class="headerlink" href="#install-from-source" title="Permanent link">&para;</a></h3>
+<p>As I mentioned in my past <a href="https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html">entry</a> I had to <a href="https://github.com/luevano/mangal">fork</a> <code>mangal</code> and related repositories to fix/change a few things. Currently the major fix I did in <code>mangal</code> is for the built in <a href="https://mangadex.org/">MangaDex</a> scraper which had really annoying bug in the chunking of the manga chapter listing.</p>
+<p>So instad of installing with <code>yay</code> we&rsquo;ll build it from source. We need to have <code>go</code> installed:</p>
+<pre><code class="language-sh">pacman -S go
+</code></pre>
+<p>Then clone my fork of <code>mangal</code> and build/install it:</p>
+<pre><code class="language-sh">git clone https://github.com/luevano/mangal.git # not sure if you can use SSH to clone
+cd mangal
+make install # or just `make build` and then move the binary to somewhere in your $PATH
+</code></pre>
+<p>This will use <code>go install</code> so it will install to a path specified by your environment variables, for more run <code>go help install</code>. It was installed to <code>$HOME/.local/bin/go/mangal</code> for me, then just make sure this is included in your PATH.</p>
+<p>Check it was correctly installed by running <code>mangal version</code>, which should print something like:</p>
+<pre><code>▇▇▇ mangal
+
+  Version         ...
+  Git Commit      ...
+  Build Date      ...
+  Built By        ...
+  Platform        ...
+</code></pre>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>I&rsquo;m going to do everything with a normal user (<code>manga-dl</code>) which I created just to download manga. So all of the commands will be run without sudo/root privileges.</p>
+<p>Change some of the configuration options:</p>
+<pre><code class="language-sh">mangal config set -k downloader.path -v &quot;/mnt/d/mangal&quot; # downloads to current dir by default
+mangal config set -k formats.use -v &quot;cbz&quot; # downloads as pdf by default
+mangal config set -k installer.user -v &quot;luevano&quot; # points to my scrapers repository which contains a few extra scrapers and fixes, defaults to metafates' one; this is important if you're using my fork, don't use otherwise as it uses extra stuff I added
+mangal config set -k logs.write -v true # I like to get logs for what happens
+</code></pre>
+<p>For more configs and to read what they&rsquo;re for:</p>
+<pre><code class="language-sh">mangal config info
+</code></pre>
+<p>Also install the custom Lua scrapers by running:</p>
+<pre><code class="language-sh">mangal sources install
+</code></pre>
+<p>And install whatever you want, it picks up the sources/scrapers from the configured repository (<code>installer.&lt;key&gt;</code> config), if you followed, it will show my scrapers.</p>
+<h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
+<p>Two main ways of using <code>mangal</code>: </p>
+<ul>
+<li>TUI: for initial browsing/downloading and testing things out. If the manga finished publishing, this should be enough.</li>
+<li>inline: for automation on manga that is still publishing and I need to check/download every once in a while.</li>
+</ul>
+<h4 id="headless-browser">Headless browser<a class="headerlink" href="#headless-browser" title="Permanent link">&para;</a></h4>
+<p>Before continuing, I gotta say I went through some bullshit while trying to use the custom Lua scrapers that use the <em>headless</em> browser (actually just a wrapper of <a href="https://github.com/go-rod/rod">go-rod/rod</a>, and honestly it is not really a &ldquo;headless&rdquo; browser, <code>mangal</code> &ldquo;documentation&rdquo; is just wrong). For mor on my rant check out my last <a href="https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html">entry</a>.</p>
+<p>There is no concrete documentation on the &ldquo;headless&rdquo; browser, only that it is automatically set up and ready to use&hellip; but it doesn&rsquo;t install any library/dependency needed. I discovered the following libraries that were missing on my Arch minimal install:</p>
+<ul>
+<li>library -&gt; arch package containing it</li>
+<li>libnss3.so -&gt; nss</li>
+<li>libatk-1.0.so.0 -&gt; at-spi2-core</li>
+<li>libcups.so.2 -&gt; libcups</li>
+<li>libdrm.so.2 -&gt; libdrm</li>
+<li>libXcomposite.so.1 -&gt; libxcomposite</li>
+<li>libXdamage.so.1 -&gt; libxdamage</li>
+<li>libXrandr.so.2 -&gt; libxrandr</li>
+<li>libgbm.so.1 -&gt; mesa</li>
+<li>libxkbcommon.so.0 -&gt; libxkbcommon</li>
+<li>libpango-1.0.so.0 -&gt; pango</li>
+<li>libasound.so.2 -&gt; alsa-lib</li>
+</ul>
+<p>To install them::</p>
+<pre><code class="language-sh">pacman -S nss at-spi2-core libcups libdrm libxcomposite libxdamage libxrandr mesa libxkbcommon pango alsa-lib
+</code></pre>
+<p>I can&rsquo;t guarantee that those are all the packages needed, those are the ones I happen to discover (had to <a href="https://github.com/luevano/mangal-lua-libs">fork</a> the lua libs and add some logging because the error message was too fucking generic).</p>
+<p>These dependencies are probably met by installing either <code>chromedriver</code> or <code>google-chrome</code> from the AUR (for what I could see on the package dependencies).</p>
+<h4 id="tui">TUI<a class="headerlink" href="#tui" title="Permanent link">&para;</a></h4>
+<p>Use the TUI by running</p>
+<pre><code class="language-sh">mangal
+</code></pre>
+<p>Download manga using the TUI by selecting the source/scrapper, search the manga/comic you want and then you can select each chapter to download (use <code>tab</code> to select all). This is what I use when downloading manga that already finished publishing, or when I&rsquo;m just searching and testing out how it downloads the manga (directory name, and manga information).</p>
+<p>Note that some scrapters will contain duplicated chapters, as they have uploaded chapters from the community. This happens a lot with <a href="https://mangadex.org/">MangaDex</a>.</p>
+<h4 id="inline">Inline<a class="headerlink" href="#inline" title="Permanent link">&para;</a></h4>
+<p>The inline mode is a single terminal command meant to be used to automate stuff or for more advanced options. You can peek a bit into the &ldquo;<a href="https://github.com/metafates/mangal/wiki/Inline-mode#command-examples">documentation</a>&rdquo; which honestly its ass because it doesn&rsquo;t explain much. The minimal command for inline according to the help is:</p>
+<pre><code class="language-sh">mangal inline --manga &lt;option&gt; --query &lt;manga-title&gt;
+</code></pre>
+<p>But this will not produce anything because it also needs <code>--source</code> (or set the default using the config key <code>downloader.default_sources</code>) and either <code>--json</code> (for the search result) or <code>--download</code> to actually download whatever was found but it could download something you don&rsquo;t want so do the <code>--json</code> first.</p>
+<p>Something not mentioned anywhere is the <code>--manga</code> flag options (found it at the source code), it has 3 available options:</p>
+<ul>
+<li><code>first</code>: first manga entry found for the search.</li>
+<li><code>last</code>: last manga entry found for the search.</li>
+<li><code>exact</code>: exact manga title match. This is the one I use.</li>
+</ul>
+<p>That said, I&rsquo;ll do an example by using <a href="https://mangapill.com">Mangapill</a> as source, and will search for <a href="https://mangapill.com/manga/2285/kimetsu-no-yaiba">Demon Slayer: Kimetsu no Yaiba</a>:</p>
+<ol>
+<li>Search first and make sure my command will pull the manga I want:</li>
+</ol>
+<pre><code class="language-sh">mangal inline --source &quot;Mangapill&quot; --manga &quot;exact&quot; --query &quot;Kimetsu no Yaiba&quot; --json | jq # I use jq to pretty format the output
+</code></pre>
+<ol start="2">
+<li>
+<p>I make sure the json output contains the correct manga information: name, url, etc..</p>
+<ul>
+<li>You can also include the flag <code>--include-anilist-manga</code> to include anilist information (if any) so you can check that the correct anilist id is attached. If the correct one is not attached (and it exists) then you can run the command:</li>
+</ul>
+<p><code>sh
+mangal inline anilist set --name "Kimetsu no Yaiba" --id 101922</code></p>
+<p>Which means that all &ldquo;searches&rdquo; for that <code>--name</code> flag will be attached to that specific anilist ID.
+3. If I&rsquo;m okay with the outputs, then I change <code>--json</code> for <code>--download</code> to actually download:</p>
+</li>
+</ol>
+<pre><code class="language-sh">mangal inline --source &quot;Mangapill&quot; --manga &quot;exact&quot; --query &quot;Kimetsu no Yaiba&quot; --download
+</code></pre>
+<ol start="4">
+<li>Check if the manga is downloaded correctly. I do this by going to my download directory and checking the directory name (I&rsquo;m picky with this stuff), that all chapters where downloaded, that it includes a correct <code>series.json</code> file and it contains a <code>cover.&lt;img-ext&gt;</code>; this usually means it correctly pulled information from anilist and that it will contain metadata Komga will be able to use.</li>
+</ol>
+<h4 id="komga-library">Komga library<a class="headerlink" href="#komga-library" title="Permanent link">&para;</a></h4>
+<p>Now I just check that it is correctly added to Komga by clicking on the 3 dots to the right of the library name and click on &ldquo;Scan library files&rdquo; to refresh if the cron timer hasn&rsquo;t pass by yet.</p>
+<p>Then I check that the metadata is correct (once the manga is fully indexed), such as title, summary, chapter count, language, tags, genre, etc., which honestly it never works fine as <code>mangal</code> creates the <code>series.json</code> with the <code>comicId</code> field with an upper case <code>I</code> and Komga expects it to be a lower case <code>i</code> (<code>comicid</code>) so it falls back to using the info from the first chapter. I&rsquo;ll probably will fix this on <code>mangal</code> side, and see how it goes.</p>
+<p>So, what I do is manually edit the metadata for the manga, by changing whatever it&rsquo;s wrong or add what&rsquo;s missing (I like adding anilist and MyAnimeList links) and then leave it as is.</p>
+<h4 id="automation">Automation<a class="headerlink" href="#automation" title="Permanent link">&para;</a></h4>
+<p>The straight forward approach for automation is just to bundle a bunch of <code>mangal inline</code> commands in a shell script and automate either via <a href="https://wiki.archlinux.org/title/cron">cron</a> or <a href="https://wiki.archlinux.org/title/systemd/Timers">systemd/Timers</a>. But, as always, I overcomplicated/overengineered my approach, which is the following:</p>
+<ol>
+<li>Group manga names per source.</li>
+<li>Have a way to track the changes/updates on each run.</li>
+<li>Use that tracker to know where to start downloading chapters from.<ul>
+<li>This is optional, as you can just do <code>--chapters "all"</code> and it will work. This is mostly to keep the logs/output cleaner/shorter.</li>
+</ul>
+</li>
+<li>Do any configuration needed beforehand.</li>
+<li>Download/update each manga using <code>mangal inline</code>.</li>
+<li>Wrap everything in a <code>systemd</code> service and timer.</li>
+</ol>
+<p>Manga list example:</p>
+<pre><code class="language-sh">mangapill=&quot;Berserk|Chainsaw Man|Dandadan|Jujutsu Kaisen|etc...&quot;
+</code></pre>
+<p>Bash function that handles the download per manga in the list:</p>
+<pre><code class="language-sh">mangal_src_dl () {
+    source_name=$1
+    manga_list=$(echo &quot;$2&quot; | tr '|' '\n')
+
+    while IFS= read -r line; do
+        # By default download all chapters
+        chapters=&quot;all&quot;
+        last_chapter_n=$(grep -e &quot;$line&quot; &quot;$TRACKER_FILE&quot; | cut -d'|' -f2 | grep -v -e '^$' | tail -n 1)
+        if [ -n &quot;${last_chapter_n}&quot; ]; then
+            chapters=&quot;$last_chapter_n-9999&quot;
+            echo &quot;Downloading [${last_chapter_n}-] chapters for $line from $source_name...&quot;
+        else
+            echo &quot;Downloading all chapters for $line from $source_name...&quot;
+        fi
+        dl_output=$(mangal inline -S &quot;$source_name&quot; -q &quot;$line&quot; -m &quot;exact&quot; -F &quot;$DOWNLOAD_FORMAT&quot; -c &quot;$chapters&quot; -d)
+
+        if [ $? -ne 0 ]; then
+            echo &quot;Failed to download chapters for $line.&quot;
+            continue
+        fi
+
+        line_count=$(echo &quot;$dl_output&quot; | grep -v -e '^$' | wc -l)
+        if [ $line_count -gt 0 ]; then
+            echo &quot;Downloaded $line_count chapters for $line:&quot;
+            echo &quot;$dl_output&quot;
+            new_last_chapter_n=$(echo &quot;$dl_output&quot; | tail -n 1 | cut -d'[' -f2 | cut -d']' -f1)
+            # manga_name|last_chapter_number|downloaded_chapters_on_this_update|manga_source
+            echo &quot;$line|$new_last_chapter_n|$line_count|$source_name&quot; &gt;&gt; $TRACKER_FILE
+        else
+            echo &quot;No new chapters for $line.&quot;
+        fi
+    done &lt;&lt;&lt; &quot;$manga_list&quot;
+}
+</code></pre>
+<p>Where <code>$TRACKER_FILE</code> is just a variable holding a path to some file where you can store the tracking and <code>$DOWNLOAD_FORMAT</code> the format for the mangas, for me it&rsquo;s <code>cbz</code>. Then the usage would be something like <code>mangal_src_dl "Mangapill" "$mangapill"</code>, meaning that it is a function call per source.</p>
+<p>The tracker file would have a format like follows:</p>
+<pre><code># Updated: 06/10/23 10:53:15 AM CST
+Berserk|0392|392|Mangapill
+Dandadan|0110|110|Mangapill
+...
+</code></pre>
+<p>And note that if you already had manga downloaded and you run the script for the first time, then it will show as if it downloaded everything from the first chapter, but that&rsquo;s just how <code>mangal</code> works, it will actually just discover downloaded chapters and only download anything missing.</p>
+<p>Any configuration the downloader/updater might need needs to be done before the <code>mangal_src_dl</code> calls. I like to configure mangal for download path, format, etc.. To clear the <code>mangal</code> cache and <code>rod</code> browser (headless browser used in some custom sources) as well as set up any anilist bindings. An example of an anilist binding I had to do is for Mushoku Tensei, as it has both a light novel and manga version, both having different information, for me it was <code>mangal inline anilist set --name "Mushoku Tensei - Isekai Ittara Honki Dasu" --id 85564</code>.</p>
+<p>Finally is just a matter of using your prefered way of scheduling, I&rsquo;ll use <code>systemd/Timers</code> but anything is fine. You could make the downloader script more sophisticated and only running every week on which each manga gets released usually, but that&rsquo;s too much work, so I&rsquo;ll just run it once daily probably, or 2-3 times daily.</p>
+<h3 id="alternative-downloaders">Alternative downloaders<a class="headerlink" href="#alternative-downloaders" title="Permanent link">&para;</a></h3>
+<p>Just for the record, here is a list of downloaders/scrapers I considered before starting to use <code>mangal</code>:</p>
+<ul>
+<li><a href="https://github.com/oae/kaizoku">kaizoku</a>: NodeJS web server that uses <code>mangal</code> for its &ldquo;backend&rdquo; and honestly since I liked <code>mangal</code> so much I should use it, the only reason I don&rsquo;t is because I&rsquo;m a bitch and I don&rsquo;t want to use a D*ck*r image and NodeJS (ew) (in general is pretty bloated in my opinion). If I get tired of my solution with pure <code>mangal</code> I might as well just migrate to it as It&rsquo;s a more automatic solution.</li>
+<li><a href="https://github.com/manga-py/manga-py">manga-py</a>: Python CLI application that&rsquo;s a really good option as far as I&rsquo;ve explored it, I&rsquo;m just not using it yet as <code>mangal</code> has been really smooth and has everything I need, but will definitely explore it in the future if I need to. The cool thing out of the box is the amount of sources it can scrape from (somethign lacking from <code>mangal</code>).</li>
+<li><a href="https://github.com/mylar3/mylar3">mylar3</a>: Python web server that should be the easier way to download manga with once correctly set up, but I guess I&rsquo;m too dumb and don&rsquo;t know how to configure it. Looks like you need to have access to specific private torrent trackers or whatever the other ways to download are, I just couldn&rsquo;t figure out how to set it up and for public torrent stuff everything will be all over the place, so this was no option for me at the end.</li>
+</ul>
+<p>Others:</p>
+<ul>
+<li><a href="https://hakuneko.download/">HakuNeku</a>: It looks pretty easy to use and future rich, only thing is that it&rsquo;s not designed for headless servers, just a normal app. So this is also not an option for me. You could use it on your computer and <code>rsync</code> to your server or use some other means to upload to your server (a <em>nono</em> for me).</li>
+<li><a href="https://github.com/riderkick/FMD">FMD</a>: No fucking idea on how to use it and it&rsquo;s not been updated since 2019, just listing it here as an option if it interests you.</li>
+</ul>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/updating_creating_entries_titles_to_setup.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Sat, Jun 10, 2023 @ 19:36 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+<span>
+  <i class="fas fa-address-card" alt="Contact"></i>
+  <a href="https://blog.luevano.xyz/contact.html">Contact</a>
+</span>
+
+<span>
+  <i class="fas fa-donate" alt="Donate"></i>
+  <a href="https://blog.luevano.xyz/donate.html">Donate</a>
+</span>
+
+<span>
+  <i class="fas fa-rss" alt="RSS"></i>
+  <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+</span>
+
+<br>
+<span class="created-with">
+  <i class="fas fa-hammer" alt="Hammer"></i>
+  Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+</span>
+
+<br>
+<span class="copyright">
+  Copyright <i class="far fa-copyright" alt="Copyright"></i> 2023 David Luévano Alvarado
+</span>
+
+    </footer>
+  </body>
+</html>
