@@ -75,7 +75,7 @@ This `komga` package creates a `komga` (service) user and group which is tied to
 
 Configure it by editing `/etc/komga.conf`:
 
-```conf
+```sh
 SERVER_PORT=8989
 SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
 
@@ -94,12 +94,12 @@ KOMGA_DATABASE_BACKUP_SCHEDULE="0 0 */8 * * ?"
 My changes (shown above):
 
 - Port on `8989` because `8080` its too generic.
-- `cron` schedules
+- `cron` schedules.
     - It's not actually `cron` but rather a `cron`-like syntax used by [Spring](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html) as stated in the [Komga config](https://komga.org/installation/configuration.html#optional-configuration).
 - Added the remember me key.
 - For more check out [Komga: Configuration options](https://komga.org/installation/configuration.html).
 
-If you're going to run it locally (or LAN/VPN) you can start the `komga.service` and access it via IP at `http://<your-server-ip>:<port>(/base_url)` as stated at [Komga: Accessing the web interface](https://komga.org/installation/webui.html), else continue with the next steps for the reverse proxy and certificate.
+If you're going to run it locally (or LAN/VPN) you can start the `komga.service` and access it via IP at `http://<your-server-ip>:<port>(/base_url)` as stated at [Komga: Accessing the web interface](https://komga.org/installation/webui.html), then you can continue with the [mangal](#mangal) section, else continue with the next steps for the reverse proxy and certificate.
 
 ## Reverse proxy
 
@@ -124,7 +124,7 @@ server {
 }
 ```
 
-If it's going to be used as a subdir on another domain then just change the `location` (with `/subdir` instead of `/`) directive to the corresponding `.conf` file; be careful with the `proxy_pass` directive, it has to match what you configured at `/etc/komga.conf` for the `SERVER_SERVLET_CONTEXT_PATH` regardless of the `/subdir` you selected at `location`.
+If it's going to be used as a subdir on another domain then just change the `location` with `/subdir` instead of `/`; be careful with the `proxy_pass` directive, it has to match what you configured at `/etc/komga.conf` for the `SERVER_SERVLET_CONTEXT_PATH` regardless of the `/subdir` you selected at `location`.
 
 ## SSL certificate
 
@@ -222,7 +222,7 @@ So instad of installing with `yay` we'll build it from source. We need to have `
 pacman -S go
 ```
 
-Then clone my fork of `mangal` and build/install it:
+Then clone my fork of `mangal` and `build`/`install` it:
 
 ```sh
 git clone https://github.com/luevano/mangal.git # not sure if you can use SSH to clone
@@ -230,7 +230,7 @@ cd mangal
 make install # or just `make build` and then move the binary to somewhere in your $PATH
 ```
 
-This will use `go install` so it will install to a path specified by your environment variables, for more run `go help install`. It was installed to `$HOME/.local/bin/go/mangal` for me, then just make sure this is included in your PATH.
+This will use `go install` so it will install to a path specified by the `go` environment variables, for more run `go help install`. It was installed to `$HOME/.local/bin/go/mangal` for me because my env vars, then just make sure this is included in your `PATH`.
 
 Check it was correctly installed by running `mangal version`, which should print something like:
 
@@ -275,12 +275,12 @@ And install whatever you want, it picks up the sources/scrapers from the configu
 
 Two main ways of using `mangal`: 
 
-- TUI: for initial browsing/downloading and testing things out. If the manga finished publishing, this should be enough.
-- inline: for automation on manga that is still publishing and I need to check/download every once in a while.
+- **TUI**: for initial browsing/downloading and testing things out. If the manga finished publishing, this should be enough.
+- **inline**: for automation on manga that is still publishing and I need to check/download every once in a while.
 
 ### Headless browser
 
-Before continuing, I gotta say I went through some bullshit while trying to use the custom Lua scrapers that use the *headless* browser (actually just a wrapper of [go-rod/rod](https://github.com/go-rod/rod), and honestly it is not really a "headless" browser, `mangal` "documentation" is just wrong). For mor on my rant check out my last [entry](https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html).
+Before continuing, I gotta say I went through some bullshit while trying to use the custom Lua scrapers that use the *headless* browser (actually just a wrapper of [go-rod/rod](https://github.com/go-rod/rod), and honestly it is not really a "headless" browser, `mangal` "documentation" is just wrong). For more on my rant check out my last [entry](https://blog.luevano.xyz/a/learned_go_and_lua_hard_way.html).
 
 There is no concrete documentation on the "headless" browser, only that it is automatically set up and ready to use... but it doesn't install any library/dependency needed. I discovered the following libraries that were missing on my Arch minimal install:
 
@@ -317,7 +317,7 @@ mangal
 
 Download manga using the TUI by selecting the source/scrapper, search the manga/comic you want and then you can select each chapter to download (use `tab` to select all). This is what I use when downloading manga that already finished publishing, or when I'm just searching and testing out how it downloads the manga (directory name, and manga information).
 
-Note that some scrapters will contain duplicated chapters, as they have uploaded chapters from the community. This happens a lot with [MangaDex](https://mangadex.org/).
+Note that some scrapters will contain duplicated chapters, as they have multiple uploaded chapters from the community, usually for different *scanlation groups*. This happens a lot with [MangaDex](https://mangadex.org/).
 
 ### Inline
 
@@ -327,13 +327,23 @@ The inline mode is a single terminal command meant to be used to automate stuff 
 mangal inline --manga <option> --query <manga-title>
 ```
 
-But this will not produce anything because it also needs `--source` (or set the default using the config key `downloader.default_sources`) and either `--json` (for the search result) or `--download` to actually download whatever was found but it could download something you don't want so do the `--json` first.
+But this will not produce anything because it also needs `--source` (or set the default using the config key `downloader.default_sources`) and either `--json` which basically just does the search and returns the result in `json` format or `--download` to actually download whatever is found; I recommend to do `--json` first to check that the correct manga will be downloaded then do `--download`.
 
 Something not mentioned anywhere is the `--manga` flag options (found it at the source code), it has 3 available options:
 
 - `first`: first manga entry found for the search.
 - `last`: last manga entry found for the search.
 - `exact`: exact manga title match. This is the one I use.
+
+Similar to `--chapters`, there are a few options not explained (that I found at the source code, too). I usually just use `all` but other options:
+
+- `all`: all chapters found in the chapter list.
+- `first`: first chapter found in the chapter list.
+- `last`: last chapter found in the chapter list
+- `[from]-[to]`: selector for the chapters found in the chapter list, index starts at 0.
+    - If the selectors (`from` or `to`) exceed the amount of chapters in the chapterlist it just adjusts to he maximum available.
+    - I had to fix this at the source code because if you wanted `to` to be the last chapter, it did `to + 1` and it failed due to index out of range.
+- `@[sub]@`: not sure how this works exactly, my understanding is that it's for "named" chapters.
 
 That said, I'll do an example by using [Mangapill](https://mangapill.com) as source, and will search for [Demon Slayer: Kimetsu no Yaiba](https://mangapill.com/manga/2285/kimetsu-no-yaiba):
 
@@ -344,13 +354,15 @@ mangal inline --source "Mangapill" --manga "exact" --query "Kimetsu no Yaiba" --
 ```
 
 2. I make sure the json output contains the correct manga information: name, url, etc..
-    - You can also include the flag `--include-anilist-manga` to include anilist information (if any) so you can check that the correct anilist id is attached. If the correct one is not attached (and it exists) then you can run the command:
 
-    ```sh
-    mangal inline anilist set --name "Kimetsu no Yaiba" --id 101922
-    ```
+- You can also include the flag `--include-anilist-manga` to include anilist information (if any) so you can check that the correct anilist id is attached. If the correct one is not attached (and it exists) then you can run the command:
 
-    Which means that all "searches" for that `--name` flag will be attached to that specific anilist ID.
+```sh
+mangal inline anilist set --name "Kimetsu no Yaiba" --id 101922
+```
+
+Which means that all "searches" for that `--name` flag will be attached to that specific anilist ID.
+
 3. If I'm okay with the outputs, then I change `--json` for `--download` to actually download:
 
 ```sh
@@ -361,7 +373,7 @@ mangal inline --source "Mangapill" --manga "exact" --query "Kimetsu no Yaiba" --
 
 ### Komga library
 
-Now I just check that it is correctly added to Komga by clicking on the 3 dots to the right of the library name and click on "Scan library files" to refresh if the cron timer hasn't pass by yet.
+Now I just check that it is correctly added to Komga by clicking on the 3 dots to the right of the library name and click on "Scan library files" to refresh if the cron timer hasn't activated this yet.
 
 Then I check that the metadata is correct (once the manga is fully indexed), such as title, summary, chapter count, language, tags, genre, etc., which honestly it never works fine as `mangal` creates the `series.json` with the `comicId` field with an upper case `I` and Komga expects it to be a lower case `i` (`comicid`) so it falls back to using the info from the first chapter. I'll probably will fix this on `mangal` side, and see how it goes.
 
@@ -369,15 +381,15 @@ So, what I do is manually edit the metadata for the manga, by changing whatever 
 
 ### Automation
 
-The straight forward approach for automation is just to bundle a bunch of `mangal inline` commands in a shell script and automate either via [cron](https://wiki.archlinux.org/title/cron) or [systemd/Timers](https://wiki.archlinux.org/title/systemd/Timers). But, as always, I overcomplicated/overengineered my approach, which is the following:
+The straight forward approach for automation is just to bundle a bunch of `mangal inline` commands in a shell script and schedule it's execution either via [cron](https://wiki.archlinux.org/title/cron) or [systemd/Timers](https://wiki.archlinux.org/title/systemd/Timers). But, as always, I overcomplicated/overengineered my approach, which is the following:
 
 1. Group manga names per source.
-2. Have a way to track the changes/updates on each run.
-3. Use that tracker to know where to start downloading chapters from.
-    - This is optional, as you can just do `--chapters "all"` and it will work. This is mostly to keep the logs/output cleaner/shorter.
-4. Do any configuration needed beforehand.
+2. Configure anything that should always be set before executing `mangal`, this includes anilist bindings.
+3. Have a way to track the changes/updates on each run.
+4. Use that tracker to know where to start downloading chapters from.
+    - This is optional, as you can just do `--chapters "all"` and it will work but I do it mostly to keep the logs/output cleaner/shorter.
 5. Download/update each manga using `mangal inline`.
-6. Wrap everything in a `systemd` service and timer.
+6. Wrap everything in a `systemd` `service` and `timer`.
 
 Manga list example:
 
@@ -385,7 +397,7 @@ Manga list example:
 mangapill="Berserk|Chainsaw Man|Dandadan|Jujutsu Kaisen|etc..."
 ```
 
-Bash function that handles the download per manga in the list:
+Function that handles the download per manga in the list:
 
 ```sh
 mangal_src_dl () {
@@ -425,6 +437,25 @@ mangal_src_dl () {
 
 Where `$TRACKER_FILE` is just a variable holding a path to some file where you can store the tracking and `$DOWNLOAD_FORMAT` the format for the mangas, for me it's `cbz`. Then the usage would be something like `mangal_src_dl "Mangapill" "$mangapill"`, meaning that it is a function call per source.
 
+A simpler function without "tracking" would be:
+
+```sh
+mangal_src_dl () {
+    source_name=$1
+    manga_list=$(echo "$2" | tr '|' '\n')
+
+    while IFS= read -r line; do
+        echo "Downloading all chapters for $line from $source_name..."
+        mangal inline -S "$source_name" -q "$line" -m "exact" -F "$DOWNLOAD_FORMAT" -c "all" -d
+        if [ $? -ne 0 ]; then
+            echo "Failed to download chapters for $line."
+            continue
+        fi
+        echo "Finished downloading chapters for $line."
+    done <<< "$manga_list"
+}
+```
+
 The tracker file would have a format like follows:
 
 ```
@@ -436,9 +467,17 @@ Dandadan|0110|110|Mangapill
 
 And note that if you already had manga downloaded and you run the script for the first time, then it will show as if it downloaded everything from the first chapter, but that's just how `mangal` works, it will actually just discover downloaded chapters and only download anything missing.
 
-Any configuration the downloader/updater might need needs to be done before the `mangal_src_dl` calls. I like to configure mangal for download path, format, etc.. To clear the `mangal` cache and `rod` browser (headless browser used in some custom sources) as well as set up any anilist bindings. An example of an anilist binding I had to do is for Mushoku Tensei, as it has both a light novel and manga version, both having different information, for me it was `mangal inline anilist set --name "Mushoku Tensei - Isekai Ittara Honki Dasu" --id 85564`.
+Any configuration the downloader/updater might need needs to be done before the `mangal_src_dl` calls. I like to configure mangal for download path, format, etc.. I found that it is needed to clear the `mangal` and `rod` browser cache (headless browser used in some custom sources) from personal experience and from others: [mangal#170](https://github.com/metafates/mangal/issues/170) and [kaizoku#89](https://github.com/oae/kaizoku/issues/89).
 
-Finally is just a matter of using your prefered way of scheduling, I'll use `systemd/Timers` but anything is fine. You could make the downloader script more sophisticated and only running every week on which each manga gets released usually, but that's too much work, so I'll just run it once daily probably, or 2-3 times daily.
+Also you should set any anilist binding necessary for the downloading (as the cache was cleared). An example of an anilist binding I had to do is for Mushoku Tensei, as it has both a [light novel](https://anilist.co/manga/85470/Mushoku-Tensei-Jobless-Reincarnation/) and [manga](https://anilist.co/manga/85564/Mushoku-Tensei-Jobless-Reincarnation/) version, which for me it's the following binding:
+
+```sh
+mangal inline anilist set --name "Mushoku Tensei - Isekai Ittara Honki Dasu" --id 85564
+```
+
+Finally is just a matter of using your prefered way of scheduling, I'll use `systemd/Timers` but anything is fine. You could make the downloader script more sophisticated and only running every week on which each manga gets (usually) released but that's too much work; I'll just run it once daily probably.
+
+A feature I want to add and probably will is sending notifications (probably through email) on a summary for manga downloaded or failed to download so I'm on top of the updates. For now this is good enough and it's been working so far.
 
 ## Alternative downloaders
 
