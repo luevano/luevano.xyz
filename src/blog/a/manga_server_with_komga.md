@@ -118,7 +118,7 @@ mangal config set -k installer.user -v "luevano" # points to my scrapers reposit
 mangal config set -k logs.write -v true # I like to get logs for what happens
 ```
 
-**Note**: For testing purposes (if you want to explore `mangal`) set `downloader.path` later, then set it to where you want once ready to start to populate the Komga library directory (could be after finishing the [Komga](#komga) section).
+**Note**: For testing purposes (if you want to explore `mangal`) set `downloader.path` once you're ready to start to populate the Komga library directory (at [Komga: populate manga library](#populate-manga-library)).
 
 For more configs and to read what they're for:
 
