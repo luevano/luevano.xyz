@@ -41,19 +41,9 @@
 <ul>
 <li><a href="#table-of-contents">Table of contents</a></li>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#aur-yay">AUR - yay</a><ul>
+<li><a href="#yay">yay</a><ul>
 <li><a href="#install">Install</a></li>
 <li><a href="#usage">Usage</a></li>
-</ul>
-</li>
-<li><a href="#komga">Komga</a><ul>
-<li><a href="#reverse-proxy">Reverse proxy</a></li>
-<li><a href="#ssl-certificate">SSL certificate</a></li>
-<li><a href="#starting-using-komga">Starting using Komga</a></li>
-<li><a href="#library-creation">Library creation</a><ul>
-<li><a href="#set-default-directory-permissions">Set default directory permissions</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li><a href="#mangal">mangal</a><ul>
@@ -63,13 +53,23 @@
 <li><a href="#headless-browser">Headless browser</a></li>
 <li><a href="#tui">TUI</a></li>
 <li><a href="#inline">Inline</a></li>
-<li><a href="#komga-library">Komga library</a></li>
 <li><a href="#automation">Automation</a></li>
 </ul>
 </li>
-<li><a href="#alternative-downloaders">Alternative downloaders</a></li>
 </ul>
 </li>
+<li><a href="#komga">Komga</a><ul>
+<li><a href="#reverse-proxy">Reverse proxy</a></li>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+<li><a href="#starting-using-komga">Starting using Komga</a></li>
+<li><a href="#library-creation">Library creation</a><ul>
+<li><a href="#set-default-directory-permissions">Set default directory permissions</a></li>
+<li><a href="#populate-manga-library">Populate manga library</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#alternative-downloaders">Alternative downloaders</a></li>
 </ul>
 </div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
@@ -78,7 +78,7 @@
 <li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>komga</code> (or whatever you want).</li>
 <li>An SSL certificate, if you&rsquo;re following the other entries (specially the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> entry), add a <code>komga.conf</code> and run <code>certbot --nginx</code> (or similar) to extend/create the certificate. More details below: <a href="#reverse-proxy">Reverse proxy</a> and <a href="#ssl-certificate">SSL certificate</a>.</li>
 </ul>
-<h2 id="aur-yay">AUR - yay<a class="headerlink" href="#aur-yay" title="Permanent link">&para;</a></h2>
+<h2 id="yay">yay<a class="headerlink" href="#yay" title="Permanent link">&para;</a></h2>
 <p>This is the first time I mention the <strong>AUR</strong> (and <code>yay</code>) in my entries, so I might as well just write a bit about it.</p>
 <p>The <a href="https://aur.archlinux.org/">AUR</a> is the <strong>A</strong>rch Linux <strong>U</strong>ser <strong>R</strong>epository and it&rsquo;s basically like an extension of the official one which is supported by the community, the only thing is that it requires a different package manager. The one I use (and I think everyone does, too) is <code>yay</code>, which as far as I know is like a wrapper of <code>pacman</code>.</p>
 <h3 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h3>
@@ -98,105 +98,9 @@ sudo rm -r yay
 <p>To install a package (for example Komga in this blog entry), run:</p>
 <pre><code class="language-sh">yay -S komga
 </code></pre>
-<h2 id="komga">Komga<a class="headerlink" href="#komga" title="Permanent link">&para;</a></h2>
-<p><a href="https://komga.org/">Komga</a> is a comics/mangas media server.</p>
-<p>Install from the AUR:</p>
-<pre><code class="language-sh">yay -S komga
-</code></pre>
-<p>This <code>komga</code> package creates a <code>komga</code> (service) user and group which is tied to the also included <code>komga.service</code>.</p>
-<p>Configure it by editing <code>/etc/komga.conf</code>:</p>
-<pre><code class="language-sh">SERVER_PORT=8989
-SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
-
-KOMGA_LIBRARIES_SCAN_CRON=&quot;0 0 * * * ?&quot;
-KOMGA_LIBRARIES_SCAN_STARTUP=false
-KOMGA_LIBRARIES_SCAN_DIRECTORY_EXCLUSIONS='#recycle,@eaDir,@Recycle'
-KOMGA_FILESYSTEM_SCANNER_FORCE_DIRECTORY_MODIFIED_TIME=false
-KOMGA_REMEMBERME_KEY=USE-WHATEVER-YOU-WANT-HERE
-KOMGA_REMEMBERME_VALIDITY=2419200
-
-KOMGA_DATABASE_BACKUP_ENABLED=true
-KOMGA_DATABASE_BACKUP_STARTUP=true
-KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
-</code></pre>
-<p>My changes (shown above):</p>
-<ul>
-<li>Port on <code>8989</code> because <code>8080</code> its too generic.</li>
-<li><code>cron</code> schedules.<ul>
-<li>It&rsquo;s not actually <code>cron</code> but rather a <code>cron</code>-like syntax used by <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html">Spring</a> as stated in the <a href="https://komga.org/installation/configuration.html#optional-configuration">Komga config</a>.</li>
-</ul>
-</li>
-<li>Added the remember me key.</li>
-<li>For more check out <a href="https://komga.org/installation/configuration.html">Komga: Configuration options</a>.</li>
-</ul>
-<p>If you&rsquo;re going to run it locally (or LAN/VPN) you can start the <code>komga.service</code> and access it via IP at <code>http://&lt;your-server-ip&gt;:&lt;port&gt;(/base_url)</code> as stated at <a href="https://komga.org/installation/webui.html">Komga: Accessing the web interface</a>, then you can continue with the <a href="#mangal">mangal</a> section, else continue with the next steps for the reverse proxy and certificate.</p>
-<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
-<p>Create the reverse proxy configuration (this is for <code>nginx</code>). In my case I&rsquo;ll use a subdomain, so this is a new config called <code>komga.conf</code> at the usual <code>sites-available/enabled</code> path:</p>
-<pre><code class="language-nginx">server {
-    listen 80;
-    server_name komga.yourdomain.com; # change accordingly to your wanted subdomain and domain name
-
-    location / {
-        proxy_pass http://localhost:8989; # change 8989 to the port you want to use
-
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        proxy_read_timeout 600s;
-        proxy_send_timeout 600s;
-    }
-}
-</code></pre>
-<p>If it&rsquo;s going to be used as a subdir on another domain then just change the <code>location</code> with <code>/subdir</code> instead of <code>/</code>; be careful with the <code>proxy_pass</code> directive, it has to match what you configured at <code>/etc/komga.conf</code> for the <code>SERVER_SERVLET_CONTEXT_PATH</code> regardless of the <code>/subdir</code> you selected at <code>location</code>.</p>
-<h3 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h3>
-<p>If using a subdir then the same certificate for the subdomain/domain should work fine and no extra stuff is needed, else if following along me then we can create/extend the certificate by running:</p>
-<pre><code class="language-sh">certbot --nginx
-</code></pre>
-<p>That will automatically detect the new subdomain config and create/extend your existing certificate(s). In my case I manage each certificate&rsquo;s subdomain:</p>
-<pre><code class="language-sh">certbot --nginx -d domainname.com -d subdomain.domainname.com -d komga.domainname.com
-</code></pre>
-<h3 id="starting-using-komga">Starting using Komga<a class="headerlink" href="#starting-using-komga" title="Permanent link">&para;</a></h3>
-<p>We can now <code>start</code>/<code>enable</code> the <code>komga.service</code>:</p>
-<pre><code class="language-sh">systemctl enable komga.service
-systemctl start komga.service
-</code></pre>
-<p>And access the web interface at <code>https://komga.domainname.com</code> which should show the login page for Komga. The first time it will ask to create an account as shown in <a href="https://komga.org/installation/webui.html#create-user-account">Komga: Create user account</a>, this will be an admin account. Fill in the email and password (can be changed later). The email doesn&rsquo;t have to be an actual email, for now it&rsquo;s just for management purposes.</p>
-<p>Next thing would be to add any extra account (for read-only/download manga permissions), add/import libraries, etc.. For now I&rsquo;ll leave it here until we start downloading manga on the next steps.</p>
-<h3 id="library-creation">Library creation<a class="headerlink" href="#library-creation" title="Permanent link">&para;</a></h3>
-<p>Creating a library is as simple as creating a directory somewhere and point to it in Komga. The folowing examples are for my use case, change accordingly. I&rsquo;ll be using <code>/mnt/d/mangal</code> for my library:</p>
-<pre><code class="language-sh">mkdir /mnt/d/mangal
-</code></pre>
-<p>Where I chose the name <code>mangal</code> as its the name of the downloader/scrapper I&rsquo;m going to use, it could be anything, this is just how I like to organize stuff.</p>
-<p>For the most part, the permissions don&rsquo;t matter much (as long as it&rsquo;s readable by the <code>komga</code> user) unless you want to delete some manga, then <code>komga</code> user also needs write permissions.</p>
-<p>Then just create the library in Komga web interface (the <code>+</code> sign next to <em>Libraries</em>), choose a name <em>&ldquo;Mangal&rdquo;</em> and point to the root folder <code>/mnt/d/mangal</code>, then just click <em>Next</em>, <em>Next</em> and <em>Add</em> for the defaults (that&rsquo;s how I&rsquo;ve been using it so far). This is well explained at <a href="https://komga.org/guides/libraries.html">Komga: Libraries</a>.</p>
-<p>The real important part (for me) is the permissions of the <code>/mnt/d/mangal</code> directory, as I want to have write access for <code>komga</code> so I can manage from the web interface itself. It looks like it&rsquo;s just a matter of giving ownership to the <code>komga</code> user either for owner or for group (or to all for that matter), but since I&rsquo;m going to use a separate user to download manga then I need to choose carefully.</p>
-<h4 id="set-default-directory-permissions">Set default directory permissions<a class="headerlink" href="#set-default-directory-permissions" title="Permanent link">&para;</a></h4>
-<p>The desired behaviour is: set <code>komga</code> as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. I found out via <a href="https://unix.stackexchange.com/a/1315">this</a> stack exchange answer how to do it. So, for me:</p>
-<pre><code class="language-sh">chown manga-dl:komga /mnt/d/mangal # required for group ownership for komga
-chmod g+s /mnt/d/mangal # required for group permission inheritance
-setfacl -d -m g::rwx /mnt/d/mangal # default permissions for group
-setfacl -d -m o::rx /mnt/d/mangal # default permissions for other (as normal, I think this command can be excluded)
-</code></pre>
-<p>Where <code>manga-dl</code> is the user I created to download manga with. Optionally add <code>-R</code> flag to those 4 commands in case it already has subdirectories/files (this might mess file permissions, but it&rsquo;s not an issue as far as I konw).</p>
-<p>Checking that the permissions are set correctly (<code>getfacl /mnt/d/mangal</code>):</p>
-<pre><code>getfacl: Removing leading '/' from absolute path names
-# file: mnt/d/mangal
-# owner: manga-dl
-# group: komga
-# flags: -s-
-user::rwx
-group::rwx
-other::r-x
-default:user::rwx
-default:group::rwx
-default:other::r-x
-</code></pre>
-<p>You can then check by creating a new subdirectory (in <code>/mnt/d/mangal</code>) and it should have the same group permissions.</p>
 <h2 id="mangal">mangal<a class="headerlink" href="#mangal" title="Permanent link">&para;</a></h2>
-<p><a href="https://github.com/metafates/mangal">mangal</a> is a cli/tui manga downloader with anilist integration and custom Lua scrapers.</p>
-<p>Similar to Komga, you could install it from the AUR with <code>yay</code>:</p>
+<p><a href="https://github.com/metafates/mangal">mangal</a> is a CLI/TUI manga downloader with anilist integration and custom Lua scrapers.</p>
+<p>You could install it from the AUR with <code>yay</code>:</p>
 <pre><code class="language-sh">yay -S mangal-bin
 </code></pre>
 <p>But I&rsquo;ll use my <a href="https://github.com/luevano/mangal">fork</a> as it contains some fixes and extra stuff.</p>
@@ -205,7 +109,7 @@ default:other::r-x
 <p>So instad of installing with <code>yay</code> we&rsquo;ll build it from source. We need to have <code>go</code> installed:</p>
 <pre><code class="language-sh">pacman -S go
 </code></pre>
-<p>Then clone my fork of <code>mangal</code> and <code>build</code>/<code>install</code> it:</p>
+<p>Then clone my fork of <code>mangal</code> and <code>install</code> it:</p>
 <pre><code class="language-sh">git clone https://github.com/luevano/mangal.git # not sure if you can use SSH to clone
 cd mangal
 make install # or just `make build` and then move the binary to somewhere in your $PATH
@@ -228,6 +132,7 @@ mangal config set -k formats.use -v &quot;cbz&quot; # downloads as pdf by defaul
 mangal config set -k installer.user -v &quot;luevano&quot; # points to my scrapers repository which contains a few extra scrapers and fixes, defaults to metafates' one; this is important if you're using my fork, don't use otherwise as it uses extra stuff I added
 mangal config set -k logs.write -v true # I like to get logs for what happens
 </code></pre>
+<p><strong>Note</strong>: For testing purposes (if you want to explore <code>mangal</code>) set <code>downloader.path</code> later, then set it to where you want once ready to start to populate the Komga library directory (could be after finishing the <a href="#komga">Komga</a> section).</p>
 <p>For more configs and to read what they&rsquo;re for:</p>
 <pre><code class="language-sh">mangal config info
 </code></pre>
@@ -270,7 +175,7 @@ mangal config set -k logs.write -v true # I like to get logs for what happens
 <p>Download manga using the TUI by selecting the source/scrapper, search the manga/comic you want and then you can select each chapter to download (use <code>tab</code> to select all). This is what I use when downloading manga that already finished publishing, or when I&rsquo;m just searching and testing out how it downloads the manga (directory name, and manga information).</p>
 <p>Note that some scrapters will contain duplicated chapters, as they have multiple uploaded chapters from the community, usually for different <em>scanlation groups</em>. This happens a lot with <a href="https://mangadex.org/">MangaDex</a>.</p>
 <h4 id="inline">Inline<a class="headerlink" href="#inline" title="Permanent link">&para;</a></h4>
-<p>The inline mode is a single terminal command meant to be used to automate stuff or for more advanced options. You can peek a bit into the &ldquo;<a href="https://github.com/metafates/mangal/wiki/Inline-mode#command-examples">documentation</a>&rdquo; which honestly its ass because it doesn&rsquo;t explain much. The minimal command for inline according to the help is:</p>
+<p>The inline mode is a single terminal command meant to be used to automate stuff or for more advanced options. You can peek a bit into the &ldquo;<a href="https://github.com/metafates/mangal/wiki/Inline-mode#command-examples">documentation</a>&rdquo; which honestly it&rsquo;s ass because it doesn&rsquo;t explain much. The minimal command for inline according to the <code>mangal help</code> is:</p>
 <pre><code class="language-sh">mangal inline --manga &lt;option&gt; --query &lt;manga-title&gt;
 </code></pre>
 <p>But this will not produce anything because it also needs <code>--source</code> (or set the default using the config key <code>downloader.default_sources</code>) and either <code>--json</code> which basically just does the search and returns the result in <code>json</code> format or <code>--download</code> to actually download whatever is found; I recommend to do <code>--json</code> first to check that the correct manga will be downloaded then do <code>--download</code>.</p>
@@ -302,11 +207,10 @@ mangal config set -k logs.write -v true # I like to get logs for what happens
 <li>I make sure the json output contains the correct manga information: name, url, etc..</li>
 </ol>
 <ul>
-<li>You can also include the flag <code>--include-anilist-manga</code> to include anilist information (if any) so you can check that the correct anilist id is attached. If the correct one is not attached (and it exists) then you can run the command:</li>
+<li>You can also include the flag <code>--include-anilist-manga</code> to include anilist information (if any) so you can check that the correct anilist id is attached. If the correct one is not attached (and it exists) then you can bind the <code>--query</code> (search term) to a specific anilist id by running:</li>
 </ul>
 <pre><code class="language-sh">mangal inline anilist set --name &quot;Kimetsu no Yaiba&quot; --id 101922
 </code></pre>
-<p>Which means that all &ldquo;searches&rdquo; for that <code>--name</code> flag will be attached to that specific anilist ID.</p>
 <ol start="3">
 <li>If I&rsquo;m okay with the outputs, then I change <code>--json</code> for <code>--download</code> to actually download:</li>
 </ol>
@@ -315,10 +219,6 @@ mangal config set -k logs.write -v true # I like to get logs for what happens
 <ol start="4">
 <li>Check if the manga is downloaded correctly. I do this by going to my download directory and checking the directory name (I&rsquo;m picky with this stuff), that all chapters where downloaded, that it includes a correct <code>series.json</code> file and it contains a <code>cover.&lt;img-ext&gt;</code>; this usually means it correctly pulled information from anilist and that it will contain metadata Komga will be able to use.</li>
 </ol>
-<h4 id="komga-library">Komga library<a class="headerlink" href="#komga-library" title="Permanent link">&para;</a></h4>
-<p>Now I just check that it is correctly added to Komga by clicking on the 3 dots to the right of the library name and click on &ldquo;Scan library files&rdquo; to refresh if the cron timer hasn&rsquo;t activated this yet.</p>
-<p>Then I check that the metadata is correct (once the manga is fully indexed), such as title, summary, chapter count, language, tags, genre, etc., which honestly it never works fine as <code>mangal</code> creates the <code>series.json</code> with the <code>comicId</code> field with an upper case <code>I</code> and Komga expects it to be a lower case <code>i</code> (<code>comicid</code>) so it falls back to using the info from the first chapter. I&rsquo;ll probably will fix this on <code>mangal</code> side, and see how it goes.</p>
-<p>So, what I do is manually edit the metadata for the manga, by changing whatever it&rsquo;s wrong or add what&rsquo;s missing (I like adding anilist and MyAnimeList links) and then leave it as is.</p>
 <h4 id="automation">Automation<a class="headerlink" href="#automation" title="Permanent link">&para;</a></h4>
 <p>The straight forward approach for automation is just to bundle a bunch of <code>mangal inline</code> commands in a shell script and schedule it&rsquo;s execution either via <a href="https://wiki.archlinux.org/title/cron">cron</a> or <a href="https://wiki.archlinux.org/title/systemd/Timers">systemd/Timers</a>. But, as always, I overcomplicated/overengineered my approach, which is the following:</p>
 <ol>
@@ -400,7 +300,107 @@ Dandadan|0110|110|Mangapill
 </code></pre>
 <p>Finally is just a matter of using your prefered way of scheduling, I&rsquo;ll use <code>systemd/Timers</code> but anything is fine. You could make the downloader script more sophisticated and only running every week on which each manga gets (usually) released but that&rsquo;s too much work; I&rsquo;ll just run it once daily probably.</p>
 <p>A feature I want to add and probably will is sending notifications (probably through email) on a summary for manga downloaded or failed to download so I&rsquo;m on top of the updates. For now this is good enough and it&rsquo;s been working so far.</p>
-<h3 id="alternative-downloaders">Alternative downloaders<a class="headerlink" href="#alternative-downloaders" title="Permanent link">&para;</a></h3>
+<h2 id="komga">Komga<a class="headerlink" href="#komga" title="Permanent link">&para;</a></h2>
+<p><a href="https://komga.org/">Komga</a> is a comics/mangas media server.</p>
+<p>Install from the AUR:</p>
+<pre><code class="language-sh">yay -S komga
+</code></pre>
+<p>This <code>komga</code> package creates a <code>komga</code> (service) user and group which is tied to the also included <code>komga.service</code>.</p>
+<p>Configure it by editing <code>/etc/komga.conf</code>:</p>
+<pre><code class="language-sh">SERVER_PORT=8989
+SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
+
+KOMGA_LIBRARIES_SCAN_CRON=&quot;0 0 * * * ?&quot;
+KOMGA_LIBRARIES_SCAN_STARTUP=false
+KOMGA_LIBRARIES_SCAN_DIRECTORY_EXCLUSIONS='#recycle,@eaDir,@Recycle'
+KOMGA_FILESYSTEM_SCANNER_FORCE_DIRECTORY_MODIFIED_TIME=false
+KOMGA_REMEMBERME_KEY=USE-WHATEVER-YOU-WANT-HERE
+KOMGA_REMEMBERME_VALIDITY=2419200
+
+KOMGA_DATABASE_BACKUP_ENABLED=true
+KOMGA_DATABASE_BACKUP_STARTUP=true
+KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
+</code></pre>
+<p>My changes (shown above):</p>
+<ul>
+<li>Port on <code>8989</code> because <code>8080</code> its too generic.</li>
+<li><code>cron</code> schedules.<ul>
+<li>It&rsquo;s not actually <code>cron</code> but rather a <code>cron</code>-like syntax used by <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html">Spring</a> as stated in the <a href="https://komga.org/installation/configuration.html#optional-configuration">Komga config</a>.</li>
+</ul>
+</li>
+<li>Added the remember me key.</li>
+<li>For more check out <a href="https://komga.org/installation/configuration.html">Komga: Configuration options</a>.</li>
+</ul>
+<p>If you&rsquo;re going to run it locally (or LAN/VPN) you can start the <code>komga.service</code> and access it via IP at <code>http://&lt;your-server-ip&gt;:&lt;port&gt;(/base_url)</code> as stated at <a href="https://komga.org/installation/webui.html">Komga: Accessing the web interface</a>, then you can continue with the <a href="#mangal">mangal</a> section, else continue with the next steps for the reverse proxy and certificate.</p>
+<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>Create the reverse proxy configuration (this is for <code>nginx</code>). In my case I&rsquo;ll use a subdomain, so this is a new config called <code>komga.conf</code> at the usual <code>sites-available/enabled</code> path:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name komga.yourdomain.com; # change accordingly to your wanted subdomain and domain name
+
+    location / {
+        proxy_pass http://localhost:8989; # change 8989 to the port you want to use
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+    }
+}
+</code></pre>
+<p>If it&rsquo;s going to be used as a subdir on another domain then just change the <code>location</code> with <code>/subdir</code> instead of <code>/</code>; be careful with the <code>proxy_pass</code> directive, it has to match what you configured at <code>/etc/komga.conf</code> for the <code>SERVER_SERVLET_CONTEXT_PATH</code> regardless of the <code>/subdir</code> you selected at <code>location</code>.</p>
+<h3 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h3>
+<p>If using a subdir then the same certificate for the subdomain/domain should work fine and no extra stuff is needed, else if following along me then we can create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>That will automatically detect the new subdomain config and create/extend your existing certificate(s). In my case I manage each certificate&rsquo;s subdomain:</p>
+<pre><code class="language-sh">certbot --nginx -d domainname.com -d subdomain.domainname.com -d komga.domainname.com
+</code></pre>
+<h3 id="starting-using-komga">Starting using Komga<a class="headerlink" href="#starting-using-komga" title="Permanent link">&para;</a></h3>
+<p>We can now <code>start</code>/<code>enable</code> the <code>komga.service</code>:</p>
+<pre><code class="language-sh">systemctl enable komga.service
+systemctl start komga.service
+</code></pre>
+<p>And access the web interface at <code>https://komga.domainname.com</code> which should show the login page for Komga. The first time it will ask to create an account as shown in <a href="https://komga.org/installation/webui.html#create-user-account">Komga: Create user account</a>, this will be an admin account. Fill in the email and password (can be changed later). The email doesn&rsquo;t have to be an actual email, for now it&rsquo;s just for management purposes.</p>
+<p>Next thing would be to add any extra account (for read-only/download manga permissions), add/import libraries, etc.. For now I&rsquo;ll leave it here until we start downloading manga on the next steps.</p>
+<h3 id="library-creation">Library creation<a class="headerlink" href="#library-creation" title="Permanent link">&para;</a></h3>
+<p>Creating a library is as simple as creating a directory somewhere and point to it in Komga. The following examples are for my use case, change accordingly. I&rsquo;ll be using <code>/mnt/d/mangal</code> for my library (as stated in the <a href="#configuration">mangal: configuration</a> section):</p>
+<pre><code class="language-sh">mkdir /mnt/d/mangal
+</code></pre>
+<p>Where I chose the name <code>mangal</code> as its the name of the downloader/scrapper, it could be anything, this is just how I like to organize stuff.</p>
+<p>For the most part, the permissions don&rsquo;t matter much (as long as it&rsquo;s readable by the <code>komga</code> user) unless you want to delete some manga, then <code>komga</code> user also needs write permissions.</p>
+<p>Then just create the library in Komga web interface (the <code>+</code> sign next to <em>Libraries</em>), choose a name <em>&ldquo;Mangal&rdquo;</em> and point to the root folder <code>/mnt/d/mangal</code>, then just click <em>Next</em>, <em>Next</em> and <em>Add</em> for the defaults (that&rsquo;s how I&rsquo;ve been using it so far). This is well explained at <a href="https://komga.org/guides/libraries.html">Komga: Libraries</a>.</p>
+<p>The real important part (for me) is the permissions of the <code>/mnt/d/mangal</code> directory, as I want to have write access for <code>komga</code> so I can manage from the web interface itself. It looks like it&rsquo;s just a matter of giving ownership to the <code>komga</code> user either for owner or for group (or to all for that matter), but since I&rsquo;m going to use a separate user to download manga then I need to choose carefully.</p>
+<h4 id="set-default-directory-permissions">Set default directory permissions<a class="headerlink" href="#set-default-directory-permissions" title="Permanent link">&para;</a></h4>
+<p>The desired behaviour is: set <code>komga</code> as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. I found out via <a href="https://unix.stackexchange.com/a/1315">this</a> stack exchange answer how to do it. So, for me:</p>
+<pre><code class="language-sh">chown manga-dl:komga /mnt/d/mangal # required for group ownership for komga
+chmod g+s /mnt/d/mangal # required for group permission inheritance
+setfacl -d -m g::rwx /mnt/d/mangal # default permissions for group
+setfacl -d -m o::rx /mnt/d/mangal # default permissions for other (as normal, I think this command can be excluded)
+</code></pre>
+<p>Where <code>manga-dl</code> is the user I created to download manga with. Optionally add <code>-R</code> flag to those 4 commands in case it already has subdirectories/files (this might mess file permissions, but it&rsquo;s not an issue as far as I konw).</p>
+<p>Checking that the permissions are set correctly (<code>getfacl /mnt/d/mangal</code>):</p>
+<pre><code>getfacl: Removing leading '/' from absolute path names
+# file: mnt/d/mangal
+# owner: manga-dl
+# group: komga
+# flags: -s-
+user::rwx
+group::rwx
+other::r-x
+default:user::rwx
+default:group::rwx
+default:other::r-x
+</code></pre>
+<p>You can then check by creating a new subdirectory (in <code>/mnt/d/mangal</code>) and it should have the same group permissions.</p>
+<h4 id="populate-manga-library">Populate manga library<a class="headerlink" href="#populate-manga-library" title="Permanent link">&para;</a></h4>
+<p>You can now start downloading manga using <code>mangal</code> either manually or by running the <code>cron</code>/<code>systemd/Timers</code> and it will be detected by Komga automatically when it scans the library (once every hour according to my config). You can manually scan the library, though, by clicking on the 3 dots to the right of the library name (in Komga) and click on &ldquo;Scan library files&rdquo;.</p>
+<p>Then you can check that the metadata is correct (once the manga is fully indexed and metadata finished building), such as title, summary, chapter count, language, tags, genre, etc., which honestly it never works fine as <code>mangal</code> creates the <code>series.json</code> with the <code>comicId</code> field with an upper case <code>I</code> and Komga expects it to be a lower case <code>i</code> (<code>comicid</code>) so it falls back to using the info from the first chapter. I&rsquo;ll probably will fix this on <code>mangal</code> side, and see how it goes.</p>
+<p>So, what I do is manually edit the metadata for the manga, by changing whatever it&rsquo;s wrong or add what&rsquo;s missing (I like adding anilist and MyAnimeList links) and then leave it as is. This is up to you.</p>
+<h2 id="alternative-downloaders">Alternative downloaders<a class="headerlink" href="#alternative-downloaders" title="Permanent link">&para;</a></h2>
 <p>Just for the record, here is a list of downloaders/scrapers I considered before starting to use <code>mangal</code>:</p>
 <ul>
 <li><a href="https://github.com/oae/kaizoku">kaizoku</a>: NodeJS web server that uses <code>mangal</code> for its &ldquo;backend&rdquo; and honestly since I liked <code>mangal</code> so much I should use it, the only reason I don&rsquo;t is because I&rsquo;m a bitch and I don&rsquo;t want to use a D*ck*r image and NodeJS (ew) (in general is pretty bloated in my opinion). If I get tired of my solution with pure <code>mangal</code> I might as well just migrate to it as It&rsquo;s a more automatic solution.</li>
