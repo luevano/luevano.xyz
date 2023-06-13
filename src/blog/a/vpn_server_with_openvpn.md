@@ -1,7 +1,7 @@
-title: Create a VPN server with OpenVPN (IPv4)
+title: Set up a VPN server with OpenVPN
 author: David Luévano
 lang: en
-summary: How to create a VPN server using OpenVPN on a server running Nginx. Only for IPv4.
+summary: How to set up a VPN server using OpenVPN on a server running Nginx, on Arch. Only for IPv4.
 tags: server
 	tools
     code
@@ -23,15 +23,15 @@ This will be installed and working alongside the other stuff I've wrote about on
 Pretty simple:
 
 - Working server with root access, and with `ufw` as the firewall.
-- Depending on what port you want to run the VPN on, the default `1194`, or as a fallback on `443` (click [here](https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/) for more). I will do mine on port `1194` but it's just a matter of changing 2 lines of configuration and one `ufw` rule.
+- Open port `1194` (default), or as a fallback on `443` (click [here](https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/) for more). I will do mine on port `1194` but it's just a matter of changing 2 lines of configuration and one `ufw` rule.
 
 # Create PKI from scratch
 
 PKI stands for *Public Key Infrastructure* and basically it's required for certificates, private keys and more. This is supposed to work between two servers and one client: a server in charge of creating, signing and verifying the certificates, a server with the OpenVPN service running and the client making the request.
 
-This is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about. In a nutshell, I'm no expert.
+In a nutshel, this is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about.
 
-... but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I'm gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).
+That's how the it should be st up... but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I'm gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).
 
 This is done with [Easy-RSA](https://wiki.archlinux.org/title/Easy-RSA).
 
@@ -87,15 +87,13 @@ chown nobody:nobody pki/crl.pem
 chmod o+r pki/crl.pem
 ```
 
-Now, go to the `openvpn` directory and create the required files there:
+Finally, go to the `openvpn` directory and create the required files there:
 
 ```sh
 cd /etc/openvpn/server
 openssl dhparam -out dh.pem 2048
 openvpn --genkey secret ta.key
 ```
-
-That's it for the PKI stuff and general certificate configuration.
 
 # OpenVPN
 
@@ -281,9 +279,9 @@ Where the `server` after `@` is the name of your configuration, `server.conf` wi
 
 ## Create client configurations
 
-You might notice that I didn't specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the `server.conf` file that we created.
+You might notice that I didn't specify how to actually connect the VPN. For that we need a configuration file similar to the `server.conf` file that we created.
 
-The real way of doing this would be to run similar steps as the ones with `easy-rsa` locally, send them to the server, sign them, and retrieve them. Nah, we'll just create all configuration files on the server as I was mentioning earlier.
+The real way of doing this would be to run similar steps as the ones with `easy-rsa` locally, send them to the server, sign them, and retrieve them. Fuck all that, we'll just create all configuration files on the server as I was mentioning earlier.
 
 Also, the client configuration file has to match the server one (to some degree), to make this easier you can create a `client-common` file in `/etc/openvpn/server` with the following content:
 
@@ -302,13 +300,13 @@ verb 3
 
 Where you should make any changes necessary, depending on your configuration.
 
-Now, we need a way to create and revoke new configuration files. For this I created a script, heavily based on one of the links I mentioned at the beginning, by the way. You can place these scripts anywhere you like, and you should take a look before running them because you'll be running them as root.
+Now, we need a way to create and revoke new configuration files. For this I created a script, heavily based on one of the links I mentioned at the beginning. You can place these scripts anywhere you like, and you should take a look before running them because you'll be running them with elevated privileges (sudo).
 
 In a nutshell, what it does is: generate a new client certificate keypair, update the CRL and create a new `.ovpn` configuration file that consists on the `client-common` data and all of the required certificates; or, revoke an existing client and refresh the CRL. The file is placed under `~/ovpn`.
 
 Create a new file with the following content (name it whatever you like) and don't forget to make it executable (`chmod +x vpn_script`):
 
-```
+```sh
 #!/bin/sh
 # Client ovpn configuration creation and revoking.
 MODE=$1
@@ -364,6 +362,6 @@ chmod o+r pki/crl.pem
 cd $CPWD
 ```
 
-And the way to use is to run `vpn_script new/rev client_name` as sudo (when revoking, it doesn't actually delete the `.ovpn` file in `~/ovpn`). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for `easy-rsa`).
+And the way to use is to run `bash vpn_script <mode> <client_name>` where `mode` is `new` or `rev` (revoke) as sudo (when revoking, it doesn't actually delete the `.ovpn` file in `~/ovpn`). Again, this is a little script that I put together, so you should check it out, it may need tweaks (specially depending on your directory structure for `easy-rsa`).
 
 Now, just get the `.ovpn` file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.

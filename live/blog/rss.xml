@@ -1981,7 +1981,7 @@ func _ready() -&gt; void:
 <p>En otras noticias, estoy muy agusto en el jale que tengo actualmente aunque lleve alrededor de 3 semanas de un infierno en el jale. Debo pensar en si debo omitir cosas personales o del trabajo aquí, ya que quién sabe quién se pueda llegar a topar con esto <em>*thinking emoji*</em>.</p>]]></content:encoded>
     </item>
     <item>
-      <title>Create a VPN server with OpenVPN (IPv4)</title>
+      <title>Set up a VPN server with OpenVPN</title>
       <link>https://blog.luevano.xyz/a/vpn_server_with_openvpn.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/vpn_server_with_openvpn.html</guid>
       <pubDate>Sun, 01 Aug 2021 09:27:02 GMT</pubDate>
@@ -1990,7 +1990,7 @@ func _ready() -&gt; void:
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
-      <description>How to create a VPN server using OpenVPN on a server running Nginx. Only for IPv4.</description>
+      <description>How to set up a VPN server using OpenVPN on a server running Nginx, on Arch. Only for IPv4.</description>
       <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to do this entry, but had no time to do it since I also have to set up the VPN service as well to make sure what I&rsquo;m writing makes sense, today is the day.</p>
 <p>Like with any other of my entries I based my setup on the <a href="https://wiki.archlinux.org/title/OpenVPN">Arch Wiki</a>, <a href="https://github.com/Nyr/openvpn-install">this install script</a> and <a href="https://github.com/graysky2/ovpngen">this profile generator script</a>.</p>
 <p>This will be installed and working alongside the other stuff I&rsquo;ve wrote about on other posts (see the <a href="https://blog.luevano.xyz/tag/@server.html">server</a> tag). All commands here are executes as root unless specified otherwise. Also, this is intended only for IPv4 (it&rsquo;s not that hard to include IPv6, but meh). As always, all commands are executed as root unless stated otherwise.</p>
@@ -2011,12 +2011,12 @@ func _ready() -&gt; void:
 <p>Pretty simple:</p>
 <ul>
 <li>Working server with root access, and with <code>ufw</code> as the firewall.</li>
-<li>Depending on what port you want to run the VPN on, the default <code>1194</code>, or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one <code>ufw</code> rule.</li>
+<li>Open port <code>1194</code> (default), or as a fallback on <code>443</code> (click <a href="https://openvpn.net/vpn-server-resources/advanced-option-settings-on-the-command-line/">here</a> for more). I will do mine on port <code>1194</code> but it&rsquo;s just a matter of changing 2 lines of configuration and one <code>ufw</code> rule.</li>
 </ul>
 <h2 id="create-pki-from-scratch">Create PKI from scratch<a class="headerlink" href="#create-pki-from-scratch" title="Permanent link">&para;</a></h2>
 <p>PKI stands for <em>Public Key Infrastructure</em> and basically it&rsquo;s required for certificates, private keys and more. This is supposed to work between two servers and one client: a server in charge of creating, signing and verifying the certificates, a server with the OpenVPN service running and the client making the request.</p>
-<p>This is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about. In a nutshell, I&rsquo;m no expert.</p>
-<p>&hellip; but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I&rsquo;m gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).</p>
+<p>In a nutshel, this is supposed to work something like: 1) a client wants to use the VPN service, so it creates a requests and sends it to the signing server, 2) this server checks the requests and signs the request, returning the certificates to both the VPN service and the client and 3) the client can now connect to the VPN service using the signed certificate which the OpenVPN server knows about.</p>
+<p>That&rsquo;s how the it should be st up&hellip; but, to be honest, all of this is a hassle and (in my case) I want something simple to use and manage. So I&rsquo;m gonna do all on one server and then just give away the configuration file for the clients, effectively generating files that anyone can run and will work, meaning that you need to be careful who you give this files (it also comes with a revoking mechanism, so no worries).</p>
 <p>This is done with <a href="https://wiki.archlinux.org/title/Easy-RSA">Easy-RSA</a>.</p>
 <p>Install the <code>easy-rsa</code> package:</p>
 <pre><code class="language-sh">pacman -S easy-rsa
@@ -2051,12 +2051,11 @@ chmod o+rx pki/private/server.key
 chown nobody:nobody pki/crl.pem
 chmod o+r pki/crl.pem
 </code></pre>
-<p>Now, go to the <code>openvpn</code> directory and create the required files there:</p>
+<p>Finally, go to the <code>openvpn</code> directory and create the required files there:</p>
 <pre><code class="language-sh">cd /etc/openvpn/server
 openssl dhparam -out dh.pem 2048
 openvpn --genkey secret ta.key
 </code></pre>
-<p>That&rsquo;s it for the PKI stuff and general certificate configuration.</p>
 <h2 id="openvpn">OpenVPN<a class="headerlink" href="#openvpn" title="Permanent link">&para;</a></h2>
 <p><a href="https://wiki.archlinux.org/title/OpenVPN">OpenVPN</a> is a robust and highly flexible VPN daemon, that&rsquo;s pretty complete feature-wise.</p>
 <p>Install the <code>openvpn</code> package:</p>
@@ -2207,8 +2206,8 @@ systemctl enable openvpn-server@server.service
 </code></pre>
 <p>Where the <code>server</code> after <code>@</code> is the name of your configuration, <code>server.conf</code> without the <code>.conf</code> in my case.</p>
 <h3 id="create-client-configurations">Create client configurations<a class="headerlink" href="#create-client-configurations" title="Permanent link">&para;</a></h3>
-<p>You might notice that I didn&rsquo;t specify how to actually connect to our server. For that we need to do a few more steps. We actually need a configuration file similar to the <code>server.conf</code> file that we created.</p>
-<p>The real way of doing this would be to run similar steps as the ones with <code>easy-rsa</code> locally, send them to the server, sign them, and retrieve them. Nah, we&rsquo;ll just create all configuration files on the server as I was mentioning earlier.</p>
+<p>You might notice that I didn&rsquo;t specify how to actually connect the VPN. For that we need a configuration file similar to the <code>server.conf</code> file that we created.</p>
+<p>The real way of doing this would be to run similar steps as the ones with <code>easy-rsa</code> locally, send them to the server, sign them, and retrieve them. Fuck all that, we&rsquo;ll just create all configuration files on the server as I was mentioning earlier.</p>
 <p>Also, the client configuration file has to match the server one (to some degree), to make this easier you can create a <code>client-common</code> file in <code>/etc/openvpn/server</code> with the following content:</p>
 <pre><code>client
 dev tun
@@ -2222,10 +2221,10 @@ auth SHA512
 verb 3
 </code></pre>
 <p>Where you should make any changes necessary, depending on your configuration.</p>
-<p>Now, we need a way to create and revoke new configuration files. For this I created a script, heavily based on one of the links I mentioned at the beginning, by the way. You can place these scripts anywhere you like, and you should take a look before running them because you&rsquo;ll be running them as root.</p>
+<p>Now, we need a way to create and revoke new configuration files. For this I created a script, heavily based on one of the links I mentioned at the beginning. You can place these scripts anywhere you like, and you should take a look before running them because you&rsquo;ll be running them with elevated privileges (sudo).</p>
 <p>In a nutshell, what it does is: generate a new client certificate keypair, update the CRL and create a new <code>.ovpn</code> configuration file that consists on the <code>client-common</code> data and all of the required certificates; or, revoke an existing client and refresh the CRL. The file is placed under <code>~/ovpn</code>.</p>
 <p>Create a new file with the following content (name it whatever you like) and don&rsquo;t forget to make it executable (<code>chmod +x vpn_script</code>):</p>
-<pre><code>#!/bin/sh
+<pre><code class="language-sh">#!/bin/sh
 # Client ovpn configuration creation and revoking.
 MODE=$1
 if [ ! &quot;$MODE&quot; = &quot;new&quot; -a ! &quot;$MODE&quot; = &quot;rev&quot; ]; then
@@ -2279,7 +2278,7 @@ chown nobody:nobody pki/crl.pem
 chmod o+r pki/crl.pem
 cd $CPWD
 </code></pre>
-<p>And the way to use is to run <code>vpn_script new/rev client_name</code> as sudo (when revoking, it doesn&rsquo;t actually delete the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (depending on your directory structure for <code>easy-rsa</code>).</p>
+<p>And the way to use is to run <code>bash vpn_script &lt;mode&gt; &lt;client_name&gt;</code> where <code>mode</code> is <code>new</code> or <code>rev</code> (revoke) as sudo (when revoking, it doesn&rsquo;t actually delete the <code>.ovpn</code> file in <code>~/ovpn</code>). Again, this is a little script that I put together, so you should check it out, it may need tweaks (specially depending on your directory structure for <code>easy-rsa</code>).</p>
 <p>Now, just get the <code>.ovpn</code> file generated, import it to OpenVPN in your client of preference and you should have a working VPN service.</p>]]></content:encoded>
     </item>
     <item>
