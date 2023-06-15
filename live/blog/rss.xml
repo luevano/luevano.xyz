@@ -23,6 +23,50 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Configure system logs on Arch to avoid filled up disk</title>
+      <link>https://blog.luevano.xyz/a/arch_logs_flooding_disk.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/arch_logs_flooding_disk.html</guid>
+      <pubDate>Thu, 15 Jun 2023 10:22:20 GMT</pubDate>
+      <category>Code</category>
+      <category>English</category>
+      <category>Server</category>
+      <category>Short</category>
+      <category>Tools</category>
+      <category>Tutorial</category>
+      <description>How to configure the system logs, mostly journald, from filling up the disk, on Arch.</description>
+      <content:encoded><![CDATA[<p>It&rsquo;s been a while since I&rsquo;ve been running a minimal server on a VPS, and it is a pretty humble VPS with just 32 GB of storage which works for me as I&rsquo;m only hosting a handful of services. At some point I started noticing that the disk keept filling up on each time I checked.</p>
+<p>Turns out that out of the box, Arch has a default config for <code>systemd</code>&lsquo;s <code>journald</code> that keeps a persistent <code>journal</code> log, but doesn&rsquo;t have a limit on how much logging is kept. This means that depending on how many services, and how aggresive they log, it can be filled up pretty quickly. For me I had around 15 GB of logs, from the normal <code>journal</code> directory, <code>nginx</code> directory and my now unused <code>prosody</code> instance.</p>
+<p>For <code>prosody</code> it was just a matter of deleting the directory as I&rsquo;m not using it anymore, which freed around 4 GB of disk space.
+For <code>journal</code> I did a combination of configuring <code>SystemMaxUse</code> and creating a <em>Namespace</em> for all &ldquo;email&rdquo; related services as mentioned in the <a href="https://wiki.archlinux.org/title/Systemd/Journal#Per_unit_size_limit_by_a_journal_namespace">Arch wiki: systemd/Journal</a>; basically just configuring <code>/etc/systemd/journald.conf</code> (and <code>/etc/systemd/journald@email.con</code> with the comment change) with:</p>
+<pre><code class="language-conf">[Journal]
+Storage=persistent
+SystemMaxUse=100MB # 50MB for the &quot;email&quot; Namespace
+</code></pre>
+<p>And then for each service that I want to use this &ldquo;email&rdquo; <em>Namespace</em> I add:</p>
+<pre><code class="language-conf">[Service]
+LogNamespace=email
+</code></pre>
+<p>Which can be changed manually or by executing <code>systemctl edit service_name.service</code> and it will create an override file which will be read on top of the normal service configuration. Once configured restart by running <code>systemctl daemon-reload</code> and <code>systemctl restart service_name.service</code> (probably also restart <code>systemd-journald</code>).</p>
+<p>I also disabled the logging for <code>ufw</code> by running <code>ufw logging off</code> as it logs everything to the <code>kernel</code> &ldquo;unit&rdquo;, and I didn&rsquo;t find a way to pipe its logs to a separate directory. It really isn&rsquo;t that useful as most of the logs are the normal <code>[UFW BLOCK]</code> log, which is normal. If I need debugging then I&rsquo;ll just enable that again. Note that you can change the logging level, if you still want some kind of logging.</p>
+<p>Finally to clean up the <code>nginx</code> logs, you need to install <code>logrotate</code> (<code>pacman -S logrotate</code>) as that is what is used to clean up the <code>nginx</code> log directory. <code>nginx</code> already &ldquo;installs&rdquo; a config file for <code>logrotate</code> which is located at <code>/etc/logrotate.d/</code>, I just added a few lines:</p>
+<pre><code>/var/log/nginx/*log {
+    rotate 7
+    weekly
+    dateext
+    dateformat -%Y-%m-%d
+    missingok
+    notifempty
+    create 640 http log
+    sharedscripts
+    compress
+    postrotate
+        test ! -r /run/nginx.pid || kill -USR1 `cat /run/nginx.pid`
+    endscript
+}
+</code></pre>
+<p>Once you&rsquo;re ok with your config, it&rsquo;s just a matter of running <code>logrotate -v -f /etc/logrotate.d/nginx</code> which forces the run of the rule for <code>nginx</code>. After this, <code>logrotate</code> will be run daily if you <code>enable</code> the <code>logrotate</code> timer: <code>systemctl enable logrotate.timer</code>.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>Set up a manga server with Komga and mangal</title>
       <link>https://blog.luevano.xyz/a/manga_server_with_komga.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/manga_server_with_komga.html</guid>
