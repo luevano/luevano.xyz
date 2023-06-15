@@ -14,9 +14,9 @@ It's been a while since I've been running a minimal server on a VPS, and it is a
 Turns out that out of the box, Arch has a default config for `systemd`'s `journald` that keeps a persistent `journal` log, but doesn't have a limit on how much logging is kept. This means that depending on how many services, and how aggresive they log, it can be filled up pretty quickly. For me I had around 15 GB of logs, from the normal `journal` directory, `nginx` directory and my now unused `prosody` instance.
 
 For `prosody` it was just a matter of deleting the directory as I'm not using it anymore, which freed around 4 GB of disk space.
-For `journal` I did a combination of configuring `SystemMaxUse` and creating a *Namespace* for all "email" related services as mentioned in the [Arch wiki: systemd/Journal](https://wiki.archlinux.org/title/Systemd/Journal#Per_unit_size_limit_by_a_journal_namespace); basically just configuring `/etc/systemd/journald.conf` (and `/etc/systemd/journald@email.con` with the comment change) with:
+For `journal` I did a combination of configuring `SystemMaxUse` and creating a *Namespace* for all "email" related services as mentioned in the [Arch wiki: systemd/Journal](https://wiki.archlinux.org/title/Systemd/Journal#Per_unit_size_limit_by_a_journal_namespace); basically just configuring `/etc/systemd/journald.conf` (and `/etc/systemd/journald@email.conf` with the comment change) with:
 
-```conf
+```ini
 [Journal]
 Storage=persistent
 SystemMaxUse=100MB # 50MB for the "email" Namespace
@@ -24,7 +24,7 @@ SystemMaxUse=100MB # 50MB for the "email" Namespace
 
 And then for each service that I want to use this "email" *Namespace* I add:
 
-```conf
+```ini
 [Service]
 LogNamespace=email
 ```
