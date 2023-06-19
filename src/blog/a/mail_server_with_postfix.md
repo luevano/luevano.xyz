@@ -10,7 +10,9 @@ tags: server
 
 The entry is going to be long because it's a *tedious* process. This is also based on [Luke Smith's script](https://github.com/LukeSmithxyz/emailwiz), but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I'm in the process of installing/configuring the mail server on a new VPS of mine; ~~also I'm going to be writing a script that does everything in one go (for Arch Linux), that will be hosted [here](https://git.luevano.xyz/server_scripts.git).~~ ^^I haven't had time to do the script so nevermind this, if I ever do it I'll make a new entry regarding it.^^
 
-This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.
+This configuration works for local users (users that appear in `/etc/passwd`), and does not use any type of SQL database. Do note that I'm not running Postfix in a chroot, which can be a problem if you're following my steps as noted by ==[Bojan](https://bojanmilevski.com/)==; in the case that you want to run in chroot then add the steps chown in the Arch wiki: [Postfix in a chroot jail](https://wiki.archlinux.org/title/postfix#Postfix_in_a_chroot_jail); the issue faced if following my steps and using a chroot is that there will be issues resolving the hostname due to `/etc/hosts` or `/etc/hostname` not being available in the chroot.
+
+All commands executed here are run with root privileges, unless stated otherwise.
 
 # Table of contents
 

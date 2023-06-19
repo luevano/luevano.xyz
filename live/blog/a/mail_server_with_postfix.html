@@ -88,7 +88,8 @@
   <h1>Set up a Mail server with Postfix, Dovecot, SpamAssassin and OpenDKIM</h1>
 
   <p>The entry is going to be long because it&rsquo;s a <em>tedious</em> process. This is also based on <a href="https://github.com/LukeSmithxyz/emailwiz">Luke Smith&rsquo;s script</a>, but adapted to Arch Linux (his script works on debian-based distributions). This entry is mostly so I can record all the notes required while I&rsquo;m in the process of installing/configuring the mail server on a new VPS of mine; <del>also I&rsquo;m going to be writing a script that does everything in one go (for Arch Linux), that will be hosted <a href="https://git.luevano.xyz/server_scripts.git">here</a>.</del> <ins>I haven&rsquo;t had time to do the script so nevermind this, if I ever do it I&rsquo;ll make a new entry regarding it.</ins></p>
-<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL database. And note that most if not all commands executed here are run with root privileges, unless stated otherwise.</p>
+<p>This configuration works for local users (users that appear in <code>/etc/passwd</code>), and does not use any type of SQL database. Do note that I&rsquo;m not running Postfix in a chroot, which can be a problem if you&rsquo;re following my steps as noted by <mark><a href="https://bojanmilevski.com/">Bojan</a></mark>; in the case that you want to run in chroot then add the steps chown in the Arch wiki: <a href="https://wiki.archlinux.org/title/postfix#Postfix_in_a_chroot_jail">Postfix in a chroot jail</a>; the issue faced if following my steps and using a chroot is that there will be issues resolving the hostname due to <code>/etc/hosts</code> or <code>/etc/hostname</code> not being available in the chroot.</p>
+<p>All commands executed here are run with root privileges, unless stated otherwise.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
 <div class="toc">
 <ul>
@@ -485,7 +486,7 @@ systemctl enable spamassassin.service
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Mar 21, 2021 @ 04:05 UTC</p>
-      <p>Modified: Sat, Jun 03, 2023 @ 03:54 UTC</p>
+      <p>Modified: Mon, Jun 19, 2023 @ 05:30 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
