@@ -103,9 +103,11 @@ LogNamespace=email
 </ul>
 </li>
 <li><a href="#komga">Komga</a><ul>
-<li><a href="#reverse-proxy">Reverse proxy</a></li>
+<li><a href="#reverse-proxy">Reverse proxy</a><ul>
 <li><a href="#ssl-certificate">SSL certificate</a></li>
-<li><a href="#starting-using-komga">Starting using Komga</a></li>
+</ul>
+</li>
+<li><a href="#start-using-komga">Start using Komga</a></li>
 <li><a href="#library-creation">Library creation</a><ul>
 <li><a href="#set-default-directory-permissions">Set default directory permissions</a></li>
 <li><a href="#populate-manga-library">Populate manga library</a></li>
@@ -396,14 +398,14 @@ KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
 }
 </code></pre>
 <p>If it&rsquo;s going to be used as a subdir on another domain then just change the <code>location</code> with <code>/subdir</code> instead of <code>/</code>; be careful with the <code>proxy_pass</code> directive, it has to match what you configured at <code>/etc/komga.conf</code> for the <code>SERVER_SERVLET_CONTEXT_PATH</code> regardless of the <code>/subdir</code> you selected at <code>location</code>.</p>
-<h3 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h3>
+<h4 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h4>
 <p>If using a subdir then the same certificate for the subdomain/domain should work fine and no extra stuff is needed, else if following along me then we can create/extend the certificate by running:</p>
 <pre><code class="language-sh">certbot --nginx
 </code></pre>
 <p>That will automatically detect the new subdomain config and create/extend your existing certificate(s). In my case I manage each certificate&rsquo;s subdomain:</p>
 <pre><code class="language-sh">certbot --nginx -d domainname.com -d subdomain.domainname.com -d komga.domainname.com
 </code></pre>
-<h3 id="starting-using-komga">Starting using Komga<a class="headerlink" href="#starting-using-komga" title="Permanent link">&para;</a></h3>
+<h3 id="start-using-komga">Start using Komga<a class="headerlink" href="#start-using-komga" title="Permanent link">&para;</a></h3>
 <p>We can now <code>start</code>/<code>enable</code> the <code>komga.service</code>:</p>
 <pre><code class="language-sh">systemctl enable komga.service
 systemctl start komga.service
