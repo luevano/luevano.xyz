@@ -397,7 +397,7 @@ server {
 
 If it's going to be used as a subdir on another domain then just change the `location` with `/subdir` instead of `/`; be careful with the `proxy_pass` directive, it has to match what you configured at `/etc/komga.conf` for the `SERVER_SERVLET_CONTEXT_PATH` regardless of the `/subdir` you selected at `location`.
 
-## SSL certificate
+### SSL certificate
 
 If using a subdir then the same certificate for the subdomain/domain should work fine and no extra stuff is needed, else if following along me then we can create/extend the certificate by running:
 
@@ -411,7 +411,7 @@ That will automatically detect the new subdomain config and create/extend your e
 certbot --nginx -d domainname.com -d subdomain.domainname.com -d komga.domainname.com
 ```
 
-## Starting using Komga
+## Start using Komga
 
 We can now `start`/`enable` the `komga.service`:
 
