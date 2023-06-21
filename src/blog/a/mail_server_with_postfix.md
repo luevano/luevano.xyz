@@ -519,4 +519,4 @@ Next, to actually login into a mail app/program, you will use the following sett
 
 All that's left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to [DKIM Test](https://www.appmaildev.com/en/dkim) and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:
 
-![DKIM Test successful](${SURL}/images/b/notes/mail/dkim_test_successful.png "DKIM Test successful")
+![DKIM Test successful](${SURL}/images/b/mail/dkim_test_successful.png "DKIM Test successful")
