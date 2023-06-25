@@ -383,6 +383,7 @@ server {
 
     location / {
         proxy_pass http://localhost:8989; # change 8989 to the port you want to use
+        proxy_http_version 1.1;
 
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

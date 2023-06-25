@@ -1,18 +1,18 @@
 title: Set up a media server with Jellyfin, Sonarr and Radarr
 author: David Luévano
 lang: en
-summary: How to set up a media server with Jellyfin, Sonarr and Radarr, on Arch. With qBitTorrent and Jackett also.
+summary: How to set up a media server with Jellyfin, Sonarr and Radarr, on Arch. With qBitTorrent and Jackett with flaresolverr also.
 tags: server
 	tools
 	code
 	tutorial
 	english
 
-Riding on my excitement of having a good internet connection and having setup my *home server* now it's time to self host a media server for movies, series and anime. I'll be exposing my stuff on a personal (in the sense that I own it and it's going to be used for that only) subdomain, but that's optional depending on your setup.
+Riding on my excitement of having a good internet connection and having setup my *home server* now it's time to self host a media server for movies, series and anime. I'll be exposing my stuff on a subdomain only so I can access it while out of home and for SSL certificates (not required), but shouldn't be necessary and instead you can use a VPN ([how to set up](https://blog.luevano.xyz/a/vpn_server_with_openvpn.html)). For your reference, whenever I say "Starr apps" (\*arr apps) I mean the family of apps such as Sonarr, Radarr, Readarr, Lidarr, etc..
 
-Most of my config is based on [TRaSH-Guides](https://trash-guides.info/) (I'll only mention it as "TRaSH", without the "-Guides") and will be mentioned when needed; I just mention it here in case I forget to give credit on the respective areas. Specially have a read at the [TRaSH: Native folder structure](https://trash-guides.info/Hardlinks/How-to-setup-for/Native/) as it is a very good setup along with the [TRaSH: Hardlinks and instant moves](https://trash-guides.info/Hardlinks/Hardlinks-and-Instant-Moves/).
+Most of my config is based on [TRaSH-Guides](https://trash-guides.info/), in case I forget to mention it explicitly on its respective areas, which will be mentioned as "TRaSH" going forward. Specially get familiar with the [TRaSH: Native folder structure](https://trash-guides.info/Hardlinks/How-to-setup-for/Native/) and with the [TRaSH: Hardlinks and instant moves](https://trash-guides.info/Hardlinks/Hardlinks-and-Instant-Moves/). Will use default configurations based on the respective documentation for each service (Sonarr, Radarr, Bazarr), except when stated otherwise.
 
-Everything here is performed in ==Arch Linux btw== and all commands should be run as root unless stated otherwise, as always.
+Everything here is performed in ==arch btw== and all commands should be run as root unless stated otherwise.
 
 ==Also kindly note that I do not condone the use of BitTorrent for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.==
 
@@ -22,45 +22,48 @@ Everything here is performed in ==Arch Linux btw== and all commands should be ru
 
 # Prerequisites
 
-Similar to my early [tutorial](https://blog.luevano.xyz/tag/@tutorial.html) entries, if you want it as a subdomain (revers proxy, SSL certificate, etc.):
+- A firewall is always strongly recommended to secure your service, and in this case we need to open some ports, specially for `qbittorrent`. I like to use `ufw`, but anything you're comfortable with works.
+
+If you want to expose to a (sub)domain, then similar to my early [tutorial](https://blog.luevano.xyz/tag/@tutorial.html) entries (specially the [website](https://blog.luevano.xyz/a/website_with_nginx.html) for the reverse proxy plus certificates) I'll use:
 
 - `nginx` for the reverse proxy.
-- `certbot` for Let's Encrypt SSL certificates.
-- `ufw` for the firewall, similar to my other entries. Else any other kind of firewall if desired.
-- `yay` installed. I mentioned how to install and use it on my previous entry: [Manga server with Komga: yay](https://blog.luevano.xyz/a/manga_server_with_komga.html#yay).
-- An **A** (and/or **AAAA**) or a **CNAME** for `jellyfin` (or whatever you want).
-    - Optionally, another one for all *iso downloading software* (wink).
-- An SSL certificate, if you're following the other entries (specially the [website](https://blog.luevano.xyz/a/website_with_nginx.html) entry), add a `jellyfin.conf` (and optionally the *isos* subdomain config) and run `certbot --nginx` (or similar) to extend/create the certificate.
+- `certbot` for the SSL certificates.
+- `yay` to install AUR packages.
+    - I mentioned how to install and use it on my previous entry: [Manga server with Komga: yay](https://blog.luevano.xyz/a/manga_server_with_komga.html#yay).
+- An **A** (and/or **AAAA**) or a **CNAME** for `jellyfin`.
+    - Optionally, another one for all automation software (Jackett, Starr apps, etc.). You can use one subdomain per service, but I'll put them all under `isos` in the examples shown.
 
-## Create directory structure
+You don't need to use these in specific, but everything will be written with these in mind.
 
-This is just the creation of the basic directory structure, as mentioned in [TRaSH: Native folder structure](https://trash-guides.info/Hardlinks/How-to-setup-for/Native/). I'll be using my steps to create default directory permissions on the directories as shown in my [Komga setup guide](https://blog.luevano.xyz/a/manga_server_with_komga#set-default-directory-permissions.html).
+## Directory structure
 
-First of all, create a service user called `servarr` that all services will use the group of:
+Basically following [TRaSH: Native folder structure](https://trash-guides.info/Hardlinks/How-to-setup-for/Native/) except for the directory permissions part, I'll do the same as with my [Komga setup guide](https://blog.luevano.xyz/a/manga_server_with_komga#set-default-directory-permissions.html) to stablish default group permissions.
+
+
+The desired behaviour is: set `servarr` as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. `servarr` is going to be a service user and I'll use the root of a mounted drive at `/mnt/a`.
+
+1. Create a service user called `servarr` (it could just be a group, too):
 
 ```sh
 useradd -r -s /usr/bin/nologin -M -c "Servarr applications" servarr
 ```
 
-Then the desired behaviour is: set `servarr` as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings.
-
-Create the `jellyfin` directory (this might come back and bite me in the ass later because of the `qbittorrent` download path) default permissions:
+2. Create the `torrents` directory and set default permissions:
 
 ```sh
-# some of these commands depend on which user created the directory
-mkdir /mnt/a/jellyfin
-chown servarr:servarr /mnt/a/jellyfin
-chmod g+w /mnt/a/jellyfin
-chmod g+s /mnt/a/jellyfin
-setfacl -d -m g::rwx /mnt/a/jellyfin
-setfacl -d -m o::rx /mnt/a/jellyfin
+cd /mnt/a # change this according to your setup
+mkdir torrents
+chown servarr:servarr torrents
+chmod g+w torrents
+chmod g+s torrents
+setfacl -d -m g::rwx torrents
+setfacl -d -m o::rx torrents
 ```
 
-Then check that the permissions are set correctly (`getfacl /mnt/a/jellyfin`)
+3. Check that the permissions are set correctly (`getfacl torrents`)
 
 ```
-getfacl: Removing leading '/' from absolute path names
-# file: mnt/a/jellyfin
+# file: torrents/
 # owner: servarr
 # group: servarr
 # flags: -s-
@@ -72,16 +75,32 @@ default:group::rwx
 default:other::r-x
 ```
 
-Then the subdirectories can be created using any user (the group permissions should be set automatically) then you can change the owner to `servarr` if you want:
+4. Create the subdirectories you want with any user (I'll be using `servarr` personally):
 
 ```sh
-cd /mnt/a/jellyfin
 mkdir torrents/{tv,movies,anime}
-mkdir media/{tv,movies,anime}
-chown -R servarr: /mnt/a/jellyfin
+chown -R servarr: torrents
 ```
 
-Later, add any user to the `servarr` grup if it needs access to write. These should be `qbittorrent`, `sonarr`, `radarr` and `jellyfin`, for example by running:
+5. Finally repeat steps 2 - 4 for the `media` directory.
+
+The final directory structure should be the following:
+
+```
+root_dir
+├── torrents
+│   ├── movies
+│   ├── music
+│   └── tv
+└── media
+    ├── movies
+    ├── music
+    └── tv
+```
+
+Where `root_dir` is `/mnt/a` in my case. This is going to be the reference for the following applications set up.
+
+Later, add the necessary users to the `servarr` group if they need write access, by executing:
 
 ```sh
 gpasswd -a <USER> servarr
@@ -89,15 +108,14 @@ gpasswd -a <USER> servarr
 
 # Jackett
 
-[Jackett](https://github.com/Jackett/Jackett) is a "proxy server" (or "middle-ware") which translates queries from apps (such as Sonarr and Radarr in this entry) into tracker-specific http queries. Note that there is an alternative called [Prowlarr](https://github.com/Prowlarr/Prowlarr) that it's actually better integrated with Sonarr and Radarr, requiring less maintenance; I'll still be using Jackett.
+[Jackett](https://github.com/Jackett/Jackett) is a "proxy server" (or "middle-ware") that translates queries from apps (such as the Starr apps in this case) into tracker-specific http queries. Note that there is an alternative called [Prowlarr](https://github.com/Prowlarr/Prowlarr) that is better integrated with most if not all Starr apps, requiring less maintenance; I'll still be sticking with Jackett, though.
 
 Install from the AUR with `yay`:
 
 ```sh
-yay -S jackett-bin
+yay -S jackett
 ```
 
-That's the pre-built binary, but you can build from source with `yay` by installing `jackett`. You might want to also install `flaresolverr` (AUR) to bypass *certain* protection for some sites.
 
 ## Reverse proxy
 
@@ -177,6 +195,96 @@ You can manually test the indexers by doing a basic search, in case you don't tr
 ![Jacket: example search on tpb](${SURL}/images/b/jack/jack_example_search.png "Jackett: example search on tpb")
 
 We'll come back to Jackett to continue setting up Sonarr/Radarr with some indexers at their respective moments.
+
+# FlareSolverr
+
+[FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) is used to bypass *certain* protection that some sites have. This is not 100% necessary and only needed for some trackers sometimes.
+
+You could install from the AUR with `yay`:
+
+```sh
+yay -S flaresolverr
+```
+
+But at the time of writing, the package wont work for the following reasons:
+
+- The `python-selenium` package that it requires doesn't build (actually doesn't pass the tests).
+- The `python-selenium` package is a higher version than the required by `flaresolverr`, and it's a breaking change version, so even if you are able to install `python-selenium` (by just removing the checks) it will still fail due to this check.
+
+For now the best next thing is to manually set it up using a virtual environment. Taking some elements from the AUR package.
+
+Only package requirements are `chromium` and `xorg-server-xvfb`, needed for the webdriver and a virtual X server. Install via pacman:
+
+```sh
+pacman -S chromium xorg-server-xvfb
+```
+
+Create a new service user called `flaresolverr` ([flaresolverr.sysusers](https://aur.archlinux.org/cgit/aur.git/tree/flaresolverr.sysusers?h=flaresolverr)):
+
+```sh
+useradd -r -s /usr/bin/nologin -c "FlareSolverr" -d "/opt/flaresolverr" flaresolverr
+```
+
+Clone the [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) git repo in `/opt` and get inside it:
+
+```sh
+cd /opt
+git clone git@github.com:FlareSolverr/FlareSolverr.git
+mv FlareSolverr/ flaresolverr
+cd flaresolverr
+```
+
+Create a python environment called `.venv`, activate it and install the requirements:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Next thing is to create a systemd service `flaresolverr.service` ([flaresolverr.service](https://aur.archlinux.org/cgit/aur.git/tree/flaresolverr.service?h=flaresolverr) with some modifications for the python environment):
+
+```ini
+[Unit]
+Description=FlareSolverr
+After=network.target
+
+[Service]
+SyslogIdentifier=flaresolverr
+Restart=always
+RestartSec=5
+Type=simple
+User=flaresolverr
+Group=flaresolverr
+Environment="LOG_LEVEL=info"
+Environment="CAPTCHA_SOLVER=none"
+WorkingDirectory=/opt/flaresolverr
+ExecStart=/opt/flaresolverr/.venv/bin/python /opt/flaresolverr/src/flaresolverr.py # note the venv python and that it uses the "src" directory for the git repo
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then change the ownership to `flaresolverr`, make a symbolic link to `/etc/systemd/system` (or create the service file directly in here) and now the service can be started/enabled:
+
+```sh
+chown -R flaresolverr:flaresolverr /opt/flaresolverr/
+ln -s /opt/flaresolverr/flaresolverr.service /etc/systemd/system/
+systemctl enable flaresolverr.service
+systemctl start flaresolverr.service
+```
+
+You can check that the service started correctly by checking the journal:
+
+```sh
+journalctl -fxeu flaresolverr
+```
+
+Which should display "Test successful" and "Serving on http://0.0.0.0:8191" which is the default, unless you configure this differently via virtual environments (in the systemd service file, for example). Now just configure Jackett with the FlareSolverr API endpoint, which can be left blank if its the default (my case, but I manually set it up anyways).
+
+==Note that since this was a manual setup, if `python` gets updated it will probably break the virtual environment (just re-do that part). If FlareSolverr gets updated, you might need to stash the changes (because of the service file) and do a git pull (probably install the requirements again, too). Until the AUR packages are fixed, at least.==
 
 # qBitTorrent
 
