@@ -496,13 +496,51 @@ As mentioned in [Custom Formats](#custom-formats) and [Quality](#quality) this i
 
 I set the name to "HD Bluray + WEB". I'm also not upgrading the torrents for now. Language set to "Original".
 
-#### Indexers
-
-WIP
-
 #### Download Clients
 
-WIP
+Pretty straight forward, just click on the giant "+" button and click on the qBitTorrent option. Then configure:
+
+- Name: can be anything, just an identifier.
+- Enable: enable it.
+- Host: use `localhost`. For some reason I can't make it work with the reverse proxied qBitTorrent.
+- Port: the port number you chose, `30000` in my case.
+- Url Base: leave blank as even though we have it exposed under `/qbt`, the `localhost` service itself is not.
+- Username: the Web UI username, `admin` by default.
+- Password: the Web UI username, `adminadmin` by default (you should've changed it if you have the service exposed).
+- Category: `movies`. Not sure if this can be set on a per indexer basis, but for now I'm using it like this. If I need another category I think I'll have to "add another download client" (which would be the same just with different category).
+
+Everything else can be left as default, but maybe change *Completed Download Handling* if you'd like. Same goes for the general *Failed Download Handling* download clients' coption.
+
+#### Indexers
+
+Also easy to set up, also just click on the giant "+" button and click on the *custom* Torznab option (you can also use the *preset -> Jackett* Torznab option). Then configure:
+
+- Name: can be anything, just an identifier. I like to do "Jackett - indexer_name".
+- URL: `http://localhost:9117/api/v2.0/indexers/YOURINDEXER/results/torznab/`, where `YOURINDEXER` is what Jackett exposes. Can be looked at if you hover on the indexer's "Copy Torznab Feed" button on the Jackett Web UI, examples are `yts` and `tpb`. Again, for some reason I can't directly use the reverse proxied Jackett.
+- API Path: `/api`, leave as is.
+- API Key: this can be found at the top right corner in Jackett's Web UI. Copy/paste it.
+- Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the movies categories).
+- Tags: I like to add a tag for teh "indexer_name" like `yts` or `tpb`. This is useful so I can control which indexers to use when adding new movies.
+
+Everything else on default. *Download Client* can also be set, which can be useful to keep different categories per indexer or something similar. *Seed Ratio* and *Seed Time* can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.
+
+### Download content
+
+You can now start to download content by going to *Movies -> Add New*. Basically just follow the [Radarr: How to add a movie](https://wiki.servarr.com/radarr/quick-start-guide#how-to-add-a-movie) guide. The screenshots from the guide are a bit outdated but it contains everything you need to know.
+
+I personally use:
+
+- Monitor: Movie Only.
+- Minimum Availability: Released.
+- Quiality Profile: "HD Bluray + WEB", the one configured in this entry.
+- Tags: the "indexer_name" I want to use to download the movie, usually just `yts` (remember this is a "LQ" so if you have that custom format set it might not download anything) as mentioned in [Indexers](#indexers-1). If you don't specify a tag it will use all indexers as far as I know.
+- Start search for missing movie: toggled on. Immediatly start searching for the movie and start the download.
+
+Once you click on "Add Movie" it will add it to the *Movies* section and start searching and selecting the best torrent it finds, according to the "filters" (quality settings, profile and indexer(s)).
+
+When it selects a torrent it sends it to qBitTorrent and you can even go ahead and monitor it over there. Else you can also monitor at *Activity -> Queue*.
+
+After the movie is downloaded and processed by Radarr, it will create the appropriate hardlinks to the `media/movies` directory, as set in [Directory structure](#directory-structure).
 
 # Jellyfin
 
@@ -514,11 +552,15 @@ Install from the AUR with `yay`:
 yay -S jellyfin-bin
 ```
 
-Similar to `jackett` this is a pre-built binary, but you can build from source with `yay` by installing `jellyfin` (or from the latest `git` commit with `jellyfin-git`).
+I'm installing the pre-built binary instead of building it as I was getting a lot of errors and the server was even crashing. You can try installing `jellyfin` instead.
 
-You can already `start`/`enable` the `jellyfin.service` which will start at `http://localhost:8096/` by default where you need to complete the initial set up. You can either allow through `ufw` and finish the setup, or create the reverse proxy through `nginx`.
+==Add the `jellyfin` user to the `servarr` group:==
 
-==Don't forget to add the `jellyfin` user to the `servarr` group.==
+```sh
+gpasswd -a jellyfin servarr
+```
+
+You can already `start`/`enable` the `jellyfin.service` which will start at `http://localhost:8096/` by default where you need to complete the initial set up. But let's create the reverse proxy first then start everything and finish the set up.
 
 ## Reverse proxy
 
@@ -595,7 +637,7 @@ Create/extend the certificate by running:
 certbot --nginx
 ```
 
-Similarly to `jackett`, that will autodetect the new subdomain and extend the existing certificate(s). Restart the `nginx` service for changes to take effect:
+Similarly to the `isos` subdomain, that will autodetect the new subdomain and extend the existing certificate(s). Restart the `nginx` service for changes to take effect:
 
 ```sh
 systemctl restart nginx
@@ -603,7 +645,7 @@ systemctl restart nginx
 
 ## Start using Jellyfin
 
-You can now `start`/`enable` the `jellyfin.service`:
+You can now `start`/`enable` the `jellyfin.service` if you haven't already:
 
 ```sh
 systemctl enable jellyfin.service
@@ -611,3 +653,15 @@ systemctl start jellyfin.service
 ```
 
 Then navigate to `https://jellyfin.yourdomain.com` and either continue with the set up wizard if you didn't already or continue with the next steps to configure your libraries.
+
+The initial setup wizard makes you create an user (will be the admin for now) and at least one library, though these can be done later. For more check [Jellyfin: Quick start](https://jellyfin.org/docs/general/quick-start/).
+
+Remember to use the configured directory as mentioned in [Directory structure](#directory-structure). Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then click on *Administration -> Dashboard*. I didn't configure much other than adding a couple of users for me and friends, I wouldn't recommend using the admin account to watch (personal preference).
+
+Once there is at least one library it will show at *Home* along with the latest movies (if any) similar to the following (don't judge, these are just the latest I added due to friend's requests):
+
+![Jellyfin: Home libraries](${SURL}/images/b/jellyfin/jellyfin_home_libraries.png "Jellyfin: Home libraries")
+
+And inside the "Movies" library you can see the whole catalog where you can filter or just scroll as well as seeing *Suggestions* (I think this starts getting populated afte a while) and *Genres*:
+
+![Jellyfin: Library catalog options](${SURL}/images/b/jellyfin/jellyfin_library_catalog_options.png "Jellyfin: Library catalog options")
