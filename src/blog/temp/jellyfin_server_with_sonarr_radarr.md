@@ -207,12 +207,12 @@ yay -S flaresolverr
 
 But at the time of writing, the package wont work for the following reasons:
 
-- The `python-selenium` package that it requires doesn't build (actually doesn't pass the tests).
-- The `python-selenium` package is a higher version than the required by `flaresolverr`, and it's a breaking change version, so even if you are able to install `python-selenium` (by just removing the checks) it will still fail due to this check.
+- The `python-selenium` package that it requires doesn't build (actually it just doesn't pass the tests).
+- The `python-selenium` package is a higher version than the required by `flaresolverr`, and it's a breaking change version (they don't follow semantic versioning), so even if you are able to install `python-selenium` (by just removing the checks) it will still fail due to this check.
 
 ### Manual installation
 
-For now the best next thing is to manually set it up using a virtual environment. I'll be taking some elements from the AUR package. Only package requirements are `chromium` and `xorg-server-xvfb`, needed for the `selenium` webdriver and a virtual X server.
+For now the best next thing is to manually set it up using a python virtual environment. I'll be taking some elements from the AUR package. Only package requirements are `chromium` and `xorg-server-xvfb`, needed for the `selenium` webdriver and a virtual X server.
 
 Install dependencies via pacman:
 
@@ -252,7 +252,7 @@ chown -R flaresolverr:flaresolverr /opt/flaresolverr/
 
 #### Creating a systemd service
 
-You could just execute `python src/flaresolverr.py` while in the python virtual environment, but we want it as a service. Create a systemd service file `flaresolverr.service` ([flaresolverr.service](https://aur.archlinux.org/cgit/aur.git/tree/flaresolverr.service?h=flaresolverr) with few modifications) either at the `/opt/flaresolverr` directory and create a symlink to `/etc/systemd/system` or directly create the service file there:
+You could just execute `python src/flaresolverr.py` while in the python virtual environment, but we want it as a service. Create a systemd service file `flaresolverr.service` ([flaresolverr.service](https://aur.archlinux.org/cgit/aur.git/tree/flaresolverr.service?h=flaresolverr) with few modifications) in `/etc/systemd/system`:
 
 ```ini
 [Unit]
@@ -289,7 +289,7 @@ You can check that the service started correctly by checking the logs:
 journalctl -fxeu flaresolverr
 ```
 
-Which should display "Test successful" and "Serving on http://0.0.0.0:8191" (which is the default). Jackett will need to be configured if FlareSolverr is served on anything different than the default.
+It should show "Test successful" and "Serving on http://0.0.0.0:8191" (which is the default). Jackett will need to be configured if FlareSolverr is served on anything different than the default.
 
 ==Note that since this was a manual setup, if `python` gets updated it will probably break the virtual environment (just re-do that part). If FlareSolverr gets updated, you might need to stash the changes (because of the service file) and do a git pull (probably install the requirements again, too). Until the AUR packages are fixed, at least.==
 
@@ -297,13 +297,11 @@ Which should display "Test successful" and "Serving on http://0.0.0.0:8191" (whi
 
 [qBitTorrent](https://wiki.archlinux.org/title/QBittorrent) is a fast, stable and light BitTorrent client that comes with many features and in my opinion it's a really user friendly client and my personal choice for years now. But you can choose whatever client you want, there are more lightweight alternatives such as [Transmission](https://wiki.archlinux.org/title/transmission).
 
-Install the "headless" `qbittorrent` package:
+Install the headless `qbittorrent` package ("nox" as in "no X server"):
 
 ```sh
 pacman -S qbittorrent-nox
 ```
-
-Where "nox" stands for "no X server" (the commonly used Linux display server).
 
 By default the package doesn't install any (service) user, but it is recommended to have one so we can run the service under it. Create the user, I'll call it `qbittorrent` and leave it with the default homedir (`/home`):
 
@@ -311,7 +309,11 @@ By default the package doesn't install any (service) user, but it is recommended
 useradd -r -m qbittorrent
 ```
 
-==Add the `qbittorrent` user to the `servarr` group.==
+==Add the `qbittorrent` user to the `servarr` group:==
+
+```sh
+gpasswd -a qbittorrent servarr
+```
 
 Decide a port number you're going to run the service on for the next steps, the default is `8080` but I'll use `30000`; it doesn't matter much, as long as it matches for all the config.
 
@@ -349,13 +351,13 @@ systemctl enable `qbittorrent-nox@qbittorrent.service
 systemctl start `qbittorrent-nox@qbittorrent.service
 ```
 
-This will start `qbittorrent` using default config. We need to change the port (in my case to `30000`) and add a config for when `qbittorrent` exits (the Web UI has a close button). I guess this can be done before enabling/starting the service, but either way let's create a "drop-in" file by "editing" the service:
+This will start `qbittorrent` using default config. We need to change the port (in my case to `30000`) and set `qbittorrent` to restart on exit (the Web UI has a close button). I guess this can be done before enabling/starting the service, but either way let's create a "drop-in" file by "editing" the service:
 
 ```sh
 systemctl edit `qbittorrent-nox@qbittorrent.service
 ```
 
-Which will bring up a file containing the service unit and a space where we can add/override anything. Read the comments and only add the following config on the specified text space:
+Which will bring up a file editing mode containing the service unit and a space where we can add/override anything, add:
 
 ```ini
 [Service]
@@ -364,7 +366,7 @@ Restart=on-success
 RestartSec=5s
 ```
 
-With this you can `restart` the service (it might ask to also reload the systemd deamon or something like that):
+When saving and exiting from the file it will create the override config. Restart the service for changes to take effect (it might ask to also reload the systemd deamon or something like that):
 
 ```sh
 systemctl restart `qbittorrent-nox@qbittorrent.service
@@ -376,13 +378,13 @@ You can now head to `https://isos.yourdomain.com/qbt/` and login with user `admi
 
 It should be usable already but we can go further and fine tune it, specially to some kind of "convention" as shown in [TRaSH: qBitTorrent basic setup](https://trash-guides.info/Downloaders/qBittorrent/Basic-Setup/) and subsequent `qbittorrent` guides.
 
-I use all the suggested settings, where the only "changes" are for personal paths, ports, and in general connection settings that depend on my set up. The only super important setting I noticed that can affect our setup (meaning what is described in this entry) is the *Web UI -> Authentication* for the "Bypass authentication for cliens on localhost". This will be an issue because the reverse proxy is accessing `qbittorrent` via the localhost, so this will make the service open to the world, experiment at your own risk.
+I use all the suggested settings, where the only "changes" are for personal paths, ports, and in general connection settings that depend on my setup. The only super important setting I noticed that can affect our setup (meaning what is described in this entry) is the *Web UI -> Authentication* for the "Bypass authentication for clients on localhost". This will be an issue because the reverse proxy is accessing `qbittorrent` via the localhost, so this will make the service open to the world, experiment at your own risk.
 
 Finally, add categories by following [TRaSH: qBitTorrent how to add categories](https://trash-guides.info/Downloaders/qBittorrent/How-to-add-categories/). I added 3: `tv`, `movies` and `anime`.
 
 # Radarr
 
-[Radarr](https://radarr.video/) is a movie collection manager that can be used to download movies via torrents. This is actually a fork of Sonarr, but Sonarr is harder to set up in my opinion so I'm starting with this one.
+[Radarr](https://radarr.video/) is a movie collection manager that can be used to download movies via torrents. This is actually a fork of Sonarr, so they're pretty similar, I just wanted to set up movies first.
 
 Install from the AUR with `yay`:
 
@@ -390,13 +392,17 @@ Install from the AUR with `yay`:
 yay -S radarr
 ```
 
-The default port that Radarr uses is `7878` for http (the one we need for our reverse proxy).
+==Add the `radarr` user to the `servarr` group:==
 
-==Don't forget to add the `radarr` user to the `servarr` group.==
+```sh
+gpasswd -a radarr servarr
+```
+
+The default port that Radarr uses is `7878` for http (the one we need for our reverse proxy).
 
 ## Reverse proxy
 
-Add the following `location` block into the `isos.conf` with whatever subdirectory name you want, I'll leave it as `radarr` as stated in the official documentation:
+Add the following `location` blocks into the `isos.conf` with whatever subdirectory name you want, I'll leave it as `radarr`:
 
 ```nginx
 location /radarr {
@@ -434,7 +440,7 @@ systemctl enable radarr.service
 systemctl start radarr.service
 ```
 
-This will start the service and create the default configs under `/var/lib/radarr`, but we need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/radarr`). Edit `/var/lib/radarr/config.xml` and change the `URLBase` config:
+This will start the service and create the default configs under `/var/lib/radarr`. We need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/radarr`). Edit `/var/lib/radarr/config.xml` and change the `URLBase` config:
 
 ```xml
 ...
@@ -442,17 +448,61 @@ This will start the service and create the default configs under `/var/lib/radar
 ...
 ```
 
-Then restart the service:
+Then restart the `radarr` service:
 
 ```sh
 systemctl restart radarr.service
 ```
 
-And head to `https://isos.yourdomain.com/radarr` and again go straight to secure the instance by adding authentication under *Settings -> General -> Security*. I added the "Forms" option, just fill in the username, password and click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.
+Now `https://isos.yourdomain.com/radarr` is accessible. Again go straight to secure the instance by adding authentication under *Settings -> General -> Security*. I added the "Forms" option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.
 
 ### Configuration
 
-Now, this is the most tedious part, and I'm going to go for all of the defaults plus recommended configs (for the [TRaSH-Guides](https://trash-guides.info/), for example) according to the official [Radarr: Quick Start Guide](https://wiki.servarr.com/radarr/quick-start-guide). I'll be adding anything that is either not mentioned in the guide, or that is specific to how I'm setting up stuff in this entry.
+This is the most tedious part, but I'm going to go for most of the defaults plus recommended configs (by [TRaSH](https://trash-guides.info/)) according to the official [Radarr: Quick start guide](https://wiki.servarr.com/radarr/quick-start-guide). Anything that is either not mentioned in the guide, or that is specific to how I'm setting up stuff in this entry will be stated below.
+
+#### Media Management
+
+- **Movie Naming**:
+    - *Standard Movie Format*:
+
+    ```
+    {Movie CleanTitle} {(Release Year)} [imdbid-{ImdbId}] - {Edition Tags }{[Custom Formats]}{[Quality Full]}{[MediaInfo 3D]}{[MediaInfo VideoDynamicRangeType]}{[Mediainfo AudioCodec}{ Mediainfo AudioChannels}]{MediaInfo AudioLanguages}[{MediaInfo VideoBitDepth}bit][{Mediainfo VideoCodec}]{-Release Group}
+    ```
+
+    - *Movie Folder Format*:
+
+    ```
+    {Movie CleanTitle} ({Release Year}) [imdbid-{ImdbId}]
+    ```
+
+- **File Management**:
+    - *Propers and Repacks*: set it to "Do Not Prefer" and instead we'll use the [Repack/Proper](https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#repackproper) [custom format by TRaSH](https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats).
+
+#### Quality
+
+This is personal preference and it dictates your preferred file sizes. You can follow [TRaSH: Quality settings](https://trash-guides.info/Radarr/Radarr-Quality-Settings-File-Size/) to maximize the quality of the downloaded content and restrict low quality stuff.
+
+Personally, I think TRaSH's quality settings are a bit elitist and first world-y. I'm fine with whatever, and the tracker I'm using has the quality I want anyways. I did, however, set it to a minimum of `0` and maximum of `400` for the qualities shown in TRaSH's guide. Configuring anything below `720p` shouldn't be necessary anyways.
+
+#### Custom Formats
+
+Again, this is also completely a personal preference selection and depends on the quality and filters you want. My custom format selections are mostly based on [TRaSH: HD Bluray + WEB quality profile](https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-webA).
+
+The only *Unwanted* format that I'm not going to use is the Low Quality ([LQ](https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#lq)) as it blocks one of the sources I'm using to download a bunch of movies. The reasoning behind the LQ custom format is that these release groups don't care much about quality (they keep low file sizes) and name tagging, which I understand but I'm fine with this as I can upgrade movies individually whenever I want (I want a big catalog of content that I can quickly watch).
+
+#### Profiles
+
+As mentioned in [Custom Formats](#custom-formats) and [Quality](#quality) this is completly a personal preference. I'm going to go for "Low Quality" downloads by still following some of the conventions from TRaSH. I'm using the [TRaSH: HD Bluray + WEB quality profile](https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-webA) with the exclusion of the [LQ](https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#lq) profile.
+
+I set the name to "HD Bluray + WEB". I'm also not upgrading the torrents for now. Language set to "Original".
+
+#### Indexers
+
+WIP
+
+#### Download Clients
+
+WIP
 
 # Jellyfin
 
