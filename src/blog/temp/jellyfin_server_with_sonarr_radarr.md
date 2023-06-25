@@ -116,10 +116,11 @@ Install from the AUR with `yay`:
 yay -S jackett
 ```
 
+I'll be using the default `9117` port, but change accordingly if you decide on another one.
 
 ## Reverse proxy
 
-I'm going to have all my *iso downloading* services under the same subdomain, only on different subdirectories. So, create the config file `isos.conf` at the usual `sites-available/enabled` path for `nginx`:
+I'm going to have most of the services under the same subdomain, with different subdirectories. Create the config file `isos.conf` at the usual `sites-available/enabled` path for `nginx`:
 
 ```nginx
 server {
@@ -138,7 +139,7 @@ server {
 }
 ```
 
-This is the basic reverse proxy config as shown in [Jackett: Running Jackett behgind a reverse proxy](https://github.com/Jackett/Jackett#running-jackett-behind-a-reverse-proxy). The rest of the services will be added under different `location` block on their respective steps.
+This is the basic reverse proxy config as shown in [Jackett: Running Jackett behind a reverse proxy](https://github.com/Jackett/Jackett#running-jackett-behind-a-reverse-proxy). The rest of the services will be added under different `location` block on their respective steps.
 
 ### SSL certificate
 
@@ -148,7 +149,7 @@ Create/extend the certificate by running:
 certbot --nginx
 ```
 
-That will automatically detect the new subdomain config and create/extend your existing certificate(s). Now you can restart the `nginx` service for changes to take effect:
+That will automatically detect the new subdomain config and create/extend your existing certificate(s). Restart the `nginx` service for changes to take effect:
 
 ```sh
 systemctl restart nginx
@@ -163,7 +164,7 @@ systemctl enable jackett.service
 systemctl start jackett.service
 ```
 
-And it will autocreate the default configuration under `/var/lib/jackett/ServerConfig.json`, which we need to edit at least to change the `BasePathOverride`:
+It will autocreate the default configuration under `/var/lib/jackett/ServerConfig.json`, which we need to edit at least to change the `BasePathOverride` to match what we used in the `nginx` config:
 
 ```json
 {
@@ -174,29 +175,27 @@ And it will autocreate the default configuration under `/var/lib/jackett/ServerC
 }
 ```
 
-It has to match whatever we used at the `isos.conf` file, same goes for `Port`, which I left at default (`9117`). Now restart the service:
+Also modify the `Port` if you changed it. Restart the `jackett` service:
 
 ```sh
 systemctl restart jackett.service
 ```
 
-And it should now be available at `https://isos.yourdomain.com/jack`. Right away go ahead and scroll down and add an admin password, because it is unprotected by default. You can change any other config you want from the Web UI, too.
+It should now be available at `https://isos.yourdomain.com/jack`. Add an admin password right away by scroll down and until the first config setting; don't forget to click on "Set Password". You can change any other config you want from the Web UI, too (you'll need to click on "Apply server settings").
 
 ### Indexers
 
-For Jackett, an indexer is just a jackett configured tracker for some of the commonly known trackers/torrent sites, it comes pre-configured and you can select different indexer URL, useful when the site is down and you need to use a mirror. Some indexers come with extra features/configuration depending on what the site specializes on, for example the `Nyaa.si` indexer has options to provide better season information to Sonarr, and options for filter, category, etc..
+For Jackett, an indexer is just a configured tracker for some of the commonly known torrent sites. Jackett comes with a lot of pre-configured public and private indexers which usually have multiple URLs (mirrors) per indexer, useful when the main torrent site is down. Some indexers come with extra features/configuration depending on what the site specializes on.
 
-To add an indexer click on the "+ Add Indexer" at the top of the Web UI and look for indexers you know, for example *The Pirate Bay*, *Nyaa*, *1337x*, etc., then click on the "+" icon on the far-most right (or select the ones you want and scroll all the way to the bottom to add all selected) for each indexer you want. They then will show as a list with some available actions such as "Copy RSS Feed", "Copy Torznab Feed", "Copy Potato Feed", a button to search, configure, delete and test the indexer, as shown below:
+To add an indexer click on the "+ Add Indexer" at the top of the Web UI and look for indexers you want, then click on the "+" icon on the far-most right for each indexer or select the ones you want (clicking on the checkbox on the far-most left of the indexer) and scroll all the way to the bottom to click on "Add Selected". They then will show as a list with some available actions such as "Copy RSS Feed", "Copy Torznab Feed", "Copy Potato Feed", a button to search, configure, delete and test the indexer, as shown below:
 
 ![Jacket: configured indexers](${SURL}/images/b/jack/jack_configured_indexers.png "Jackett: configured indexers")
 
-You can manually test the indexers by doing a basic search, in case you don't trust the "Test" button. For example:
+You can manually test the indexers by doing a basic search to see if they return anything, either by searching on each individual indexer by clicking on the magnifying glass icon on the right of the indexer or clicking on "Manual Search" button which is next to the "+ Add Indexer" button at the top right.
 
-![Jacket: example search on tpb](${SURL}/images/b/jack/jack_example_search.png "Jackett: example search on tpb")
+Explore each indexer's configuration in case there is stuff you might want to change.
 
-We'll come back to Jackett to continue setting up Sonarr/Radarr with some indexers at their respective moments.
-
-# FlareSolverr
+## FlareSolverr
 
 [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) is used to bypass *certain* protection that some sites have. This is not 100% necessary and only needed for some trackers sometimes.
 
@@ -211,9 +210,11 @@ But at the time of writing, the package wont work for the following reasons:
 - The `python-selenium` package that it requires doesn't build (actually doesn't pass the tests).
 - The `python-selenium` package is a higher version than the required by `flaresolverr`, and it's a breaking change version, so even if you are able to install `python-selenium` (by just removing the checks) it will still fail due to this check.
 
-For now the best next thing is to manually set it up using a virtual environment. Taking some elements from the AUR package.
+### Manual installation
 
-Only package requirements are `chromium` and `xorg-server-xvfb`, needed for the webdriver and a virtual X server. Install via pacman:
+For now the best next thing is to manually set it up using a virtual environment. I'll be taking some elements from the AUR package. Only package requirements are `chromium` and `xorg-server-xvfb`, needed for the `selenium` webdriver and a virtual X server.
+
+Install dependencies via pacman:
 
 ```sh
 pacman -S chromium xorg-server-xvfb
@@ -243,7 +244,15 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Next thing is to create a systemd service `flaresolverr.service` ([flaresolverr.service](https://aur.archlinux.org/cgit/aur.git/tree/flaresolverr.service?h=flaresolverr) with some modifications for the python environment):
+Finally just change the ownership of the `/opt/flaresolverr` directory:
+
+```sh
+chown -R flaresolverr:flaresolverr /opt/flaresolverr/
+```
+
+#### Creating a systemd service
+
+You could just execute `python src/flaresolverr.py` while in the python virtual environment, but we want it as a service. Create a systemd service file `flaresolverr.service` ([flaresolverr.service](https://aur.archlinux.org/cgit/aur.git/tree/flaresolverr.service?h=flaresolverr) with few modifications) either at the `/opt/flaresolverr` directory and create a symlink to `/etc/systemd/system` or directly create the service file there:
 
 ```ini
 [Unit]
@@ -267,22 +276,20 @@ TimeoutStopSec=30
 WantedBy=multi-user.target
 ```
 
-Then change the ownership to `flaresolverr`, make a symbolic link to `/etc/systemd/system` (or create the service file directly in here) and now the service can be started/enabled:
+We can now `start`/`enable` the `flaresolverr.service`:
 
 ```sh
-chown -R flaresolverr:flaresolverr /opt/flaresolverr/
-ln -s /opt/flaresolverr/flaresolverr.service /etc/systemd/system/
 systemctl enable flaresolverr.service
 systemctl start flaresolverr.service
 ```
 
-You can check that the service started correctly by checking the journal:
+You can check that the service started correctly by checking the logs:
 
 ```sh
 journalctl -fxeu flaresolverr
 ```
 
-Which should display "Test successful" and "Serving on http://0.0.0.0:8191" which is the default, unless you configure this differently via virtual environments (in the systemd service file, for example). Now just configure Jackett with the FlareSolverr API endpoint, which can be left blank if its the default (my case, but I manually set it up anyways).
+Which should display "Test successful" and "Serving on http://0.0.0.0:8191" (which is the default). Jackett will need to be configured if FlareSolverr is served on anything different than the default.
 
 ==Note that since this was a manual setup, if `python` gets updated it will probably break the virtual environment (just re-do that part). If FlareSolverr gets updated, you might need to stash the changes (because of the service file) and do a git pull (probably install the requirements again, too). Until the AUR packages are fixed, at least.==
 
@@ -298,15 +305,15 @@ pacman -S qbittorrent-nox
 
 Where "nox" stands for "no X server" (the commonly used Linux display server).
 
-By default the package doesn't install any service user, but it is recommended to have one so we can run the service under it. Create the user (it can be any name):
+By default the package doesn't install any (service) user, but it is recommended to have one so we can run the service under it. Create the user, I'll call it `qbittorrent` and leave it with the default homedir (`/home`):
 
 ```sh
 useradd -r -m qbittorrent
 ```
 
-And decide a port number you're going to run the service on for the next steps, the default is `8080` but I'll use `30000`; it doesn't matter much, as long as it matches for all the config.
+==Add the `qbittorrent` user to the `servarr` group.==
 
-==Don't forget to add the `qbittorrent` user to the `servarr` group.==
+Decide a port number you're going to run the service on for the next steps, the default is `8080` but I'll use `30000`; it doesn't matter much, as long as it matches for all the config.
 
 ## Reverse proxy
 
@@ -335,14 +342,14 @@ systemctl restart nginx
 
 ## Start using qBitTorrent
 
-You can now `start`/`enable` the `qbittorrent-nox@.service`. Remembering to use the service account created (`qbittorrent`):
+You can now `start`/`enable` the `qbittorrent-nox@.service` using the service account created (`qbittorrent`):
 
 ```sh
 systemctl enable `qbittorrent-nox@qbittorrent.service
 systemctl start `qbittorrent-nox@qbittorrent.service
 ```
 
-This will start `qbittorrent` using default config, we need to change the port (in my case to `30000`) and add a config for when `qbittorrent` exits (the Web UI has a close button). I guess this can be done before enabling/starting the service, but either way let's create a "drop-in" file by "editing" the service:
+This will start `qbittorrent` using default config. We need to change the port (in my case to `30000`) and add a config for when `qbittorrent` exits (the Web UI has a close button). I guess this can be done before enabling/starting the service, but either way let's create a "drop-in" file by "editing" the service:
 
 ```sh
 systemctl edit `qbittorrent-nox@qbittorrent.service
@@ -363,7 +370,7 @@ With this you can `restart` the service (it might ask to also reload the systemd
 systemctl restart `qbittorrent-nox@qbittorrent.service
 ```
 
-You can now head to `https://isos.yourdomain.com/qbt/` and login with user `admin` and password `adminadmin` (by default). First thing is that you should go and change the password in the config. The Web UI is basically the same as the normal desktop UI so if you've used it it will feel familiar. From here you can threat it as a normal torrent client and even start using it raw to download your Linux isos already.
+You can now head to `https://isos.yourdomain.com/qbt/` and login with user `admin` and password `adminadmin` (by default). Change the default password right away by going to *Tools -> Options -> Web UI -> Authentication*. The Web UI is basically the same as the normal desktop UI so if you've used it it will feel familiar. From here you can threat it as a normal torrent client and even start using for other stuff other than the specified here.
 
 ### Configuration
 
