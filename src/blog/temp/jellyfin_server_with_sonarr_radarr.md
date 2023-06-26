@@ -336,7 +336,7 @@ location /qbt/ {
 }
 ```
 
-This is taken from [qBitTorrent: NGINX Revers Proxy for Web UI](https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI). Restart the `nginx` service for the changes to take effect:
+This is taken from [qBitTorrent: Nginx reverse proxy for Web UI](https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI). Restart the `nginx` service for the changes to take effect:
 
 ```sh
 systemctl restart nginx
@@ -425,7 +425,7 @@ location /radarr/api {
 }
 ```
 
-This is taken from [Radarr Installation: Reverse Proxy Configuration: NGINX](https://wiki.servarr.com/radarr/installation#nginx). Restart the `nginx` service for the changes to take effect:
+This is taken from [Radarr Nginx reverse proxy configuration](https://wiki.servarr.com/radarr/installation#nginx). Restart the `nginx` service for the changes to take effect:
 
 ```sh
 systemctl restart nginx
@@ -440,7 +440,7 @@ systemctl enable radarr.service
 systemctl start radarr.service
 ```
 
-This will start the service and create the default configs under `/var/lib/radarr`. We need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/radarr`). Edit `/var/lib/radarr/config.xml` and change the `URLBase` config:
+This will start the service and create the default configs under `/var/lib/radarr`. We need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/radarr`). Edit `/var/lib/radarr/config.xml`:
 
 ```xml
 ...
@@ -456,24 +456,13 @@ systemctl restart radarr.service
 
 Now `https://isos.yourdomain.com/radarr` is accessible. Again go straight to secure the instance by adding authentication under *Settings -> General -> Security*. I added the "Forms" option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.
 
+Note that if you want to have an anime movies library, it is recommended to run a second instance of Radarr for this as shown in [Radarr: Linux multiple instances](https://wiki.servarr.com/radarr/installation#linux-multiple-instances) and follow [TRaSH: How to setup quality profiles anime](https://trash-guides.info/Radarr/radarr-setup-quality-profiles-anime/) if an anime instance is what you want.
+
 ### Configuration
 
 This is the most tedious part, but I'm going to go for most of the defaults plus recommended configs (by [TRaSH](https://trash-guides.info/)) according to the official [Radarr: Quick start guide](https://wiki.servarr.com/radarr/quick-start-guide). Anything that is either not mentioned in the guide, or that is specific to how I'm setting up stuff in this entry will be stated below.
 
 #### Media Management
-
-- **Movie Naming**:
-    - *Standard Movie Format*:
-
-    ```
-    {Movie CleanTitle} {(Release Year)} [imdbid-{ImdbId}] - {Edition Tags }{[Custom Formats]}{[Quality Full]}{[MediaInfo 3D]}{[MediaInfo VideoDynamicRangeType]}{[Mediainfo AudioCodec}{ Mediainfo AudioChannels}]{MediaInfo AudioLanguages}[{MediaInfo VideoBitDepth}bit][{Mediainfo VideoCodec}]{-Release Group}
-    ```
-
-    - *Movie Folder Format*:
-
-    ```
-    {Movie CleanTitle} ({Release Year}) [imdbid-{ImdbId}]
-    ```
 
 - **File Management**:
     - *Propers and Repacks*: set it to "Do Not Prefer" and instead we'll use the [Repack/Proper](https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#repackproper) [custom format by TRaSH](https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats).
@@ -496,7 +485,7 @@ As mentioned in [Custom Formats](#custom-formats) and [Quality](#quality) this i
 
 I set the name to "HD Bluray + WEB". I'm also not upgrading the torrents for now. Language set to "Original".
 
-#### Download Clients
+#### Download clients
 
 Pretty straight forward, just click on the giant "+" button and click on the qBitTorrent option. Then configure:
 
@@ -509,18 +498,18 @@ Pretty straight forward, just click on the giant "+" button and click on the qBi
 - Password: the Web UI username, `adminadmin` by default (you should've changed it if you have the service exposed).
 - Category: `movies`. Not sure if this can be set on a per indexer basis, but for now I'm using it like this. If I need another category I think I'll have to "add another download client" (which would be the same just with different category).
 
-Everything else can be left as default, but maybe change *Completed Download Handling* if you'd like. Same goes for the general *Failed Download Handling* download clients' coption.
+Everything else can be left as default, but maybe change *Completed Download Handling* if you'd like. Same goes for the general *Failed Download Handling* download clients' option.
 
 #### Indexers
 
 Also easy to set up, also just click on the giant "+" button and click on the *custom* Torznab option (you can also use the *preset -> Jackett* Torznab option). Then configure:
 
 - Name: can be anything, just an identifier. I like to do "Jackett - indexer_name".
-- URL: `http://localhost:9117/api/v2.0/indexers/YOURINDEXER/results/torznab/`, where `YOURINDEXER` is what Jackett exposes. Can be looked at if you hover on the indexer's "Copy Torznab Feed" button on the Jackett Web UI, examples are `yts` and `tpb`. Again, for some reason I can't directly use the reverse proxied Jackett.
+- URL: `http://localhost:9117/api/v2.0/indexers/YOURINDEXER/results/torznab/`, where `YOURINDEXER` is what Jackett exposes. Can be looked at if you hover on the indexer's "Copy Torznab Feed" button on the Jackett Web UI, examples are `yts` and `thepiratebay`. Again, for some reason I can't directly use the reverse proxied Jackett.
 - API Path: `/api`, leave as is.
 - API Key: this can be found at the top right corner in Jackett's Web UI. Copy/paste it.
 - Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the movies categories).
-- Tags: I like to add a tag for teh "indexer_name" like `yts` or `tpb`. This is useful so I can control which indexers to use when adding new movies.
+- Tags: I like to add a tag for the "indexer_name" like `yts` or `tpb`. This is useful so I can control which indexers to use when adding new movies.
 
 Everything else on default. *Download Client* can also be set, which can be useful to keep different categories per indexer or something similar. *Seed Ratio* and *Seed Time* can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.
 
@@ -541,6 +530,168 @@ Once you click on "Add Movie" it will add it to the *Movies* section and start s
 When it selects a torrent it sends it to qBitTorrent and you can even go ahead and monitor it over there. Else you can also monitor at *Activity -> Queue*.
 
 After the movie is downloaded and processed by Radarr, it will create the appropriate hardlinks to the `media/movies` directory, as set in [Directory structure](#directory-structure).
+
+# Sonarr
+
+[Sonarr](https://sonarr.tv/) is a TV series collection manager that can be used to download series via torrents. As mentioned in [Radarr](#radarr). Most of the install process, configuration and whatnot is going to be basically the same as with [Radarr](#radarr).
+
+Install from the AUR with `yay`:
+
+```sh
+yay -S sonarr
+```
+
+==Add the `sonarr` user to the `servarr` group:==
+
+```sh
+gpasswd -a sonarr servarr
+```
+
+The default port that Sonarr uses is `8989` for http, this should be fine for you, but I'll change it to `7979` as it's already in use for Komga for me, as shown in my [Manga server with Komga](https://blog.luevano.xyz/a/manga_server_with_komga.html).
+
+## Reverse proxy
+
+Basically the same as with [Radarr: Reverse proxy](#reverse-proxy-2), ==except that the `proxy_pass` (needs `/sonarr`) and the `proxy_set_header` (needs `$proxy_host` instead of `$host`) are different.==
+
+Add the following `location` blocks into the `isos.conf`, I'll leave it as `sonarr`:
+
+```nginx
+location /sonarr {
+    proxy_pass http://localhost:7979/sonarr; # change port if needed, this is not the default
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $proxy_host; # this differs from the radarr reverse proxy
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+
+    proxy_redirect off;
+}
+# Allow the API External Access via NGINX
+location /sonarr/api {
+    auth_basic off;
+    proxy_pass http://localhost:7979; # change port if needed, this is not the default
+}
+```
+
+This is taken from [Sonarr: Nginx reverse proxy configuration](https://wiki.servarr.com/sonarr/installation#nginx). Restart the `nginx` service for the changes to take effect:
+
+```sh
+systemctl restart nginx
+```
+
+## Start using Sonarr
+
+You can now `start`/`enable` the `sonarr.service`:
+
+```sh
+systemctl enable sonarr.service
+systemctl start sonarr.service
+```
+
+This will start the service and create the default configs under `/var/lib/sonarr`. We need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/sonarr`) and in my case the `Port`. Edit `/var/lib/sonarr/config.xml`:
+
+```xml
+...
+<Port>7979</Port>
+<UrlBase>/sonarr</UrlBase>
+...
+```
+
+Then restart the `sonarr` service:
+
+```sh
+systemctl restart sonarr.service
+```
+
+Now `https://isos.yourdomain.com/sonarr` is accessible. Again go straight to secure the instance by adding authentication under *Settings -> General -> Security*. I added the "Forms" option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.
+
+Similar to [Radarr](#radarr) if you want to have an anime library, it is recommended to run a second instance of Sonarr for this as shown in [Sonarr: Linux multiple instances](https://wiki.servarr.com/sonarr/installation#linux-multiple-instances) and follow [TRaSH: Release profile regex (anime)](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx-Anime/) and the [TRaSH: Anime recommended naming scheme](https://trash-guides.info/Sonarr/Sonarr-recommended-naming-scheme/#anime-episode-format) if an anime instance is what you want.
+
+### Configuration
+
+Also the most tedious part, will go for most of the defaults plus recommended configs (by [TRaSH](https://trash-guides.info/)) according to the official [Sonarr: Quick start guide](https://wiki.servarr.com/sonarr/quick-start-guide), as with [Radarr](#radarr). Anything that is either not mentioned in the guide, or that is specific to how I'm setting up stuff in this entry will be stated below.
+
+#### Media Management
+
+- **File Management**:
+    - *Propers and Repacks*: set it to "Do Not Prefer" and instead we'll use the [Propers and Repacks](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#propers-and-repacks) release profile and fill with [P2P Groups + Repack/Proper](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#p2p-groups-repackproper).
+
+#### Quality
+
+Similar to [Radarr: Quality](#quality) this is personal preference and it dictates your preferred file sizes. You can follow [TRaSH: Quality settings](https://trash-guides.info/Sonarr/Sonarr-Quality-Settings-File-Size/) to maximize the quality of the downloaded content and restrict low quality stuff.
+
+Will basically do the same as in [Radarr: Quality](#quality): set minimum of `0` and maximum of `400` for everything `720p` and above.
+
+#### Profiles
+
+This is a bit different than with [Radarr](#radarr), the way it is configured is by setting "Release profiles". I took the profiles from [TRaSH: WEB-DL Release profile regex](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/). The only possible change I'll do is disable the Low Quality Groups after some testing if this results in some issues, similar with Radarr's "LQ" custom format.
+
+For me it ended up looking like this:
+
+![Sonarr: Release profiles](${SURL}/images/b/sonarr/sonarr_release_profiles.png "Sonarr: Release profiles")
+
+But yours can differ as is mostly personal preference. For the "Quality profile" I'll be using the default "HD-1080p" most of the time, but I also created a "WEB(720/1080/2160)" because some shows are not present in only one quality.
+
+#### Download clients
+
+Exactly the same as with [Radarr: Download clients](#download-clients) only change is the category from `movies` to `tv` (or whatever you want), click on the giant "+" button and click on the qBitTorrent option. Then configure:
+
+- Name: can be anything, just an identifier.
+- Enable: enable it.
+- Host: use `localhost`.
+- Port: the port number you chose, `30000` in my case.
+- Url Base: leave blank as even though we have it exposed under `/qbt`, the `localhost` service itself is not.
+- Username: the Web UI username, `admin` by default.
+- Password: the Web UI username, `adminadmin` by default (you should've changed it if you have the service exposed).
+- Category: `tv`.
+
+Everything else can be left as default, but maybe change *Completed Download Handling* if you'd like. Same goes for the general *Failed Download Handling* download clients' option.
+
+#### Indexers
+
+Also exactly the same as with [Radarr: Indexers](#indexers-1), click on the giant "+" button and click on the *custom* Torznab option (this doesn't have the Jackett preset). Then configure:
+
+- Name: can be anything, just an identifier. I like to do "Jackett - indexer_name".
+- URL: `http://localhost:9117/api/v2.0/indexers/YOURINDEXER/results/torznab/`, where `YOURINDEXER` is what Jackett exposes. Can be looked at if you hover on the indexer's "Copy Torznab Feed" button on the Jackett Web UI, examples are `eztv` and `thepiratebay`. Again, for some reason I can't directly use the reverse proxied Jackett.
+- API Path: `/api`, leave as is.
+- API Key: this can be found at the top right corner in Jackett's Web UI. Copy/paste it.
+- Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the movies categories).
+- Tags: I like to add a tag for the "indexer_name" like `yts` or `tpb`. This is useful so I can control which indexers to use when adding new movies.
+
+Everything else on default. *Download Client* can also be set, which can be useful to keep different categories per indexer or something similar. *Seed Ratio* and *Seed Time* can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.
+
+### Download content
+
+Almost the same as with [Radarr: Download content](#download-content), but I've been personally selecting the torrents I want to download for each season/episode so far, as the indexers I'm using are all over the place and I like consistencies. Will update if I find a better near 100% automation process, but I'm fine with this anyways as I always monitor that everything is going fine.
+
+Add by going to *Series -> Add New*. Basically just follow the [Sonarr: Library add new](https://wiki.servarr.com/sonarr/library#add-new) guide. Adding series needs a bit more options that movies in Radarr, but it's straight forward.
+
+I personally use:
+
+- Monitor: All Episodes.
+- Quiality Profile: "WEB(720/1080/2160)". This depends on what I want for that how, lately I've been experimenting with this one.
+- Series Type: Standard. For now I'm just downloading shows, but it has an Anime option.
+- Tags: the "indexer_name" I want to use to download the movie, I've been using all indexers so I just use all tags as I'm experimenting and trying multiple options.
+- Season Folder: enabled. I like as much organization as possible.
+- Start search for missing episodes: disabled. Depends on you, due to my indexers, I prefer to check manually the season packs, for example.
+- Start search for cutoff unmet episodes: disabled. Honestly don't really know what this is.
+
+Once you click on "Add X" it will add it to the *Series* section and will start as monitored. So far I haven't noticed that it immediately starts downloading (because of the "Start search for missing episodes" setting) but I always click on unmonitor the series, so I can manually check (again, due to the low quality of my indexers).
+
+When it automatically starts to download an episode/season it will send it to qBitTorrent and you can monitor it over there. Else you can also monitor at *Activity -> Queue*. Same thing goes if you download manually each episode/season via the interactive search.
+
+To interactively search episodes/seasons go to *Series* and then click on any series, then click either on the interactive search button for the episode or the season, it is an icon of a person as shown below:
+
+![Sonarr: Interactive search button](${SURL}/images/b/sonarr/sonarr_interactive_search_button.png "Sonarr: Interactive search button")
+
+Then it will bring a window with the search results, where it shows the indexer it got the result from, the size of the torrent, peers, language, quality, the score it received from the configured release profiles an alert in case that the torrent is "bad" and the download button to manually download the torrent you want. An example shown below:
+
+![Sonarr: Interactive search results](${SURL}/images/b/sonarr/sonarr_interactive_search_results.png "Sonarr: Interactive search results")
+
+After the movie is downloaded and processed by Sonarr, it will create the appropriate hardlinks to the `media/tv` directory, as set in [Directory structure](#directory-structure).
 
 # Jellyfin
 
