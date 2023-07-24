@@ -1,7 +1,7 @@
-title: Set up a media server with Jellyfin with Sonarr and Radarr
+title: Set up a media server with Jellyfin, Sonarr and Radarr
 author: David Luévano
 lang: en
-summary: How to set up a media server with Jellyfin with Sonarr and Radarr, on Arch. With Bazarr, too.
+summary: How to set up a media server with Jellyfin, Sonarr and Radarr, on Arch. With Bazarr, too.
 tags: server
 	tools
 	code

@@ -23,7 +23,7 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
-      <title>Set up a media server with Jellyfin with Sonarr and Radarr</title>
+      <title>Set up a media server with Jellyfin, Sonarr and Radarr</title>
       <link>https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html</guid>
       <pubDate>Mon, 24 Jul 2023 04:30:14 GMT</pubDate>
@@ -32,7 +32,7 @@
       <category>Server</category>
       <category>Tools</category>
       <category>Tutorial</category>
-      <description>How to set up a media server with Jellyfin with Sonarr and Radarr, on Arch. With Bazarr, too.</description>
+      <description>How to set up a media server with Jellyfin, Sonarr and Radarr, on Arch. With Bazarr, too.</description>
       <content:encoded><![CDATA[<p>Second part of my self hosted media server. This is a direct continuation of <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html">Set up qBitTorrent with Jackett for use with Starr apps</a>, which will be mentioned as &ldquo;first part&rdquo; going forward. Sonarr, Radarr, Bazarr (Starr apps) and Jellyfin setups will be described in this part. Same introduction applies to this entry, regarding the use of documentation and configuration.</p>
 <p>Everything here is performed in <mark>arch btw</mark> and all commands should be run as root unless stated otherwise.</p>
 <p><mark>Kindly note that I do not condone the use of BitTorrent for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.</mark></p>
