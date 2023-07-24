@@ -16,7 +16,7 @@ Most of my config is based on the [TRaSH-Guides](https://trash-guides.info/) (wi
 
 Everything here is performed in ==arch btw== and all commands should be run as root unless stated otherwise.
 
-==Also kindly note that I do not condone the use of torrenting for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.==
+==Kindly note that I do not condone the use of torrenting for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.==
 
 # Table of contents
 
@@ -36,7 +36,7 @@ If you want to expose to a (sub)domain, then similar to my early [tutorial](http
 - An **A** (and/or **AAAA**) or a **CNAME** for `isos` (or whatever you want to call it).
     - For automation software (qBitTorrent, Jackett, Starr apps, etc.). One subdomain per service can be used instead.
 
-==Note: I'm using the explicit `127.0.0.1` ip instead of `localhost` in the reverse proxies/services config as `localhost` resolves to `ipv6` sometimes which is not configured on my server correctly.== If you have it configured you can use localhost without any issue.
+==Note: I'm using the explicit `127.0.0.1` ip instead of `localhost` in the reverse proxies/services config as `localhost` resolves to `ipv6` sometimes which is not configured on my server correctly.== If you have it configured you can use `localhost` without any issue.
 
 ## Directory structure
 
@@ -183,7 +183,9 @@ Also modify the `Port` if you changed it. Restart the `jackett` service:
 systemctl restart jackett.service
 ```
 
-It should now be available at `https://isos.yourdomain.com/jack`. ==Add an admin password right away== by scroll down and until the first config setting; don't forget to click on "Set Password". Change any other config you want from the Web UI, too (you'll need to click on "Apply server settings").
+It should now be available at `https://isos.yourdomain.com/jack`. ==Add an admin password right away== by scroll down and until the first config setting; don't forget to click on "Set Password". Change any other config you want from the Web UI, too (you'll need to click on the blue "Apply server settings" button).
+
+Note that you need to set the "Base URL override" to `http://127.0.0.1:9117` (or whatever port you used) so that the "Copy Torznab Feed" button works for each indexer.
 
 ### Indexers
 
@@ -228,7 +230,7 @@ Verify that the service started correctly by checking the logs:
 journalctl -fxeu flaresolverr
 ```
 
-It should show "Test successful" and "Serving on http://0.0.0.0:8191" (which is the default). Jackett will need to be configured if FlareSolverr is served on anything different than the default. This doesn't need to be exposed or anything, it's just an internal API that Jackett (or anything you want) will use.
+It should show "Test successful" and "Serving on http://0.0.0.0:8191" (which is the default). Jackett now needs to be configured by adding `http://127.0.0.1:8191` almost at the end in the "FlareSolverr API URL" field, then click on the blue "Apply server settings" button at the beginning of the config section. This doesn't need to be exposed or anything, it's just an internal API that Jackett (or anything you want) will use.
 
 # qBitTorrent
 
