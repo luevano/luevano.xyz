@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en
+"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
+<title>Set up a media server with Jellyfin with Sonarr and Radarr -- Luévano's Blog</title>
+  <meta name="description" content="How to set up a media server with Jellyfin with Sonarr and Radarr, on Arch. With Bazarr, too."/>
+<link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
+    <!-- theme related -->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
+    <!-- extra -->
+    <!-- highlight support for code blocks -->
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+</script>
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
+
+    <!-- og meta -->
+  <meta property="og:title" content="Set up a media server with Jellyfin with Sonarr and Radarr -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.md"/>
+  <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
+  <meta property="og:description" content="How to set up a media server with Jellyfin with Sonarr and Radarr, on Arch. With Bazarr, too."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+<nav>
+  <ul>
+    <li>
+      <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+    </li>
+
+    <li>
+      <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+    </li>
+
+    <li>
+      <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+    </li>
+
+    <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+      <ul>
+        <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+        <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+        <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+      </ul>
+    </li>
+
+    <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+      <ul>
+        <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+
+    </header>
+
+    <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
+  <h1>Set up a media server with Jellyfin with Sonarr and Radarr</h1>
+
+  <p>Second part of my self hosted media server. This is a direct continuation of <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html">Set up qBitTorrent with Jackett for use with Starr apps</a>, which will be mentioned as &ldquo;first part&rdquo; going forward. Sonarr, Radarr, Bazarr (Starr apps) and Jellyfin setups will be described in this part. Same introduction applies to this entry, regarding the use of documentation and configuration.</p>
+<p>Everything here is performed in <mark>arch btw</mark> and all commands should be run as root unless stated otherwise.</p>
+<p><mark>Kindly note that I do not condone the use of BitTorrent for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.</mark></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#radarr">Radarr</a><ul>
+<li><a href="#reverse-proxy">Reverse proxy</a></li>
+<li><a href="#start-using-radarr">Start using Radarr</a><ul>
+<li><a href="#configuration">Configuration</a><ul>
+<li><a href="#media-management">Media Management</a></li>
+<li><a href="#quality">Quality</a></li>
+<li><a href="#custom-formats">Custom Formats</a></li>
+<li><a href="#profiles">Profiles</a></li>
+<li><a href="#download-clients">Download clients</a></li>
+<li><a href="#indexers">Indexers</a></li>
+</ul>
+</li>
+<li><a href="#download-content">Download content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sonarr">Sonarr</a><ul>
+<li><a href="#reverse-proxy_1">Reverse proxy</a></li>
+<li><a href="#start-using-sonarr">Start using Sonarr</a><ul>
+<li><a href="#configuration_1">Configuration</a><ul>
+<li><a href="#media-management_1">Media Management</a></li>
+<li><a href="#quality_1">Quality</a></li>
+<li><a href="#profiles_1">Profiles</a></li>
+<li><a href="#download-clients_1">Download clients</a></li>
+<li><a href="#indexers_1">Indexers</a></li>
+</ul>
+</li>
+<li><a href="#download-content_1">Download content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#jellyfin">Jellyfin</a><ul>
+<li><a href="#reverse-proxy_2">Reverse proxy</a><ul>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+</ul>
+</li>
+<li><a href="#start-using-jellyfin">Start using Jellyfin</a><ul>
+<li><a href="#plugins">Plugins</a></li>
+<li><a href="#transcoding">Transcoding</a><ul>
+<li><a href="#nvidia-drivers">NVIDIA drivers</a></li>
+<li><a href="#enable-hardware-acceleration">Enable hardware acceleration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#bazarr">Bazarr</a><ul>
+<li><a href="#reverse-proxy_3">Reverse proxy</a></li>
+<li><a href="#start-using-bazarr">Start using Bazarr</a><ul>
+<li><a href="#configuration_2">Configuration</a><ul>
+<li><a href="#providers">Providers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Same prerequisites as with the <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#prerequisites">First part: Prerequisites</a> plus:</p>
+<ul>
+<li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>jellyfin</code>. Only if you want to expose Jellyfin to a subdomain.</li>
+</ul>
+<p>The <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">First part: Directory structure</a> is the same here. The <code>servarr</code> user and group should be available, too.</p>
+<p><mark>It is assumed that the first part was followed.</mark></p>
+<h2 id="radarr">Radarr<a class="headerlink" href="#radarr" title="Permanent link">&para;</a></h2>
+<p><a href="https://radarr.video/">Radarr</a> is a movie collection manager that can be used to download movies via torrents. This is actually a fork of Sonarr, so they&rsquo;re pretty similar, I just wanted to set up movies first.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S radarr
+</code></pre>
+<p><mark>Add the <code>radarr</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a radarr servarr
+</code></pre>
+<p>The default port that Radarr uses is <code>7878</code> for http (the one you need for the reverse proxy).</p>
+<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>Add the following <code>location</code> blocks into the <code>isos.conf</code> with whatever subdirectory name you want, I&rsquo;ll leave it as <code>radarr</code>:</p>
+<pre><code class="language-nginx">location /radarr/ {
+    proxy_pass http://127.0.0.1:7878/radarr/; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+
+    proxy_redirect off;
+}
+# Allow the API External Access via NGINX
+location /radarr/api {
+    auth_basic off;
+    proxy_pass http://127.0.0.1:7878/radarr/api; # change port if needed
+}
+</code></pre>
+<p>This is taken from <a href="https://wiki.servarr.com/radarr/installation#nginx">Radarr Nginx reverse proxy configuration</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-radarr">Start using Radarr<a class="headerlink" href="#start-using-radarr" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>radarr.service</code>:</p>
+<pre><code class="language-sh">systemctl enable radarr.service
+systemctl start radarr.service
+</code></pre>
+<p>This will start the service and create the default configs under <code>/var/lib/radarr</code>. You need to change the <code>URLBase</code> as the reverse proxy is under a subdirectory (<code>/radarr</code>). Edit <code>/var/lib/radarr/config.xml</code>:</p>
+<pre><code class="language-xml">...
+&lt;UrlBase&gt;/radarr&lt;/UrlBase&gt;
+...
+</code></pre>
+<p>Then restart the <code>radarr</code> service:</p>
+<pre><code class="language-sh">systemctl restart radarr.service
+</code></pre>
+<p>Now <code>https://isos.yourdomain.com/radarr</code> is accessible. <mark>Secure the instance right away</mark> by adding authentication under <em>Settings -&gt; General -&gt; Security</em>. I added the &ldquo;Forms&rdquo; option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.</p>
+<p>Note that if you want to have an anime movies library, it is recommended to run a second instance of Radarr for this as shown in <a href="https://wiki.servarr.com/radarr/installation#linux-multiple-instances">Radarr: Linux multiple instances</a> and follow <a href="https://trash-guides.info/Radarr/radarr-setup-quality-profiles-anime/">TRaSH: How to setup quality profiles anime</a> if an anime instance is what you want.</p>
+<h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
+<p>Will be following the official <a href="https://wiki.servarr.com/radarr/quick-start-guide">Radarr: Quick start guide</a> as well as the recommendations by <a href="https://trash-guides.info/Radarr/">TRaSH: Radarr</a>.</p>
+<p>Anything that is not mentioned in either guide or that is specific to how I&rsquo;m setting up stuff will be stated below.</p>
+<h5 id="media-management">Media Management<a class="headerlink" href="#media-management" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>File Management</strong>:<ul>
+<li><em>Propers and Repacks</em>: set it to &ldquo;Do Not Prefer&rdquo; and instead you&rsquo;ll use the <a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#repackproper">Repack/Proper</a> <a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats">custom format by TRaSH</a>.</li>
+</ul>
+</li>
+</ul>
+<h5 id="quality">Quality<a class="headerlink" href="#quality" title="Permanent link">&para;</a></h5>
+<p>This is personal preference and it dictates your preferred file sizes. You can follow <a href="https://trash-guides.info/Radarr/Radarr-Quality-Settings-File-Size/">TRaSH: Quality settings</a> to maximize the quality of the downloaded content and restrict low quality stuff.</p>
+<p>Personally, I think TRaSH&rsquo;s quality settings are a bit elitist and first world-y. I&rsquo;m fine with whatever and the tracker I&rsquo;m using has the quality I want anyways. I did, however, set it to a minimum of <code>0</code> and maximum of <code>400</code> for the qualities shown in TRaSH&rsquo;s guide. Configuring anything below <code>720p</code> shouldn&rsquo;t be necessary anyways.</p>
+<h5 id="custom-formats">Custom Formats<a class="headerlink" href="#custom-formats" title="Permanent link">&para;</a></h5>
+<p>Again, this is also completely a personal preference selection and depends on the quality and filters you want. My custom format selections are mostly based on <a href="https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-webA">TRaSH: HD Bluray + WEB quality profile</a>.</p>
+<p>The only <em>Unwanted</em> format that I&rsquo;m not going to use is the Low Quality (<a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#lq">LQ</a>) as it blocks one of the sources I&rsquo;m using to download a bunch of movies. The reasoning behind the LQ custom format is that these release groups don&rsquo;t care much about quality (they keep low file sizes) and name tagging, which I understand but I&rsquo;m fine with this as I can upgrade movies individually whenever I want (I want a big catalog of content that I can quickly watch).</p>
+<h5 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">&para;</a></h5>
+<p>As mentioned in <a href="#custom-formats">Custom Formats</a> and <a href="#quality">Quality</a> this is completly a personal preference. I&rsquo;m going to go for &ldquo;Low Quality&rdquo; downloads by still following some of the conventions from TRaSH. I&rsquo;m using the <a href="https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-webA">TRaSH: HD Bluray + WEB quality profile</a> with the exclusion of the <a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#lq">LQ</a> profile.</p>
+<p>I set the name to &ldquo;HD Bluray + WEB&rdquo;. I&rsquo;m also not upgrading the torrents for now. Language set to &ldquo;Original&rdquo;.</p>
+<h5 id="download-clients">Download clients<a class="headerlink" href="#download-clients" title="Permanent link">&para;</a></h5>
+<p>Pretty straight forward, just click on the giant &ldquo;+&rdquo; button and click on the qBitTorrent option. Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier.</li>
+<li>Enable: enable it.</li>
+<li>Host: use <code>127.0.0.1</code>. For some reason I can&rsquo;t make it work with the reverse proxied qBitTorrent.</li>
+<li>Port: the port number you chose, <code>30000</code> in my case.</li>
+<li>Url Base: leave blank as even though you have it exposed under <code>/qbt</code>, the service itself is not.</li>
+<li>Username: the Web UI username, <code>admin</code> by default.</li>
+<li>Password: the Web UI username, <code>adminadmin</code> by default (you should&rsquo;ve changed it if you have the service exposed).</li>
+<li>Category: <code>movies</code>.</li>
+</ul>
+<p>Everything else can be left as default, but maybe change <em>Completed Download Handling</em> if you&rsquo;d like. Same goes for the general <em>Failed Download Handling</em> download clients&rsquo; option.</p>
+<h5 id="indexers">Indexers<a class="headerlink" href="#indexers" title="Permanent link">&para;</a></h5>
+<p>Also easy to set up, also just click on the giant &ldquo;+&rdquo; button and click on the <em>custom</em> Torznab option (you can also use the <em>preset -&gt; Jackett</em> Torznab option). Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier. I like to do &ldquo;Jackett - INDEXER&rdquo;, where &ldquo;INDEXER&rdquo; is just an identifier.</li>
+<li>URL: <code>http://127.0.0.1:9117/jack/api/v2.0/indexers/YOURINDEXER/results/torznab/</code>, where <code>YOURINDEXER</code> is specific to each indexer (<code>yts</code>, <code>nyaasi</code>, etc.). Can be directly copied from the indexer&rsquo;s &ldquo;Copy Torznab Feed&rdquo; button on the Jackett Web UI.</li>
+<li>API Path: <code>/api</code>, leave as is.</li>
+<li>API Key: this can be found at the top right corner in Jackett&rsquo;s Web UI.</li>
+<li>Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the movies categories).</li>
+<li>Tags: I like to add a tag for the indexer name like <code>yts</code> or <code>nyaa</code>. This is useful to control which indexers to use when adding new movies.</li>
+</ul>
+<p>Everything else on default. <em>Download Client</em> can also be set, which can be useful to keep different categories per indexer or something similar. <em>Seed Ratio</em> and <em>Seed Time</em> can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.</p>
+<h4 id="download-content">Download content<a class="headerlink" href="#download-content" title="Permanent link">&para;</a></h4>
+<p>You can now start to download content by going to <em>Movies -&gt; Add New</em>. Basically just follow the <a href="https://wiki.servarr.com/radarr/quick-start-guide#how-to-add-a-movie">Radarr: How to add a movie</a> guide. The screenshots from the guide are a bit outdated but it contains everything you need to know.</p>
+<p>I personally use:</p>
+<ul>
+<li>Monitor: Movie Only.</li>
+<li>Minimum Availability: Released.</li>
+<li>Quiality Profile: &ldquo;HD Bluray + WEB&rdquo;, the one configured in this entry.</li>
+<li>Tags: the indexer name I want to use to download the movie, usually just <code>yts</code> for me (remember this is a &ldquo;LQ&rdquo; release group, so if you have that custom format disable it) as mentioned in <a href="#indexers">Indexers</a>. If you don&rsquo;t specify a tag it will only use indexers that don&rsquo;t have a tag set.</li>
+<li>Start search for missing movie: toggled on. Immediatly start searching for the movie and start the download.</li>
+</ul>
+<p>Once you click on &ldquo;Add Movie&rdquo; it will add it to the <em>Movies</em> section and start searching and selecting the best torrent it finds, according to the &ldquo;filters&rdquo; (quality settings, profile and indexer(s)).</p>
+<p>When it selects a torrent it sends it to qBitTorrent and you can even go ahead and monitor it over there. Else you can also monitor at <em>Activity -&gt; Queue</em>.</p>
+<p>After the movie is downloaded and processed by Radarr, it will create the appropriate hardlinks to the <code>media/movies</code> directory, as set in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">First part: Directory structure</a>.</p>
+<p>Optionally, you can add subtitles using <a href="#bazarr">Bazarr</a>.</p>
+<h2 id="sonarr">Sonarr<a class="headerlink" href="#sonarr" title="Permanent link">&para;</a></h2>
+<p><a href="https://sonarr.tv/">Sonarr</a> is a TV series collection manager that can be used to download series via torrents. Most of the install process, configuration and whatnot is going to be basically the same as with Radarr.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S sonarr
+</code></pre>
+<p><mark>Add the <code>sonarr</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a sonarr servarr
+</code></pre>
+<p>The default port that Radarr uses is <code>8989</code> for http (the one you need for the reverse proxy).</p>
+<h3 id="reverse-proxy_1">Reverse proxy<a class="headerlink" href="#reverse-proxy_1" title="Permanent link">&para;</a></h3>
+<p>Basically the same as with <a href="#reverse-proxy">Radarr: Reverse proxy</a>, <mark>except that the <code>proxy_set_header</code> changes from <code>$proxy_host</code> to <code>$host</code>.</mark></p>
+<p>Add the following <code>location</code> blocks into the <code>isos.conf</code>, I&rsquo;ll leave it as <code>sonarr</code>:</p>
+<pre><code class="language-nginx">location /sonarr/ {
+    proxy_pass http://127.0.0.1:8989/sonarr/; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $proxy_host; # this differs from the radarr reverse proxy
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+
+    proxy_redirect off;
+}
+# Allow the API External Access via NGINX
+location /sonarr/api {
+    auth_basic off;
+    proxy_pass http://127.0.0.1:8989/sonarr/api; # change port if needed
+}
+</code></pre>
+<p>This is taken from <a href="https://wiki.servarr.com/sonarr/installation#nginx">Sonarr: Nginx reverse proxy configuration</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-sonarr">Start using Sonarr<a class="headerlink" href="#start-using-sonarr" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>sonarr.service</code>:</p>
+<pre><code class="language-sh">systemctl enable sonarr.service
+systemctl start sonarr.service
+</code></pre>
+<p>This will start the service and create the default configs under <code>/var/lib/sonarr</code>. You need to change the <code>URLBase</code> as the reverse proxy is under a subdirectory (<code>/sonarr</code>). Edit <code>/var/lib/sonarr/config.xml</code>:</p>
+<pre><code class="language-xml">...
+&lt;UrlBase&gt;/sonarr&lt;/UrlBase&gt;
+...
+</code></pre>
+<p>Then restart the <code>sonarr</code> service:</p>
+<pre><code class="language-sh">systemctl restart sonarr.service
+</code></pre>
+<p>Now <code>https://isos.yourdomain.com/sonarr</code> is accessible. <mark>Secure the instance right away</mark> by adding authentication under <em>Settings -&gt; General -&gt; Security</em>. I added the &ldquo;Forms&rdquo; option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.</p>
+<p>Similar to <a href="#radarr">Radarr</a> if you want to have an anime library, it is recommended to run a second instance of Sonarr for this as shown in <a href="https://wiki.servarr.com/sonarr/installation#linux-multiple-instances">Sonarr: Linux multiple instances</a> and follow <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx-Anime/">TRaSH: Release profile regex (anime)</a> and the <a href="https://trash-guides.info/Sonarr/Sonarr-recommended-naming-scheme/#anime-episode-format">TRaSH: Anime recommended naming scheme</a> if an anime instance is what you want.</p>
+<h4 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h4>
+<p>Will be following the official <a href="https://wiki.servarr.com/sonarr/quick-start-guide">Sonarr: Quick start guide</a> as well as the recommendations by <a href="https://trash-guides.info/Sonarr/">TRaSH: Sonarr</a>.</p>
+<p>Anything that is not mentioned in either guide or that is specific to how I&rsquo;m setting up stuff will be stated below.</p>
+<h5 id="media-management_1">Media Management<a class="headerlink" href="#media-management_1" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>File Management</strong>:<ul>
+<li><em>Propers and Repacks</em>: set it to &ldquo;Do Not Prefer&rdquo; and instead you&rsquo;ll use the <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#propers-and-repacks">Propers and Repacks</a> release profile and fill with <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#p2p-groups-repackproper">P2P Groups + Repack/Proper</a>.</li>
+</ul>
+</li>
+</ul>
+<h5 id="quality_1">Quality<a class="headerlink" href="#quality_1" title="Permanent link">&para;</a></h5>
+<p>Similar to <a href="#quality">Radarr: Quality</a> this is personal preference and it dictates your preferred file sizes. You can follow <a href="https://trash-guides.info/Sonarr/Sonarr-Quality-Settings-File-Size/">TRaSH: Quality settings</a> to maximize the quality of the downloaded content and restrict low quality stuff.</p>
+<p>Will basically do the same as in <a href="#quality">Radarr: Quality</a>: set minimum of <code>0</code> and maximum of <code>400</code> for everything <code>720p</code> and above.</p>
+<h5 id="profiles_1">Profiles<a class="headerlink" href="#profiles_1" title="Permanent link">&para;</a></h5>
+<p>This is a bit different than with <a href="#radarr">Radarr</a>, the way it is configured is by setting &ldquo;Release profiles&rdquo;. I took the profiles from <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/">TRaSH: WEB-DL Release profile regex</a>. The only possible change I&rsquo;ll do is disable the Low Quality Groups and/or the &ldquo;Golden rule&rdquo; filter (for <code>x265</code> encoded video).</p>
+<p>For me it ended up looking like this:</p>
+<figure id="__yafg-figure-4">
+<img alt="Sonarr: Release profiles" src="https://static.luevano.xyz/images/b/sonarr/sonarr_release_profiles.png" title="Sonarr: Release profiles">
+<figcaption>Sonarr: Release profiles</figcaption>
+</figure>
+<p>But yours can differ as its mostly personal preference. For the &ldquo;Quality profile&rdquo; I&rsquo;ll be using the default &ldquo;HD-1080p&rdquo; most of the time, but I also created a &ldquo;HD + WEB (720/1080)&rdquo; which works best for some.</p>
+<h5 id="download-clients_1">Download clients<a class="headerlink" href="#download-clients_1" title="Permanent link">&para;</a></h5>
+<p>Exactly the same as with <a href="#download-clients">Radarr: Download clients</a> only change is the category from <code>movies</code> to <code>tv</code> (or whatever you want), click on the giant &ldquo;+&rdquo; button and click on the qBitTorrent option. Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier.</li>
+<li>Enable: enable it.</li>
+<li>Host: use <code>127.0.0.1</code>.</li>
+<li>Port: the port number you chose, <code>30000</code> in my case.</li>
+<li>Url Base: leave blank as even though you have it exposed under <code>/qbt</code>, the service itself is not.</li>
+<li>Username: the Web UI username, <code>admin</code> by default.</li>
+<li>Password: the Web UI username, <code>adminadmin</code> by default (you should&rsquo;ve changed it if you have the service exposed).</li>
+<li>Category: <code>tv</code>.</li>
+</ul>
+<p>Everything else can be left as default, but maybe change <em>Completed Download Handling</em> if you&rsquo;d like. Same goes for the general <em>Failed Download Handling</em> download clients&rsquo; option.</p>
+<h5 id="indexers_1">Indexers<a class="headerlink" href="#indexers_1" title="Permanent link">&para;</a></h5>
+<p>Also exactly the same as with <a href="#indexers">Radarr: Indexers</a>, click on the giant &ldquo;+&rdquo; button and click on the <em>custom</em> Torznab option (this doesn&rsquo;t have the Jackett preset). Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier. I like to do &ldquo;Jackett - INDEXER&rdquo;, where &ldquo;INDEXER&rdquo; is just an identifier.</li>
+<li>URL: <code>http://127.0.0.1:9117/jack/api/v2.0/indexers/YOURINDEXER/results/torznab/</code>, where <code>YOURINDEXER</code> is specific to each indexer (<code>eztv</code>, <code>nyaasi</code>, etc.). Can be directly copied from the indexer&rsquo;s &ldquo;Copy Torznab Feed&rdquo; button on the Jackett Web UI.</li>
+<li>API Path: <code>/api</code>, leave as is.</li>
+<li>API Key: this can be found at the top right corner in Jackett&rsquo;s Web UI.</li>
+<li>Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the TV categories).</li>
+<li>Tags: I like to add a tag for the indexer name like <code>eztv</code> or <code>nyaa</code>. This is useful to control which indexers to use when adding new series.</li>
+</ul>
+<p>Everything else on default. <em>Download Client</em> can also be set, which can be useful to keep different categories per indexer or something similar. <em>Seed Ratio</em> and <em>Seed Time</em> can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.</p>
+<h4 id="download-content_1">Download content<a class="headerlink" href="#download-content_1" title="Permanent link">&para;</a></h4>
+<p>Almost the same as with <a href="#download-content">Radarr: Download content</a>, but I&rsquo;ve been personally selecting the torrents I want to download for each season/episode so far, as the indexers I&rsquo;m using are all over the place and I like consistencies. Will update if I find a (near) 100% automation process, but I&rsquo;m fine with this anyways as I always monitor that everything is going fine.</p>
+<p>Add by going to <em>Series -&gt; Add New</em>. Basically just follow the <a href="https://wiki.servarr.com/sonarr/library#add-new">Sonarr: Library add new</a> guide. Adding series needs a bit more options that movies in Radarr, but it&rsquo;s straight forward.</p>
+<p>I personally use:</p>
+<ul>
+<li>Monitor: All Episodes.</li>
+<li>Quiality Profile: &ldquo;HD + WEB (720/1080)&rdquo;. This depends on what I want for that how, lately I&rsquo;ve been experimenting with this one.</li>
+<li>Series Type: Standard. For now I&rsquo;m just downloading shows, but it has an Anime option.</li>
+<li>Tags: the &ldquo;indexer_name&rdquo; I want to use to download the movie, I&rsquo;ve been using all indexers so I just use all tags as I&rsquo;m experimenting and trying multiple options.</li>
+<li>Season Folder: enabled. I like as much organization as possible.</li>
+<li>Start search for missing episodes: disabled. Depends on you, due to my indexers, I prefer to check manually the season packs, for example.</li>
+<li>Start search for cutoff unmet episodes: disabled. Honestly don&rsquo;t really know what this is.</li>
+</ul>
+<p>Once you click on &ldquo;Add X&rdquo; it will add it to the <em>Series</em> section and will start as monitored. So far I haven&rsquo;t noticed that it immediately starts downloading (because of the &ldquo;Start search for missing episodes&rdquo; setting) but I always click on unmonitor the series, so I can manually check (again, due to the low quality of my indexers).</p>
+<p>When it automatically starts to download an episode/season it will send it to qBitTorrent and you can monitor it over there. Else you can also monitor at <em>Activity -&gt; Queue</em>. Same thing goes if you download manually each episode/season via the interactive search.</p>
+<p>To interactively search episodes/seasons go to <em>Series</em> and then click on any series, then click either on the interactive search button for the episode or the season, it is an icon of a person as shown below:</p>
+<figure id="__yafg-figure-5">
+<img alt="Sonarr: Interactive search button" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_button.png" title="Sonarr: Interactive search button">
+<figcaption>Sonarr: Interactive search button</figcaption>
+</figure>
+<p>Then it will bring a window with the search results, where it shows the indexer it got the result from, the size of the torrent, peers, language, quality, the score it received from the configured release profiles an alert in case that the torrent is &ldquo;bad&rdquo; and the download button to manually download the torrent you want. An example shown below:</p>
+<figure id="__yafg-figure-6">
+<img alt="Sonarr: Interactive search results" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_results.png" title="Sonarr: Interactive search results">
+<figcaption>Sonarr: Interactive search results</figcaption>
+</figure>
+<p>After the movie is downloaded and processed by Sonarr, it will create the appropriate hardlinks to the <code>media/tv</code> directory, as set in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">Directory structure</a>.</p>
+<p>Optionally, you can add subtitles using <a href="#bazarr">Bazarr</a>.</p>
+<h2 id="jellyfin">Jellyfin<a class="headerlink" href="#jellyfin" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/Jellyfin">Jellyfin</a> is a media server &ldquo;manager&rdquo;, usually used to manage and organize video content (movies, TV series, etc.) which could be compared with <a href="https://wiki.archlinux.org/title/plex">Plex</a> or <a href="https://wiki.archlinux.org/title/Emby">Emby</a> for example (take them as possible alternatives).</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S jellyfin-bin
+</code></pre>
+<p>I&rsquo;m installing the pre-built binary instead of building it as I was getting a lot of errors and the server was even crashing. You can try installing <code>jellyfin</code> instead.</p>
+<p><mark>Add the <code>jellyfin</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a jellyfin servarr
+</code></pre>
+<p>You can already <code>start</code>/<code>enable</code> the <code>jellyfin.service</code> which will start at <code>http://127.0.0.1:8096/</code> by default where you need to complete the initial set up. But let&rsquo;s create the reverse proxy first then start everything and finish the set up.</p>
+<h3 id="reverse-proxy_2">Reverse proxy<a class="headerlink" href="#reverse-proxy_2" title="Permanent link">&para;</a></h3>
+<p>I&rsquo;m going to have my <code>jellyfin</code> instance under a subdomain with an <code>nginx</code> reverse proxy as shown in the <a href="https://wiki.archlinux.org/title/Jellyfin#Nginx_reverse_proxy">Arch wiki</a>. For that, create a <code>jellyfin.conf</code> at the usual <code>sites-&lt;available/enabled&gt;</code> path for <code>nginx</code>:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name jellyfin.yourdomain.com; # change accordingly to your wanted subdomain and domain name
+    set $jellyfin 127.0.0.1; # jellyfin is running at localhost (127.0.0.1)
+
+    # Security / XSS Mitigation Headers
+    add_header X-Frame-Options &quot;SAMEORIGIN&quot;;
+    add_header X-XSS-Protection &quot;1; mode=block&quot;;
+    add_header X-Content-Type-Options &quot;nosniff&quot;;
+
+    # Content Security Policy
+    # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    # Enforces https content and restricts JS/CSS to origin
+    # External Javascript (such as cast_sender.js for Chromecast) must be whitelisted.
+    add_header Content-Security-Policy &quot;default-src https: data: blob: http://image.tmdb.org; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.gstatic.com/cv/js/sender/v1/cast_sender.js https://www.youtube.com blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'self'&quot;;
+
+        location = / {
+        return 302 https://$host/web/;
+    }
+
+    location / {
+        # Proxy main Jellyfin traffic
+        proxy_pass http://$jellyfin:8096;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+
+        # Disable buffering when the nginx proxy gets very resource heavy upon streaming
+        proxy_buffering off;
+    }
+
+    # location block for /web - This is purely for aesthetics so /web/#!/ works instead of having to go to /web/index.html/#!/
+    location = /web/ {
+        # Proxy main Jellyfin traffic
+        proxy_pass http://$jellyfin:8096/web/index.html;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+    }
+
+    location /socket {
+        # Proxy Jellyfin Websockets traffic
+        proxy_pass http://$jellyfin:8096;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+    }
+}
+</code></pre>
+<h4 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h4>
+<p>Create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>Similarly to the <code>isos</code> subdomain, that will autodetect the new subdomain and extend the existing certificate(s). Restart the <code>nginx</code> service for changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-jellyfin">Start using Jellyfin<a class="headerlink" href="#start-using-jellyfin" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>jellyfin.service</code> if you haven&rsquo;t already:</p>
+<pre><code class="language-sh">systemctl enable jellyfin.service
+systemctl start jellyfin.service
+</code></pre>
+<p>Then navigate to <code>https://jellyfin.yourdomain.com</code> and either continue with the set up wizard if you didn&rsquo;t already or continue with the next steps to configure your libraries.</p>
+<p>The initial setup wizard makes you create an user (will be the admin for now) and at least one library, though these can be done later. For more check <a href="https://jellyfin.org/docs/general/quick-start/">Jellyfin: Quick start</a>.</p>
+<p>Remember to use the configured directory as mentioned in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">Directory structure</a>. Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then navigate to <em>Administration -&gt; Dashboard</em>. I didn&rsquo;t configure much other than adding a couple of users for me and friends, I wouldn&rsquo;t recommend using the admin account to watch (personal preference).</p>
+<p>Once there is at least one library it will show at <em>Home</em> along with the latest movies (if any) similar to the following (don&rsquo;t judge, these are just the latest I added due to friend&rsquo;s requests):</p>
+<figure id="__yafg-figure-7">
+<img alt="Jellyfin: Home libraries" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_home_libraries.png" title="Jellyfin: Home libraries">
+<figcaption>Jellyfin: Home libraries</figcaption>
+</figure>
+<p>And inside the &ldquo;Movies&rdquo; library you can see the whole catalog where you can filter or just scroll as well as seeing <em>Suggestions</em> (I think this starts getting populated after a while) and <em>Genres</em>:</p>
+<figure id="__yafg-figure-8">
+<img alt="Jellyfin: Library catalog options" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_library_catalog_options.png" title="Jellyfin: Library catalog options">
+<figcaption>Jellyfin: Library catalog options</figcaption>
+</figure>
+<h4 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">&para;</a></h4>
+<p>You can also install/activate <a href="https://jellyfin.org/docs/general/server/plugins/">plugins</a> to get extra features. Most of the plugins you might want to use are already available in the official repositories and can be found in the &ldquo;Catalog&rdquo;. There are a lot of plugins that are focused around anime and TV metadata, as well as an Open Subtitles plugin to automatically download missing subtitles (though this is managed with <a href="#bazarr">Bazarr</a>).</p>
+<p>To activate plugins click on the 3 horizontal lines on the top left of the Web UI then navigate to <em>Administration -&gt; Dashboard -&gt; Advanced -&gt; Plugins</em> and click on the <em>Catalog</em> tab (top of the Web UI). Here you can select the plugins you want to install. By default only the official ones are shown, for more you can add more <a href="https://jellyfin.org/docs/general/server/plugins/#repositories">repositories</a>.</p>
+<p>The only plugin I&rsquo;m using is the &ldquo;Playback Reporting&rdquo;, to get a summary of what is being used in the instance. But I might experiment with some anime-focused plugins when the time comes.</p>
+<h4 id="transcoding">Transcoding<a class="headerlink" href="#transcoding" title="Permanent link">&para;</a></h4>
+<p>Although not recommended and explicitly set to not download any <code>x265</code>/<code>HEVC</code> content (by using the <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#golden-rule">Golden rule</a>) there might be cases where the only option you have is to download such content. If that is the case and you happen to have a way to do <a href="https://jellyfin.org/docs/general/administration/hardware-acceleration/">Hardware Acceleration</a>, for example by having an NVIDIA graphics card (in my case) then you should enable it to avoid using lots of resources on your system.</p>
+<p>Using hardware acceleration will leverage your GPU to do the transcoding and save resources on your CPU. I tried streaming <code>x265</code> content and it basically used 70-80% on all cores of my CPU, while on the other hand using my GPU it used the normal amount on the CPU (70-80% on a single core).</p>
+<p>This will be the steps to install on an <a href="https://jellyfin.org/docs/general/administration/hardware-acceleration/nvidia/">NVIDIA</a> graphics card, specifically a GTX 1660 Ti. But more info and guides can be found at <a href="https://jellyfin.org/docs/general/administration/hardware-acceleration/">Jellyfin: Hardware Acceleration</a> for other acceleration methods.</p>
+<h5 id="nvidia-drivers">NVIDIA drivers<a class="headerlink" href="#nvidia-drivers" title="Permanent link">&para;</a></h5>
+<p>Ensure you have the NVIDIA drivers and utils installed. I&rsquo;ve you&rsquo;ve done this in the past then you can skip this part, else you might be using the default <code>nouveau</code> drivers. Follow the next steps to set up the NVIDIA drivers, which basically is a summary of <a href="https://wiki.archlinux.org/title/NVIDIA#Installation">NVIDIA: Installation</a> for my setup, so <mark>double check the wiki in case you have an older NVIDIA graphics card</mark>.</p>
+<p>Install the <code>nvidia</code> and <code>nvidia-utils</code> packages:</p>
+<pre><code class="language-sh">pacman -S nvidia nvidia-utils
+</code></pre>
+<p>Modify <code>/etc/mkinitcpio.conf</code> to remove <code>kms</code> from the <code>HOOKS</code> array. It should look like this (commented line is how it was for me before the change):</p>
+<pre><code class="language-sh">...
+# HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block filesystems fsck)
+HOOKS=(base udev autodetect modconf keyboard keymap consolefont block filesystems fsck)
+...
+</code></pre>
+<p><a href="https://wiki.archlinux.org/title/Mkinitcpio#Image_creation_and_activation">Regenerate the initramfs</a> by executing:</p>
+<pre><code class="language-sh">mkinitcpio -P
+</code></pre>
+<p>Finally, reboot the system. After the reboot you should be able to check your GPU info and processes being run with the GPU by executing <code>nvidia-smi</code>.</p>
+<h5 id="enable-hardware-acceleration">Enable hardware acceleration<a class="headerlink" href="#enable-hardware-acceleration" title="Permanent link">&para;</a></h5>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S jellyfin-ffmpeg6-bin
+</code></pre>
+<p>This provides the <code>jellyfin-ffmpeg</code> executable, which is necessary for Jellyfin to do hardware acceleration, it needs to be this specific one.</p>
+<p>Then in the Jellyfin go to the transcoding settings by clicking on the 3 horizontal lines on the top left of the Web UI and navigating to <em>Administration -&gt; Dashboard -&gt; Playback -&gt; Transcoding</em> and:</p>
+<ul>
+<li>Change the <em>Hardware acceleration</em> from &ldquo;None&rdquo; to &ldquo;Nvidia NVENC&rdquo;.</li>
+<li>Some other options will pop up, just make sure you enable &ldquo;HEVC&rdquo; (which is <code>x265</code>) in the list of <em>Enable hardware encoding for:</em>.</li>
+<li>Scroll down and specify the <code>ffmpeg</code> path, which is <code>/usr/lib/jellyfin-ffmpeg/ffmpeg</code>.</li>
+</ul>
+<p>Don&rsquo;t forget to click &ldquo;Save&rdquo; at the bottom of the Web UI, it will ask if you want to enable hardware acceleration.</p>
+<h2 id="bazarr">Bazarr<a class="headerlink" href="#bazarr" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.bazarr.media/">Bazarr</a> is a companion for Sonarr and Radarr that manages and downloads subtitles.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S bazarr
+</code></pre>
+<p><mark>Add the <code>bazarr</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a bazarr servarr
+</code></pre>
+<p>The default port that Bazarr uses is <code>6767</code> for http (the one you need for the reverse proxy), and it has pre-configured the default ports for Radarr and Sonarr.</p>
+<h3 id="reverse-proxy_3">Reverse proxy<a class="headerlink" href="#reverse-proxy_3" title="Permanent link">&para;</a></h3>
+<p>Basically the same as with <a href="#reverse-proxy">Radarr: Reverse proxy</a> and <a href="#reverse-proxy-1">Sonarr: Reverse proxy</a>.</p>
+<p>Add the following setting in the <code>server</code> block of the <code>isos.conf</code>:</p>
+<pre><code class="language-nginx">server {
+    # server_name and other directives
+    ...
+
+    # Increase http2 max sizes
+    large_client_header_buffers 4 16k;
+
+    # some other blocks like location blocks
+    ...
+}
+</code></pre>
+<p>Then add the following <code>location</code> blocks in the <code>isos.conf</code>, where I&rsquo;ll keep it as <code>/bazarr/</code>:</p>
+<pre><code class="language-nginx">location /bazarr/ {
+    proxy_pass http://127.0.0.1:6767/bazarr/; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection &quot;Upgrade&quot;;
+
+    proxy_redirect off;
+}
+# Allow the Bazarr API through if you enable Auth on the block above
+location /bazarr/api {
+    auth_request off;
+    proxy_pass http://127.0.0.1:6767/bazarr/api;
+}
+</code></pre>
+<p>This is taken from <a href="https://wiki.bazarr.media/Additional-Configuration/Reverse-Proxy-Help/">Bazarr: Reverse proxy help</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-bazarr">Start using Bazarr<a class="headerlink" href="#start-using-bazarr" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>bazarr.service</code> if you haven&rsquo;t already:</p>
+<pre><code class="language-sh">systemctl start bazarr.service
+systemctl enable bazarr.service
+</code></pre>
+<p>This will start the service and create the default configs under <code>/var/lib/bazarr</code>. You need to change the <code>base_url</code> for the necessary services as they&rsquo;re running under a reverse proxy and under subdirectories. Edit <code>/var/lib/bazarr/config/config.ini</code>:</p>
+<pre><code class="language-ini">[general]
+port = 6767
+base_url = /bazarr
+
+[sonarr]
+port = 8989
+base_url = /sonarr
+
+[radarr]
+port = 7878
+base_url = /radarr
+</code></pre>
+<p>Then restart the <code>bazarr</code> service:</p>
+<pre><code class="language-sh">systemctl restart bazarr.service
+</code></pre>
+<p>Now <code>https://isos.yourdomain.com/bazarr</code> is accessible. <mark>Secure the instance right away</mark> by adding authentication under <em>Settings -&gt; General -&gt; Security</em>. I added the &ldquo;Forms&rdquo; option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials. I also disabled <em>Settings -&gt; General -&gt; Updates -&gt; Automatic</em>.</p>
+<h4 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h4>
+<p>Will be following the official <a href="https://wiki.bazarr.media/Getting-Started/setup-guide/">Bazarr: Setup guide</a> as well as the recommendations by <a href="https://trash-guides.info/Bazarr/">TRaSH: Bazarr</a>.</p>
+<p>Anything that is not mentioned in either guide or that is specific to how I&rsquo;m setting up stuff will be stated below.</p>
+<h5 id="providers">Providers<a class="headerlink" href="#providers" title="Permanent link">&para;</a></h5>
+<p>This doesn&rsquo;t require much thinking and its up to personal preference, but I&rsquo;ll list the ones I added:</p>
+<ul>
+<li><a href="https://www.opensubtitles.com/">OpenSubtitles.com</a>: requires an account (the <code>.org</code> option is deprecated).<ul>
+<li>For a free account it only lets you download around 20 subtitles per day, and they contain ads. You could pay for a VIP account ($3 per month) and that will give you 1000 subtitles per day and no ads. But if you&rsquo;re fine with 20 ads per day you can try to get rid of the ads by running an automated script. Such option can be found at <a href="https://github.com/brianspilner01/media-server-scripts/blob/master/sub-clean.sh">brianspilner01/media-server-scripts: sub-clean.sh</a>.</li>
+</ul>
+</li>
+<li>YIFY Subtitles</li>
+<li>Subscenter</li>
+<li>Supersubtitles</li>
+<li>TVSubtitles</li>
+<li>Subtitulamos.tv: Spanish subtitles provider.</li>
+<li>Argenteam: LATAM Spanish subtitles provider.</li>
+<li>Subdivx: LATAM Spanish / Spanish subtitles provider.</li>
+</ul>
+<p>I&rsquo;ve tested this setup for the following languages (with all default settings as stated in the guides):</p>
+<ul>
+<li>English</li>
+<li>Spanish</li>
+</ul>
+<p>I tried with &ldquo;Latin American Spanish&rdquo; but they&rsquo;re hard to find, those two work pretty good.</p>
+<p>None of these require an <a href="https://anti-captcha.com/">Anti-Captcha</a> account (which is a paid service), but I created one anyways in case I need it. Though you need to add credits to it (pretty cheap though) if you ever use it.</p>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Mon, Jul 24, 2023 @ 04:30 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+<span>
+  <i class="fas fa-address-card" alt="Contact"></i>
+  <a href="https://blog.luevano.xyz/contact.html">Contact</a>
+</span>
+
+<span>
+  <i class="fas fa-donate" alt="Donate"></i>
+  <a href="https://blog.luevano.xyz/donate.html">Donate</a>
+</span>
+
+<span>
+  <i class="fas fa-rss" alt="RSS"></i>
+  <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+</span>
+
+<br>
+<span class="created-with">
+  <i class="fas fa-hammer" alt="Hammer"></i>
+  Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+</span>
+
+<br>
+<span class="copyright">
+  Copyright <i class="far fa-copyright" alt="Copyright"></i> 2023 David Luévano Alvarado
+</span>
+
+    </footer>
+  </body>
+</html>

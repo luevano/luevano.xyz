@@ -89,6 +89,7 @@
 
   <p>I&rsquo;ve been wanting to set up a manga media server to hoard some mangas/comics and access them via Tachiyomi, but I didn&rsquo;t have enough space in my vultr VPS. Now that I have symmetric fiber optic at home and my spare PC to use as a server I decided to go ahead and create one. As always, <mark>i use arch btw</mark> so these instructions are specifically for it, I&rsquo;m not sure how easier/harder it is for other distros, I&rsquo;m just too comfortable with arch honestly.</p>
 <p>I&rsquo;m going to run it as an exposed service using a subdomain of my own, so the steps are taking that into account, if you want to run it locally (or on a LAN/VPN) then it is going to be easier/with less steps (you&rsquo;re on your own). Also, as you might notice I don&rsquo;t like to use D*ck*r images or anything (ew).</p>
+<p><mark>At the time of editing this entry (06-28-2023) Komga has already upgraded to <code>v.1.0.0</code> and it introduces some breaking changes if you already had your instance set up. Read more <a href="https://komga.org/installation/upgrade.html#prepare-for-v1-0-0">here</a>.</mark> The only change I did here was changing the port to the new default.</p>
 <p>As always, all commands are run as root unless stated otherwise.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
 <div class="toc">
@@ -363,7 +364,7 @@ Dandadan|0110|110|Mangapill
 </code></pre>
 <p>This <code>komga</code> package creates a <code>komga</code> (service) user and group which is tied to the also included <code>komga.service</code>.</p>
 <p>Configure it by editing <code>/etc/komga.conf</code>:</p>
-<pre><code class="language-sh">SERVER_PORT=8989
+<pre><code class="language-sh">SERVER_PORT=25600
 SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
 
 KOMGA_LIBRARIES_SCAN_CRON=&quot;0 0 * * * ?&quot;
@@ -379,7 +380,6 @@ KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
 </code></pre>
 <p>My changes (shown above):</p>
 <ul>
-<li>Port on <code>8989</code> because <code>8080</code> its too generic.</li>
 <li><code>cron</code> schedules.<ul>
 <li>It&rsquo;s not actually <code>cron</code> but rather a <code>cron</code>-like syntax used by <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html">Spring</a> as stated in the <a href="https://komga.org/installation/configuration.html#optional-configuration">Komga config</a>.</li>
 </ul>
@@ -395,7 +395,8 @@ KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
     server_name komga.yourdomain.com; # change accordingly to your wanted subdomain and domain name
 
     location / {
-        proxy_pass http://localhost:8989; # change 8989 to the port you want to use
+        proxy_pass http://localhost:25600; # change port if needed
+        proxy_http_version 1.1;
 
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -497,7 +498,7 @@ default:other::r-x
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sat, Jun 10, 2023 @ 19:36 UTC</p>
-      <p>Modified: Tue, Jun 20, 2023 @ 21:43 UTC</p>
+      <p>Modified: Wed, Jun 28, 2023 @ 18:35 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

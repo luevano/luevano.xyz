@@ -23,6 +23,813 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Set up a media server with Jellyfin with Sonarr and Radarr</title>
+      <link>https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html</guid>
+      <pubDate>Mon, 24 Jul 2023 04:30:14 GMT</pubDate>
+      <category>Code</category>
+      <category>English</category>
+      <category>Server</category>
+      <category>Tools</category>
+      <category>Tutorial</category>
+      <description>How to set up a media server with Jellyfin with Sonarr and Radarr, on Arch. With Bazarr, too.</description>
+      <content:encoded><![CDATA[<p>Second part of my self hosted media server. This is a direct continuation of <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html">Set up qBitTorrent with Jackett for use with Starr apps</a>, which will be mentioned as &ldquo;first part&rdquo; going forward. Sonarr, Radarr, Bazarr (Starr apps) and Jellyfin setups will be described in this part. Same introduction applies to this entry, regarding the use of documentation and configuration.</p>
+<p>Everything here is performed in <mark>arch btw</mark> and all commands should be run as root unless stated otherwise.</p>
+<p><mark>Kindly note that I do not condone the use of BitTorrent for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.</mark></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#radarr">Radarr</a><ul>
+<li><a href="#reverse-proxy">Reverse proxy</a></li>
+<li><a href="#start-using-radarr">Start using Radarr</a><ul>
+<li><a href="#configuration">Configuration</a><ul>
+<li><a href="#media-management">Media Management</a></li>
+<li><a href="#quality">Quality</a></li>
+<li><a href="#custom-formats">Custom Formats</a></li>
+<li><a href="#profiles">Profiles</a></li>
+<li><a href="#download-clients">Download clients</a></li>
+<li><a href="#indexers">Indexers</a></li>
+</ul>
+</li>
+<li><a href="#download-content">Download content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sonarr">Sonarr</a><ul>
+<li><a href="#reverse-proxy_1">Reverse proxy</a></li>
+<li><a href="#start-using-sonarr">Start using Sonarr</a><ul>
+<li><a href="#configuration_1">Configuration</a><ul>
+<li><a href="#media-management_1">Media Management</a></li>
+<li><a href="#quality_1">Quality</a></li>
+<li><a href="#profiles_1">Profiles</a></li>
+<li><a href="#download-clients_1">Download clients</a></li>
+<li><a href="#indexers_1">Indexers</a></li>
+</ul>
+</li>
+<li><a href="#download-content_1">Download content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#jellyfin">Jellyfin</a><ul>
+<li><a href="#reverse-proxy_2">Reverse proxy</a><ul>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+</ul>
+</li>
+<li><a href="#start-using-jellyfin">Start using Jellyfin</a><ul>
+<li><a href="#plugins">Plugins</a></li>
+<li><a href="#transcoding">Transcoding</a><ul>
+<li><a href="#nvidia-drivers">NVIDIA drivers</a></li>
+<li><a href="#enable-hardware-acceleration">Enable hardware acceleration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#bazarr">Bazarr</a><ul>
+<li><a href="#reverse-proxy_3">Reverse proxy</a></li>
+<li><a href="#start-using-bazarr">Start using Bazarr</a><ul>
+<li><a href="#configuration_2">Configuration</a><ul>
+<li><a href="#providers">Providers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Same prerequisites as with the <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#prerequisites">First part: Prerequisites</a> plus:</p>
+<ul>
+<li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>jellyfin</code>. Only if you want to expose Jellyfin to a subdomain.</li>
+</ul>
+<p>The <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">First part: Directory structure</a> is the same here. The <code>servarr</code> user and group should be available, too.</p>
+<p><mark>It is assumed that the first part was followed.</mark></p>
+<h2 id="radarr">Radarr<a class="headerlink" href="#radarr" title="Permanent link">&para;</a></h2>
+<p><a href="https://radarr.video/">Radarr</a> is a movie collection manager that can be used to download movies via torrents. This is actually a fork of Sonarr, so they&rsquo;re pretty similar, I just wanted to set up movies first.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S radarr
+</code></pre>
+<p><mark>Add the <code>radarr</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a radarr servarr
+</code></pre>
+<p>The default port that Radarr uses is <code>7878</code> for http (the one you need for the reverse proxy).</p>
+<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>Add the following <code>location</code> blocks into the <code>isos.conf</code> with whatever subdirectory name you want, I&rsquo;ll leave it as <code>radarr</code>:</p>
+<pre><code class="language-nginx">location /radarr/ {
+    proxy_pass http://127.0.0.1:7878/radarr/; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+
+    proxy_redirect off;
+}
+# Allow the API External Access via NGINX
+location /radarr/api {
+    auth_basic off;
+    proxy_pass http://127.0.0.1:7878/radarr/api; # change port if needed
+}
+</code></pre>
+<p>This is taken from <a href="https://wiki.servarr.com/radarr/installation#nginx">Radarr Nginx reverse proxy configuration</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-radarr">Start using Radarr<a class="headerlink" href="#start-using-radarr" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>radarr.service</code>:</p>
+<pre><code class="language-sh">systemctl enable radarr.service
+systemctl start radarr.service
+</code></pre>
+<p>This will start the service and create the default configs under <code>/var/lib/radarr</code>. You need to change the <code>URLBase</code> as the reverse proxy is under a subdirectory (<code>/radarr</code>). Edit <code>/var/lib/radarr/config.xml</code>:</p>
+<pre><code class="language-xml">...
+&lt;UrlBase&gt;/radarr&lt;/UrlBase&gt;
+...
+</code></pre>
+<p>Then restart the <code>radarr</code> service:</p>
+<pre><code class="language-sh">systemctl restart radarr.service
+</code></pre>
+<p>Now <code>https://isos.yourdomain.com/radarr</code> is accessible. <mark>Secure the instance right away</mark> by adding authentication under <em>Settings -&gt; General -&gt; Security</em>. I added the &ldquo;Forms&rdquo; option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.</p>
+<p>Note that if you want to have an anime movies library, it is recommended to run a second instance of Radarr for this as shown in <a href="https://wiki.servarr.com/radarr/installation#linux-multiple-instances">Radarr: Linux multiple instances</a> and follow <a href="https://trash-guides.info/Radarr/radarr-setup-quality-profiles-anime/">TRaSH: How to setup quality profiles anime</a> if an anime instance is what you want.</p>
+<h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
+<p>Will be following the official <a href="https://wiki.servarr.com/radarr/quick-start-guide">Radarr: Quick start guide</a> as well as the recommendations by <a href="https://trash-guides.info/Radarr/">TRaSH: Radarr</a>.</p>
+<p>Anything that is not mentioned in either guide or that is specific to how I&rsquo;m setting up stuff will be stated below.</p>
+<h5 id="media-management">Media Management<a class="headerlink" href="#media-management" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>File Management</strong>:<ul>
+<li><em>Propers and Repacks</em>: set it to &ldquo;Do Not Prefer&rdquo; and instead you&rsquo;ll use the <a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#repackproper">Repack/Proper</a> <a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats">custom format by TRaSH</a>.</li>
+</ul>
+</li>
+</ul>
+<h5 id="quality">Quality<a class="headerlink" href="#quality" title="Permanent link">&para;</a></h5>
+<p>This is personal preference and it dictates your preferred file sizes. You can follow <a href="https://trash-guides.info/Radarr/Radarr-Quality-Settings-File-Size/">TRaSH: Quality settings</a> to maximize the quality of the downloaded content and restrict low quality stuff.</p>
+<p>Personally, I think TRaSH&rsquo;s quality settings are a bit elitist and first world-y. I&rsquo;m fine with whatever and the tracker I&rsquo;m using has the quality I want anyways. I did, however, set it to a minimum of <code>0</code> and maximum of <code>400</code> for the qualities shown in TRaSH&rsquo;s guide. Configuring anything below <code>720p</code> shouldn&rsquo;t be necessary anyways.</p>
+<h5 id="custom-formats">Custom Formats<a class="headerlink" href="#custom-formats" title="Permanent link">&para;</a></h5>
+<p>Again, this is also completely a personal preference selection and depends on the quality and filters you want. My custom format selections are mostly based on <a href="https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-webA">TRaSH: HD Bluray + WEB quality profile</a>.</p>
+<p>The only <em>Unwanted</em> format that I&rsquo;m not going to use is the Low Quality (<a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#lq">LQ</a>) as it blocks one of the sources I&rsquo;m using to download a bunch of movies. The reasoning behind the LQ custom format is that these release groups don&rsquo;t care much about quality (they keep low file sizes) and name tagging, which I understand but I&rsquo;m fine with this as I can upgrade movies individually whenever I want (I want a big catalog of content that I can quickly watch).</p>
+<h5 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">&para;</a></h5>
+<p>As mentioned in <a href="#custom-formats">Custom Formats</a> and <a href="#quality">Quality</a> this is completly a personal preference. I&rsquo;m going to go for &ldquo;Low Quality&rdquo; downloads by still following some of the conventions from TRaSH. I&rsquo;m using the <a href="https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-webA">TRaSH: HD Bluray + WEB quality profile</a> with the exclusion of the <a href="https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#lq">LQ</a> profile.</p>
+<p>I set the name to &ldquo;HD Bluray + WEB&rdquo;. I&rsquo;m also not upgrading the torrents for now. Language set to &ldquo;Original&rdquo;.</p>
+<h5 id="download-clients">Download clients<a class="headerlink" href="#download-clients" title="Permanent link">&para;</a></h5>
+<p>Pretty straight forward, just click on the giant &ldquo;+&rdquo; button and click on the qBitTorrent option. Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier.</li>
+<li>Enable: enable it.</li>
+<li>Host: use <code>127.0.0.1</code>. For some reason I can&rsquo;t make it work with the reverse proxied qBitTorrent.</li>
+<li>Port: the port number you chose, <code>30000</code> in my case.</li>
+<li>Url Base: leave blank as even though you have it exposed under <code>/qbt</code>, the service itself is not.</li>
+<li>Username: the Web UI username, <code>admin</code> by default.</li>
+<li>Password: the Web UI username, <code>adminadmin</code> by default (you should&rsquo;ve changed it if you have the service exposed).</li>
+<li>Category: <code>movies</code>.</li>
+</ul>
+<p>Everything else can be left as default, but maybe change <em>Completed Download Handling</em> if you&rsquo;d like. Same goes for the general <em>Failed Download Handling</em> download clients&rsquo; option.</p>
+<h5 id="indexers">Indexers<a class="headerlink" href="#indexers" title="Permanent link">&para;</a></h5>
+<p>Also easy to set up, also just click on the giant &ldquo;+&rdquo; button and click on the <em>custom</em> Torznab option (you can also use the <em>preset -&gt; Jackett</em> Torznab option). Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier. I like to do &ldquo;Jackett - INDEXER&rdquo;, where &ldquo;INDEXER&rdquo; is just an identifier.</li>
+<li>URL: <code>http://127.0.0.1:9117/jack/api/v2.0/indexers/YOURINDEXER/results/torznab/</code>, where <code>YOURINDEXER</code> is specific to each indexer (<code>yts</code>, <code>nyaasi</code>, etc.). Can be directly copied from the indexer&rsquo;s &ldquo;Copy Torznab Feed&rdquo; button on the Jackett Web UI.</li>
+<li>API Path: <code>/api</code>, leave as is.</li>
+<li>API Key: this can be found at the top right corner in Jackett&rsquo;s Web UI.</li>
+<li>Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the movies categories).</li>
+<li>Tags: I like to add a tag for the indexer name like <code>yts</code> or <code>nyaa</code>. This is useful to control which indexers to use when adding new movies.</li>
+</ul>
+<p>Everything else on default. <em>Download Client</em> can also be set, which can be useful to keep different categories per indexer or something similar. <em>Seed Ratio</em> and <em>Seed Time</em> can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.</p>
+<h4 id="download-content">Download content<a class="headerlink" href="#download-content" title="Permanent link">&para;</a></h4>
+<p>You can now start to download content by going to <em>Movies -&gt; Add New</em>. Basically just follow the <a href="https://wiki.servarr.com/radarr/quick-start-guide#how-to-add-a-movie">Radarr: How to add a movie</a> guide. The screenshots from the guide are a bit outdated but it contains everything you need to know.</p>
+<p>I personally use:</p>
+<ul>
+<li>Monitor: Movie Only.</li>
+<li>Minimum Availability: Released.</li>
+<li>Quiality Profile: &ldquo;HD Bluray + WEB&rdquo;, the one configured in this entry.</li>
+<li>Tags: the indexer name I want to use to download the movie, usually just <code>yts</code> for me (remember this is a &ldquo;LQ&rdquo; release group, so if you have that custom format disable it) as mentioned in <a href="#indexers">Indexers</a>. If you don&rsquo;t specify a tag it will only use indexers that don&rsquo;t have a tag set.</li>
+<li>Start search for missing movie: toggled on. Immediatly start searching for the movie and start the download.</li>
+</ul>
+<p>Once you click on &ldquo;Add Movie&rdquo; it will add it to the <em>Movies</em> section and start searching and selecting the best torrent it finds, according to the &ldquo;filters&rdquo; (quality settings, profile and indexer(s)).</p>
+<p>When it selects a torrent it sends it to qBitTorrent and you can even go ahead and monitor it over there. Else you can also monitor at <em>Activity -&gt; Queue</em>.</p>
+<p>After the movie is downloaded and processed by Radarr, it will create the appropriate hardlinks to the <code>media/movies</code> directory, as set in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">First part: Directory structure</a>.</p>
+<p>Optionally, you can add subtitles using <a href="#bazarr">Bazarr</a>.</p>
+<h2 id="sonarr">Sonarr<a class="headerlink" href="#sonarr" title="Permanent link">&para;</a></h2>
+<p><a href="https://sonarr.tv/">Sonarr</a> is a TV series collection manager that can be used to download series via torrents. Most of the install process, configuration and whatnot is going to be basically the same as with Radarr.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S sonarr
+</code></pre>
+<p><mark>Add the <code>sonarr</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a sonarr servarr
+</code></pre>
+<p>The default port that Radarr uses is <code>8989</code> for http (the one you need for the reverse proxy).</p>
+<h3 id="reverse-proxy_1">Reverse proxy<a class="headerlink" href="#reverse-proxy_1" title="Permanent link">&para;</a></h3>
+<p>Basically the same as with <a href="#reverse-proxy">Radarr: Reverse proxy</a>, <mark>except that the <code>proxy_set_header</code> changes from <code>$proxy_host</code> to <code>$host</code>.</mark></p>
+<p>Add the following <code>location</code> blocks into the <code>isos.conf</code>, I&rsquo;ll leave it as <code>sonarr</code>:</p>
+<pre><code class="language-nginx">location /sonarr/ {
+    proxy_pass http://127.0.0.1:8989/sonarr/; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $proxy_host; # this differs from the radarr reverse proxy
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+
+    proxy_redirect off;
+}
+# Allow the API External Access via NGINX
+location /sonarr/api {
+    auth_basic off;
+    proxy_pass http://127.0.0.1:8989/sonarr/api; # change port if needed
+}
+</code></pre>
+<p>This is taken from <a href="https://wiki.servarr.com/sonarr/installation#nginx">Sonarr: Nginx reverse proxy configuration</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-sonarr">Start using Sonarr<a class="headerlink" href="#start-using-sonarr" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>sonarr.service</code>:</p>
+<pre><code class="language-sh">systemctl enable sonarr.service
+systemctl start sonarr.service
+</code></pre>
+<p>This will start the service and create the default configs under <code>/var/lib/sonarr</code>. You need to change the <code>URLBase</code> as the reverse proxy is under a subdirectory (<code>/sonarr</code>). Edit <code>/var/lib/sonarr/config.xml</code>:</p>
+<pre><code class="language-xml">...
+&lt;UrlBase&gt;/sonarr&lt;/UrlBase&gt;
+...
+</code></pre>
+<p>Then restart the <code>sonarr</code> service:</p>
+<pre><code class="language-sh">systemctl restart sonarr.service
+</code></pre>
+<p>Now <code>https://isos.yourdomain.com/sonarr</code> is accessible. <mark>Secure the instance right away</mark> by adding authentication under <em>Settings -&gt; General -&gt; Security</em>. I added the &ldquo;Forms&rdquo; option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials.</p>
+<p>Similar to <a href="#radarr">Radarr</a> if you want to have an anime library, it is recommended to run a second instance of Sonarr for this as shown in <a href="https://wiki.servarr.com/sonarr/installation#linux-multiple-instances">Sonarr: Linux multiple instances</a> and follow <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx-Anime/">TRaSH: Release profile regex (anime)</a> and the <a href="https://trash-guides.info/Sonarr/Sonarr-recommended-naming-scheme/#anime-episode-format">TRaSH: Anime recommended naming scheme</a> if an anime instance is what you want.</p>
+<h4 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h4>
+<p>Will be following the official <a href="https://wiki.servarr.com/sonarr/quick-start-guide">Sonarr: Quick start guide</a> as well as the recommendations by <a href="https://trash-guides.info/Sonarr/">TRaSH: Sonarr</a>.</p>
+<p>Anything that is not mentioned in either guide or that is specific to how I&rsquo;m setting up stuff will be stated below.</p>
+<h5 id="media-management_1">Media Management<a class="headerlink" href="#media-management_1" title="Permanent link">&para;</a></h5>
+<ul>
+<li><strong>File Management</strong>:<ul>
+<li><em>Propers and Repacks</em>: set it to &ldquo;Do Not Prefer&rdquo; and instead you&rsquo;ll use the <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#propers-and-repacks">Propers and Repacks</a> release profile and fill with <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#p2p-groups-repackproper">P2P Groups + Repack/Proper</a>.</li>
+</ul>
+</li>
+</ul>
+<h5 id="quality_1">Quality<a class="headerlink" href="#quality_1" title="Permanent link">&para;</a></h5>
+<p>Similar to <a href="#quality">Radarr: Quality</a> this is personal preference and it dictates your preferred file sizes. You can follow <a href="https://trash-guides.info/Sonarr/Sonarr-Quality-Settings-File-Size/">TRaSH: Quality settings</a> to maximize the quality of the downloaded content and restrict low quality stuff.</p>
+<p>Will basically do the same as in <a href="#quality">Radarr: Quality</a>: set minimum of <code>0</code> and maximum of <code>400</code> for everything <code>720p</code> and above.</p>
+<h5 id="profiles_1">Profiles<a class="headerlink" href="#profiles_1" title="Permanent link">&para;</a></h5>
+<p>This is a bit different than with <a href="#radarr">Radarr</a>, the way it is configured is by setting &ldquo;Release profiles&rdquo;. I took the profiles from <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/">TRaSH: WEB-DL Release profile regex</a>. The only possible change I&rsquo;ll do is disable the Low Quality Groups and/or the &ldquo;Golden rule&rdquo; filter (for <code>x265</code> encoded video).</p>
+<p>For me it ended up looking like this:</p>
+<figure id="__yafg-figure-4">
+<img alt="Sonarr: Release profiles" src="https://static.luevano.xyz/images/b/sonarr/sonarr_release_profiles.png" title="Sonarr: Release profiles">
+<figcaption>Sonarr: Release profiles</figcaption>
+</figure>
+<p>But yours can differ as its mostly personal preference. For the &ldquo;Quality profile&rdquo; I&rsquo;ll be using the default &ldquo;HD-1080p&rdquo; most of the time, but I also created a &ldquo;HD + WEB (720/1080)&rdquo; which works best for some.</p>
+<h5 id="download-clients_1">Download clients<a class="headerlink" href="#download-clients_1" title="Permanent link">&para;</a></h5>
+<p>Exactly the same as with <a href="#download-clients">Radarr: Download clients</a> only change is the category from <code>movies</code> to <code>tv</code> (or whatever you want), click on the giant &ldquo;+&rdquo; button and click on the qBitTorrent option. Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier.</li>
+<li>Enable: enable it.</li>
+<li>Host: use <code>127.0.0.1</code>.</li>
+<li>Port: the port number you chose, <code>30000</code> in my case.</li>
+<li>Url Base: leave blank as even though you have it exposed under <code>/qbt</code>, the service itself is not.</li>
+<li>Username: the Web UI username, <code>admin</code> by default.</li>
+<li>Password: the Web UI username, <code>adminadmin</code> by default (you should&rsquo;ve changed it if you have the service exposed).</li>
+<li>Category: <code>tv</code>.</li>
+</ul>
+<p>Everything else can be left as default, but maybe change <em>Completed Download Handling</em> if you&rsquo;d like. Same goes for the general <em>Failed Download Handling</em> download clients&rsquo; option.</p>
+<h5 id="indexers_1">Indexers<a class="headerlink" href="#indexers_1" title="Permanent link">&para;</a></h5>
+<p>Also exactly the same as with <a href="#indexers">Radarr: Indexers</a>, click on the giant &ldquo;+&rdquo; button and click on the <em>custom</em> Torznab option (this doesn&rsquo;t have the Jackett preset). Then configure:</p>
+<ul>
+<li>Name: can be anything, just an identifier. I like to do &ldquo;Jackett - INDEXER&rdquo;, where &ldquo;INDEXER&rdquo; is just an identifier.</li>
+<li>URL: <code>http://127.0.0.1:9117/jack/api/v2.0/indexers/YOURINDEXER/results/torznab/</code>, where <code>YOURINDEXER</code> is specific to each indexer (<code>eztv</code>, <code>nyaasi</code>, etc.). Can be directly copied from the indexer&rsquo;s &ldquo;Copy Torznab Feed&rdquo; button on the Jackett Web UI.</li>
+<li>API Path: <code>/api</code>, leave as is.</li>
+<li>API Key: this can be found at the top right corner in Jackett&rsquo;s Web UI.</li>
+<li>Categories: which categories to use when searching, these are generic categories until you test/add the indexer. After you add the indexer you can come back and select your prefered categories (like just toggling the TV categories).</li>
+<li>Tags: I like to add a tag for the indexer name like <code>eztv</code> or <code>nyaa</code>. This is useful to control which indexers to use when adding new series.</li>
+</ul>
+<p>Everything else on default. <em>Download Client</em> can also be set, which can be useful to keep different categories per indexer or something similar. <em>Seed Ratio</em> and <em>Seed Time</em> can also be set and are used to manage when to stop the torrent, this can also be set globally on the qBitTorrent Web UI, this is a personal setting.</p>
+<h4 id="download-content_1">Download content<a class="headerlink" href="#download-content_1" title="Permanent link">&para;</a></h4>
+<p>Almost the same as with <a href="#download-content">Radarr: Download content</a>, but I&rsquo;ve been personally selecting the torrents I want to download for each season/episode so far, as the indexers I&rsquo;m using are all over the place and I like consistencies. Will update if I find a (near) 100% automation process, but I&rsquo;m fine with this anyways as I always monitor that everything is going fine.</p>
+<p>Add by going to <em>Series -&gt; Add New</em>. Basically just follow the <a href="https://wiki.servarr.com/sonarr/library#add-new">Sonarr: Library add new</a> guide. Adding series needs a bit more options that movies in Radarr, but it&rsquo;s straight forward.</p>
+<p>I personally use:</p>
+<ul>
+<li>Monitor: All Episodes.</li>
+<li>Quiality Profile: &ldquo;HD + WEB (720/1080)&rdquo;. This depends on what I want for that how, lately I&rsquo;ve been experimenting with this one.</li>
+<li>Series Type: Standard. For now I&rsquo;m just downloading shows, but it has an Anime option.</li>
+<li>Tags: the &ldquo;indexer_name&rdquo; I want to use to download the movie, I&rsquo;ve been using all indexers so I just use all tags as I&rsquo;m experimenting and trying multiple options.</li>
+<li>Season Folder: enabled. I like as much organization as possible.</li>
+<li>Start search for missing episodes: disabled. Depends on you, due to my indexers, I prefer to check manually the season packs, for example.</li>
+<li>Start search for cutoff unmet episodes: disabled. Honestly don&rsquo;t really know what this is.</li>
+</ul>
+<p>Once you click on &ldquo;Add X&rdquo; it will add it to the <em>Series</em> section and will start as monitored. So far I haven&rsquo;t noticed that it immediately starts downloading (because of the &ldquo;Start search for missing episodes&rdquo; setting) but I always click on unmonitor the series, so I can manually check (again, due to the low quality of my indexers).</p>
+<p>When it automatically starts to download an episode/season it will send it to qBitTorrent and you can monitor it over there. Else you can also monitor at <em>Activity -&gt; Queue</em>. Same thing goes if you download manually each episode/season via the interactive search.</p>
+<p>To interactively search episodes/seasons go to <em>Series</em> and then click on any series, then click either on the interactive search button for the episode or the season, it is an icon of a person as shown below:</p>
+<figure id="__yafg-figure-5">
+<img alt="Sonarr: Interactive search button" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_button.png" title="Sonarr: Interactive search button">
+<figcaption>Sonarr: Interactive search button</figcaption>
+</figure>
+<p>Then it will bring a window with the search results, where it shows the indexer it got the result from, the size of the torrent, peers, language, quality, the score it received from the configured release profiles an alert in case that the torrent is &ldquo;bad&rdquo; and the download button to manually download the torrent you want. An example shown below:</p>
+<figure id="__yafg-figure-6">
+<img alt="Sonarr: Interactive search results" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_results.png" title="Sonarr: Interactive search results">
+<figcaption>Sonarr: Interactive search results</figcaption>
+</figure>
+<p>After the movie is downloaded and processed by Sonarr, it will create the appropriate hardlinks to the <code>media/tv</code> directory, as set in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">Directory structure</a>.</p>
+<p>Optionally, you can add subtitles using <a href="#bazarr">Bazarr</a>.</p>
+<h2 id="jellyfin">Jellyfin<a class="headerlink" href="#jellyfin" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/Jellyfin">Jellyfin</a> is a media server &ldquo;manager&rdquo;, usually used to manage and organize video content (movies, TV series, etc.) which could be compared with <a href="https://wiki.archlinux.org/title/plex">Plex</a> or <a href="https://wiki.archlinux.org/title/Emby">Emby</a> for example (take them as possible alternatives).</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S jellyfin-bin
+</code></pre>
+<p>I&rsquo;m installing the pre-built binary instead of building it as I was getting a lot of errors and the server was even crashing. You can try installing <code>jellyfin</code> instead.</p>
+<p><mark>Add the <code>jellyfin</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a jellyfin servarr
+</code></pre>
+<p>You can already <code>start</code>/<code>enable</code> the <code>jellyfin.service</code> which will start at <code>http://127.0.0.1:8096/</code> by default where you need to complete the initial set up. But let&rsquo;s create the reverse proxy first then start everything and finish the set up.</p>
+<h3 id="reverse-proxy_2">Reverse proxy<a class="headerlink" href="#reverse-proxy_2" title="Permanent link">&para;</a></h3>
+<p>I&rsquo;m going to have my <code>jellyfin</code> instance under a subdomain with an <code>nginx</code> reverse proxy as shown in the <a href="https://wiki.archlinux.org/title/Jellyfin#Nginx_reverse_proxy">Arch wiki</a>. For that, create a <code>jellyfin.conf</code> at the usual <code>sites-&lt;available/enabled&gt;</code> path for <code>nginx</code>:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name jellyfin.yourdomain.com; # change accordingly to your wanted subdomain and domain name
+    set $jellyfin 127.0.0.1; # jellyfin is running at localhost (127.0.0.1)
+
+    # Security / XSS Mitigation Headers
+    add_header X-Frame-Options &quot;SAMEORIGIN&quot;;
+    add_header X-XSS-Protection &quot;1; mode=block&quot;;
+    add_header X-Content-Type-Options &quot;nosniff&quot;;
+
+    # Content Security Policy
+    # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    # Enforces https content and restricts JS/CSS to origin
+    # External Javascript (such as cast_sender.js for Chromecast) must be whitelisted.
+    add_header Content-Security-Policy &quot;default-src https: data: blob: http://image.tmdb.org; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.gstatic.com/cv/js/sender/v1/cast_sender.js https://www.youtube.com blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'self'&quot;;
+
+        location = / {
+        return 302 https://$host/web/;
+    }
+
+    location / {
+        # Proxy main Jellyfin traffic
+        proxy_pass http://$jellyfin:8096;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+
+        # Disable buffering when the nginx proxy gets very resource heavy upon streaming
+        proxy_buffering off;
+    }
+
+    # location block for /web - This is purely for aesthetics so /web/#!/ works instead of having to go to /web/index.html/#!/
+    location = /web/ {
+        # Proxy main Jellyfin traffic
+        proxy_pass http://$jellyfin:8096/web/index.html;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+    }
+
+    location /socket {
+        # Proxy Jellyfin Websockets traffic
+        proxy_pass http://$jellyfin:8096;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+    }
+}
+</code></pre>
+<h4 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h4>
+<p>Create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>Similarly to the <code>isos</code> subdomain, that will autodetect the new subdomain and extend the existing certificate(s). Restart the <code>nginx</code> service for changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-jellyfin">Start using Jellyfin<a class="headerlink" href="#start-using-jellyfin" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>jellyfin.service</code> if you haven&rsquo;t already:</p>
+<pre><code class="language-sh">systemctl enable jellyfin.service
+systemctl start jellyfin.service
+</code></pre>
+<p>Then navigate to <code>https://jellyfin.yourdomain.com</code> and either continue with the set up wizard if you didn&rsquo;t already or continue with the next steps to configure your libraries.</p>
+<p>The initial setup wizard makes you create an user (will be the admin for now) and at least one library, though these can be done later. For more check <a href="https://jellyfin.org/docs/general/quick-start/">Jellyfin: Quick start</a>.</p>
+<p>Remember to use the configured directory as mentioned in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">Directory structure</a>. Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then navigate to <em>Administration -&gt; Dashboard</em>. I didn&rsquo;t configure much other than adding a couple of users for me and friends, I wouldn&rsquo;t recommend using the admin account to watch (personal preference).</p>
+<p>Once there is at least one library it will show at <em>Home</em> along with the latest movies (if any) similar to the following (don&rsquo;t judge, these are just the latest I added due to friend&rsquo;s requests):</p>
+<figure id="__yafg-figure-7">
+<img alt="Jellyfin: Home libraries" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_home_libraries.png" title="Jellyfin: Home libraries">
+<figcaption>Jellyfin: Home libraries</figcaption>
+</figure>
+<p>And inside the &ldquo;Movies&rdquo; library you can see the whole catalog where you can filter or just scroll as well as seeing <em>Suggestions</em> (I think this starts getting populated after a while) and <em>Genres</em>:</p>
+<figure id="__yafg-figure-8">
+<img alt="Jellyfin: Library catalog options" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_library_catalog_options.png" title="Jellyfin: Library catalog options">
+<figcaption>Jellyfin: Library catalog options</figcaption>
+</figure>
+<h4 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">&para;</a></h4>
+<p>You can also install/activate <a href="https://jellyfin.org/docs/general/server/plugins/">plugins</a> to get extra features. Most of the plugins you might want to use are already available in the official repositories and can be found in the &ldquo;Catalog&rdquo;. There are a lot of plugins that are focused around anime and TV metadata, as well as an Open Subtitles plugin to automatically download missing subtitles (though this is managed with <a href="#bazarr">Bazarr</a>).</p>
+<p>To activate plugins click on the 3 horizontal lines on the top left of the Web UI then navigate to <em>Administration -&gt; Dashboard -&gt; Advanced -&gt; Plugins</em> and click on the <em>Catalog</em> tab (top of the Web UI). Here you can select the plugins you want to install. By default only the official ones are shown, for more you can add more <a href="https://jellyfin.org/docs/general/server/plugins/#repositories">repositories</a>.</p>
+<p>The only plugin I&rsquo;m using is the &ldquo;Playback Reporting&rdquo;, to get a summary of what is being used in the instance. But I might experiment with some anime-focused plugins when the time comes.</p>
+<h4 id="transcoding">Transcoding<a class="headerlink" href="#transcoding" title="Permanent link">&para;</a></h4>
+<p>Although not recommended and explicitly set to not download any <code>x265</code>/<code>HEVC</code> content (by using the <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#golden-rule">Golden rule</a>) there might be cases where the only option you have is to download such content. If that is the case and you happen to have a way to do <a href="https://jellyfin.org/docs/general/administration/hardware-acceleration/">Hardware Acceleration</a>, for example by having an NVIDIA graphics card (in my case) then you should enable it to avoid using lots of resources on your system.</p>
+<p>Using hardware acceleration will leverage your GPU to do the transcoding and save resources on your CPU. I tried streaming <code>x265</code> content and it basically used 70-80% on all cores of my CPU, while on the other hand using my GPU it used the normal amount on the CPU (70-80% on a single core).</p>
+<p>This will be the steps to install on an <a href="https://jellyfin.org/docs/general/administration/hardware-acceleration/nvidia/">NVIDIA</a> graphics card, specifically a GTX 1660 Ti. But more info and guides can be found at <a href="https://jellyfin.org/docs/general/administration/hardware-acceleration/">Jellyfin: Hardware Acceleration</a> for other acceleration methods.</p>
+<h5 id="nvidia-drivers">NVIDIA drivers<a class="headerlink" href="#nvidia-drivers" title="Permanent link">&para;</a></h5>
+<p>Ensure you have the NVIDIA drivers and utils installed. I&rsquo;ve you&rsquo;ve done this in the past then you can skip this part, else you might be using the default <code>nouveau</code> drivers. Follow the next steps to set up the NVIDIA drivers, which basically is a summary of <a href="https://wiki.archlinux.org/title/NVIDIA#Installation">NVIDIA: Installation</a> for my setup, so <mark>double check the wiki in case you have an older NVIDIA graphics card</mark>.</p>
+<p>Install the <code>nvidia</code> and <code>nvidia-utils</code> packages:</p>
+<pre><code class="language-sh">pacman -S nvidia nvidia-utils
+</code></pre>
+<p>Modify <code>/etc/mkinitcpio.conf</code> to remove <code>kms</code> from the <code>HOOKS</code> array. It should look like this (commented line is how it was for me before the change):</p>
+<pre><code class="language-sh">...
+# HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block filesystems fsck)
+HOOKS=(base udev autodetect modconf keyboard keymap consolefont block filesystems fsck)
+...
+</code></pre>
+<p><a href="https://wiki.archlinux.org/title/Mkinitcpio#Image_creation_and_activation">Regenerate the initramfs</a> by executing:</p>
+<pre><code class="language-sh">mkinitcpio -P
+</code></pre>
+<p>Finally, reboot the system. After the reboot you should be able to check your GPU info and processes being run with the GPU by executing <code>nvidia-smi</code>.</p>
+<h5 id="enable-hardware-acceleration">Enable hardware acceleration<a class="headerlink" href="#enable-hardware-acceleration" title="Permanent link">&para;</a></h5>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S jellyfin-ffmpeg6-bin
+</code></pre>
+<p>This provides the <code>jellyfin-ffmpeg</code> executable, which is necessary for Jellyfin to do hardware acceleration, it needs to be this specific one.</p>
+<p>Then in the Jellyfin go to the transcoding settings by clicking on the 3 horizontal lines on the top left of the Web UI and navigating to <em>Administration -&gt; Dashboard -&gt; Playback -&gt; Transcoding</em> and:</p>
+<ul>
+<li>Change the <em>Hardware acceleration</em> from &ldquo;None&rdquo; to &ldquo;Nvidia NVENC&rdquo;.</li>
+<li>Some other options will pop up, just make sure you enable &ldquo;HEVC&rdquo; (which is <code>x265</code>) in the list of <em>Enable hardware encoding for:</em>.</li>
+<li>Scroll down and specify the <code>ffmpeg</code> path, which is <code>/usr/lib/jellyfin-ffmpeg/ffmpeg</code>.</li>
+</ul>
+<p>Don&rsquo;t forget to click &ldquo;Save&rdquo; at the bottom of the Web UI, it will ask if you want to enable hardware acceleration.</p>
+<h2 id="bazarr">Bazarr<a class="headerlink" href="#bazarr" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.bazarr.media/">Bazarr</a> is a companion for Sonarr and Radarr that manages and downloads subtitles.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S bazarr
+</code></pre>
+<p><mark>Add the <code>bazarr</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a bazarr servarr
+</code></pre>
+<p>The default port that Bazarr uses is <code>6767</code> for http (the one you need for the reverse proxy), and it has pre-configured the default ports for Radarr and Sonarr.</p>
+<h3 id="reverse-proxy_3">Reverse proxy<a class="headerlink" href="#reverse-proxy_3" title="Permanent link">&para;</a></h3>
+<p>Basically the same as with <a href="#reverse-proxy">Radarr: Reverse proxy</a> and <a href="#reverse-proxy-1">Sonarr: Reverse proxy</a>.</p>
+<p>Add the following setting in the <code>server</code> block of the <code>isos.conf</code>:</p>
+<pre><code class="language-nginx">server {
+    # server_name and other directives
+    ...
+
+    # Increase http2 max sizes
+    large_client_header_buffers 4 16k;
+
+    # some other blocks like location blocks
+    ...
+}
+</code></pre>
+<p>Then add the following <code>location</code> blocks in the <code>isos.conf</code>, where I&rsquo;ll keep it as <code>/bazarr/</code>:</p>
+<pre><code class="language-nginx">location /bazarr/ {
+    proxy_pass http://127.0.0.1:6767/bazarr/; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection &quot;Upgrade&quot;;
+
+    proxy_redirect off;
+}
+# Allow the Bazarr API through if you enable Auth on the block above
+location /bazarr/api {
+    auth_request off;
+    proxy_pass http://127.0.0.1:6767/bazarr/api;
+}
+</code></pre>
+<p>This is taken from <a href="https://wiki.bazarr.media/Additional-Configuration/Reverse-Proxy-Help/">Bazarr: Reverse proxy help</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-bazarr">Start using Bazarr<a class="headerlink" href="#start-using-bazarr" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>bazarr.service</code> if you haven&rsquo;t already:</p>
+<pre><code class="language-sh">systemctl start bazarr.service
+systemctl enable bazarr.service
+</code></pre>
+<p>This will start the service and create the default configs under <code>/var/lib/bazarr</code>. You need to change the <code>base_url</code> for the necessary services as they&rsquo;re running under a reverse proxy and under subdirectories. Edit <code>/var/lib/bazarr/config/config.ini</code>:</p>
+<pre><code class="language-ini">[general]
+port = 6767
+base_url = /bazarr
+
+[sonarr]
+port = 8989
+base_url = /sonarr
+
+[radarr]
+port = 7878
+base_url = /radarr
+</code></pre>
+<p>Then restart the <code>bazarr</code> service:</p>
+<pre><code class="language-sh">systemctl restart bazarr.service
+</code></pre>
+<p>Now <code>https://isos.yourdomain.com/bazarr</code> is accessible. <mark>Secure the instance right away</mark> by adding authentication under <em>Settings -&gt; General -&gt; Security</em>. I added the &ldquo;Forms&rdquo; option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials. I also disabled <em>Settings -&gt; General -&gt; Updates -&gt; Automatic</em>.</p>
+<h4 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h4>
+<p>Will be following the official <a href="https://wiki.bazarr.media/Getting-Started/setup-guide/">Bazarr: Setup guide</a> as well as the recommendations by <a href="https://trash-guides.info/Bazarr/">TRaSH: Bazarr</a>.</p>
+<p>Anything that is not mentioned in either guide or that is specific to how I&rsquo;m setting up stuff will be stated below.</p>
+<h5 id="providers">Providers<a class="headerlink" href="#providers" title="Permanent link">&para;</a></h5>
+<p>This doesn&rsquo;t require much thinking and its up to personal preference, but I&rsquo;ll list the ones I added:</p>
+<ul>
+<li><a href="https://www.opensubtitles.com/">OpenSubtitles.com</a>: requires an account (the <code>.org</code> option is deprecated).<ul>
+<li>For a free account it only lets you download around 20 subtitles per day, and they contain ads. You could pay for a VIP account ($3 per month) and that will give you 1000 subtitles per day and no ads. But if you&rsquo;re fine with 20 ads per day you can try to get rid of the ads by running an automated script. Such option can be found at <a href="https://github.com/brianspilner01/media-server-scripts/blob/master/sub-clean.sh">brianspilner01/media-server-scripts: sub-clean.sh</a>.</li>
+</ul>
+</li>
+<li>YIFY Subtitles</li>
+<li>Subscenter</li>
+<li>Supersubtitles</li>
+<li>TVSubtitles</li>
+<li>Subtitulamos.tv: Spanish subtitles provider.</li>
+<li>Argenteam: LATAM Spanish subtitles provider.</li>
+<li>Subdivx: LATAM Spanish / Spanish subtitles provider.</li>
+</ul>
+<p>I&rsquo;ve tested this setup for the following languages (with all default settings as stated in the guides):</p>
+<ul>
+<li>English</li>
+<li>Spanish</li>
+</ul>
+<p>I tried with &ldquo;Latin American Spanish&rdquo; but they&rsquo;re hard to find, those two work pretty good.</p>
+<p>None of these require an <a href="https://anti-captcha.com/">Anti-Captcha</a> account (which is a paid service), but I created one anyways in case I need it. Though you need to add credits to it (pretty cheap though) if you ever use it.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Set up qBitTorrent with Jackett for use with Starr apps</title>
+      <link>https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html</guid>
+      <pubDate>Mon, 24 Jul 2023 02:06:24 GMT</pubDate>
+      <category>Code</category>
+      <category>English</category>
+      <category>Server</category>
+      <category>Tools</category>
+      <category>Tutorial</category>
+      <description>How to set up a torrenting solution with qBitTorrent in preparation for a media server with Jellyfin and Starr apps, on Arch. With Jackett and flaresolverr, too.</description>
+      <content:encoded><![CDATA[<p>Riding on my excitement of having a good internet connection and having setup my <em>home server</em> now it&rsquo;s time to self host a media server for movies, series and anime. I&rsquo;ll setup qBitTorrent as the downloader, Jackett for the trackers, the <em>Starr apps</em> for the automatic downloading and Jellyfin as the media server manager/media viewer. This was going to be a single entry but it ended up being a really long one so I&rsquo;m splitting it, this being the first part.</p>
+<p>I&rsquo;ll be exposing my stuff on a subdomain only so I can access it while out of home and for SSL certificates (not required), but shouldn&rsquo;t be necessary and instead you can use a VPN (<a href="https://blog.luevano.xyz/a/vpn_server_with_openvpn.html">how to set up</a>). For your reference, whenever I say &ldquo;Starr apps&rdquo; (*arr apps) I mean the family of apps such as Sonarr, Radarr, Bazarr, Readarr, Lidarr, etc..</p>
+<p>Most of my config is based on the <a href="https://trash-guides.info/">TRaSH-Guides</a> (will be mentioned as &ldquo;TRaSH&rdquo; going forward). Specially get familiar with the <a href="https://trash-guides.info/Hardlinks/How-to-setup-for/Native/">TRaSH: Native folder structure</a> and with the <a href="https://trash-guides.info/Hardlinks/Hardlinks-and-Instant-Moves/">TRaSH: Hardlinks and instant moves</a>. Will also use the default configurations based on the respective documentation for each Starr app and service, except when stated otherwise.</p>
+<p>Everything here is performed in <mark>arch btw</mark> and all commands should be run as root unless stated otherwise.</p>
+<p><mark>Kindly note that I do not condone the use of torrenting for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.</mark></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a><ul>
+<li><a href="#directory-structure">Directory structure</a></li>
+</ul>
+</li>
+<li><a href="#jackett">Jackett</a><ul>
+<li><a href="#reverse-proxy">Reverse proxy</a><ul>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+</ul>
+</li>
+<li><a href="#start-using-jackett">Start using Jackett</a><ul>
+<li><a href="#indexers">Indexers</a></li>
+</ul>
+</li>
+<li><a href="#flaresolverr">FlareSolverr</a></li>
+</ul>
+</li>
+<li><a href="#qbittorrent">qBitTorrent</a><ul>
+<li><a href="#reverse-proxy_1">Reverse proxy</a></li>
+<li><a href="#start-using-qbittorrent">Start using qBitTorrent</a><ul>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#trackers">Trackers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>The specific programs are mostly recommendations, if you&rsquo;re familiar with something else or want to change things around, feel free to do so but everything will be written with them in mind.</p>
+<p>If you want to expose to a (sub)domain, then similar to my early <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a> entries (specially the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> for the reverse proxy plus certificates):</p>
+<ul>
+<li><code>nginx</code> for the reverse proxy.</li>
+<li><code>certbot</code> for the SSL certificates.</li>
+<li><code>ufw</code> for the firewall.</li>
+<li><code>yay</code> to install AUR packages.<ul>
+<li>I mentioned how to install and use it on my previous entry: <a href="https://blog.luevano.xyz/a/manga_server_with_komga.html#yay">Manga server with Komga: yay</a>.</li>
+</ul>
+</li>
+<li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>isos</code> (or whatever you want to call it).<ul>
+<li>For automation software (qBitTorrent, Jackett, Starr apps, etc.). One subdomain per service can be used instead.</li>
+</ul>
+</li>
+</ul>
+<p><mark>Note: I&rsquo;m using the explicit <code>127.0.0.1</code> ip instead of <code>localhost</code> in the reverse proxies/services config as <code>localhost</code> resolves to <code>ipv6</code> sometimes which is not configured on my server correctly.</mark> If you have it configured you can use <code>localhost</code> without any issue.</p>
+<h3 id="directory-structure">Directory structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
+<p>Basically following <a href="https://trash-guides.info/Hardlinks/How-to-setup-for/Native/">TRaSH: Native folder structure</a> except for the directory permissions part, I&rsquo;ll do the same as with my <a href="https://blog.luevano.xyz/a/manga_server_with_komga#set-default-directory-permissions.html">Komga setup guide</a> to stablish default group permissions.</p>
+<p>The desired behaviour is: set <code>servarr</code> as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. <code>servarr</code> is going to be a service user and I&rsquo;ll use the root of a mounted drive at <code>/mnt/a</code>.</p>
+<ol>
+<li>Create a service user called <code>servarr</code> (it could just be a group, too):</li>
+</ol>
+<pre><code class="language-sh">useradd -r -s /usr/bin/nologin -M -c &quot;Servarr applications&quot; servarr
+</code></pre>
+<ol start="2">
+<li>Create the <code>torrents</code> directory and set default permissions:</li>
+</ol>
+<pre><code class="language-sh">cd /mnt/a # change this according to your setup
+mkdir torrents
+chown servarr:servarr torrents
+chmod g+w torrents
+chmod g+s torrents
+setfacl -d -m g::rwx torrents
+setfacl -d -m o::rx torrents
+</code></pre>
+<ol start="3">
+<li>Check that the permissions are set correctly (<code>getfacl torrents</code>)</li>
+</ol>
+<pre><code># file: torrents/
+# owner: servarr
+# group: servarr
+# flags: -s-
+user::rwx
+group::rwx
+other::r-x
+default:user::rwx
+default:group::rwx
+default:other::r-x
+</code></pre>
+<ol start="4">
+<li>Create the subdirectories you want with any user (I&rsquo;ll be using <code>servarr</code> personally):</li>
+</ol>
+<pre><code class="language-sh">mkdir torrents/{tv,movies,anime}
+chown -R servarr: torrents
+</code></pre>
+<ol start="5">
+<li>Finally repeat steps 2 - 4 for the <code>media</code> directory.</li>
+</ol>
+<p>The final directory structure should be the following:</p>
+<pre><code>root_dir
+├── torrents
+│   ├── movies
+│   ├── music
+│   └── tv
+└── media
+    ├── movies
+    ├── music
+    └── tv
+</code></pre>
+<p>Where <code>root_dir</code> is <code>/mnt/a</code> in my case. This is going to be the reference for the following applications set up.</p>
+<p>Later, add the necessary users to the <code>servarr</code> group if they need write access, by executing:</p>
+<pre><code class="language-sh">gpasswd -a &lt;USER&gt; servarr
+</code></pre>
+<h2 id="jackett">Jackett<a class="headerlink" href="#jackett" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/Jackett/Jackett">Jackett</a> is a &ldquo;proxy server&rdquo; (or &ldquo;middle-ware&rdquo;) that translates queries from apps (such as the Starr apps in this case) into tracker-specific http queries. Note that there is an alternative called <a href="https://github.com/Prowlarr/Prowlarr">Prowlarr</a> that is better integrated with most if not all Starr apps, requiring less maintenance; I&rsquo;ll still be sticking with Jackett, though.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S jackett
+</code></pre>
+<p>I&rsquo;ll be using the default <code>9117</code> port, but change accordingly if you decide on another one.</p>
+<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>I&rsquo;m going to have most of the services under the same subdomain, with different subdirectories. Create the config file <code>isos.conf</code> at the usual <code>sites-available/enabled</code> path for <code>nginx</code>:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name isos.yourdomain.com;
+
+    location /jack { # you can change this to jackett or anything you'd like, but it has to match the jackett config on the next steps
+        proxy_pass http://127.0.0.1:9117; # change the port according to what you want
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_redirect off;
+    }
+}
+</code></pre>
+<p>This is the basic reverse proxy config as shown in <a href="https://github.com/Jackett/Jackett#running-jackett-behind-a-reverse-proxy">Jackett: Running Jackett behind a reverse proxy</a>. The rest of the services will be added under different <code>location</code> block on their respective steps.</p>
+<h4 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h4>
+<p>Create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>That will automatically detect the new subdomain config and create/extend your existing certificate(s). Restart the <code>nginx</code> service for changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-jackett">Start using Jackett<a class="headerlink" href="#start-using-jackett" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>jackett.service</code>:</p>
+<pre><code class="language-sh">systemctl enable jackett.service
+systemctl start jackett.service
+</code></pre>
+<p>It will autocreate the default configuration under <code>/var/lib/jackett/ServerConfig.json</code>, which you need to edit at least to change the <code>BasePathOverride</code> to match what you used in the <code>nginx</code> config:</p>
+<pre><code class="language-json">{
+    &quot;Port&quot;: 9117,
+    &quot;SomeOtherConfigs&quot;: &quot;some_other_values&quot;,
+    &quot;BasePathOverride&quot;: &quot;/jack&quot;,
+    &quot;MoreConfigs&quot;: &quot;more_values&quot;,
+}
+</code></pre>
+<p>Also modify the <code>Port</code> if you changed it. Restart the <code>jackett</code> service:</p>
+<pre><code class="language-sh">systemctl restart jackett.service
+</code></pre>
+<p>It should now be available at <code>https://isos.yourdomain.com/jack</code>. <mark>Add an admin password right away</mark> by scroll down and until the first config setting; don&rsquo;t forget to click on &ldquo;Set Password&rdquo;. Change any other config you want from the Web UI, too (you&rsquo;ll need to click on the blue &ldquo;Apply server settings&rdquo; button).</p>
+<p>Note that you need to set the &ldquo;Base URL override&rdquo; to <code>http://127.0.0.1:9117</code> (or whatever port you used) so that the &ldquo;Copy Torznab Feed&rdquo; button works for each indexer.</p>
+<h4 id="indexers">Indexers<a class="headerlink" href="#indexers" title="Permanent link">&para;</a></h4>
+<p>For Jackett, an indexer is just a configured tracker for some of the commonly known torrent sites. Jackett comes with a lot of pre-configured public and private indexers which usually have multiple URLs (mirrors) per indexer, useful when the main torrent site is down. Some indexers come with extra features/configuration depending on what the site specializes on.</p>
+<p>To add an indexer click on the &ldquo;+ Add Indexer&rdquo; at the top of the Web UI and look for indexers you want, then click on the &ldquo;+&rdquo; icon on the far-most right for each indexer or select the ones you want (clicking on the checkbox on the far-most left of the indexer) and scroll all the way to the bottom to click on &ldquo;Add Selected&rdquo;. They then will show as a list with some available actions such as &ldquo;Copy RSS Feed&rdquo;, &ldquo;Copy Torznab Feed&rdquo;, &ldquo;Copy Potato Feed&rdquo;, a button to search, configure, delete and test the indexer, as shown below:</p>
+<figure id="__yafg-figure-1">
+<img alt="Jacket: configured indexers" src="https://static.luevano.xyz/images/b/jack/jack_configured_indexers.png" title="Jackett: configured indexers">
+<figcaption>Jackett: configured indexers</figcaption>
+</figure>
+<p>You can manually test the indexers by doing a basic search to see if they return anything, either by searching on each individual indexer by clicking on the magnifying glass icon on the right of the indexer or clicking on &ldquo;Manual Search&rdquo; button which is next to the &ldquo;+ Add Indexer&rdquo; button at the top right.</p>
+<p>Explore each indexer&rsquo;s configuration in case there is stuff you might want to change.</p>
+<h3 id="flaresolverr">FlareSolverr<a class="headerlink" href="#flaresolverr" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/FlareSolverr/FlareSolverr">FlareSolverr</a> is used to bypass <em>certain</em> protection that some torrent sites have. This is not 100% necessary and only needed for some trackers sometimes, it also doesn&rsquo;t work 100%.</p>
+<p>You could install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S flaresolverr-bin
+</code></pre>
+<p>At the time of writing, the <code>flaresolverr</code> package didn&rsquo;t work for me because of <code>python-selenium</code>. <code>flaresolverr-bin</code> was updated around the time I was writing this, so that is what I&rsquo;m using and what&rsquo;s working fine so far, it contains almost everything needed (it has self contained libraries) except for <code>xfvb</code>.</p>
+<p>Install dependencies via <code>pacman</code>:</p>
+<pre><code class="language-sh">pacman -S xorg-server-xvfb
+</code></pre>
+<p>You can now <code>start</code>/<code>enable</code> the <code>flaresolverr.service</code>:</p>
+<pre><code class="language-sh">systemctl enable flaresolverr.service
+systemctl start flaresolverr.service
+</code></pre>
+<p>Verify that the service started correctly by checking the logs:</p>
+<pre><code class="language-sh">journalctl -fxeu flaresolverr
+</code></pre>
+<p>It should show &ldquo;Test successful&rdquo; and &ldquo;Serving on http://0.0.0.0:8191&rdquo; (which is the default). Jackett now needs to be configured by adding <code>http://127.0.0.1:8191</code> almost at the end in the &ldquo;FlareSolverr API URL&rdquo; field, then click on the blue &ldquo;Apply server settings&rdquo; button at the beginning of the config section. This doesn&rsquo;t need to be exposed or anything, it&rsquo;s just an internal API that Jackett (or anything you want) will use.</p>
+<h2 id="qbittorrent">qBitTorrent<a class="headerlink" href="#qbittorrent" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/QBittorrent">qBitTorrent</a> is a fast, stable and light BitTorrent client that comes with many features and in my opinion it&rsquo;s a really user friendly client and my personal choice for years now. But you can choose whatever client you want, there are more lightweight alternatives such as <a href="https://wiki.archlinux.org/title/transmission">Transmission</a>.</p>
+<p>Install the <code>qbittorrent-nox</code> package (&ldquo;nox&rdquo; as in &ldquo;no X server&rdquo;):</p>
+<pre><code class="language-sh">pacman -S qbittorrent-nox
+</code></pre>
+<p>By default the package doesn&rsquo;t create any (service) user, but it is recommended to have one so you can run the service under it. Create the user, I&rsquo;ll call it <code>qbittorrent</code> and leave it with the default homedir (<code>/home</code>):</p>
+<pre><code class="language-sh">useradd -r -m qbittorrent
+</code></pre>
+<p><mark>Add the <code>qbittorrent</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a qbittorrent servarr
+</code></pre>
+<p>Decide a port number you&rsquo;re going to run the service on for the next steps, the default is <code>8080</code> but I&rsquo;ll use <code>30000</code>; it doesn&rsquo;t matter much, as long as it matches for all the config. This is the <code>qbittorrent</code> service port, it is used to connect to the instance itself through the Web UI or via API, <mark>you also need to open a port for listening to peer connections.</mark> Choose any port you want, for example <code>50000</code> and open it with your firewall, <code>ufw</code> in my case:</p>
+<pre><code class="language-sh">ufw allow 50000/tcp comment &quot;qBitTorrent - Listening port&quot;
+</code></pre>
+<h3 id="reverse-proxy_1">Reverse proxy<a class="headerlink" href="#reverse-proxy_1" title="Permanent link">&para;</a></h3>
+<p>Add the following <code>location</code> block into the <code>isos.conf</code> with whatever subdirectory name you want, I&rsquo;ll call it <code>qbt</code>:</p>
+<pre><code class="language-nginx">location /qbt/ {
+    proxy_pass http://localhost:30000/; # change port to whatever number you want
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+
+    proxy_cookie_path / &quot;/; Secure&quot;;
+    proxy_read_timeout 600s;
+    proxy_send_timeout 600s;
+}
+</code></pre>
+<p>This is taken from <a href="https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI">qBitTorrent: Nginx reverse proxy for Web UI</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-qbittorrent">Start using qBitTorrent<a class="headerlink" href="#start-using-qbittorrent" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>qbittorrent-nox@.service</code> using the service account created (<code>qbittorrent</code>):</p>
+<pre><code class="language-sh">systemctl enable `qbittorrent-nox@qbittorrent.service
+systemctl start `qbittorrent-nox@qbittorrent.service
+</code></pre>
+<p>This will start <code>qbittorrent</code> using default config. You need to change the port (in my case to <code>30000</code>) and set <code>qbittorrent</code> to restart on exit (the Web UI has a close button). I guess this can be done before enabling/starting the service, but either way let&rsquo;s create a &ldquo;drop-in&rdquo; file by &ldquo;editing&rdquo; the service:</p>
+<pre><code class="language-sh">systemctl edit `qbittorrent-nox@qbittorrent.service
+</code></pre>
+<p>Which will bring up a file editing mode containing the service unit and a space where you can add/override anything, add:</p>
+<pre><code class="language-ini">[Service]
+Environment=&quot;QBT_WEBUI_PORT=30000&quot; # or whatever port number you want
+Restart=on-success
+RestartSec=5s
+</code></pre>
+<p>When exiting from the file (if you wrote anything) it will create the override config. Restart the service for changes to take effect (you might be asked to reload the systemd daemon):</p>
+<pre><code class="language-sh">systemctl restart `qbittorrent-nox@qbittorrent.service
+</code></pre>
+<p>You can now head to <code>https://isos.yourdomain.com/qbt/</code> and login with user <code>admin</code> and password <code>adminadmin</code> (by default). <mark>Change the default password right away</mark> by going to <em>Tools -&gt; Options -&gt; Web UI -&gt; Authentication</em>. The Web UI is basically the same as the normal desktop UI so if you&rsquo;ve used it it will feel familiar. From here you can threat it as a normal torrent client and even start using for other stuff other than the specified here.</p>
+<h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
+<p>It should be usable already but you can go further and fine tune it, specially to some kind of &ldquo;convention&rdquo; as shown in <a href="https://trash-guides.info/Downloaders/qBittorrent/Basic-Setup/">TRaSH: qBitTorrent basic setup</a> and subsequent <code>qbittorrent</code> guides.</p>
+<p>I use all the suggested settings by <em>TRaSH</em>, where the only &ldquo;changes&rdquo; are for personal paths, ports, and in general connection settings that depend on my setup. The only super important setting I noticed that can affect our setup (meaning what is described in this entry) is the <em>Web UI -&gt; Authentication</em> for the &ldquo;Bypass authentication for clients on localhost&rdquo;. This will be an issue because the reverse proxy is accessing <code>qbittorrent</code> via <code>localhost</code>, so this will make the service open to the world, experiment at your own risk.</p>
+<p>Finally, add categories by following <a href="https://trash-guides.info/Downloaders/qBittorrent/How-to-add-categories/">TRaSH: qBitTorrent how to add categories</a>, basically right clicking on <em>Categories -&gt; All (x)</em> (located at the left of the Web UI) and then on &ldquo;Add category&rdquo;; I use the same &ldquo;Category&rdquo; and &ldquo;Save Path&rdquo; (<code>tv</code> and <code>tv</code>, for example), where the &ldquo;Save Path&rdquo; will be a subdirectory of the configured global directory for torrents (<a href="https://trash-guides.info/Downloaders/qBittorrent/How-to-add-categories/#paths-and-categories-breakdown">TRaSH: qBitTorent paths and categories breakdown</a>). I added 3: <code>tv</code>, <code>movies</code> and <code>anime</code>.</p>
+<h4 id="trackers">Trackers<a class="headerlink" href="#trackers" title="Permanent link">&para;</a></h4>
+<p>Often some of the trackers that come with torrents are dead or just don&rsquo;t work. You have the option to add extra trackers to torrents either by:</p>
+<ul>
+<li>Automatically add a predefined list on new torrents: configure at <em>Tools -&gt; Options -&gt; BitTorrent</em>, enable the last option &ldquo;Automatically add these trackers to new downloads&rdquo; then add the list of trackers. This should only be done on public torrents as private ones might ban you or something.</li>
+<li>Manually add a list of trackers to individual torrents: configure by selecting a torrent, clicking on <em>Trackers</em> on the bottom of the Web UI, right clicking on an empty space and selecting &ldquo;Add trackers&hellip;&rdquo; then add the list of trackers.</li>
+</ul>
+<p>On both options, the list of trackers need to have at least one new line in between each new tracker. You can find trackers from the following sources:</p>
+<ul>
+<li><a href="https://newtrackon.com/list">List of stable trackers</a></li>
+<li><a href="https://github.com/ngosang/trackerslist">ngosang/trackerslist</a><ul>
+<li>It also mentions <a href="https://github.com/ngosang/trackerslist#third-party-tools">Third party tools</a> to automate this process.</li>
+</ul>
+</li>
+</ul>
+<p>Both sources maintain an updated list of trackers. You also might need to enable an advanced option so all the new trackers are contacted (<a href="https://github.com/qbittorrent/qBittorrent/issues/7882">Only first tracker contacted</a>): configure at <em>Tools -&gt; Options -&gt; Advanced -&gt; libtorrent Section</em> and enable both &ldquo;Always announce to all tiers&rdquo; and &ldquo;Always announce to all trackers in a tier&rdquo;.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>Configure system logs on Arch to avoid filled up disk</title>
       <link>https://blog.luevano.xyz/a/arch_logs_flooding_disk.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/arch_logs_flooding_disk.html</guid>
@@ -79,6 +886,7 @@ LogNamespace=email
       <description>How to set up a manga server with Komga as media server and mangal for downloading manga, on Arch. Tachiyomi integration is available thanks to Komga.</description>
       <content:encoded><![CDATA[<p>I&rsquo;ve been wanting to set up a manga media server to hoard some mangas/comics and access them via Tachiyomi, but I didn&rsquo;t have enough space in my vultr VPS. Now that I have symmetric fiber optic at home and my spare PC to use as a server I decided to go ahead and create one. As always, <mark>i use arch btw</mark> so these instructions are specifically for it, I&rsquo;m not sure how easier/harder it is for other distros, I&rsquo;m just too comfortable with arch honestly.</p>
 <p>I&rsquo;m going to run it as an exposed service using a subdomain of my own, so the steps are taking that into account, if you want to run it locally (or on a LAN/VPN) then it is going to be easier/with less steps (you&rsquo;re on your own). Also, as you might notice I don&rsquo;t like to use D*ck*r images or anything (ew).</p>
+<p><mark>At the time of editing this entry (06-28-2023) Komga has already upgraded to <code>v.1.0.0</code> and it introduces some breaking changes if you already had your instance set up. Read more <a href="https://komga.org/installation/upgrade.html#prepare-for-v1-0-0">here</a>.</mark> The only change I did here was changing the port to the new default.</p>
 <p>As always, all commands are run as root unless stated otherwise.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
 <div class="toc">
@@ -353,7 +1161,7 @@ Dandadan|0110|110|Mangapill
 </code></pre>
 <p>This <code>komga</code> package creates a <code>komga</code> (service) user and group which is tied to the also included <code>komga.service</code>.</p>
 <p>Configure it by editing <code>/etc/komga.conf</code>:</p>
-<pre><code class="language-sh">SERVER_PORT=8989
+<pre><code class="language-sh">SERVER_PORT=25600
 SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
 
 KOMGA_LIBRARIES_SCAN_CRON=&quot;0 0 * * * ?&quot;
@@ -369,7 +1177,6 @@ KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
 </code></pre>
 <p>My changes (shown above):</p>
 <ul>
-<li>Port on <code>8989</code> because <code>8080</code> its too generic.</li>
 <li><code>cron</code> schedules.<ul>
 <li>It&rsquo;s not actually <code>cron</code> but rather a <code>cron</code>-like syntax used by <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html">Spring</a> as stated in the <a href="https://komga.org/installation/configuration.html#optional-configuration">Komga config</a>.</li>
 </ul>
@@ -385,7 +1192,8 @@ KOMGA_DATABASE_BACKUP_SCHEDULE=&quot;0 0 */8 * * ?&quot;
     server_name komga.yourdomain.com; # change accordingly to your wanted subdomain and domain name
 
     location / {
-        proxy_pass http://localhost:8989; # change 8989 to the port you want to use
+        proxy_pass http://localhost:25600; # change port if needed
+        proxy_http_version 1.1;
 
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -600,7 +1408,7 @@ default:other::r-x
 <p>Other than that I used few key sprites from <a href="https://vryell.itch.io/">vryell</a>: <a href="https://vryell.itch.io/controller-keyboard-icons">Controller &amp; Keyboard Icons</a> and a font from <a href="https://datagoblin.itch.io/">datagoblin</a>: <a href="https://datagoblin.itch.io/monogram">Monogram</a>.</p>
 <h2 id="the-snake">The snake<a class="headerlink" href="#the-snake" title="Permanent link">&para;</a></h2>
 <p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
-<figure id="__yafg-figure-32">
+<figure id="__yafg-figure-38">
 <img alt="FileSystem - Snake dir structure" src="https://static.luevano.xyz/images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
 <figcaption>FileSystem - Snake dir structure</figcaption>
 </figure>
@@ -634,7 +1442,7 @@ func _rotate_to(direction: int) -&gt; void:
     _direction = _direction.rotated(deg2rad(direction * Global.SNAKE_ROT_SPEED * get_physics_process_delta_time()))
 </code></pre>
 <p>After tunning all the necessary parameters you should get something like this:</p>
-<figure id="__yafg-figure-33">
+<figure id="__yafg-figure-39">
 <img alt="Snake - Basic movement (left and right controls)" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
 <figcaption>Snake - Basic movement (left and right controls)</figcaption>
 </figure>
@@ -671,7 +1479,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
     update()
 </code></pre>
 <p>With this, we&rsquo;re now populating the <em>Path2D</em> curve points with the position of the snake head. You should be able to see it because of the <code>_draw</code> call. If you run it you should see something like this:</p>
-<figure id="__yafg-figure-34">
+<figure id="__yafg-figure-40">
 <img alt="Snake - Basic movement with path" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
 <figcaption>Snake - Basic movement with path</figcaption>
 </figure>
@@ -715,7 +1523,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
         _add_initial_segment(TAIL_SEGMENT_NP)
 </code></pre>
 <p>Select the <em>Snake</em> node and add the <em>Body</em> and <em>Tail</em> scene to the parameters, respectively. Then when running you should see something like this:</p>
-<figure id="__yafg-figure-35">
+<figure id="__yafg-figure-41">
 <img alt="Snake - Basic movement with all body parts" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
 <figcaption>Snake - Basic movement with all body parts</figcaption>
 </figure>
@@ -758,7 +1566,7 @@ func _add_segment_to_queue() -&gt; void:
         body_segment_queue.append(body_segment_queue.back() + Global.SNAKE_SEGMENT_SIZE)
 </code></pre>
 <p>With everything implemented and connected accordingly then we can add segments on demand (for testing I&rsquo;m adding with a key press), it should look like this:</p>
-<figure id="__yafg-figure-36">
+<figure id="__yafg-figure-42">
 <img alt="Snake - Basic movement with dynamic addition of new segments" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
 <figcaption>Snake - Basic movement with dynamic addition of new segments</figcaption>
 </figure>
@@ -821,21 +1629,21 @@ func _on_body_entered(body: Node) -&gt; void:
     add_child(food)
 </code></pre>
 <p>And this is used in <code>_process</code> to place new food whenever needed. For now I added a condition to add food until 10 pieces are in place, and keep adding whenever the food is is lower than 10. After setting everything up, this is the result:</p>
-<figure id="__yafg-figure-37">
+<figure id="__yafg-figure-43">
 <img alt="Snake - Food basic interaction" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
 <figcaption>Snake - Food basic interaction</figcaption>
 </figure>
 <h2 id="za-warudo-the-world">Za warudo! (The world)<a class="headerlink" href="#za-warudo-the-world" title="Permanent link">&para;</a></h2>
 <p>It just happend that I saw a video to create random maps by using a method called <a href="https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm">random walks</a>, this video was made by <a href="https://www.youtube.com/c/NADLABS">NAD LABS</a>: <a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a>. It&rsquo;s a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):</p>
-<figure id="__yafg-figure-38">
+<figure id="__yafg-figure-44">
 <img alt="World map generator - Random map 1" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
 <figcaption>World map generator - Random map 1</figcaption>
 </figure>
-<figure id="__yafg-figure-39">
+<figure id="__yafg-figure-45">
 <img alt="World map generator - Random map 2" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_2.png" title="World map generator - Random map 2">
 <figcaption>World map generator - Random map 2</figcaption>
 </figure>
-<figure id="__yafg-figure-40">
+<figure id="__yafg-figure-46">
 <img alt="World map generator - Random map 3" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_3.png" title="World map generator - Random map 3">
 <figcaption>World map generator - Random map 3</figcaption>
 </figure>
@@ -1258,35 +2066,35 @@ func physics_process(delta: float) -&gt; void:
 <h3 id="config">Config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h3>
 <h4 id="default-import-settings">Default import settings<a class="headerlink" href="#default-import-settings" title="Permanent link">&para;</a></h4>
 <p>Since this is just pixel art, the importing settings for textures needs to be adjusted so the sprites don&rsquo;t look blurry. Go to <em>Project -&gt; Project settings&hellip; -&gt; Import defaults</em> and on the drop down select <code>Texture</code>, untick everything and make sure <em>Compress/Mode</em> is set to <code>Lossless</code>.</p>
-<figure id="__yafg-figure-4">
+<figure id="__yafg-figure-10">
 <img alt="Project settings - Import defaults - Texture settings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_import_texture.png" title="Project settings - Import defaults - Texture settings">
 <figcaption>Project settings - Import defaults - Texture settings</figcaption>
 </figure>
 <h4 id="general-settings">General settings<a class="headerlink" href="#general-settings" title="Permanent link">&para;</a></h4>
 <p>It&rsquo;s also a good idea to setup some config variables project-wide. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Application/config</em> and add a new property (there is a text box at the top of the project settings window) for game scale: <code>application/config/game_scale</code> for the type use <code>float</code> and then click on add; configure the new property to <code>3.0</code>; On the same window, also add <code>application/config/version</code> as a <code>string</code>, and make it <code>1.0.0</code> (or whatever number you want).</p>
-<figure id="__yafg-figure-5">
+<figure id="__yafg-figure-11">
 <img alt="Project settings - General - Game scale and version properties" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_config_properties.png" title="Project settings - General - Game scale and version properties">
 <figcaption>Project settings - General - Game scale and version properties</figcaption>
 </figure>
 <p>For my personal preferences, also disable some of the <em>GDScript</em> debug warnings that are annoying, this is done at <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Debug/GDScript</em> and toggle off <code>Unused arguments</code>, <code>Unused signal</code> and <code>Return value discarded</code>, and any other that might come up too often and don&rsquo;t want to see.</p>
-<figure id="__yafg-figure-6">
+<figure id="__yafg-figure-12">
 <img alt="Project settings - General - GDScript debug warnings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_debug_gdscript.png" title="Project settings - General - GDScript debug warnings">
 <figcaption>Project settings - General - GDScript debug warnings</figcaption>
 </figure>
 <p>Finally, set the initial window size in <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Display/Window</em> and set <em>Size/Width</em> and <em>Size/Height</em> to <code>600</code> and <code>800</code>, respectively. As well as the <em>Stretch/Mode</em> to <code>viewport</code> , and <em>Stretch/Aspect</em> to <code>keep</code>:</p>
-<figure id="__yafg-figure-7">
+<figure id="__yafg-figure-13">
 <img alt="Project settings - General - Initial window size" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_window_settings.png" title="Project settings - General - Initial window size">
 <figcaption>Project settings - General - Initial window size</figcaption>
 </figure>
 <h4 id="keybindings">Keybindings<a class="headerlink" href="#keybindings" title="Permanent link">&para;</a></h4>
 <p>I only used 3 actions (keybindings): jump, restart and toggle_debug (optional). To add custom keybindings (so that the <code>Input.something()</code> API can be used), go to <em>Project -&gt; Project settings&hellip; -&gt; Input Map</em> and on the text box write <code>jump</code> and click add, then it will be added to the list and it&rsquo;s just a matter of clicking the <code>+</code> sign to add a <em>Physical key</em>, press any key you want to be used to jump and click ok. Do the same for the rest of the actions.</p>
-<figure id="__yafg-figure-8">
+<figure id="__yafg-figure-14">
 <img alt="Project settings - Input Map - Adding necessary keybindings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_input_map.png" title="Project settings - Input Map - Adding necessary keybindings">
 <figcaption>Project settings - Input Map - Adding necessary keybindings</figcaption>
 </figure>
 <h4 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h4>
 <p>Finally, rename the physics layers so we don&rsquo;t lose track of which layer is which. Go to <em>Project -&gt; Layer Names -&gt; 2d Physics</em> and change the first 5 layer names to (in order): <code>player</code>, <code>ground</code>, <code>pipe</code>, <code>ceiling</code> and <code>score</code>.</p>
-<figure id="__yafg-figure-9">
+<figure id="__yafg-figure-15">
 <img alt="Project settings - Layer Names - 2D Physics" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_layer_names_2d_physics.png" title="Project settings - Layer Names - 2D Physics">
 <figcaption>Project settings - Layer Names - 2D Physics</figcaption>
 </figure>
@@ -1295,12 +2103,12 @@ func physics_process(delta: float) -&gt; void:
 <h3 id="importing">Importing<a class="headerlink" href="#importing" title="Permanent link">&para;</a></h3>
 <p>Create the necessary directories to hold the respective assets and it&rsquo;s just a matter of dragging and dropping, I used directories: <code>res://entities/actors/player/sprites/</code>, <code>res://fonts/</code>, <code>res://levels/world/background/sprites/</code>, <code>res://levels/world/ground/sprites/</code>, <code>res://levels/world/pipe/sprites/</code>, <code>res://sfx/</code>. For the player sprites, the 
 <em>FileSystem</em> window looks like this (<code>entities/actor</code> directories are really not necessary):</p>
-<figure id="__yafg-figure-10">
+<figure id="__yafg-figure-16">
 <img alt="FileSystem - Player sprite imports" src="https://static.luevano.xyz/images/g/flappybird_godot/player_sprite_imports.png" title="FileSystem - Player sprite imports">
 <figcaption>FileSystem - Player sprite imports</figcaption>
 </figure>
 <p>It should look similar for other directories, except maybe for the file extensions. For example, for the sfx:</p>
-<figure id="__yafg-figure-11">
+<figure id="__yafg-figure-17">
 <img alt="FileSystem - SFX imports" src="https://static.luevano.xyz/images/g/flappybird_godot/sfx_imports.png" title="FileSystem - SFX imports">
 <figcaption>FileSystem - SFX imports</figcaption>
 </figure>
@@ -1308,72 +2116,72 @@ func physics_process(delta: float) -&gt; void:
 <p>Now it&rsquo;s time to actually create the game, by creating the basic scenes that will make up the game. The hardest part and the most confusing is going to be the <em>TileMaps</em>, so that goes first.</p>
 <h3 id="tilemaps">TileMaps<a class="headerlink" href="#tilemaps" title="Permanent link">&para;</a></h3>
 <p>I&rsquo;m using a scene called <code>WorldTiles</code> with a <em>Node2D</em> node as root called the same. With 2 different <em>TileMap</em> nodes as children named <code>GroundTileMap</code> and <code>PipeTileMap</code> (these are their own scene); yes 2 different <em>TileMaps</em> because we need 2 different physics colliders (in <em>Godot 4.0</em> you can have a single <em>TileMap</em> with different physics colliders in it). Each node has its own script. It should look something like this:</p>
-<figure id="__yafg-figure-12">
+<figure id="__yafg-figure-18">
 <img alt="Scene - WorldTiles (TileMaps)" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_world_tiles.png" title="Scene - WorldTiles (TileMaps)">
 <figcaption>Scene - WorldTiles (TileMaps)</figcaption>
 </figure>
 <p>I used the following directory structure:</p>
-<figure id="__yafg-figure-13">
+<figure id="__yafg-figure-19">
 <img alt="Scene - WorldTiles - Directory structure" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_world_tiles_directory_structure.png" title="Scene - WorldTiles - Directory structure">
 <figcaption>Scene - WorldTiles - Directory structure</figcaption>
 </figure>
 <p>To configure the <code>GroundTileMap</code>, select the node and click on <code>(empty)</code> on the <em>TileMap/Tile set</em> property and then click on <code>New TileSet</code>, then click where the <code>(empty)</code> used to be, a new window should open on the bottom:</p>
-<figure id="__yafg-figure-14">
+<figure id="__yafg-figure-20">
 <img alt="TileSet - Configuration window" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_config_window.png" title="TileSet - Configuration window">
 <figcaption>TileSet - Configuration window</figcaption>
 </figure>
 <p>Click on the plus on the bottom left and you can now select the specific tile set to use. Now click on the yellow <code>+ New Single Tile</code>, activate the grid and select any of the tiles. Should look like this:</p>
-<figure id="__yafg-figure-15">
+<figure id="__yafg-figure-21">
 <img alt="TileSet - New single tile" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_new_single_tile.png" title="TileSet - New single tile">
 <figcaption>TileSet - New single tile</figcaption>
 </figure>
 <p>We need to do this because for some reason we can&rsquo;t change the snap options before selecting a tile. After selecting a random tile, set up the <em>Snap Options/Step</em> (in the <em>Inspector</em>) and set it to <code>16x16</code> (or if using a different tile set, to it&rsquo;s tile size):</p>
-<figure id="__yafg-figure-16">
+<figure id="__yafg-figure-22">
 <img alt="TileSet - Tile - Step snap options" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_tile_step_snap_options.png" title="TileSet - Tile - Step snap options">
 <figcaption>TileSet - Tile - Step snap options</figcaption>
 </figure>
 <p>Now you can select the actual single tile. Once selected click on <code>Collision</code>, use the rectangle tool and draw the rectangle corresponding to that tile&rsquo;s collision:</p>
-<figure id="__yafg-figure-17">
+<figure id="__yafg-figure-23">
 <img alt="TileSet - Tile - Selection and collision" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_tile_selection_collision.png" title="TileSet - Tile - Selection and collision">
 <figcaption>TileSet - Tile - Selection and collision</figcaption>
 </figure>
 <p>Do the same for the other 3 tiles. If you select the <em>TileMap</em> itself again, it should look like this on the right (on default layout it&rsquo;s on the left of the <em>Inspector</em>):</p>
-<figure id="__yafg-figure-18">
+<figure id="__yafg-figure-24">
 <img alt="TileSet - Available tiles" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_available_tiles.png" title="TileSet - Available tiles">
 <figcaption>TileSet - Available tiles</figcaption>
 </figure>
 <p>The ordering is important only for the &ldquo;underground tile&rdquo;, which is the filler ground, it should be at the end (index 3); if this is not the case, repeat the process (it&rsquo;s possible to rearrange them but it&rsquo;s hard to explain as it&rsquo;s pretty weird).</p>
 <p>At this point the tilemap doesn&rsquo;t have any physics and the cell size is wrong. Select the <code>GroundTileMap</code>, set the <em>TileMap/Cell/Size</em> to <code>16x16</code>, the <em>TileMap/Collision/Layer</em> set to <code>bit 2</code> only (ground layer) and disable any <em>TileMap/Collision/Mask</em> bits. Should look something like this:</p>
-<figure id="__yafg-figure-19">
+<figure id="__yafg-figure-25">
 <img alt="TileMap - Cell size and collision configuration" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_map_cell_collision_configuration.png" title="TileMap - Cell size and collision configuration">
 <figcaption>TileMap - Cell size and collision configuration</figcaption>
 </figure>
 <p>Now it&rsquo;s just a matter of repeating the same for the pipes (<code>PipeTileMap</code>), only difference is that when selecting the tiles you need to select 2 tiles, as the pipe is 2 tiles wide, or just set the <em>Snap Options/Step</em> to <code>32x16</code>, for example, just keep the cell size to <code>16x16</code>.</p>
 <h4 id="default-ground-tiles">Default ground tiles<a class="headerlink" href="#default-ground-tiles" title="Permanent link">&para;</a></h4>
 <p>I added few default ground tiles to the scene, just for testing purposes but I left them there. These could be place programatically, but I was too lazy to change things. On the <code>WorldTiles</code> scene, while selecting the <code>GroundTileMap</code>, you can select the tiles you want to paint with, and left click in the grid to paint with the selected tile. Need to place tiles from <code>(-8, 7)</code> to <code>(10, 7)</code> as well as the tile below with the filler ground (the tile position/coordinates show at the bottom left, refer to the image below):</p>
-<figure id="__yafg-figure-20">
+<figure id="__yafg-figure-26">
 <img alt="Scene - WorldTiles - Default ground tiles" src="https://static.luevano.xyz/images/g/flappybird_godot/world_tiles_default_tiles.png" title="Scene - WorldTiles - Default ground tiles">
 <figcaption>Scene - WorldTiles - Default ground tiles</figcaption>
 </figure>
 <h3 id="player">Player<a class="headerlink" href="#player" title="Permanent link">&para;</a></h3>
 <p>On a new scene called <code>Player</code> with a <em>KinematicBody2D</em> node named <code>Player</code> as the root of the scene, then for the children: <em>AnimatedSprite</em> as <code>Sprite</code>, <em>CollisionShape2D</em> as <code>Collision</code> (with a circle shape) and 3 <em>AudioStreamPlayers</em> for <code>JumpSound</code>, <code>DeadSound</code> and <code>HitSound</code>. Not sure if it&rsquo;s a good practice to have the audio here, since I did that at the end, pretty lazy. Then, attach a script to the <code>Player</code> node and then it should look like this:</p>
-<figure id="__yafg-figure-21">
+<figure id="__yafg-figure-27">
 <img alt="Scene - Player - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_node_setup.png" title="Scene - Player - Node setup">
 <figcaption>Scene - Player - Node setup</figcaption>
 </figure>
 <p>Select the <code>Player</code> node and set the <em>CollisionShape2D/Collision/Layer</em> to <code>1</code> and the <em>CollisionObject2D/Collision/Mask</em> to <code>2</code> and <code>3</code> (ground and pipe).</p>
 <p>For the <code>Sprite</code> node, when selecting it click on the <code>(empty)</code> for the <em>AnimatedSprite/Frames</em> property and click <code>New SpriteFrames</code>, click again where the <code>(empty)</code> used to be and ane window should open on the bottom:</p>
-<figure id="__yafg-figure-22">
+<figure id="__yafg-figure-28">
 <img alt="Scene - Player - SpriteFrames window" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_spriteframes_window.png" title="Scene - Player - SpriteFrames window">
 <figcaption>Scene - Player - SpriteFrames window</figcaption>
 </figure>
 <p>Right off the bat, set the <code>Speed</code> to <code>10 FPS</code> (bottom left) and rename <code>default</code> to <code>bird_1</code>. With the <code>bird_1</code> selected, click on the <code>Add frames from a Sprite Sheet</code>, which is the second button under <code>Animation Frames:</code> which looks has an icon of a small grid (next to the folder icon), a new window will popup where you need to select the respective sprite sheet to use and configure it for importing. On the <code>Select Frames</code> window, change the <code>Vertical</code> to <code>1</code>, and then select all 4 frames (<em>Ctrl + Scroll</em> wheel to zoom in):</p>
-<figure id="__yafg-figure-23">
+<figure id="__yafg-figure-29">
 <img alt="Scene - Player - Sprite sheet importer" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_sprite_sheet_importer.png" title="Scene - Player - Sprite sheet importer">
 <figcaption>Scene - Player - Sprite sheet importer</figcaption>
 </figure>
 <p>After that, the <em>SpriteFrames</em> window should look like this:</p>
-<figure id="__yafg-figure-24">
+<figure id="__yafg-figure-30">
 <img alt="Scene - Player - SpriteFrames window with sprite sheet configured" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_spriteframes_window_with_sprite_sheet.png" title="Scene - Player - SpriteFrames window with sprite sheet configured">
 <figcaption>Scene - Player - SpriteFrames window with sprite sheet configured</figcaption>
 </figure>
@@ -1392,12 +2200,12 @@ func physics_process(delta: float) -&gt; void:
 </ul>
 <h3 id="game">Game<a class="headerlink" href="#game" title="Permanent link">&para;</a></h3>
 <p>This is the actual <code>Game</code> scene that holds all the playable stuff, here we will drop in all the previous scenes; the root node is a <em>Node2D</em> and also has an attached script. Also need to add 2 additional <em>AudioStreamPlayers</em> for the &ldquo;start&rdquo; and &ldquo;score&rdquo; sounds, as well as a <em>Sprite</em> for the background (<em>Sprite/Offset/Offset</em> set to <code>(0, 10)</code>) and a <em>Camera2D</em> (<em>Camera2D/Current</em> set to true (checked)). It should look something like this:</p>
-<figure id="__yafg-figure-25">
+<figure id="__yafg-figure-31">
 <img alt="Scene - Game - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_game_node_setup.png" title="Scene - Game - Node setup">
 <figcaption>Scene - Game - Node setup</figcaption>
 </figure>
 <p>The scene viewport should look something like the following:</p>
-<figure id="__yafg-figure-26">
+<figure id="__yafg-figure-32">
 <img alt="Scene - Game - Viewport" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_game_viewport.png" title="Scene - Game - Viewport">
 <figcaption>Scene - Game - Viewport</figcaption>
 </figure>
@@ -1405,12 +2213,12 @@ func physics_process(delta: float) -&gt; void:
 <h4 id="fonts">Fonts<a class="headerlink" href="#fonts" title="Permanent link">&para;</a></h4>
 <p>We need some font <code>Resources</code> to style the <em>Label</em> fonts. Under the <em>FileSystem</em> window, right click on the fonts directory (create one if needed) and click on <code>New Resource...</code> and select <em>DynamicFontData</em>, save it in the &ldquo;fonts&rdquo; directory as <code>SilverDynamicFontData.tres</code> (<code>Silver</code> as it is the font I&rsquo;m using) then double click the just created resource and set the <em>DynamicFontData/Font Path</em> to the actual <code>Silver.ttf</code> font (or whatever you want).</p>
 <p>Then create a new resource and this time select <em>DynamicFont</em>, name it <code>SilverDynamicFont.tres</code>, then double click to edit and add the <code>SilverDynamicFontData.tres</code> to the <em>DynamicFont/Font/Font Data</em> property (and I personally toggled off the <em>DynamicFont/Font/Antialiased</em> property), now just set the <em>DynamicFont/Settings/(Size, Outline Size, Outline Color)</em> to <code>32</code>, <code>1</code> and <code>black</code>, respectively (or any other values you want). It should look something like this:</p>
-<figure id="__yafg-figure-27">
+<figure id="__yafg-figure-33">
 <img alt="Resource - DynamicFont - Default font" src="https://static.luevano.xyz/images/g/flappybird_godot/resource_dynamic_font.png" title="Resource - DynamicFont - Default font">
 <figcaption>Resource - DynamicFont - Default font</figcaption>
 </figure>
 <p>Do the same for another <em>DynamicFont</em> which will be used for the score label, named <code>SilverScoreDynamicFont.tres</code>. Only changes are <em>Dynamic/Settings/(Size, Outline Size)</em> which are set to <code>128</code> and <code>2</code>, respectively. The final files for the fonts should look something like this:</p>
-<figure id="__yafg-figure-28">
+<figure id="__yafg-figure-34">
 <img alt="Resource - Dynamicfont - Directory structure" src="https://static.luevano.xyz/images/g/flappybird_godot/resource_dynamic_font_directory_structure.png" title="Resource - Dynamicfont - Directory structure">
 <figcaption>Resource - Dynamicfont - Directory structure</figcaption>
 </figure>
@@ -1439,7 +2247,7 @@ func physics_process(delta: float) -&gt; void:
 </li>
 </ul>
 <p>The scene ends up looking like this:</p>
-<figure id="__yafg-figure-29">
+<figure id="__yafg-figure-35">
 <img alt="Scene - UI - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_ui.png" title="Scene - UI - Node setup">
 <figcaption>Scene - UI - Node setup</figcaption>
 </figure>
@@ -1573,7 +2381,7 @@ func _remove_first_ground() -&gt; void:
 <p>Where you might notice that the <code>_initial_new_tile_x</code> is <code>11</code>, instead of <code>10</code>, refer to <a href="#default-ground-tiles">Default ground tiles</a> where we placed tiles from <code>-8</code> to <code>10</code>, so the next empty one is <code>11</code>. These <code>_place_new_ground</code> and <code>_remove_first_ground</code> functions are called upon receiving the signal.</p>
 <h4 id="pipetilemap">PipeTileMap<a class="headerlink" href="#pipetilemap" title="Permanent link">&para;</a></h4>
 <p>This is really similar to the <code>GroundTileMap</code> code, instead of defining an <code>enum</code> for the ground tiles, we define it for the pipe patterns (because each pipe is composed of multiple pipe tiles). If your pipe tile set looks like this (notice the index):</p>
-<figure id="__yafg-figure-30">
+<figure id="__yafg-figure-36">
 <img alt="PipeTileMap - Tile set indexes" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_pipes_indexes.png" title="PipeTileMap - Tile set indexes">
 <figcaption>PipeTileMap - Tile set indexes</figcaption>
 </figure>
@@ -1675,7 +2483,7 @@ func get_high_score() -&gt; int:
         save_data()
 </code></pre>
 <p>Now, this script in particular will need to be a <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html">Singleton (AutoLoad)</a>, which means that there will be only one instance and will be available across all scripts. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; AutoLoad</em> and select this script in the <code>Path:</code> and add a <code>Node Name:</code> (I used <code>SavedData</code>, if you use something else, be careful while following this devlog) which will be the name we&rsquo;ll use to access the singleton. Toggle on <code>Enable</code> if needed, it should look like this:</p>
-<figure id="__yafg-figure-31">
+<figure id="__yafg-figure-37">
 <img alt="Project settings - AutoLoad - SavedData singleton" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_autoload_saved_data.png" title="Project settings - AutoLoad - SavedData singleton">
 <figcaption>Project settings - AutoLoad - SavedData singleton</figcaption>
 </figure>
@@ -3451,8 +4259,8 @@ systemctl enable spamassassin.service
 <li>Password: your <code>user</code> password (as in the password you use to login to the server with that user)</li>
 </ul>
 <p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
-<figure id="__yafg-figure-3">
-<img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/notes/mail/dkim_test_successful.png" title="DKIM Test successful">
+<figure id="__yafg-figure-9">
+<img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/mail/dkim_test_successful.png" title="DKIM Test successful">
 <figcaption>DKIM Test successful</figcaption>
 </figure>]]></content:encoded>
     </item>
@@ -3500,8 +4308,8 @@ systemctl enable nginx.service
 systemctl start nginx.service
 </code></pre>
 <p>And that&rsquo;s it, at this point you can already look at the default initial page of Nginx if you enter the IP of your server in a web browser. You should see something like this:</p>
-<figure id="__yafg-figure-1">
-<img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png" title="Nginx welcome page">
+<figure id="__yafg-figure-2">
+<img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/nginx/nginx_welcome_page.png" title="Nginx welcome page">
 <figcaption>Nginx welcome page</figcaption>
 </figure>
 <p>As stated in the welcome page, configuration is needed, head to the directory of Nginx:</p>
@@ -3567,8 +4375,8 @@ cd sites-available
 systemctl restart nginx
 </code></pre>
 <p>If everything goes correctly, you can now go to your website by typing <code>domain.name</code> on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different Nginx version):</p>
-<figure id="__yafg-figure-2">
-<img alt="Nginx 404 Not Found page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
+<figure id="__yafg-figure-3">
+<img alt="Nginx 404 Not Found page" src="https://static.luevano.xyz/images/b/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
 <figcaption>Nginx 404 Not Found page</figcaption>
 </figure>
 <p>That&rsquo;s no problem, because it means that the web server it&rsquo;s actually working. Just add an <code>index.html</code> file with something simple to see it in action (in the <code>/var/www/some_folder</code> that you decided upon). If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>

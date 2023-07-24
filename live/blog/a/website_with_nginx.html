@@ -120,8 +120,8 @@ systemctl enable nginx.service
 systemctl start nginx.service
 </code></pre>
 <p>And that&rsquo;s it, at this point you can already look at the default initial page of Nginx if you enter the IP of your server in a web browser. You should see something like this:</p>
-<figure id="__yafg-figure-1">
-<img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_welcome_page.png" title="Nginx welcome page">
+<figure id="__yafg-figure-2">
+<img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/nginx/nginx_welcome_page.png" title="Nginx welcome page">
 <figcaption>Nginx welcome page</figcaption>
 </figure>
 <p>As stated in the welcome page, configuration is needed, head to the directory of Nginx:</p>
@@ -187,8 +187,8 @@ cd sites-available
 systemctl restart nginx
 </code></pre>
 <p>If everything goes correctly, you can now go to your website by typing <code>domain.name</code> on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different Nginx version):</p>
-<figure id="__yafg-figure-2">
-<img alt="Nginx 404 Not Found page" src="https://static.luevano.xyz/images/b/notes/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
+<figure id="__yafg-figure-3">
+<img alt="Nginx 404 Not Found page" src="https://static.luevano.xyz/images/b/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
 <figcaption>Nginx 404 Not Found page</figcaption>
 </figure>
 <p>That&rsquo;s no problem, because it means that the web server it&rsquo;s actually working. Just add an <code>index.html</code> file with something simple to see it in action (in the <code>/var/www/some_folder</code> that you decided upon). If you keep seeing the 404 page make sure your <code>root</code> line is correct and that the directory/index file exists.</p>
@@ -243,7 +243,7 @@ systemctl restart nginx
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Fri, Mar 19, 2021 @ 02:58 UTC</p>
-      <p>Modified: Sat, Jun 03, 2023 @ 03:53 UTC</p>
+      <p>Modified: Wed, Jun 21, 2023 @ 00:18 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

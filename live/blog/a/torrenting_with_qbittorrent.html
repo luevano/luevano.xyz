@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en
+"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
+<title>Set up qBitTorrent with Jackett for use with Starr apps -- Luévano's Blog</title>
+  <meta name="description" content="How to set up a torrenting solution with qBitTorrent in preparation for a media server with Jellyfin and Starr apps, on Arch. With Jackett and flaresolverr, too."/>
+<link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
+    <!-- theme related -->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
+    <!-- extra -->
+    <!-- highlight support for code blocks -->
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+</script>
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
+
+    <!-- og meta -->
+  <meta property="og:title" content="Set up qBitTorrent with Jackett for use with Starr apps -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.md"/>
+  <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
+  <meta property="og:description" content="How to set up a torrenting solution with qBitTorrent in preparation for a media server with Jellyfin and Starr apps, on Arch. With Jackett and flaresolverr, too."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+<nav>
+  <ul>
+    <li>
+      <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+    </li>
+
+    <li>
+      <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+    </li>
+
+    <li>
+      <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+    </li>
+
+    <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+      <ul>
+        <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+        <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+        <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+      </ul>
+    </li>
+
+    <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+      <ul>
+        <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+
+    </header>
+
+    <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
+  <h1>Set up qBitTorrent with Jackett for use with Starr apps</h1>
+
+  <p>Riding on my excitement of having a good internet connection and having setup my <em>home server</em> now it&rsquo;s time to self host a media server for movies, series and anime. I&rsquo;ll setup qBitTorrent as the downloader, Jackett for the trackers, the <em>Starr apps</em> for the automatic downloading and Jellyfin as the media server manager/media viewer. This was going to be a single entry but it ended up being a really long one so I&rsquo;m splitting it, this being the first part.</p>
+<p>I&rsquo;ll be exposing my stuff on a subdomain only so I can access it while out of home and for SSL certificates (not required), but shouldn&rsquo;t be necessary and instead you can use a VPN (<a href="https://blog.luevano.xyz/a/vpn_server_with_openvpn.html">how to set up</a>). For your reference, whenever I say &ldquo;Starr apps&rdquo; (*arr apps) I mean the family of apps such as Sonarr, Radarr, Bazarr, Readarr, Lidarr, etc..</p>
+<p>Most of my config is based on the <a href="https://trash-guides.info/">TRaSH-Guides</a> (will be mentioned as &ldquo;TRaSH&rdquo; going forward). Specially get familiar with the <a href="https://trash-guides.info/Hardlinks/How-to-setup-for/Native/">TRaSH: Native folder structure</a> and with the <a href="https://trash-guides.info/Hardlinks/Hardlinks-and-Instant-Moves/">TRaSH: Hardlinks and instant moves</a>. Will also use the default configurations based on the respective documentation for each Starr app and service, except when stated otherwise.</p>
+<p>Everything here is performed in <mark>arch btw</mark> and all commands should be run as root unless stated otherwise.</p>
+<p><mark>Kindly note that I do not condone the use of torrenting for illegal activities. I take no responsibility for what you do when setting up anything shown here. It is for you to check your local laws before using automated downloaders such as Sonarr and Radarr.</mark></p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a><ul>
+<li><a href="#directory-structure">Directory structure</a></li>
+</ul>
+</li>
+<li><a href="#jackett">Jackett</a><ul>
+<li><a href="#reverse-proxy">Reverse proxy</a><ul>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+</ul>
+</li>
+<li><a href="#start-using-jackett">Start using Jackett</a><ul>
+<li><a href="#indexers">Indexers</a></li>
+</ul>
+</li>
+<li><a href="#flaresolverr">FlareSolverr</a></li>
+</ul>
+</li>
+<li><a href="#qbittorrent">qBitTorrent</a><ul>
+<li><a href="#reverse-proxy_1">Reverse proxy</a></li>
+<li><a href="#start-using-qbittorrent">Start using qBitTorrent</a><ul>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#trackers">Trackers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>The specific programs are mostly recommendations, if you&rsquo;re familiar with something else or want to change things around, feel free to do so but everything will be written with them in mind.</p>
+<p>If you want to expose to a (sub)domain, then similar to my early <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a> entries (specially the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> for the reverse proxy plus certificates):</p>
+<ul>
+<li><code>nginx</code> for the reverse proxy.</li>
+<li><code>certbot</code> for the SSL certificates.</li>
+<li><code>ufw</code> for the firewall.</li>
+<li><code>yay</code> to install AUR packages.<ul>
+<li>I mentioned how to install and use it on my previous entry: <a href="https://blog.luevano.xyz/a/manga_server_with_komga.html#yay">Manga server with Komga: yay</a>.</li>
+</ul>
+</li>
+<li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>isos</code> (or whatever you want to call it).<ul>
+<li>For automation software (qBitTorrent, Jackett, Starr apps, etc.). One subdomain per service can be used instead.</li>
+</ul>
+</li>
+</ul>
+<p><mark>Note: I&rsquo;m using the explicit <code>127.0.0.1</code> ip instead of <code>localhost</code> in the reverse proxies/services config as <code>localhost</code> resolves to <code>ipv6</code> sometimes which is not configured on my server correctly.</mark> If you have it configured you can use <code>localhost</code> without any issue.</p>
+<h3 id="directory-structure">Directory structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
+<p>Basically following <a href="https://trash-guides.info/Hardlinks/How-to-setup-for/Native/">TRaSH: Native folder structure</a> except for the directory permissions part, I&rsquo;ll do the same as with my <a href="https://blog.luevano.xyz/a/manga_server_with_komga#set-default-directory-permissions.html">Komga setup guide</a> to stablish default group permissions.</p>
+<p>The desired behaviour is: set <code>servarr</code> as group ownership, set write access to group and whenever a new directory/file is created, inherit these permission settings. <code>servarr</code> is going to be a service user and I&rsquo;ll use the root of a mounted drive at <code>/mnt/a</code>.</p>
+<ol>
+<li>Create a service user called <code>servarr</code> (it could just be a group, too):</li>
+</ol>
+<pre><code class="language-sh">useradd -r -s /usr/bin/nologin -M -c &quot;Servarr applications&quot; servarr
+</code></pre>
+<ol start="2">
+<li>Create the <code>torrents</code> directory and set default permissions:</li>
+</ol>
+<pre><code class="language-sh">cd /mnt/a # change this according to your setup
+mkdir torrents
+chown servarr:servarr torrents
+chmod g+w torrents
+chmod g+s torrents
+setfacl -d -m g::rwx torrents
+setfacl -d -m o::rx torrents
+</code></pre>
+<ol start="3">
+<li>Check that the permissions are set correctly (<code>getfacl torrents</code>)</li>
+</ol>
+<pre><code># file: torrents/
+# owner: servarr
+# group: servarr
+# flags: -s-
+user::rwx
+group::rwx
+other::r-x
+default:user::rwx
+default:group::rwx
+default:other::r-x
+</code></pre>
+<ol start="4">
+<li>Create the subdirectories you want with any user (I&rsquo;ll be using <code>servarr</code> personally):</li>
+</ol>
+<pre><code class="language-sh">mkdir torrents/{tv,movies,anime}
+chown -R servarr: torrents
+</code></pre>
+<ol start="5">
+<li>Finally repeat steps 2 - 4 for the <code>media</code> directory.</li>
+</ol>
+<p>The final directory structure should be the following:</p>
+<pre><code>root_dir
+├── torrents
+│   ├── movies
+│   ├── music
+│   └── tv
+└── media
+    ├── movies
+    ├── music
+    └── tv
+</code></pre>
+<p>Where <code>root_dir</code> is <code>/mnt/a</code> in my case. This is going to be the reference for the following applications set up.</p>
+<p>Later, add the necessary users to the <code>servarr</code> group if they need write access, by executing:</p>
+<pre><code class="language-sh">gpasswd -a &lt;USER&gt; servarr
+</code></pre>
+<h2 id="jackett">Jackett<a class="headerlink" href="#jackett" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/Jackett/Jackett">Jackett</a> is a &ldquo;proxy server&rdquo; (or &ldquo;middle-ware&rdquo;) that translates queries from apps (such as the Starr apps in this case) into tracker-specific http queries. Note that there is an alternative called <a href="https://github.com/Prowlarr/Prowlarr">Prowlarr</a> that is better integrated with most if not all Starr apps, requiring less maintenance; I&rsquo;ll still be sticking with Jackett, though.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S jackett
+</code></pre>
+<p>I&rsquo;ll be using the default <code>9117</code> port, but change accordingly if you decide on another one.</p>
+<h3 id="reverse-proxy">Reverse proxy<a class="headerlink" href="#reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>I&rsquo;m going to have most of the services under the same subdomain, with different subdirectories. Create the config file <code>isos.conf</code> at the usual <code>sites-available/enabled</code> path for <code>nginx</code>:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name isos.yourdomain.com;
+
+    location /jack { # you can change this to jackett or anything you'd like, but it has to match the jackett config on the next steps
+        proxy_pass http://127.0.0.1:9117; # change the port according to what you want
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_redirect off;
+    }
+}
+</code></pre>
+<p>This is the basic reverse proxy config as shown in <a href="https://github.com/Jackett/Jackett#running-jackett-behind-a-reverse-proxy">Jackett: Running Jackett behind a reverse proxy</a>. The rest of the services will be added under different <code>location</code> block on their respective steps.</p>
+<h4 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h4>
+<p>Create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>That will automatically detect the new subdomain config and create/extend your existing certificate(s). Restart the <code>nginx</code> service for changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-jackett">Start using Jackett<a class="headerlink" href="#start-using-jackett" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>jackett.service</code>:</p>
+<pre><code class="language-sh">systemctl enable jackett.service
+systemctl start jackett.service
+</code></pre>
+<p>It will autocreate the default configuration under <code>/var/lib/jackett/ServerConfig.json</code>, which you need to edit at least to change the <code>BasePathOverride</code> to match what you used in the <code>nginx</code> config:</p>
+<pre><code class="language-json">{
+    &quot;Port&quot;: 9117,
+    &quot;SomeOtherConfigs&quot;: &quot;some_other_values&quot;,
+    &quot;BasePathOverride&quot;: &quot;/jack&quot;,
+    &quot;MoreConfigs&quot;: &quot;more_values&quot;,
+}
+</code></pre>
+<p>Also modify the <code>Port</code> if you changed it. Restart the <code>jackett</code> service:</p>
+<pre><code class="language-sh">systemctl restart jackett.service
+</code></pre>
+<p>It should now be available at <code>https://isos.yourdomain.com/jack</code>. <mark>Add an admin password right away</mark> by scroll down and until the first config setting; don&rsquo;t forget to click on &ldquo;Set Password&rdquo;. Change any other config you want from the Web UI, too (you&rsquo;ll need to click on the blue &ldquo;Apply server settings&rdquo; button).</p>
+<p>Note that you need to set the &ldquo;Base URL override&rdquo; to <code>http://127.0.0.1:9117</code> (or whatever port you used) so that the &ldquo;Copy Torznab Feed&rdquo; button works for each indexer.</p>
+<h4 id="indexers">Indexers<a class="headerlink" href="#indexers" title="Permanent link">&para;</a></h4>
+<p>For Jackett, an indexer is just a configured tracker for some of the commonly known torrent sites. Jackett comes with a lot of pre-configured public and private indexers which usually have multiple URLs (mirrors) per indexer, useful when the main torrent site is down. Some indexers come with extra features/configuration depending on what the site specializes on.</p>
+<p>To add an indexer click on the &ldquo;+ Add Indexer&rdquo; at the top of the Web UI and look for indexers you want, then click on the &ldquo;+&rdquo; icon on the far-most right for each indexer or select the ones you want (clicking on the checkbox on the far-most left of the indexer) and scroll all the way to the bottom to click on &ldquo;Add Selected&rdquo;. They then will show as a list with some available actions such as &ldquo;Copy RSS Feed&rdquo;, &ldquo;Copy Torznab Feed&rdquo;, &ldquo;Copy Potato Feed&rdquo;, a button to search, configure, delete and test the indexer, as shown below:</p>
+<figure id="__yafg-figure-1">
+<img alt="Jacket: configured indexers" src="https://static.luevano.xyz/images/b/jack/jack_configured_indexers.png" title="Jackett: configured indexers">
+<figcaption>Jackett: configured indexers</figcaption>
+</figure>
+<p>You can manually test the indexers by doing a basic search to see if they return anything, either by searching on each individual indexer by clicking on the magnifying glass icon on the right of the indexer or clicking on &ldquo;Manual Search&rdquo; button which is next to the &ldquo;+ Add Indexer&rdquo; button at the top right.</p>
+<p>Explore each indexer&rsquo;s configuration in case there is stuff you might want to change.</p>
+<h3 id="flaresolverr">FlareSolverr<a class="headerlink" href="#flaresolverr" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/FlareSolverr/FlareSolverr">FlareSolverr</a> is used to bypass <em>certain</em> protection that some torrent sites have. This is not 100% necessary and only needed for some trackers sometimes, it also doesn&rsquo;t work 100%.</p>
+<p>You could install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S flaresolverr-bin
+</code></pre>
+<p>At the time of writing, the <code>flaresolverr</code> package didn&rsquo;t work for me because of <code>python-selenium</code>. <code>flaresolverr-bin</code> was updated around the time I was writing this, so that is what I&rsquo;m using and what&rsquo;s working fine so far, it contains almost everything needed (it has self contained libraries) except for <code>xfvb</code>.</p>
+<p>Install dependencies via <code>pacman</code>:</p>
+<pre><code class="language-sh">pacman -S xorg-server-xvfb
+</code></pre>
+<p>You can now <code>start</code>/<code>enable</code> the <code>flaresolverr.service</code>:</p>
+<pre><code class="language-sh">systemctl enable flaresolverr.service
+systemctl start flaresolverr.service
+</code></pre>
+<p>Verify that the service started correctly by checking the logs:</p>
+<pre><code class="language-sh">journalctl -fxeu flaresolverr
+</code></pre>
+<p>It should show &ldquo;Test successful&rdquo; and &ldquo;Serving on http://0.0.0.0:8191&rdquo; (which is the default). Jackett now needs to be configured by adding <code>http://127.0.0.1:8191</code> almost at the end in the &ldquo;FlareSolverr API URL&rdquo; field, then click on the blue &ldquo;Apply server settings&rdquo; button at the beginning of the config section. This doesn&rsquo;t need to be exposed or anything, it&rsquo;s just an internal API that Jackett (or anything you want) will use.</p>
+<h2 id="qbittorrent">qBitTorrent<a class="headerlink" href="#qbittorrent" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/QBittorrent">qBitTorrent</a> is a fast, stable and light BitTorrent client that comes with many features and in my opinion it&rsquo;s a really user friendly client and my personal choice for years now. But you can choose whatever client you want, there are more lightweight alternatives such as <a href="https://wiki.archlinux.org/title/transmission">Transmission</a>.</p>
+<p>Install the <code>qbittorrent-nox</code> package (&ldquo;nox&rdquo; as in &ldquo;no X server&rdquo;):</p>
+<pre><code class="language-sh">pacman -S qbittorrent-nox
+</code></pre>
+<p>By default the package doesn&rsquo;t create any (service) user, but it is recommended to have one so you can run the service under it. Create the user, I&rsquo;ll call it <code>qbittorrent</code> and leave it with the default homedir (<code>/home</code>):</p>
+<pre><code class="language-sh">useradd -r -m qbittorrent
+</code></pre>
+<p><mark>Add the <code>qbittorrent</code> user to the <code>servarr</code> group:</mark></p>
+<pre><code class="language-sh">gpasswd -a qbittorrent servarr
+</code></pre>
+<p>Decide a port number you&rsquo;re going to run the service on for the next steps, the default is <code>8080</code> but I&rsquo;ll use <code>30000</code>; it doesn&rsquo;t matter much, as long as it matches for all the config. This is the <code>qbittorrent</code> service port, it is used to connect to the instance itself through the Web UI or via API, <mark>you also need to open a port for listening to peer connections.</mark> Choose any port you want, for example <code>50000</code> and open it with your firewall, <code>ufw</code> in my case:</p>
+<pre><code class="language-sh">ufw allow 50000/tcp comment &quot;qBitTorrent - Listening port&quot;
+</code></pre>
+<h3 id="reverse-proxy_1">Reverse proxy<a class="headerlink" href="#reverse-proxy_1" title="Permanent link">&para;</a></h3>
+<p>Add the following <code>location</code> block into the <code>isos.conf</code> with whatever subdirectory name you want, I&rsquo;ll call it <code>qbt</code>:</p>
+<pre><code class="language-nginx">location /qbt/ {
+    proxy_pass http://localhost:30000/; # change port to whatever number you want
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+
+    proxy_cookie_path / &quot;/; Secure&quot;;
+    proxy_read_timeout 600s;
+    proxy_send_timeout 600s;
+}
+</code></pre>
+<p>This is taken from <a href="https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI">qBitTorrent: Nginx reverse proxy for Web UI</a>. Restart the <code>nginx</code> service for the changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h3 id="start-using-qbittorrent">Start using qBitTorrent<a class="headerlink" href="#start-using-qbittorrent" title="Permanent link">&para;</a></h3>
+<p>You can now <code>start</code>/<code>enable</code> the <code>qbittorrent-nox@.service</code> using the service account created (<code>qbittorrent</code>):</p>
+<pre><code class="language-sh">systemctl enable `qbittorrent-nox@qbittorrent.service
+systemctl start `qbittorrent-nox@qbittorrent.service
+</code></pre>
+<p>This will start <code>qbittorrent</code> using default config. You need to change the port (in my case to <code>30000</code>) and set <code>qbittorrent</code> to restart on exit (the Web UI has a close button). I guess this can be done before enabling/starting the service, but either way let&rsquo;s create a &ldquo;drop-in&rdquo; file by &ldquo;editing&rdquo; the service:</p>
+<pre><code class="language-sh">systemctl edit `qbittorrent-nox@qbittorrent.service
+</code></pre>
+<p>Which will bring up a file editing mode containing the service unit and a space where you can add/override anything, add:</p>
+<pre><code class="language-ini">[Service]
+Environment=&quot;QBT_WEBUI_PORT=30000&quot; # or whatever port number you want
+Restart=on-success
+RestartSec=5s
+</code></pre>
+<p>When exiting from the file (if you wrote anything) it will create the override config. Restart the service for changes to take effect (you might be asked to reload the systemd daemon):</p>
+<pre><code class="language-sh">systemctl restart `qbittorrent-nox@qbittorrent.service
+</code></pre>
+<p>You can now head to <code>https://isos.yourdomain.com/qbt/</code> and login with user <code>admin</code> and password <code>adminadmin</code> (by default). <mark>Change the default password right away</mark> by going to <em>Tools -&gt; Options -&gt; Web UI -&gt; Authentication</em>. The Web UI is basically the same as the normal desktop UI so if you&rsquo;ve used it it will feel familiar. From here you can threat it as a normal torrent client and even start using for other stuff other than the specified here.</p>
+<h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
+<p>It should be usable already but you can go further and fine tune it, specially to some kind of &ldquo;convention&rdquo; as shown in <a href="https://trash-guides.info/Downloaders/qBittorrent/Basic-Setup/">TRaSH: qBitTorrent basic setup</a> and subsequent <code>qbittorrent</code> guides.</p>
+<p>I use all the suggested settings by <em>TRaSH</em>, where the only &ldquo;changes&rdquo; are for personal paths, ports, and in general connection settings that depend on my setup. The only super important setting I noticed that can affect our setup (meaning what is described in this entry) is the <em>Web UI -&gt; Authentication</em> for the &ldquo;Bypass authentication for clients on localhost&rdquo;. This will be an issue because the reverse proxy is accessing <code>qbittorrent</code> via <code>localhost</code>, so this will make the service open to the world, experiment at your own risk.</p>
+<p>Finally, add categories by following <a href="https://trash-guides.info/Downloaders/qBittorrent/How-to-add-categories/">TRaSH: qBitTorrent how to add categories</a>, basically right clicking on <em>Categories -&gt; All (x)</em> (located at the left of the Web UI) and then on &ldquo;Add category&rdquo;; I use the same &ldquo;Category&rdquo; and &ldquo;Save Path&rdquo; (<code>tv</code> and <code>tv</code>, for example), where the &ldquo;Save Path&rdquo; will be a subdirectory of the configured global directory for torrents (<a href="https://trash-guides.info/Downloaders/qBittorrent/How-to-add-categories/#paths-and-categories-breakdown">TRaSH: qBitTorent paths and categories breakdown</a>). I added 3: <code>tv</code>, <code>movies</code> and <code>anime</code>.</p>
+<h4 id="trackers">Trackers<a class="headerlink" href="#trackers" title="Permanent link">&para;</a></h4>
+<p>Often some of the trackers that come with torrents are dead or just don&rsquo;t work. You have the option to add extra trackers to torrents either by:</p>
+<ul>
+<li>Automatically add a predefined list on new torrents: configure at <em>Tools -&gt; Options -&gt; BitTorrent</em>, enable the last option &ldquo;Automatically add these trackers to new downloads&rdquo; then add the list of trackers. This should only be done on public torrents as private ones might ban you or something.</li>
+<li>Manually add a list of trackers to individual torrents: configure by selecting a torrent, clicking on <em>Trackers</em> on the bottom of the Web UI, right clicking on an empty space and selecting &ldquo;Add trackers&hellip;&rdquo; then add the list of trackers.</li>
+</ul>
+<p>On both options, the list of trackers need to have at least one new line in between each new tracker. You can find trackers from the following sources:</p>
+<ul>
+<li><a href="https://newtrackon.com/list">List of stable trackers</a></li>
+<li><a href="https://github.com/ngosang/trackerslist">ngosang/trackerslist</a><ul>
+<li>It also mentions <a href="https://github.com/ngosang/trackerslist#third-party-tools">Third party tools</a> to automate this process.</li>
+</ul>
+</li>
+</ul>
+<p>Both sources maintain an updated list of trackers. You also might need to enable an advanced option so all the new trackers are contacted (<a href="https://github.com/qbittorrent/qBittorrent/issues/7882">Only first tracker contacted</a>): configure at <em>Tools -&gt; Options -&gt; Advanced -&gt; libtorrent Section</em> and enable both &ldquo;Always announce to all tiers&rdquo; and &ldquo;Always announce to all trackers in a tier&rdquo;.</p>
+
+  <div class="page-nav">
+    <span class="next">
+      <a href="https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html" alt="Next">
+        <i class="fas fa-arrow-left" alt="Arrow left"></i>
+        <span>Next</span>
+      </a>
+    </span>
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/arch_logs_flooding_disk.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Mon, Jul 24, 2023 @ 02:06 UTC</p>
+      <p>Modified: Mon, Jul 24, 2023 @ 03:51 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+<span>
+  <i class="fas fa-address-card" alt="Contact"></i>
+  <a href="https://blog.luevano.xyz/contact.html">Contact</a>
+</span>
+
+<span>
+  <i class="fas fa-donate" alt="Donate"></i>
+  <a href="https://blog.luevano.xyz/donate.html">Donate</a>
+</span>
+
+<span>
+  <i class="fas fa-rss" alt="RSS"></i>
+  <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+</span>
+
+<br>
+<span class="created-with">
+  <i class="fas fa-hammer" alt="Hammer"></i>
+  Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+</span>
+
+<br>
+<span class="copyright">
+  Copyright <i class="far fa-copyright" alt="Copyright"></i> 2023 David Luévano Alvarado
+</span>
+
+    </footer>
+  </body>
+</html>
