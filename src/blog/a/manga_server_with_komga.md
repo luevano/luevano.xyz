@@ -12,6 +12,8 @@ I've been wanting to set up a manga media server to hoard some mangas/comics and
 
 I'm going to run it as an exposed service using a subdomain of my own, so the steps are taking that into account, if you want to run it locally (or on a LAN/VPN) then it is going to be easier/with less steps (you're on your own). Also, as you might notice I don't like to use D\*ck\*r images or anything (ew).
 
+==At the time of editing this entry (06-28-2023) Komga has already upgraded to `v.1.0.0` and it introduces some breaking changes if you already had your instance set up. Read more [here](https://komga.org/installation/upgrade.html#prepare-for-v1-0-0).== The only change I did here was changing the port to the new default.
+
 As always, all commands are run as root unless stated otherwise.
 
 # Table of contents
@@ -347,7 +349,7 @@ This `komga` package creates a `komga` (service) user and group which is tied to
 Configure it by editing `/etc/komga.conf`:
 
 ```sh
-SERVER_PORT=8989
+SERVER_PORT=25600
 SERVER_SERVLET_CONTEXT_PATH=/ # this depends a lot of how it's going to be served (domain, subdomain, ip, etc)
 
 KOMGA_LIBRARIES_SCAN_CRON="0 0 * * * ?"
@@ -364,7 +366,6 @@ KOMGA_DATABASE_BACKUP_SCHEDULE="0 0 */8 * * ?"
 
 My changes (shown above):
 
-- Port on `8989` because `8080` its too generic.
 - `cron` schedules.
     - It's not actually `cron` but rather a `cron`-like syntax used by [Spring](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronSequenceGenerator.html) as stated in the [Komga config](https://komga.org/installation/configuration.html#optional-configuration).
 - Added the remember me key.
@@ -382,7 +383,7 @@ server {
     server_name komga.yourdomain.com; # change accordingly to your wanted subdomain and domain name
 
     location / {
-        proxy_pass http://localhost:8989; # change 8989 to the port you want to use
+        proxy_pass http://localhost:25600; # change port if needed
         proxy_http_version 1.1;
 
         proxy_set_header Host $host;

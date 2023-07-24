@@ -1,7 +1,7 @@
 title: Set up a media server with Jellyfin, Sonarr and Radarr
 author: David Luévano
 lang: en
-summary: How to set up a media server with Jellyfin, Sonarr and Radarr, on Arch. With qBitTorrent and Jackett with flaresolverr also.
+summary: How to set up a media server with Jellyfin, Sonarr and Radarr, on Arch. With qBitTorrent, Jackett, flaresolverr and Bazarr, too.
 tags: server
 	tools
 	code
@@ -10,7 +10,7 @@ tags: server
 
 Riding on my excitement of having a good internet connection and having setup my *home server* now it's time to self host a media server for movies, series and anime. I'll be exposing my stuff on a subdomain only so I can access it while out of home and for SSL certificates (not required), but shouldn't be necessary and instead you can use a VPN ([how to set up](https://blog.luevano.xyz/a/vpn_server_with_openvpn.html)). For your reference, whenever I say "Starr apps" (\*arr apps) I mean the family of apps such as Sonarr, Radarr, Readarr, Lidarr, etc..
 
-Most of my config is based on [TRaSH-Guides](https://trash-guides.info/), in case I forget to mention it explicitly on its respective areas, which will be mentioned as "TRaSH" going forward. Specially get familiar with the [TRaSH: Native folder structure](https://trash-guides.info/Hardlinks/How-to-setup-for/Native/) and with the [TRaSH: Hardlinks and instant moves](https://trash-guides.info/Hardlinks/Hardlinks-and-Instant-Moves/). Will use default configurations based on the respective documentation for each service (Sonarr, Radarr, Bazarr), except when stated otherwise.
+Most of my config is based on the [TRaSH-Guides](https://trash-guides.info/) (will be mentioned as "TRaSH" going forward). Specially get familiar with the [TRaSH: Native folder structure](https://trash-guides.info/Hardlinks/How-to-setup-for/Native/) and with the [TRaSH: Hardlinks and instant moves](https://trash-guides.info/Hardlinks/Hardlinks-and-Instant-Moves/). Will also use the default configurations based on the respective documentation for each Starr application and service, except when stated otherwise.
 
 Everything here is performed in ==arch btw== and all commands should be run as root unless stated otherwise.
 
@@ -22,18 +22,17 @@ Everything here is performed in ==arch btw== and all commands should be run as r
 
 # Prerequisites
 
-- A firewall is always strongly recommended to secure your service, and in this case we need to open some ports, specially for `qbittorrent`. I like to use `ufw`, but anything you're comfortable with works.
+The specific programs are mostly recommendations, if you're familiar with something else or want to change things around, feel free to do so but everything will be written with them in mind.
 
-If you want to expose to a (sub)domain, then similar to my early [tutorial](https://blog.luevano.xyz/tag/@tutorial.html) entries (specially the [website](https://blog.luevano.xyz/a/website_with_nginx.html) for the reverse proxy plus certificates) I'll use:
+If you want to expose to a (sub)domain, then similar to my early [tutorial](https://blog.luevano.xyz/tag/@tutorial.html) entries (specially the [website](https://blog.luevano.xyz/a/website_with_nginx.html) for the reverse proxy plus certificates):
 
 - `nginx` for the reverse proxy.
 - `certbot` for the SSL certificates.
+- `ufw` for the firewall.
 - `yay` to install AUR packages.
     - I mentioned how to install and use it on my previous entry: [Manga server with Komga: yay](https://blog.luevano.xyz/a/manga_server_with_komga.html#yay).
 - An **A** (and/or **AAAA**) or a **CNAME** for `jellyfin`.
     - Optionally, another one for all automation software (Jackett, Starr apps, etc.). You can use one subdomain per service, but I'll put them all under `isos` in the examples shown.
-
-You don't need to use these in specific, but everything will be written with these in mind.
 
 ## Directory structure
 
@@ -152,7 +151,7 @@ certbot --nginx
 That will automatically detect the new subdomain config and create/extend your existing certificate(s). Restart the `nginx` service for changes to take effect:
 
 ```sh
-systemctl restart nginx
+systemctl restart nginx.service
 ```
 
 ## Start using Jackett
@@ -339,7 +338,7 @@ location /qbt/ {
 This is taken from [qBitTorrent: Nginx reverse proxy for Web UI](https://github.com/qbittorrent/qBittorrent/wiki/NGINX-Reverse-Proxy-for-Web-UI). Restart the `nginx` service for the changes to take effect:
 
 ```sh
-systemctl restart nginx
+systemctl restart nginx.service
 ```
 
 ## Start using qBitTorrent
@@ -381,6 +380,21 @@ It should be usable already but we can go further and fine tune it, specially to
 I use all the suggested settings, where the only "changes" are for personal paths, ports, and in general connection settings that depend on my setup. The only super important setting I noticed that can affect our setup (meaning what is described in this entry) is the *Web UI -> Authentication* for the "Bypass authentication for clients on localhost". This will be an issue because the reverse proxy is accessing `qbittorrent` via the localhost, so this will make the service open to the world, experiment at your own risk.
 
 Finally, add categories by following [TRaSH: qBitTorrent how to add categories](https://trash-guides.info/Downloaders/qBittorrent/How-to-add-categories/). I added 3: `tv`, `movies` and `anime`.
+
+### Trackers
+
+Often some of the trackers that come with torrents are dead or just don't work. You have the option to add extra trackers to torrents either by:
+
+- Automatically add a predefined list on new torrents: configure at *Tools -> Options -> BitTorrent*, enable the last option "Automatically add these trackers to new downloads" then add the list of trackers. This should only be done on public torrents as private ones might ban you or something.
+- Manually add a list of trackers to individual torrents: configure by selecting a torrent, clicking on *Trackers* on the bottom of the Web UI, right clicking on an empty space and selecting "Add trackers..." then add the list of trackers.
+
+On both options, the list of trackers need to have at least one new line in between each new tracker. You can find trackers from the following sources:
+
+- [List of stable trackers](https://newtrackon.com/list)
+- [ngosang/trackerslist](https://github.com/ngosang/trackerslist)
+    - It also mentions [Third party tools](https://github.com/ngosang/trackerslist#third-party-tools) to automate this process.
+
+Both sources maintain an updated list of trackers. You also might need to enable an advanced option so all the new trackers are contacted ([Only first tracker contacted](https://github.com/qbittorrent/qBittorrent/issues/7882)): configure at *Tools -> Options -> Advanced -> libtorrent Section* and enable both "Always announce to all tiers" and "Always announce to all trackers in a tier".
 
 # Radarr
 
@@ -428,7 +442,7 @@ location /radarr/api {
 This is taken from [Radarr Nginx reverse proxy configuration](https://wiki.servarr.com/radarr/installation#nginx). Restart the `nginx` service for the changes to take effect:
 
 ```sh
-systemctl restart nginx
+systemctl restart nginx.service
 ```
 
 ## Start using Radarr
@@ -460,7 +474,9 @@ Note that if you want to have an anime movies library, it is recommended to run 
 
 ### Configuration
 
-This is the most tedious part, but I'm going to go for most of the defaults plus recommended configs (by [TRaSH](https://trash-guides.info/)) according to the official [Radarr: Quick start guide](https://wiki.servarr.com/radarr/quick-start-guide). Anything that is either not mentioned in the guide, or that is specific to how I'm setting up stuff in this entry will be stated below.
+Will be following the official [Radarr: Quick start guide](https://wiki.servarr.com/radarr/quick-start-guide) as well as the recommendations by [TRaSH: Radarr](https://trash-guides.info/Radarr/).
+
+Anything that is not mentioned in either guide or that is specific to how I'm setting up stuff will be stated below.
 
 #### Media Management
 
@@ -531,9 +547,11 @@ When it selects a torrent it sends it to qBitTorrent and you can even go ahead a
 
 After the movie is downloaded and processed by Radarr, it will create the appropriate hardlinks to the `media/movies` directory, as set in [Directory structure](#directory-structure).
 
+Optionally, you can add subtitles using [Bazarr](#bazarr).
+
 # Sonarr
 
-[Sonarr](https://sonarr.tv/) is a TV series collection manager that can be used to download series via torrents. As mentioned in [Radarr](#radarr). Most of the install process, configuration and whatnot is going to be basically the same as with [Radarr](#radarr).
+[Sonarr](https://sonarr.tv/) is a TV series collection manager that can be used to download series via torrents. As mentioned in [Radarr](#radarr). Most of the install process, configuration and whatnot is going to be basically the same as with Radarr.
 
 Install from the AUR with `yay`:
 
@@ -547,7 +565,7 @@ yay -S sonarr
 gpasswd -a sonarr servarr
 ```
 
-The default port that Sonarr uses is `8989` for http, this should be fine for you, but I'll change it to `7979` as it's already in use for Komga for me, as shown in my [Manga server with Komga](https://blog.luevano.xyz/a/manga_server_with_komga.html).
+The default port that Radarr uses is `8989` for http (the one we need for our reverse proxy).
 
 ## Reverse proxy
 
@@ -557,7 +575,7 @@ Add the following `location` blocks into the `isos.conf`, I'll leave it as `sona
 
 ```nginx
 location /sonarr {
-    proxy_pass http://localhost:7979/sonarr; # change port if needed, this is not the default
+    proxy_pass http://localhost:8989/sonarr; # change port if needed
     proxy_http_version 1.1;
 
     proxy_set_header Host $proxy_host; # this differs from the radarr reverse proxy
@@ -572,14 +590,14 @@ location /sonarr {
 # Allow the API External Access via NGINX
 location /sonarr/api {
     auth_basic off;
-    proxy_pass http://localhost:7979; # change port if needed, this is not the default
+    proxy_pass http://localhost:8989; # change port if needed
 }
 ```
 
 This is taken from [Sonarr: Nginx reverse proxy configuration](https://wiki.servarr.com/sonarr/installation#nginx). Restart the `nginx` service for the changes to take effect:
 
 ```sh
-systemctl restart nginx
+systemctl restart nginx.service
 ```
 
 ## Start using Sonarr
@@ -591,11 +609,10 @@ systemctl enable sonarr.service
 systemctl start sonarr.service
 ```
 
-This will start the service and create the default configs under `/var/lib/sonarr`. We need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/sonarr`) and in my case the `Port`. Edit `/var/lib/sonarr/config.xml`:
+This will start the service and create the default configs under `/var/lib/sonarr`. We need to change the `URLBase` as we're running the reverse proxy under a subdirectory (`/sonarr`). Edit `/var/lib/sonarr/config.xml`:
 
 ```xml
 ...
-<Port>7979</Port>
 <UrlBase>/sonarr</UrlBase>
 ...
 ```
@@ -612,7 +629,9 @@ Similar to [Radarr](#radarr) if you want to have an anime library, it is recomme
 
 ### Configuration
 
-Also the most tedious part, will go for most of the defaults plus recommended configs (by [TRaSH](https://trash-guides.info/)) according to the official [Sonarr: Quick start guide](https://wiki.servarr.com/sonarr/quick-start-guide), as with [Radarr](#radarr). Anything that is either not mentioned in the guide, or that is specific to how I'm setting up stuff in this entry will be stated below.
+Will be following the official [Sonarr: Quick start guide](https://wiki.servarr.com/sonarr/quick-start-guide) as well as the recommendations by [TRaSH: Sonarr](https://trash-guides.info/Sonarr/).
+
+Anything that is not mentioned in either guide or that is specific to how I'm setting up stuff will be stated below.
 
 #### Media Management
 
@@ -627,13 +646,13 @@ Will basically do the same as in [Radarr: Quality](#quality): set minimum of `0`
 
 #### Profiles
 
-This is a bit different than with [Radarr](#radarr), the way it is configured is by setting "Release profiles". I took the profiles from [TRaSH: WEB-DL Release profile regex](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/). The only possible change I'll do is disable the Low Quality Groups after some testing if this results in some issues, similar with Radarr's "LQ" custom format.
+This is a bit different than with [Radarr](#radarr), the way it is configured is by setting "Release profiles". I took the profiles from [TRaSH: WEB-DL Release profile regex](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/). The only possible change I'll do is disable the Low Quality Groups and/or the "Golden rule" filter (for `x265` encoded video).
 
 For me it ended up looking like this:
 
 ![Sonarr: Release profiles](${SURL}/images/b/sonarr/sonarr_release_profiles.png "Sonarr: Release profiles")
 
-But yours can differ as is mostly personal preference. For the "Quality profile" I'll be using the default "HD-1080p" most of the time, but I also created a "WEB(720/1080/2160)" because some shows are not present in only one quality.
+But yours can differ as is mostly personal preference. For the "Quality profile" I'll be using the default "HD-1080p" most of the time, but I also created a "HD + WEB (720/1080)" which works best for some.
 
 #### Download clients
 
@@ -672,7 +691,7 @@ Add by going to *Series -> Add New*. Basically just follow the [Sonarr: Library 
 I personally use:
 
 - Monitor: All Episodes.
-- Quiality Profile: "WEB(720/1080/2160)". This depends on what I want for that how, lately I've been experimenting with this one.
+- Quiality Profile: "HD + WEB (720/1080)". This depends on what I want for that how, lately I've been experimenting with this one.
 - Series Type: Standard. For now I'm just downloading shows, but it has an Anime option.
 - Tags: the "indexer_name" I want to use to download the movie, I've been using all indexers so I just use all tags as I'm experimenting and trying multiple options.
 - Season Folder: enabled. I like as much organization as possible.
@@ -692,6 +711,8 @@ Then it will bring a window with the search results, where it shows the indexer 
 ![Sonarr: Interactive search results](${SURL}/images/b/sonarr/sonarr_interactive_search_results.png "Sonarr: Interactive search results")
 
 After the movie is downloaded and processed by Sonarr, it will create the appropriate hardlinks to the `media/tv` directory, as set in [Directory structure](#directory-structure).
+
+Optionally, you can add subtitles using [Bazarr](#bazarr).
 
 # Jellyfin
 
@@ -791,7 +812,7 @@ certbot --nginx
 Similarly to the `isos` subdomain, that will autodetect the new subdomain and extend the existing certificate(s). Restart the `nginx` service for changes to take effect:
 
 ```sh
-systemctl restart nginx
+systemctl restart nginx.service
 ```
 
 ## Start using Jellyfin
@@ -807,7 +828,7 @@ Then navigate to `https://jellyfin.yourdomain.com` and either continue with the 
 
 The initial setup wizard makes you create an user (will be the admin for now) and at least one library, though these can be done later. For more check [Jellyfin: Quick start](https://jellyfin.org/docs/general/quick-start/).
 
-Remember to use the configured directory as mentioned in [Directory structure](#directory-structure). Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then click on *Administration -> Dashboard*. I didn't configure much other than adding a couple of users for me and friends, I wouldn't recommend using the admin account to watch (personal preference).
+Remember to use the configured directory as mentioned in [Directory structure](#directory-structure). Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then navigate to *Administration -> Dashboard*. I didn't configure much other than adding a couple of users for me and friends, I wouldn't recommend using the admin account to watch (personal preference).
 
 Once there is at least one library it will show at *Home* along with the latest movies (if any) similar to the following (don't judge, these are just the latest I added due to friend's requests):
 
@@ -816,3 +837,200 @@ Once there is at least one library it will show at *Home* along with the latest 
 And inside the "Movies" library you can see the whole catalog where you can filter or just scroll as well as seeing *Suggestions* (I think this starts getting populated afte a while) and *Genres*:
 
 ![Jellyfin: Library catalog options](${SURL}/images/b/jellyfin/jellyfin_library_catalog_options.png "Jellyfin: Library catalog options")
+
+### Plugins
+
+You can also install/activate [plugins](https://jellyfin.org/docs/general/server/plugins/) to get extra features. Most of the plugins you might want to use are already available in the official repositories and can be found in the "Catalog". There are a lot of plugins that are focused around anime and TV metadata, as well as an Open Subtitles plugin to automatically download missing subtitles (though this is managed with [Bazarr](#bazarr)).
+
+To activate plugins click on the 3 horizontal lines on the top left of the Web UI then navigate to *Administration -> Dashboard -> Advanced -> Plugins* and click on the *Catalog* tab (top of the Web UI). Here you can select the plugins you want to install. By default only the official ones are shown, for more you can add more [repositories](https://jellyfin.org/docs/general/server/plugins/#repositories).
+
+The only plugin I'm using is the "Playback Reporting", to get a summary of what is being used in the instance. But I might experiment with some anime-focused plugins when the time comes.
+
+### Transcoding
+
+Although not recommended and explicitly set to not download any `x265`/`HEVC` content (by using the [Golden rule](https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/#golden-rule)) there might be cases where the only option you have is to download such content. If that is the case and you happen to have a way to do [Hardware Acceleration](https://jellyfin.org/docs/general/administration/hardware-acceleration/), for example by having an NVIDIA graphics card (in my case) then you should enable it to avoid using lots of resources on your system.
+
+Using hardware acceleration will leverage your GPU to do the transcoding and save resources on your CPU. I tried streaming `x265` content and it basically used 70-80% on all cores of my CPU, while on the other hand using my GPU it used the normal amount on the CPU (70-80% on a single core).
+
+This will be the steps to install on an [NVIDIA](https://jellyfin.org/docs/general/administration/hardware-acceleration/nvidia/) graphics card, specifically a GTX 1660 Ti. But more info and guides can be found at [Jellyfin: Hardware Acceleration](https://jellyfin.org/docs/general/administration/hardware-acceleration/) for other acceleration methods.
+
+#### NVIDIA drivers
+
+Ensure you have the NVIDIA drivers and utils installed. I've you've done this in the past then you can skip this part, else you might be using the default `nouveau` drivers. Follow the next steps to set up the NVIDIA drivers, which basically is a summary of [NVIDIA: Installation](https://wiki.archlinux.org/title/NVIDIA#Installation) for my setup, so ==double check the wiki in case you have an older NVIDIA graphics card==.
+
+Install the `nvidia` and `nvidia-utils` packages:
+
+```sh
+pacman -S nvidia nvidia-utils
+```
+
+Modify `/etc/mkinitcpio.conf` to remove `kms` from the `HOOKS` array. It should look like this (commented line is how it was for me before the change):
+
+```sh
+...
+# HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block filesystems fsck)
+HOOKS=(base udev autodetect modconf keyboard keymap consolefont block filesystems fsck)
+...
+```
+
+[Regenerate the initramfs](https://wiki.archlinux.org/title/Mkinitcpio#Image_creation_and_activation) by executing:
+
+```sh
+mkinitcpio -P
+```
+
+Finally, reboot the system. After the reboot you should be able to check your GPU info and processes being run with the GPU by executing `nvidia-smi`.
+
+#### Enable hardware acceleration
+
+Install from the AUR with `yay`:
+
+```sh
+yay -S jellyfin-ffmpeg6-bin
+```
+
+This provides the `jellyfin-ffmpeg` executable, which is necessary for Jellyfin to do hardware acceleration, it needs to be this specific one.
+
+Then in the Jellyfin go to the transcoding settings by clicking on the 3 horizontal lines on the top left of the Web UI and navigating to *Administration -> Dashboard -> Playback -> Transcoding* and:
+
+- Change the *Hardware acceleration* from "None" to "Nvidia NVENC".
+- Some other options will pop up, just make sure you enable "HEVC" (which is `x265`) in the list of *Enable hardware encoding for:*.
+- Scroll down and specify the `ffmpeg` path, which is `/usr/lib/jellyfin-ffmpeg/ffmpeg`.
+
+Don't forget to click "Save" at the bottom of the Web UI, it will ask if you want to enable hardware acceleration.
+
+# Bazarr
+
+[Bazarr](https://www.bazarr.media/) is a companion for Sonarr and Radarr that manages and downloads subtitles.
+
+Install from the AUR with `yay`:
+
+```sh
+yay -S bazarr
+```
+
+==Add the `bazarr` user to the `servarr` group:==
+
+```sh
+gpasswd -a bazarr servarr
+```
+
+The default port that Bazarr uses is `6767` for http (the one we need for our reverse proxy), and it has pre-configured the default ports for Radarr and Sonarr.
+
+## Reverse proxy
+
+Basically the same as with [Radarr: Reverse proxy](#reverse-proxy-2) and [Sonarr: Reverse proxy](#reverse-proxy-3), ==except that the `proxy_pass` (needs `/bazarr`) is different.==
+
+Add the following setting in the `server` block of the `isos.conf`:
+
+```nginx 
+server {
+    # server_name and other directives
+    ...
+
+    # Increase http2 max sizes
+    large_client_header_buffers 4 16k;
+
+    # some other blocks like location blocks
+    ...
+}
+```
+
+Then add the following `location` blocks in the `isos.conf`, where I'll keep it as `/bazarr`:
+
+```nginx
+location /bazarr {
+    proxy_pass http://localhost:6767/bazarr; # change port if needed
+    proxy_http_version 1.1;
+
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+
+    proxy_redirect off;
+}
+# Allow the Bazarr API through if you enable Auth on the block above
+location /bazarr/api {
+    auth_request off;
+    proxy_pass http://localhost:6767/bazarr/api;
+}
+```
+
+This is taken from [Bazarr: Reverse proxy help](https://wiki.bazarr.media/Additional-Configuration/Reverse-Proxy-Help/). Restart the `nginx` service for the changes to take effect:
+
+```sh
+systemctl restart nginx.service
+```
+
+## Start using Bazarr
+
+You can now `start`/`enable` the `bazarr.service` if you haven't already:
+
+```sh
+systemctl start bazarr.service
+systemctl enable bazarr.service
+```
+
+This will start the service and create the default configs under `/var/lib/bazarr`. We need to change the `base_url` for the necessary services as we're running them under a reverse proxy and under subdirectories. Edit `/var/lib/bazarr/config/config.ini`:
+
+```ini
+[general]
+port = 6767
+base_url = /bazarr
+
+[sonarr]
+port = 8989
+base_url = /sonarr
+
+[radarr]
+port = 7878
+base_url = /radarr
+```
+
+Then restart the `bazarr` service:
+
+```sh
+systemctl restart bazarr.service
+```
+
+Now `https://isos.yourdomain.com/bazarr` is accessible. Again go straight to secure the instance by adding authentication under *Settings -> General -> Security*. I added the "Forms" option, just fill in the username and password then click on save changes on the top left of the page. You can restart the service again and check that it asks for login credentials. I also disabled *Settings -> General -> Updates -> Automatic*.
+
+### Configuration
+
+Will be following the official [Bazarr: Setup guide](https://wiki.bazarr.media/Getting-Started/setup-guide/) as well as the recommendations by [TRaSH: Bazarr](https://trash-guides.info/Bazarr/).
+
+Anything that is not mentioned in either guide or that is specific to how I'm setting up stuff will be stated below.
+
+#### Providers
+
+This doesn't require much thinking and its up to personal preference, but I'll list the ones I added:
+
+- [OpenSubtitles.com](https://www.opensubtitles.com/): requires an account (the `.org` option is deprecated).
+    - For a free account it only lets you download around 20 subtitles per day, and they contain ads. You could pay for a VIP account ($3 per month) and that will give you 1000 subtitles per day and no ads. But if you're fine with 20 ads per day you can try to get rid of the ads by running an automated script. Such option can be found at [brianspilner01/media-server-scripts: sub-clean.sh](https://github.com/brianspilner01/media-server-scripts/blob/master/sub-clean.sh).
+- YIFY Subtitles
+- Subscenter
+- Supersubtitles
+- TVSubtitles
+- Subtitulamos.tv: Spanish subtitles provider.
+- Argenteam: LATAM Spanish subtitles provider.
+- Subdivx: LATAM Spanish / Spanish subtitles provider.
+
+I've tested this setup for the following languages (with all default settings as stated in the guides):
+
+- English
+- Spanish
+
+I tried with "Latin American Spanish" but they're hard to find, those two work pretty good.
+
+None of these require an [Anti-Captcha](https://anti-captcha.com/) account (which is a paid service), but I created one anyways in case I need it. Though you need to add credits to it (pretty cheap though) if you ever use it.
+
+# WIP
+
+- Description on qbittorrent listening port, openning with ufw, specify at the beginning or on the config part
+- Change all reverse proxy and configs for 127.0.0.1 instead of localhost
+- Change jackett config for the 127.0.0.1 ip
+- Change the reverse proxy's api location parts
+- Flaresolverr now works with -bin, needs to install xorg-server-xvfb
