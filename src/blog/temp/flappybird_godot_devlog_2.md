@@ -21,6 +21,24 @@ The source code can be found at [luevano/flappybird_godot](https://github.com/lu
 
 I used the automatic 3.x to 4 porting option when loading a project in Godot as a starting point.
 
+Add follow ignores for GDScript:
+
+1. Unused parameter.
+2. Unused private parameter.
+
+Coudln't add logging plugin [KOBUGE-Games/godot-logger](https://github.com/KOBUGE-Games/godot-logger), changing from `INFO` to `DEBUG` its a pain if trying to do from singleton. Tried teh following after adding:
+
+1. Change from `Logger` to `Log` in the autoload configuration.
+2. Add config and always load it with `Log.<load/save>_config("res://logger.cfg")`.
+
+Initially modify all conflicting code:
+
+1. Change from `File` class to `ConfigFile` and refactor. Also add logging to `SavedData`.
+2. Comment out the `velocity` property of `Player` which is already included in `CharacterBody2D`
+3. Disable all `WorldTiles` related code in `game.gd` as well as the `world_detector` (probably because of the signal?).
+4. Comment out the game label as `String(int)` doesn't work anymore.
+5. In general resolve conflicting code issues that the automatic tool didn't catch.
+
 
 ---
 
