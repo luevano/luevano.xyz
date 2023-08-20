@@ -334,7 +334,7 @@ systemctl start sonarr.service
 <h5 id="profiles_1">Profiles<a class="headerlink" href="#profiles_1" title="Permanent link">&para;</a></h5>
 <p>This is a bit different than with <a href="#radarr">Radarr</a>, the way it is configured is by setting &ldquo;Release profiles&rdquo;. I took the profiles from <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/">TRaSH: WEB-DL Release profile regex</a>. The only possible change I&rsquo;ll do is disable the Low Quality Groups and/or the &ldquo;Golden rule&rdquo; filter (for <code>x265</code> encoded video).</p>
 <p>For me it ended up looking like this:</p>
-<figure id="__yafg-figure-4">
+<figure id="__yafg-figure-5">
 <img alt="Sonarr: Release profiles" src="https://static.luevano.xyz/images/b/sonarr/sonarr_release_profiles.png" title="Sonarr: Release profiles">
 <figcaption>Sonarr: Release profiles</figcaption>
 </figure>
@@ -379,12 +379,12 @@ systemctl start sonarr.service
 <p>Once you click on &ldquo;Add X&rdquo; it will add it to the <em>Series</em> section and will start as monitored. So far I haven&rsquo;t noticed that it immediately starts downloading (because of the &ldquo;Start search for missing episodes&rdquo; setting) but I always click on unmonitor the series, so I can manually check (again, due to the low quality of my indexers).</p>
 <p>When it automatically starts to download an episode/season it will send it to qBitTorrent and you can monitor it over there. Else you can also monitor at <em>Activity -&gt; Queue</em>. Same thing goes if you download manually each episode/season via the interactive search.</p>
 <p>To interactively search episodes/seasons go to <em>Series</em> and then click on any series, then click either on the interactive search button for the episode or the season, it is an icon of a person as shown below:</p>
-<figure id="__yafg-figure-5">
+<figure id="__yafg-figure-6">
 <img alt="Sonarr: Interactive search button" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_button.png" title="Sonarr: Interactive search button">
 <figcaption>Sonarr: Interactive search button</figcaption>
 </figure>
 <p>Then it will bring a window with the search results, where it shows the indexer it got the result from, the size of the torrent, peers, language, quality, the score it received from the configured release profiles an alert in case that the torrent is &ldquo;bad&rdquo; and the download button to manually download the torrent you want. An example shown below:</p>
-<figure id="__yafg-figure-6">
+<figure id="__yafg-figure-7">
 <img alt="Sonarr: Interactive search results" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_results.png" title="Sonarr: Interactive search results">
 <figcaption>Sonarr: Interactive search results</figcaption>
 </figure>
@@ -479,12 +479,12 @@ systemctl start jellyfin.service
 <p>The initial setup wizard makes you create an user (will be the admin for now) and at least one library, though these can be done later. For more check <a href="https://jellyfin.org/docs/general/quick-start/">Jellyfin: Quick start</a>.</p>
 <p>Remember to use the configured directory as mentioned in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">Directory structure</a>. Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then navigate to <em>Administration -&gt; Dashboard</em>. I didn&rsquo;t configure much other than adding a couple of users for me and friends, I wouldn&rsquo;t recommend using the admin account to watch (personal preference).</p>
 <p>Once there is at least one library it will show at <em>Home</em> along with the latest movies (if any) similar to the following (don&rsquo;t judge, these are just the latest I added due to friend&rsquo;s requests):</p>
-<figure id="__yafg-figure-7">
+<figure id="__yafg-figure-8">
 <img alt="Jellyfin: Home libraries" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_home_libraries.png" title="Jellyfin: Home libraries">
 <figcaption>Jellyfin: Home libraries</figcaption>
 </figure>
 <p>And inside the &ldquo;Movies&rdquo; library you can see the whole catalog where you can filter or just scroll as well as seeing <em>Suggestions</em> (I think this starts getting populated after a while) and <em>Genres</em>:</p>
-<figure id="__yafg-figure-8">
+<figure id="__yafg-figure-9">
 <img alt="Jellyfin: Library catalog options" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_library_catalog_options.png" title="Jellyfin: Library catalog options">
 <figcaption>Jellyfin: Library catalog options</figcaption>
 </figure>

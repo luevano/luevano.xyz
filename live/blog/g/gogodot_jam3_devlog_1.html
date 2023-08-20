@@ -141,7 +141,7 @@
 <p>Other than that I used few key sprites from <a href="https://vryell.itch.io/">vryell</a>: <a href="https://vryell.itch.io/controller-keyboard-icons">Controller &amp; Keyboard Icons</a> and a font from <a href="https://datagoblin.itch.io/">datagoblin</a>: <a href="https://datagoblin.itch.io/monogram">Monogram</a>.</p>
 <h2 id="the-snake">The snake<a class="headerlink" href="#the-snake" title="Permanent link">&para;</a></h2>
 <p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
-<figure id="__yafg-figure-38">
+<figure id="__yafg-figure-39">
 <img alt="FileSystem - Snake dir structure" src="https://static.luevano.xyz/images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
 <figcaption>FileSystem - Snake dir structure</figcaption>
 </figure>
@@ -175,7 +175,7 @@ func _rotate_to(direction: int) -&gt; void:
     _direction = _direction.rotated(deg2rad(direction * Global.SNAKE_ROT_SPEED * get_physics_process_delta_time()))
 </code></pre>
 <p>After tunning all the necessary parameters you should get something like this:</p>
-<figure id="__yafg-figure-39">
+<figure id="__yafg-figure-40">
 <img alt="Snake - Basic movement (left and right controls)" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
 <figcaption>Snake - Basic movement (left and right controls)</figcaption>
 </figure>
@@ -212,7 +212,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
     update()
 </code></pre>
 <p>With this, we&rsquo;re now populating the <em>Path2D</em> curve points with the position of the snake head. You should be able to see it because of the <code>_draw</code> call. If you run it you should see something like this:</p>
-<figure id="__yafg-figure-40">
+<figure id="__yafg-figure-41">
 <img alt="Snake - Basic movement with path" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
 <figcaption>Snake - Basic movement with path</figcaption>
 </figure>
@@ -256,7 +256,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
         _add_initial_segment(TAIL_SEGMENT_NP)
 </code></pre>
 <p>Select the <em>Snake</em> node and add the <em>Body</em> and <em>Tail</em> scene to the parameters, respectively. Then when running you should see something like this:</p>
-<figure id="__yafg-figure-41">
+<figure id="__yafg-figure-42">
 <img alt="Snake - Basic movement with all body parts" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
 <figcaption>Snake - Basic movement with all body parts</figcaption>
 </figure>
@@ -299,7 +299,7 @@ func _add_segment_to_queue() -&gt; void:
         body_segment_queue.append(body_segment_queue.back() + Global.SNAKE_SEGMENT_SIZE)
 </code></pre>
 <p>With everything implemented and connected accordingly then we can add segments on demand (for testing I&rsquo;m adding with a key press), it should look like this:</p>
-<figure id="__yafg-figure-42">
+<figure id="__yafg-figure-43">
 <img alt="Snake - Basic movement with dynamic addition of new segments" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
 <figcaption>Snake - Basic movement with dynamic addition of new segments</figcaption>
 </figure>
@@ -362,21 +362,21 @@ func _on_body_entered(body: Node) -&gt; void:
     add_child(food)
 </code></pre>
 <p>And this is used in <code>_process</code> to place new food whenever needed. For now I added a condition to add food until 10 pieces are in place, and keep adding whenever the food is is lower than 10. After setting everything up, this is the result:</p>
-<figure id="__yafg-figure-43">
+<figure id="__yafg-figure-44">
 <img alt="Snake - Food basic interaction" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
 <figcaption>Snake - Food basic interaction</figcaption>
 </figure>
 <h2 id="za-warudo-the-world">Za warudo! (The world)<a class="headerlink" href="#za-warudo-the-world" title="Permanent link">&para;</a></h2>
 <p>It just happend that I saw a video to create random maps by using a method called <a href="https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm">random walks</a>, this video was made by <a href="https://www.youtube.com/c/NADLABS">NAD LABS</a>: <a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a>. It&rsquo;s a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):</p>
-<figure id="__yafg-figure-44">
+<figure id="__yafg-figure-45">
 <img alt="World map generator - Random map 1" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
 <figcaption>World map generator - Random map 1</figcaption>
 </figure>
-<figure id="__yafg-figure-45">
+<figure id="__yafg-figure-46">
 <img alt="World map generator - Random map 2" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_2.png" title="World map generator - Random map 2">
 <figcaption>World map generator - Random map 2</figcaption>
 </figure>
-<figure id="__yafg-figure-46">
+<figure id="__yafg-figure-47">
 <img alt="World map generator - Random map 3" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_3.png" title="World map generator - Random map 3">
 <figcaption>World map generator - Random map 3</figcaption>
 </figure>

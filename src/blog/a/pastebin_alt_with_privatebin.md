@@ -164,9 +164,9 @@ Create a new user and database as described in [MariaDB: Create users/databases]
 
 ## Configuration
 
-The default configuration file is self explanatory, it is located at `/etc/webapps/yourls/config.php`.
+The default configuration file is self explanatory, it is located at `/etc/webapps/yourls/config.php`. Make sure to correctly set the user/database YOURLS will use and either create a cookie or get one from [URL provided](http://yourls.org/cookie).
 
-Set the user/database YOURLS will use and either create a cookie or get one from [URL provided](http://yourls.org/cookie). It is important to change the `$yours_user_passwords` variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:
+It is important to change the `$yours_user_passwords` variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:
 
 ```php
 define( 'YOURLS_NO_HASH_PASSWORD', true );
@@ -178,7 +178,7 @@ I also changed the "shortening method" to `62` to include more characters:
 define( 'YOURLS_URL_CONVERT', 62 );
 ```
 
-Lastly, the `$yourls_reserved_URL` variable will need more blacklisted words depending on the use-case. `YOURLS_SITE` needs to match whatever is set in `nginx`.
+The `$yourls_reserved_URL` variable will need more blacklisted words depending on the use-case. Make sure the `YOURLS_PRIVATE` variable is set to `true` (default) if the service will be exposed to the public.
 
 ## Nginx
 
@@ -188,7 +188,7 @@ Create a `yourls.conf` at the usual `sites-<available/enabled>` path for `nginx`
 server {
     listen 80;
     root /usr/share/webapps/yourls/;
-    server_name short.yourdomain.com;
+    server_name short.example.com;
     index index.php;
 
     location / {
@@ -218,6 +218,18 @@ Restart the `nginx` service for changes to take effect:
 ```sh
 systemctl restart nginx.service
 ```
+
+## Usage
+
+The admin area is located at `https://short.example.com/admin/`, login with any of the configured users set with the `$yours_user_passwords` in the config. Activate plugins by going to the "Manage Plugins" page (located at the top left) and clicking in the respective "Activate" button by hovering the "Actin" column, as shown below:
+
+![YOURLS: Activate plugin](${SURL}/images/b/yourls/yourls_activate_plugin.png "YOURLS: Activate plugin")
+
+I personally activated the "Random ShortURLs" and "Allow Hyphens in Short URLs". Once the "Random ShortURLs" plugin is activated it can be configured by going to the "Random ShortURLs Settings" page (located at the top left, right below "Manage Plugins"), only config available is "Random Keyword Length".
+
+The main admin area can be used to manually shorten any link provided, by using the automatic shortening or by providing a custom short URL.
+
+Finally, the "Tools" page (located at the top left) conains the `signature` token, used for [YOURLS: Passwordless API](https://yourls.org/docs/guide/advanced/passwordless-api) as well as useful bookmarklets for URL shortening while browsing.
 
 # PrivateBin
 
@@ -295,7 +307,7 @@ Create a `privatebin.conf` at the usual `sites-<available/enabled>` path for `ng
 server {
     listen 80;
     root //usr/share/webapps/privatebin/;
-    server_name bin.yourdomain.com;
+    server_name bin.example.com;
     index index.php;
 
     if ($pastebin_badagent) {

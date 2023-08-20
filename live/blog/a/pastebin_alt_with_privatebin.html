@@ -110,6 +110,7 @@
 <li><a href="#ssl-certificate">SSL certificate</a></li>
 </ul>
 </li>
+<li><a href="#usage">Usage</a></li>
 </ul>
 </li>
 <li><a href="#privatebin">PrivateBin</a><ul>
@@ -218,20 +219,20 @@ extension=mysqli
 </code></pre>
 <p>Create a new user and database as described in <a href="#create-usersdatabases">MariaDB: Create users/databases</a>.</p>
 <h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h3>
-<p>The default configuration file is self explanatory, it is located at <code>/etc/webapps/yourls/config.php</code>.</p>
-<p>Set the user/database YOURLS will use and either create a cookie or get one from <a href="http://yourls.org/cookie">URL provided</a>. It is important to change the <code>$yours_user_passwords</code> variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:</p>
+<p>The default configuration file is self explanatory, it is located at <code>/etc/webapps/yourls/config.php</code>. Make sure to correctly set the user/database YOURLS will use and either create a cookie or get one from <a href="http://yourls.org/cookie">URL provided</a>.</p>
+<p>It is important to change the <code>$yours_user_passwords</code> variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:</p>
 <pre><code class="language-php">define( 'YOURLS_NO_HASH_PASSWORD', true );
 </code></pre>
 <p>I also changed the &ldquo;shortening method&rdquo; to <code>62</code> to include more characters:</p>
 <pre><code class="language-php">define( 'YOURLS_URL_CONVERT', 62 );
 </code></pre>
-<p>Lastly, the <code>$yourls_reserved_URL</code> variable will need more blacklisted words depending on the use-case. <code>YOURLS_SITE</code> needs to match whatever is set in <code>nginx</code>.</p>
+<p>The <code>$yourls_reserved_URL</code> variable will need more blacklisted words depending on the use-case. Make sure the <code>YOURLS_PRIVATE</code> variable is set to <code>true</code> (default) if the service will be exposed to the public.</p>
 <h3 id="nginx_1">Nginx<a class="headerlink" href="#nginx_1" title="Permanent link">&para;</a></h3>
 <p>Create a <code>yourls.conf</code> at the usual <code>sites-&lt;available/enabled&gt;</code> path for <code>nginx</code>:</p>
 <pre><code class="language-nginx">server {
     listen 80;
     root /usr/share/webapps/yourls/;
-    server_name short.yourdomain.com;
+    server_name short.example.com;
     index index.php;
 
     location / {
@@ -251,6 +252,15 @@ extension=mysqli
 <p>Restart the <code>nginx</code> service for changes to take effect:</p>
 <pre><code class="language-sh">systemctl restart nginx.service
 </code></pre>
+<h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
+<p>The admin area is located at <code>https://short.example.com/admin/</code>, login with any of the configured users set with the <code>$yours_user_passwords</code> in the config. Activate plugins by going to the &ldquo;Manage Plugins&rdquo; page (located at the top left) and clicking in the respective &ldquo;Activate&rdquo; button by hovering the &ldquo;Actin&rdquo; column, as shown below:</p>
+<figure id="__yafg-figure-1">
+<img alt="YOURLS: Activate plugin" src="https://static.luevano.xyz/images/b/yourls/yourls_activate_plugin.png" title="YOURLS: Activate plugin">
+<figcaption>YOURLS: Activate plugin</figcaption>
+</figure>
+<p>I personally activated the &ldquo;Random ShortURLs&rdquo; and &ldquo;Allow Hyphens in Short URLs&rdquo;. Once the &ldquo;Random ShortURLs&rdquo; plugin is activated it can be configured by going to the &ldquo;Random ShortURLs Settings&rdquo; page (located at the top left, right below &ldquo;Manage Plugins&rdquo;), only config available is &ldquo;Random Keyword Length&rdquo;.</p>
+<p>The main admin area can be used to manually shorten any link provided, by using the automatic shortening or by providing a custom short URL.</p>
+<p>Finally, the &ldquo;Tools&rdquo; page (located at the top left) conains the <code>signature</code> token, used for <a href="https://yourls.org/docs/guide/advanced/passwordless-api">YOURLS: Passwordless API</a> as well as useful bookmarklets for URL shortening while browsing.</p>
 <h2 id="privatebin">PrivateBin<a class="headerlink" href="#privatebin" title="Permanent link">&para;</a></h2>
 <p><a href="https://privatebin.info/">PrivateBin</a> is a minimalist self-hosted alternative to <a href="https://pastebin.com/">pastebin</a>.</p>
 <p>Install from the AUR with <code>yay</code>:</p>
@@ -300,7 +310,7 @@ opt[12] = true    ; PDO::ATTR_PERSISTENT
 <pre><code class="language-nginx">server {
     listen 80;
     root //usr/share/webapps/privatebin/;
-    server_name bin.yourdomain.com;
+    server_name bin.example.com;
     index index.php;
 
     if ($pastebin_badagent) {
@@ -344,7 +354,7 @@ opt[12] = true    ; PDO::ATTR_PERSISTENT
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Aug 20, 2023 @ 09:46 UTC</p>
-      <p>Modified: Sun, Aug 20, 2023 @ 09:56 UTC</p>
+      <p>Modified: Sun, Aug 20, 2023 @ 10:28 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>

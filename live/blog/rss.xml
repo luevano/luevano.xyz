@@ -56,6 +56,7 @@
 <li><a href="#ssl-certificate">SSL certificate</a></li>
 </ul>
 </li>
+<li><a href="#usage">Usage</a></li>
 </ul>
 </li>
 <li><a href="#privatebin">PrivateBin</a><ul>
@@ -164,20 +165,20 @@ extension=mysqli
 </code></pre>
 <p>Create a new user and database as described in <a href="#create-usersdatabases">MariaDB: Create users/databases</a>.</p>
 <h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h3>
-<p>The default configuration file is self explanatory, it is located at <code>/etc/webapps/yourls/config.php</code>.</p>
-<p>Set the user/database YOURLS will use and either create a cookie or get one from <a href="http://yourls.org/cookie">URL provided</a>. It is important to change the <code>$yours_user_passwords</code> variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:</p>
+<p>The default configuration file is self explanatory, it is located at <code>/etc/webapps/yourls/config.php</code>. Make sure to correctly set the user/database YOURLS will use and either create a cookie or get one from <a href="http://yourls.org/cookie">URL provided</a>.</p>
+<p>It is important to change the <code>$yours_user_passwords</code> variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:</p>
 <pre><code class="language-php">define( 'YOURLS_NO_HASH_PASSWORD', true );
 </code></pre>
 <p>I also changed the &ldquo;shortening method&rdquo; to <code>62</code> to include more characters:</p>
 <pre><code class="language-php">define( 'YOURLS_URL_CONVERT', 62 );
 </code></pre>
-<p>Lastly, the <code>$yourls_reserved_URL</code> variable will need more blacklisted words depending on the use-case. <code>YOURLS_SITE</code> needs to match whatever is set in <code>nginx</code>.</p>
+<p>The <code>$yourls_reserved_URL</code> variable will need more blacklisted words depending on the use-case. Make sure the <code>YOURLS_PRIVATE</code> variable is set to <code>true</code> (default) if the service will be exposed to the public.</p>
 <h3 id="nginx_1">Nginx<a class="headerlink" href="#nginx_1" title="Permanent link">&para;</a></h3>
 <p>Create a <code>yourls.conf</code> at the usual <code>sites-&lt;available/enabled&gt;</code> path for <code>nginx</code>:</p>
 <pre><code class="language-nginx">server {
     listen 80;
     root /usr/share/webapps/yourls/;
-    server_name short.yourdomain.com;
+    server_name short.example.com;
     index index.php;
 
     location / {
@@ -197,6 +198,15 @@ extension=mysqli
 <p>Restart the <code>nginx</code> service for changes to take effect:</p>
 <pre><code class="language-sh">systemctl restart nginx.service
 </code></pre>
+<h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
+<p>The admin area is located at <code>https://short.example.com/admin/</code>, login with any of the configured users set with the <code>$yours_user_passwords</code> in the config. Activate plugins by going to the &ldquo;Manage Plugins&rdquo; page (located at the top left) and clicking in the respective &ldquo;Activate&rdquo; button by hovering the &ldquo;Actin&rdquo; column, as shown below:</p>
+<figure id="__yafg-figure-1">
+<img alt="YOURLS: Activate plugin" src="https://static.luevano.xyz/images/b/yourls/yourls_activate_plugin.png" title="YOURLS: Activate plugin">
+<figcaption>YOURLS: Activate plugin</figcaption>
+</figure>
+<p>I personally activated the &ldquo;Random ShortURLs&rdquo; and &ldquo;Allow Hyphens in Short URLs&rdquo;. Once the &ldquo;Random ShortURLs&rdquo; plugin is activated it can be configured by going to the &ldquo;Random ShortURLs Settings&rdquo; page (located at the top left, right below &ldquo;Manage Plugins&rdquo;), only config available is &ldquo;Random Keyword Length&rdquo;.</p>
+<p>The main admin area can be used to manually shorten any link provided, by using the automatic shortening or by providing a custom short URL.</p>
+<p>Finally, the &ldquo;Tools&rdquo; page (located at the top left) conains the <code>signature</code> token, used for <a href="https://yourls.org/docs/guide/advanced/passwordless-api">YOURLS: Passwordless API</a> as well as useful bookmarklets for URL shortening while browsing.</p>
 <h2 id="privatebin">PrivateBin<a class="headerlink" href="#privatebin" title="Permanent link">&para;</a></h2>
 <p><a href="https://privatebin.info/">PrivateBin</a> is a minimalist self-hosted alternative to <a href="https://pastebin.com/">pastebin</a>.</p>
 <p>Install from the AUR with <code>yay</code>:</p>
@@ -246,7 +256,7 @@ opt[12] = true    ; PDO::ATTR_PERSISTENT
 <pre><code class="language-nginx">server {
     listen 80;
     root //usr/share/webapps/privatebin/;
-    server_name bin.yourdomain.com;
+    server_name bin.example.com;
     index index.php;
 
     if ($pastebin_badagent) {
@@ -526,7 +536,7 @@ systemctl start sonarr.service
 <h5 id="profiles_1">Profiles<a class="headerlink" href="#profiles_1" title="Permanent link">&para;</a></h5>
 <p>This is a bit different than with <a href="#radarr">Radarr</a>, the way it is configured is by setting &ldquo;Release profiles&rdquo;. I took the profiles from <a href="https://trash-guides.info/Sonarr/Sonarr-Release-Profile-RegEx/">TRaSH: WEB-DL Release profile regex</a>. The only possible change I&rsquo;ll do is disable the Low Quality Groups and/or the &ldquo;Golden rule&rdquo; filter (for <code>x265</code> encoded video).</p>
 <p>For me it ended up looking like this:</p>
-<figure id="__yafg-figure-4">
+<figure id="__yafg-figure-5">
 <img alt="Sonarr: Release profiles" src="https://static.luevano.xyz/images/b/sonarr/sonarr_release_profiles.png" title="Sonarr: Release profiles">
 <figcaption>Sonarr: Release profiles</figcaption>
 </figure>
@@ -571,12 +581,12 @@ systemctl start sonarr.service
 <p>Once you click on &ldquo;Add X&rdquo; it will add it to the <em>Series</em> section and will start as monitored. So far I haven&rsquo;t noticed that it immediately starts downloading (because of the &ldquo;Start search for missing episodes&rdquo; setting) but I always click on unmonitor the series, so I can manually check (again, due to the low quality of my indexers).</p>
 <p>When it automatically starts to download an episode/season it will send it to qBitTorrent and you can monitor it over there. Else you can also monitor at <em>Activity -&gt; Queue</em>. Same thing goes if you download manually each episode/season via the interactive search.</p>
 <p>To interactively search episodes/seasons go to <em>Series</em> and then click on any series, then click either on the interactive search button for the episode or the season, it is an icon of a person as shown below:</p>
-<figure id="__yafg-figure-5">
+<figure id="__yafg-figure-6">
 <img alt="Sonarr: Interactive search button" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_button.png" title="Sonarr: Interactive search button">
 <figcaption>Sonarr: Interactive search button</figcaption>
 </figure>
 <p>Then it will bring a window with the search results, where it shows the indexer it got the result from, the size of the torrent, peers, language, quality, the score it received from the configured release profiles an alert in case that the torrent is &ldquo;bad&rdquo; and the download button to manually download the torrent you want. An example shown below:</p>
-<figure id="__yafg-figure-6">
+<figure id="__yafg-figure-7">
 <img alt="Sonarr: Interactive search results" src="https://static.luevano.xyz/images/b/sonarr/sonarr_interactive_search_results.png" title="Sonarr: Interactive search results">
 <figcaption>Sonarr: Interactive search results</figcaption>
 </figure>
@@ -671,12 +681,12 @@ systemctl start jellyfin.service
 <p>The initial setup wizard makes you create an user (will be the admin for now) and at least one library, though these can be done later. For more check <a href="https://jellyfin.org/docs/general/quick-start/">Jellyfin: Quick start</a>.</p>
 <p>Remember to use the configured directory as mentioned in <a href="https://blog.luevano.xyz/a/torrenting_with_qbittorrent.html#directory-structure">Directory structure</a>. Any other configuration (like adding users or libraries) can be done at the dashboard: click on the 3 horizontal lines on the top left of the Web UI then navigate to <em>Administration -&gt; Dashboard</em>. I didn&rsquo;t configure much other than adding a couple of users for me and friends, I wouldn&rsquo;t recommend using the admin account to watch (personal preference).</p>
 <p>Once there is at least one library it will show at <em>Home</em> along with the latest movies (if any) similar to the following (don&rsquo;t judge, these are just the latest I added due to friend&rsquo;s requests):</p>
-<figure id="__yafg-figure-7">
+<figure id="__yafg-figure-8">
 <img alt="Jellyfin: Home libraries" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_home_libraries.png" title="Jellyfin: Home libraries">
 <figcaption>Jellyfin: Home libraries</figcaption>
 </figure>
 <p>And inside the &ldquo;Movies&rdquo; library you can see the whole catalog where you can filter or just scroll as well as seeing <em>Suggestions</em> (I think this starts getting populated after a while) and <em>Genres</em>:</p>
-<figure id="__yafg-figure-8">
+<figure id="__yafg-figure-9">
 <img alt="Jellyfin: Library catalog options" src="https://static.luevano.xyz/images/b/jellyfin/jellyfin_library_catalog_options.png" title="Jellyfin: Library catalog options">
 <figcaption>Jellyfin: Library catalog options</figcaption>
 </figure>
@@ -982,7 +992,7 @@ systemctl start jackett.service
 <h4 id="indexers">Indexers<a class="headerlink" href="#indexers" title="Permanent link">&para;</a></h4>
 <p>For Jackett, an indexer is just a configured tracker for some of the commonly known torrent sites. Jackett comes with a lot of pre-configured public and private indexers which usually have multiple URLs (mirrors) per indexer, useful when the main torrent site is down. Some indexers come with extra features/configuration depending on what the site specializes on.</p>
 <p>To add an indexer click on the &ldquo;+ Add Indexer&rdquo; at the top of the Web UI and look for indexers you want, then click on the &ldquo;+&rdquo; icon on the far-most right for each indexer or select the ones you want (clicking on the checkbox on the far-most left of the indexer) and scroll all the way to the bottom to click on &ldquo;Add Selected&rdquo;. They then will show as a list with some available actions such as &ldquo;Copy RSS Feed&rdquo;, &ldquo;Copy Torznab Feed&rdquo;, &ldquo;Copy Potato Feed&rdquo;, a button to search, configure, delete and test the indexer, as shown below:</p>
-<figure id="__yafg-figure-1">
+<figure id="__yafg-figure-2">
 <img alt="Jacket: configured indexers" src="https://static.luevano.xyz/images/b/jack/jack_configured_indexers.png" title="Jackett: configured indexers">
 <figcaption>Jackett: configured indexers</figcaption>
 </figure>
@@ -1654,7 +1664,7 @@ default:other::r-x
 <p>Other than that I used few key sprites from <a href="https://vryell.itch.io/">vryell</a>: <a href="https://vryell.itch.io/controller-keyboard-icons">Controller &amp; Keyboard Icons</a> and a font from <a href="https://datagoblin.itch.io/">datagoblin</a>: <a href="https://datagoblin.itch.io/monogram">Monogram</a>.</p>
 <h2 id="the-snake">The snake<a class="headerlink" href="#the-snake" title="Permanent link">&para;</a></h2>
 <p>This is the most challenging part in my opinion as making all the body parts follow the head in a user defined path it&rsquo;s kinda hard. I tried with like 4-5 options and the one I&rsquo;m detailing here is the only one that worked as I wanted for me. This time the directory structure I&rsquo;m using is the following:</p>
-<figure id="__yafg-figure-38">
+<figure id="__yafg-figure-39">
 <img alt="FileSystem - Snake dir structure" src="https://static.luevano.xyz/images/g/gogodot_jam3/file_system_snake_dir_structure.png" title="FileSystem - Snake dir structure">
 <figcaption>FileSystem - Snake dir structure</figcaption>
 </figure>
@@ -1688,7 +1698,7 @@ func _rotate_to(direction: int) -&gt; void:
     _direction = _direction.rotated(deg2rad(direction * Global.SNAKE_ROT_SPEED * get_physics_process_delta_time()))
 </code></pre>
 <p>After tunning all the necessary parameters you should get something like this:</p>
-<figure id="__yafg-figure-39">
+<figure id="__yafg-figure-40">
 <img alt="Snake - Basic movement (left and right controls)" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement.gif" title="Snake - Basic movement (left and right controls)">
 <figcaption>Snake - Basic movement (left and right controls)</figcaption>
 </figure>
@@ -1725,7 +1735,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
     update()
 </code></pre>
 <p>With this, we&rsquo;re now populating the <em>Path2D</em> curve points with the position of the snake head. You should be able to see it because of the <code>_draw</code> call. If you run it you should see something like this:</p>
-<figure id="__yafg-figure-40">
+<figure id="__yafg-figure-41">
 <img alt="Snake - Basic movement with path" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_path.gif" title="Snake - Basic movement with path">
 <figcaption>Snake - Basic movement with path</figcaption>
 </figure>
@@ -1769,7 +1779,7 @@ func _on_Head_snake_path_new_point(coordinates: Vector2) -&gt; void:
         _add_initial_segment(TAIL_SEGMENT_NP)
 </code></pre>
 <p>Select the <em>Snake</em> node and add the <em>Body</em> and <em>Tail</em> scene to the parameters, respectively. Then when running you should see something like this:</p>
-<figure id="__yafg-figure-41">
+<figure id="__yafg-figure-42">
 <img alt="Snake - Basic movement with all body parts" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_added_body_parts.gif" title="Snake - Basic movement with all body parts">
 <figcaption>Snake - Basic movement with all body parts</figcaption>
 </figure>
@@ -1812,7 +1822,7 @@ func _add_segment_to_queue() -&gt; void:
         body_segment_queue.append(body_segment_queue.back() + Global.SNAKE_SEGMENT_SIZE)
 </code></pre>
 <p>With everything implemented and connected accordingly then we can add segments on demand (for testing I&rsquo;m adding with a key press), it should look like this:</p>
-<figure id="__yafg-figure-42">
+<figure id="__yafg-figure-43">
 <img alt="Snake - Basic movement with dynamic addition of new segments" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_basic_movement_with_dynamic_segments.gif" title="Snake - Basic movement with dynamic addition of new segments">
 <figcaption>Snake - Basic movement with dynamic addition of new segments</figcaption>
 </figure>
@@ -1875,21 +1885,21 @@ func _on_body_entered(body: Node) -&gt; void:
     add_child(food)
 </code></pre>
 <p>And this is used in <code>_process</code> to place new food whenever needed. For now I added a condition to add food until 10 pieces are in place, and keep adding whenever the food is is lower than 10. After setting everything up, this is the result:</p>
-<figure id="__yafg-figure-43">
+<figure id="__yafg-figure-44">
 <img alt="Snake - Food basic interaction" src="https://static.luevano.xyz/images/g/gogodot_jam3/snake_food_basic_interaction.gif" title="Snake - Food basic interaction">
 <figcaption>Snake - Food basic interaction</figcaption>
 </figure>
 <h2 id="za-warudo-the-world">Za warudo! (The world)<a class="headerlink" href="#za-warudo-the-world" title="Permanent link">&para;</a></h2>
 <p>It just happend that I saw a video to create random maps by using a method called <a href="https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm">random walks</a>, this video was made by <a href="https://www.youtube.com/c/NADLABS">NAD LABS</a>: <a href="https://www.youtube.com/watch?v=ppP2Doq3p7s">Nuclear Throne Like Map Generation In Godot</a>. It&rsquo;s a pretty simple but powerful script, he provided the source code from which I based my random walker, just tweaked a few things and added others. Some of the maps than can be generated with this method (already aded some random sprites):</p>
-<figure id="__yafg-figure-44">
+<figure id="__yafg-figure-45">
 <img alt="World map generator - Random map 1" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_1.png" title="World map generator - Random map 1">
 <figcaption>World map generator - Random map 1</figcaption>
 </figure>
-<figure id="__yafg-figure-45">
+<figure id="__yafg-figure-46">
 <img alt="World map generator - Random map 2" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_2.png" title="World map generator - Random map 2">
 <figcaption>World map generator - Random map 2</figcaption>
 </figure>
-<figure id="__yafg-figure-46">
+<figure id="__yafg-figure-47">
 <img alt="World map generator - Random map 3" src="https://static.luevano.xyz/images/g/gogodot_jam3/world_generator_3.png" title="World map generator - Random map 3">
 <figcaption>World map generator - Random map 3</figcaption>
 </figure>
@@ -2312,35 +2322,35 @@ func physics_process(delta: float) -&gt; void:
 <h3 id="config">Config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h3>
 <h4 id="default-import-settings">Default import settings<a class="headerlink" href="#default-import-settings" title="Permanent link">&para;</a></h4>
 <p>Since this is just pixel art, the importing settings for textures needs to be adjusted so the sprites don&rsquo;t look blurry. Go to <em>Project -&gt; Project settings&hellip; -&gt; Import defaults</em> and on the drop down select <code>Texture</code>, untick everything and make sure <em>Compress/Mode</em> is set to <code>Lossless</code>.</p>
-<figure id="__yafg-figure-10">
+<figure id="__yafg-figure-11">
 <img alt="Project settings - Import defaults - Texture settings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_import_texture.png" title="Project settings - Import defaults - Texture settings">
 <figcaption>Project settings - Import defaults - Texture settings</figcaption>
 </figure>
 <h4 id="general-settings">General settings<a class="headerlink" href="#general-settings" title="Permanent link">&para;</a></h4>
 <p>It&rsquo;s also a good idea to setup some config variables project-wide. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Application/config</em> and add a new property (there is a text box at the top of the project settings window) for game scale: <code>application/config/game_scale</code> for the type use <code>float</code> and then click on add; configure the new property to <code>3.0</code>; On the same window, also add <code>application/config/version</code> as a <code>string</code>, and make it <code>1.0.0</code> (or whatever number you want).</p>
-<figure id="__yafg-figure-11">
+<figure id="__yafg-figure-12">
 <img alt="Project settings - General - Game scale and version properties" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_config_properties.png" title="Project settings - General - Game scale and version properties">
 <figcaption>Project settings - General - Game scale and version properties</figcaption>
 </figure>
 <p>For my personal preferences, also disable some of the <em>GDScript</em> debug warnings that are annoying, this is done at <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Debug/GDScript</em> and toggle off <code>Unused arguments</code>, <code>Unused signal</code> and <code>Return value discarded</code>, and any other that might come up too often and don&rsquo;t want to see.</p>
-<figure id="__yafg-figure-12">
+<figure id="__yafg-figure-13">
 <img alt="Project settings - General - GDScript debug warnings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_debug_gdscript.png" title="Project settings - General - GDScript debug warnings">
 <figcaption>Project settings - General - GDScript debug warnings</figcaption>
 </figure>
 <p>Finally, set the initial window size in <em>Project -&gt; Project settings&hellip; -&gt; General</em>, select <em>Display/Window</em> and set <em>Size/Width</em> and <em>Size/Height</em> to <code>600</code> and <code>800</code>, respectively. As well as the <em>Stretch/Mode</em> to <code>viewport</code> , and <em>Stretch/Aspect</em> to <code>keep</code>:</p>
-<figure id="__yafg-figure-13">
+<figure id="__yafg-figure-14">
 <img alt="Project settings - General - Initial window size" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_window_settings.png" title="Project settings - General - Initial window size">
 <figcaption>Project settings - General - Initial window size</figcaption>
 </figure>
 <h4 id="keybindings">Keybindings<a class="headerlink" href="#keybindings" title="Permanent link">&para;</a></h4>
 <p>I only used 3 actions (keybindings): jump, restart and toggle_debug (optional). To add custom keybindings (so that the <code>Input.something()</code> API can be used), go to <em>Project -&gt; Project settings&hellip; -&gt; Input Map</em> and on the text box write <code>jump</code> and click add, then it will be added to the list and it&rsquo;s just a matter of clicking the <code>+</code> sign to add a <em>Physical key</em>, press any key you want to be used to jump and click ok. Do the same for the rest of the actions.</p>
-<figure id="__yafg-figure-14">
+<figure id="__yafg-figure-15">
 <img alt="Project settings - Input Map - Adding necessary keybindings" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_input_map.png" title="Project settings - Input Map - Adding necessary keybindings">
 <figcaption>Project settings - Input Map - Adding necessary keybindings</figcaption>
 </figure>
 <h4 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h4>
 <p>Finally, rename the physics layers so we don&rsquo;t lose track of which layer is which. Go to <em>Project -&gt; Layer Names -&gt; 2d Physics</em> and change the first 5 layer names to (in order): <code>player</code>, <code>ground</code>, <code>pipe</code>, <code>ceiling</code> and <code>score</code>.</p>
-<figure id="__yafg-figure-15">
+<figure id="__yafg-figure-16">
 <img alt="Project settings - Layer Names - 2D Physics" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_layer_names_2d_physics.png" title="Project settings - Layer Names - 2D Physics">
 <figcaption>Project settings - Layer Names - 2D Physics</figcaption>
 </figure>
@@ -2349,12 +2359,12 @@ func physics_process(delta: float) -&gt; void:
 <h3 id="importing">Importing<a class="headerlink" href="#importing" title="Permanent link">&para;</a></h3>
 <p>Create the necessary directories to hold the respective assets and it&rsquo;s just a matter of dragging and dropping, I used directories: <code>res://entities/actors/player/sprites/</code>, <code>res://fonts/</code>, <code>res://levels/world/background/sprites/</code>, <code>res://levels/world/ground/sprites/</code>, <code>res://levels/world/pipe/sprites/</code>, <code>res://sfx/</code>. For the player sprites, the 
 <em>FileSystem</em> window looks like this (<code>entities/actor</code> directories are really not necessary):</p>
-<figure id="__yafg-figure-16">
+<figure id="__yafg-figure-17">
 <img alt="FileSystem - Player sprite imports" src="https://static.luevano.xyz/images/g/flappybird_godot/player_sprite_imports.png" title="FileSystem - Player sprite imports">
 <figcaption>FileSystem - Player sprite imports</figcaption>
 </figure>
 <p>It should look similar for other directories, except maybe for the file extensions. For example, for the sfx:</p>
-<figure id="__yafg-figure-17">
+<figure id="__yafg-figure-18">
 <img alt="FileSystem - SFX imports" src="https://static.luevano.xyz/images/g/flappybird_godot/sfx_imports.png" title="FileSystem - SFX imports">
 <figcaption>FileSystem - SFX imports</figcaption>
 </figure>
@@ -2362,72 +2372,72 @@ func physics_process(delta: float) -&gt; void:
 <p>Now it&rsquo;s time to actually create the game, by creating the basic scenes that will make up the game. The hardest part and the most confusing is going to be the <em>TileMaps</em>, so that goes first.</p>
 <h3 id="tilemaps">TileMaps<a class="headerlink" href="#tilemaps" title="Permanent link">&para;</a></h3>
 <p>I&rsquo;m using a scene called <code>WorldTiles</code> with a <em>Node2D</em> node as root called the same. With 2 different <em>TileMap</em> nodes as children named <code>GroundTileMap</code> and <code>PipeTileMap</code> (these are their own scene); yes 2 different <em>TileMaps</em> because we need 2 different physics colliders (in <em>Godot 4.0</em> you can have a single <em>TileMap</em> with different physics colliders in it). Each node has its own script. It should look something like this:</p>
-<figure id="__yafg-figure-18">
+<figure id="__yafg-figure-19">
 <img alt="Scene - WorldTiles (TileMaps)" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_world_tiles.png" title="Scene - WorldTiles (TileMaps)">
 <figcaption>Scene - WorldTiles (TileMaps)</figcaption>
 </figure>
 <p>I used the following directory structure:</p>
-<figure id="__yafg-figure-19">
+<figure id="__yafg-figure-20">
 <img alt="Scene - WorldTiles - Directory structure" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_world_tiles_directory_structure.png" title="Scene - WorldTiles - Directory structure">
 <figcaption>Scene - WorldTiles - Directory structure</figcaption>
 </figure>
 <p>To configure the <code>GroundTileMap</code>, select the node and click on <code>(empty)</code> on the <em>TileMap/Tile set</em> property and then click on <code>New TileSet</code>, then click where the <code>(empty)</code> used to be, a new window should open on the bottom:</p>
-<figure id="__yafg-figure-20">
+<figure id="__yafg-figure-21">
 <img alt="TileSet - Configuration window" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_config_window.png" title="TileSet - Configuration window">
 <figcaption>TileSet - Configuration window</figcaption>
 </figure>
 <p>Click on the plus on the bottom left and you can now select the specific tile set to use. Now click on the yellow <code>+ New Single Tile</code>, activate the grid and select any of the tiles. Should look like this:</p>
-<figure id="__yafg-figure-21">
+<figure id="__yafg-figure-22">
 <img alt="TileSet - New single tile" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_new_single_tile.png" title="TileSet - New single tile">
 <figcaption>TileSet - New single tile</figcaption>
 </figure>
 <p>We need to do this because for some reason we can&rsquo;t change the snap options before selecting a tile. After selecting a random tile, set up the <em>Snap Options/Step</em> (in the <em>Inspector</em>) and set it to <code>16x16</code> (or if using a different tile set, to it&rsquo;s tile size):</p>
-<figure id="__yafg-figure-22">
+<figure id="__yafg-figure-23">
 <img alt="TileSet - Tile - Step snap options" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_tile_step_snap_options.png" title="TileSet - Tile - Step snap options">
 <figcaption>TileSet - Tile - Step snap options</figcaption>
 </figure>
 <p>Now you can select the actual single tile. Once selected click on <code>Collision</code>, use the rectangle tool and draw the rectangle corresponding to that tile&rsquo;s collision:</p>
-<figure id="__yafg-figure-23">
+<figure id="__yafg-figure-24">
 <img alt="TileSet - Tile - Selection and collision" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_tile_selection_collision.png" title="TileSet - Tile - Selection and collision">
 <figcaption>TileSet - Tile - Selection and collision</figcaption>
 </figure>
 <p>Do the same for the other 3 tiles. If you select the <em>TileMap</em> itself again, it should look like this on the right (on default layout it&rsquo;s on the left of the <em>Inspector</em>):</p>
-<figure id="__yafg-figure-24">
+<figure id="__yafg-figure-25">
 <img alt="TileSet - Available tiles" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_available_tiles.png" title="TileSet - Available tiles">
 <figcaption>TileSet - Available tiles</figcaption>
 </figure>
 <p>The ordering is important only for the &ldquo;underground tile&rdquo;, which is the filler ground, it should be at the end (index 3); if this is not the case, repeat the process (it&rsquo;s possible to rearrange them but it&rsquo;s hard to explain as it&rsquo;s pretty weird).</p>
 <p>At this point the tilemap doesn&rsquo;t have any physics and the cell size is wrong. Select the <code>GroundTileMap</code>, set the <em>TileMap/Cell/Size</em> to <code>16x16</code>, the <em>TileMap/Collision/Layer</em> set to <code>bit 2</code> only (ground layer) and disable any <em>TileMap/Collision/Mask</em> bits. Should look something like this:</p>
-<figure id="__yafg-figure-25">
+<figure id="__yafg-figure-26">
 <img alt="TileMap - Cell size and collision configuration" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_map_cell_collision_configuration.png" title="TileMap - Cell size and collision configuration">
 <figcaption>TileMap - Cell size and collision configuration</figcaption>
 </figure>
 <p>Now it&rsquo;s just a matter of repeating the same for the pipes (<code>PipeTileMap</code>), only difference is that when selecting the tiles you need to select 2 tiles, as the pipe is 2 tiles wide, or just set the <em>Snap Options/Step</em> to <code>32x16</code>, for example, just keep the cell size to <code>16x16</code>.</p>
 <h4 id="default-ground-tiles">Default ground tiles<a class="headerlink" href="#default-ground-tiles" title="Permanent link">&para;</a></h4>
 <p>I added few default ground tiles to the scene, just for testing purposes but I left them there. These could be place programatically, but I was too lazy to change things. On the <code>WorldTiles</code> scene, while selecting the <code>GroundTileMap</code>, you can select the tiles you want to paint with, and left click in the grid to paint with the selected tile. Need to place tiles from <code>(-8, 7)</code> to <code>(10, 7)</code> as well as the tile below with the filler ground (the tile position/coordinates show at the bottom left, refer to the image below):</p>
-<figure id="__yafg-figure-26">
+<figure id="__yafg-figure-27">
 <img alt="Scene - WorldTiles - Default ground tiles" src="https://static.luevano.xyz/images/g/flappybird_godot/world_tiles_default_tiles.png" title="Scene - WorldTiles - Default ground tiles">
 <figcaption>Scene - WorldTiles - Default ground tiles</figcaption>
 </figure>
 <h3 id="player">Player<a class="headerlink" href="#player" title="Permanent link">&para;</a></h3>
 <p>On a new scene called <code>Player</code> with a <em>KinematicBody2D</em> node named <code>Player</code> as the root of the scene, then for the children: <em>AnimatedSprite</em> as <code>Sprite</code>, <em>CollisionShape2D</em> as <code>Collision</code> (with a circle shape) and 3 <em>AudioStreamPlayers</em> for <code>JumpSound</code>, <code>DeadSound</code> and <code>HitSound</code>. Not sure if it&rsquo;s a good practice to have the audio here, since I did that at the end, pretty lazy. Then, attach a script to the <code>Player</code> node and then it should look like this:</p>
-<figure id="__yafg-figure-27">
+<figure id="__yafg-figure-28">
 <img alt="Scene - Player - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_node_setup.png" title="Scene - Player - Node setup">
 <figcaption>Scene - Player - Node setup</figcaption>
 </figure>
 <p>Select the <code>Player</code> node and set the <em>CollisionShape2D/Collision/Layer</em> to <code>1</code> and the <em>CollisionObject2D/Collision/Mask</em> to <code>2</code> and <code>3</code> (ground and pipe).</p>
 <p>For the <code>Sprite</code> node, when selecting it click on the <code>(empty)</code> for the <em>AnimatedSprite/Frames</em> property and click <code>New SpriteFrames</code>, click again where the <code>(empty)</code> used to be and ane window should open on the bottom:</p>
-<figure id="__yafg-figure-28">
+<figure id="__yafg-figure-29">
 <img alt="Scene - Player - SpriteFrames window" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_spriteframes_window.png" title="Scene - Player - SpriteFrames window">
 <figcaption>Scene - Player - SpriteFrames window</figcaption>
 </figure>
 <p>Right off the bat, set the <code>Speed</code> to <code>10 FPS</code> (bottom left) and rename <code>default</code> to <code>bird_1</code>. With the <code>bird_1</code> selected, click on the <code>Add frames from a Sprite Sheet</code>, which is the second button under <code>Animation Frames:</code> which looks has an icon of a small grid (next to the folder icon), a new window will popup where you need to select the respective sprite sheet to use and configure it for importing. On the <code>Select Frames</code> window, change the <code>Vertical</code> to <code>1</code>, and then select all 4 frames (<em>Ctrl + Scroll</em> wheel to zoom in):</p>
-<figure id="__yafg-figure-29">
+<figure id="__yafg-figure-30">
 <img alt="Scene - Player - Sprite sheet importer" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_sprite_sheet_importer.png" title="Scene - Player - Sprite sheet importer">
 <figcaption>Scene - Player - Sprite sheet importer</figcaption>
 </figure>
 <p>After that, the <em>SpriteFrames</em> window should look like this:</p>
-<figure id="__yafg-figure-30">
+<figure id="__yafg-figure-31">
 <img alt="Scene - Player - SpriteFrames window with sprite sheet configured" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_player_spriteframes_window_with_sprite_sheet.png" title="Scene - Player - SpriteFrames window with sprite sheet configured">
 <figcaption>Scene - Player - SpriteFrames window with sprite sheet configured</figcaption>
 </figure>
@@ -2446,12 +2456,12 @@ func physics_process(delta: float) -&gt; void:
 </ul>
 <h3 id="game">Game<a class="headerlink" href="#game" title="Permanent link">&para;</a></h3>
 <p>This is the actual <code>Game</code> scene that holds all the playable stuff, here we will drop in all the previous scenes; the root node is a <em>Node2D</em> and also has an attached script. Also need to add 2 additional <em>AudioStreamPlayers</em> for the &ldquo;start&rdquo; and &ldquo;score&rdquo; sounds, as well as a <em>Sprite</em> for the background (<em>Sprite/Offset/Offset</em> set to <code>(0, 10)</code>) and a <em>Camera2D</em> (<em>Camera2D/Current</em> set to true (checked)). It should look something like this:</p>
-<figure id="__yafg-figure-31">
+<figure id="__yafg-figure-32">
 <img alt="Scene - Game - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_game_node_setup.png" title="Scene - Game - Node setup">
 <figcaption>Scene - Game - Node setup</figcaption>
 </figure>
 <p>The scene viewport should look something like the following:</p>
-<figure id="__yafg-figure-32">
+<figure id="__yafg-figure-33">
 <img alt="Scene - Game - Viewport" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_game_viewport.png" title="Scene - Game - Viewport">
 <figcaption>Scene - Game - Viewport</figcaption>
 </figure>
@@ -2459,12 +2469,12 @@ func physics_process(delta: float) -&gt; void:
 <h4 id="fonts">Fonts<a class="headerlink" href="#fonts" title="Permanent link">&para;</a></h4>
 <p>We need some font <code>Resources</code> to style the <em>Label</em> fonts. Under the <em>FileSystem</em> window, right click on the fonts directory (create one if needed) and click on <code>New Resource...</code> and select <em>DynamicFontData</em>, save it in the &ldquo;fonts&rdquo; directory as <code>SilverDynamicFontData.tres</code> (<code>Silver</code> as it is the font I&rsquo;m using) then double click the just created resource and set the <em>DynamicFontData/Font Path</em> to the actual <code>Silver.ttf</code> font (or whatever you want).</p>
 <p>Then create a new resource and this time select <em>DynamicFont</em>, name it <code>SilverDynamicFont.tres</code>, then double click to edit and add the <code>SilverDynamicFontData.tres</code> to the <em>DynamicFont/Font/Font Data</em> property (and I personally toggled off the <em>DynamicFont/Font/Antialiased</em> property), now just set the <em>DynamicFont/Settings/(Size, Outline Size, Outline Color)</em> to <code>32</code>, <code>1</code> and <code>black</code>, respectively (or any other values you want). It should look something like this:</p>
-<figure id="__yafg-figure-33">
+<figure id="__yafg-figure-34">
 <img alt="Resource - DynamicFont - Default font" src="https://static.luevano.xyz/images/g/flappybird_godot/resource_dynamic_font.png" title="Resource - DynamicFont - Default font">
 <figcaption>Resource - DynamicFont - Default font</figcaption>
 </figure>
 <p>Do the same for another <em>DynamicFont</em> which will be used for the score label, named <code>SilverScoreDynamicFont.tres</code>. Only changes are <em>Dynamic/Settings/(Size, Outline Size)</em> which are set to <code>128</code> and <code>2</code>, respectively. The final files for the fonts should look something like this:</p>
-<figure id="__yafg-figure-34">
+<figure id="__yafg-figure-35">
 <img alt="Resource - Dynamicfont - Directory structure" src="https://static.luevano.xyz/images/g/flappybird_godot/resource_dynamic_font_directory_structure.png" title="Resource - Dynamicfont - Directory structure">
 <figcaption>Resource - Dynamicfont - Directory structure</figcaption>
 </figure>
@@ -2493,7 +2503,7 @@ func physics_process(delta: float) -&gt; void:
 </li>
 </ul>
 <p>The scene ends up looking like this:</p>
-<figure id="__yafg-figure-35">
+<figure id="__yafg-figure-36">
 <img alt="Scene - UI - Node setup" src="https://static.luevano.xyz/images/g/flappybird_godot/scene_ui.png" title="Scene - UI - Node setup">
 <figcaption>Scene - UI - Node setup</figcaption>
 </figure>
@@ -2627,7 +2637,7 @@ func _remove_first_ground() -&gt; void:
 <p>Where you might notice that the <code>_initial_new_tile_x</code> is <code>11</code>, instead of <code>10</code>, refer to <a href="#default-ground-tiles">Default ground tiles</a> where we placed tiles from <code>-8</code> to <code>10</code>, so the next empty one is <code>11</code>. These <code>_place_new_ground</code> and <code>_remove_first_ground</code> functions are called upon receiving the signal.</p>
 <h4 id="pipetilemap">PipeTileMap<a class="headerlink" href="#pipetilemap" title="Permanent link">&para;</a></h4>
 <p>This is really similar to the <code>GroundTileMap</code> code, instead of defining an <code>enum</code> for the ground tiles, we define it for the pipe patterns (because each pipe is composed of multiple pipe tiles). If your pipe tile set looks like this (notice the index):</p>
-<figure id="__yafg-figure-36">
+<figure id="__yafg-figure-37">
 <img alt="PipeTileMap - Tile set indexes" src="https://static.luevano.xyz/images/g/flappybird_godot/tile_set_pipes_indexes.png" title="PipeTileMap - Tile set indexes">
 <figcaption>PipeTileMap - Tile set indexes</figcaption>
 </figure>
@@ -2729,7 +2739,7 @@ func get_high_score() -&gt; int:
         save_data()
 </code></pre>
 <p>Now, this script in particular will need to be a <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html">Singleton (AutoLoad)</a>, which means that there will be only one instance and will be available across all scripts. To do so, go to <em>Project -&gt; Project settings&hellip; -&gt; AutoLoad</em> and select this script in the <code>Path:</code> and add a <code>Node Name:</code> (I used <code>SavedData</code>, if you use something else, be careful while following this devlog) which will be the name we&rsquo;ll use to access the singleton. Toggle on <code>Enable</code> if needed, it should look like this:</p>
-<figure id="__yafg-figure-37">
+<figure id="__yafg-figure-38">
 <img alt="Project settings - AutoLoad - SavedData singleton" src="https://static.luevano.xyz/images/g/flappybird_godot/project_settings_autoload_saved_data.png" title="Project settings - AutoLoad - SavedData singleton">
 <figcaption>Project settings - AutoLoad - SavedData singleton</figcaption>
 </figure>
@@ -4505,7 +4515,7 @@ systemctl enable spamassassin.service
 <li>Password: your <code>user</code> password (as in the password you use to login to the server with that user)</li>
 </ul>
 <p>All that&rsquo;s left to do is test your mail server for spoofing, and to see if everything is setup correctly. Go to <a href="https://www.appmaildev.com/en/dkim">DKIM Test</a> and follow the instructions (basically click next, and send an email with whatever content to the email that they provide). After you send the email, you should see something like:</p>
-<figure id="__yafg-figure-9">
+<figure id="__yafg-figure-10">
 <img alt="DKIM Test successful" src="https://static.luevano.xyz/images/b/mail/dkim_test_successful.png" title="DKIM Test successful">
 <figcaption>DKIM Test successful</figcaption>
 </figure>]]></content:encoded>
@@ -4554,7 +4564,7 @@ systemctl enable nginx.service
 systemctl start nginx.service
 </code></pre>
 <p>And that&rsquo;s it, at this point you can already look at the default initial page of Nginx if you enter the IP of your server in a web browser. You should see something like this:</p>
-<figure id="__yafg-figure-2">
+<figure id="__yafg-figure-3">
 <img alt="Nginx welcome page" src="https://static.luevano.xyz/images/b/nginx/nginx_welcome_page.png" title="Nginx welcome page">
 <figcaption>Nginx welcome page</figcaption>
 </figure>
@@ -4621,7 +4631,7 @@ cd sites-available
 systemctl restart nginx
 </code></pre>
 <p>If everything goes correctly, you can now go to your website by typing <code>domain.name</code> on a web browser. But you will see a &ldquo;404 Not Found&rdquo; page like the following (maybe with different Nginx version):</p>
-<figure id="__yafg-figure-3">
+<figure id="__yafg-figure-4">
 <img alt="Nginx 404 Not Found page" src="https://static.luevano.xyz/images/b/nginx/nginx_404_page.png" title="Nginx 404 Not Found page">
 <figcaption>Nginx 404 Not Found page</figcaption>
 </figure>
