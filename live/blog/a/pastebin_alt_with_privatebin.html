@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html class="theme-dark" lang="en
+"
+  prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
+<title>Set up a pastebin alternative with PrivateBin and YOURLS -- Luévano's Blog</title>
+  <meta name="description" content="How to set up a pastebin alternative with PrivateBin and YOURLS as shortener, on Arch."/>
+<link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
+    <!-- general style -->
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/fork-awesome/css/fork-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/font-awesome/css/all.min.css">
+    <!-- theme related -->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/theme.js"></script>
+    <link id="theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/theme.css">
+    <!-- misc functions-->
+    <script type="text/javascript" src="https://static.luevano.xyz/scripts/return_top.js"></script>
+    <!-- extra -->
+    <!-- highlight support for code blocks -->
+<script type="text/javascript" src="https://static.luevano.xyz/hl/highlight.min.js"></script>
+<script type="text/javascript">
+  hljs.initHighlightingOnLoad();
+</script>
+<link id="code-theme-css" rel="stylesheet" type="text/css" href="https://static.luevano.xyz/hl/styles/nord.min.css">
+
+
+
+
+
+
+    <!-- og meta -->
+  <meta property="og:title" content="Set up a pastebin alternative with PrivateBin and YOURLS -- Luévano's Blog"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:url" content="https://blog.luevano.xyz/a/pastebin_alt_with_privatebin.md"/>
+  <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
+  <meta property="og:description" content="How to set up a pastebin alternative with PrivateBin and YOURLS as shortener, on Arch."/>
+  <meta property="og:locale" content="en"/>
+  <meta property="og:site_name" content="Luévano's Blog"/>
+  </head>
+
+  <body>
+    <header>
+<nav>
+  <ul>
+    <li>
+      <a href="https://luevano.xyz/"><i class="fas fa-home" alt="Home"></i><span>Home</span></a>
+    </li>
+
+    <li>
+      <a href="https://blog.luevano.xyz/"><i class="fas fa-book-open" alt="Blog"></i><span>Blog</span></a>
+    </li>
+
+    <li>
+      <a href="https://art.luevano.xyz/"><i class="fas fa-paint-brush" alt="Art"></i><span>Art</span></a>
+    </li>
+
+    <li><i class="fab fa-git" alt="Git"></i><span>Git</span>
+      <ul>
+        <li><a href="https://git.luevano.xyz/" target="_blank"><i class="fab fa-git-alt" alt="Git-alt"></i></a></li>
+
+        <li><a href="https://github.com/luevano" target="_blank"><i class="fab fa-github" alt="Github"></i></a></li>
+
+        <li><a href="https://gitlab.com/dluevano" target="_blank"><i class="fab fa-gitlab" alt="Gitlab"></i></a></li>
+      </ul>
+    </li>
+
+    <li><i class="fas fa-box-open" alt="Stuff"></i><span>Stuff</span>
+      <ul>
+        <li><a href="https://gb.luevano.xyz/"><i class="fas fa-gamepad" alt="Gameboy"></i><span>Gameboy</span></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<button class="theme-switcher" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+
+    </header>
+
+    <main>
+      <div class="return-top">
+        <button class="return-top" onclick="returnTop()" id="returnTopButton">
+        <i class="fas fa-arrow-up" alt="Return to top"></i>
+        </button>
+      </div>
+  <h1>Set up a pastebin alternative with PrivateBin and YOURLS</h1>
+
+  <p>I learned about PrivateBin a few weeks back and ever since I&rsquo;ve been looking into installing it, along with a URL shortener (a service I wanted to self host since forever). It took me a while as I ran into some problems while experimenting and documenting all the necessary bits in here.</p>
+<p>My setup is exposed to the public, and as always is heavily based on previous entries as described in <a href="#prerequisites">Prerequisites</a>. Descriptions on setting up MariaDB (preferred MySQL replacement for Arch) and PHP are written in this entry as this is the first time I&rsquo;ve needed them.</p>
+<p>Everything here is performed in <mark>arch btw</mark> and all commands should be run as root unless stated otherwise.</p>
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#mariadb">MariaDB</a><ul>
+<li><a href="#create-usersdatabases">Create users/databases</a></li>
+</ul>
+</li>
+<li><a href="#php">PHP</a><ul>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#nginx">Nginx</a></li>
+</ul>
+</li>
+<li><a href="#yourls">YOURLS</a><ul>
+<li><a href="#configuration_1">Configuration</a></li>
+<li><a href="#nginx_1">Nginx</a><ul>
+<li><a href="#ssl-certificate">SSL certificate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#privatebin">PrivateBin</a><ul>
+<li><a href="#configuration_2">Configuration</a><ul>
+<li><a href="#yourls-integration">YOURLS integration</a></li>
+</ul>
+</li>
+<li><a href="#nginx_2">Nginx</a><ul>
+<li><a href="#ssl-certificate_1">SSL certificate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>If you want to expose to a (sub)domain, then similar to my early <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a> entries (specially the <a href="https://blog.luevano.xyz/a/website_with_nginx.html">website</a> for the reverse proxy plus certificates):</p>
+<ul>
+<li><code>nginx</code> for the reverse proxy.</li>
+<li><code>certbot</code> for the SSL certificates.</li>
+<li><code>yay</code> to install AUR packages.<ul>
+<li>I briefly mention how to install and use it on <a href="https://blog.luevano.xyz/a/manga_server_with_komga.html#yay">Manga server with Komga: yay</a>.</li>
+</ul>
+</li>
+<li>An <strong>A</strong> (and/or <strong>AAAA</strong>) or a <strong>CNAME</strong> for <code>privatebin</code> and <code>yourls</code> (or whatever you want to call them).</li>
+</ul>
+<h2 id="mariadb">MariaDB<a class="headerlink" href="#mariadb" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/MariaDB">MariaDB</a> is a drop-in replacement of <a href="https://wiki.archlinux.org/title/MySQL">MySQL</a>.</p>
+<p>Install the <code>mariadb</code> package:</p>
+<pre><code class="language-sh">pacman -S mariadb
+</code></pre>
+<p>Before starting/enabling the systemd service run:</p>
+<pre><code class="language-sh">mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+</code></pre>
+<p><code>start</code>/<code>enable</code> the <code>mariadb.service</code>:</p>
+<pre><code class="language-sh">systemctl start mariadb.service
+systemctl enable mariadb.service
+</code></pre>
+<p>Run and follow the secure installation script before proceding any further:</p>
+<pre><code class="language-sh">mariadb-secure-installation
+</code></pre>
+<p>Change the binding address so the service listens on <code>localhost</code> only by modifying <code>/etc/my.cnf.d/server.cnf</code>:</p>
+<pre><code class="language-ini">[mariadb]
+bind-address = localhost
+</code></pre>
+<h3 id="create-usersdatabases">Create users/databases<a class="headerlink" href="#create-usersdatabases" title="Permanent link">&para;</a></h3>
+<p>To use <code>mariadb</code> simply run the command and it will try to login with the corresponding linux user running it. The general login command is:</p>
+<pre><code class="language-sh">mariadb -u &lt;username&gt; -p &lt;database_name&gt;
+</code></pre>
+<p>The <code>database_name</code> is optional. It will prompt a password input field.</p>
+<p>Using <code>mariadb</code> as root, create users with their respective database if needed with the following queries:</p>
+<pre><code class="language-sql">MariaDB&gt; CREATE USER '&lt;username&gt;'@'localhost' IDENTIFIED BY '&lt;password&gt;';
+MariaDB&gt; CREATE DATABASE &lt;database_name&gt;;
+MariaDB&gt; GRANT ALL PRIVILEGES ON &lt;database_name&gt;.* TO '&lt;username&gt;'@'localhost';
+MariaDB&gt; quit
+</code></pre>
+<p>The <code>database_name</code> will depend on how YOURLS and PrivateBin are configured, that is if the services use a separate database and/or table prefixes are used.</p>
+<h2 id="php">PHP<a class="headerlink" href="#php" title="Permanent link">&para;</a></h2>
+<p><a href="https://wiki.archlinux.org/title/PHP">PHP</a> is a general-purpose scripting language that is usually used for web development, which was supposed to be ass for a long time but it seems to be a misconseption from the <em>old times</em>.</p>
+<p>Install the <code>php</code>, <code>php-fpm</code>, <code>php-gd</code> packages:</p>
+<pre><code class="language-sh">pacman -S php php-fpm php-gd
+</code></pre>
+<p><code>start</code>/<code>enable</code> the <code>php-fpm.service</code>:</p>
+<pre><code class="language-sh">systemctl start php-fpm.service
+systemctl enable php-fpm.service
+</code></pre>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>Only showing changes needed, main config file is located at <code>/etc/php/php.ini</code>, or drop-in files can be placed at <code>/etc/php/conf.d/</code> instead.</p>
+<p>Set timezone (<a href="https://www.php.net/manual/en/timezones.php">list of timezones</a>):</p>
+<pre><code class="language-ini">date.timezone = Europe/Berlin
+</code></pre>
+<p>Enable the <code>gd</code> and <code>mysql</code> extensions:</p>
+<pre><code class="language-ini">extension=gd
+extension=pdo_mysql
+extension=mysqli
+</code></pre>
+<h3 id="nginx">Nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h3>
+<p>Create a PHP specific config that can be reusable at <code>/etc/nginx/php_fastcgi.conf</code>:</p>
+<pre><code class="language-nginx">location ~ \.php$ {
+    # required for yourls
+    add_header Access-Control-Allow-Origin $http_origin;
+
+    # 404
+    try_files $fastcgi_script_name =404;
+
+    # default fastcgi_params
+    include fastcgi_params;
+
+    # fastcgi settings
+    fastcgi_pass                        unix:/run/php-fpm/php-fpm.sock;
+    fastcgi_index                       index.php;
+    fastcgi_buffers                     8 16k;
+    fastcgi_buffer_size         32k;
+
+    # fastcgi params
+    fastcgi_param DOCUMENT_ROOT $realpath_root;
+    fastcgi_param SCRIPT_FILENAME       $realpath_root$fastcgi_script_name;
+    #fastcgi_param PHP_ADMIN_VALUE      &quot;open_basedir=$base/:/usr/lib/php/:/tmp/&quot;;
+}
+</code></pre>
+<p>This then can be imported by any <code>server</code> directive that needs it.</p>
+<h2 id="yourls">YOURLS<a class="headerlink" href="#yourls" title="Permanent link">&para;</a></h2>
+<p><a href="https://yourls.org/">YOURLS</a> is a self-hosted URL shortener that is supported by PrivateBin.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S yourls
+</code></pre>
+<p>Create a new user and database as described in <a href="#create-usersdatabases">MariaDB: Create users/databases</a>.</p>
+<h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h3>
+<p>The default configuration file is self explanatory, it is located at <code>/etc/webapps/yourls/config.php</code>.</p>
+<p>Set the user/database YOURLS will use and either create a cookie or get one from <a href="http://yourls.org/cookie">URL provided</a>. It is important to change the <code>$yours_user_passwords</code> variable, YOURLS will hash the passwords on login so it is not stored in plaintext. Password hashing can be disabled with:</p>
+<pre><code class="language-php">define( 'YOURLS_NO_HASH_PASSWORD', true );
+</code></pre>
+<p>I also changed the &ldquo;shortening method&rdquo; to <code>62</code> to include more characters:</p>
+<pre><code class="language-php">define( 'YOURLS_URL_CONVERT', 62 );
+</code></pre>
+<p>Lastly, the <code>$yourls_reserved_URL</code> variable will need more blacklisted words depending on the use-case. <code>YOURLS_SITE</code> needs to match whatever is set in <code>nginx</code>.</p>
+<h3 id="nginx_1">Nginx<a class="headerlink" href="#nginx_1" title="Permanent link">&para;</a></h3>
+<p>Create a <code>yourls.conf</code> at the usual <code>sites-&lt;available/enabled&gt;</code> path for <code>nginx</code>:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    root /usr/share/webapps/yourls/;
+    server_name short.yourdomain.com;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /yourls-loader.php$is_args$args;
+    }
+
+    include /etc/nginx/php_fastcgi.conf;
+}
+</code></pre>
+<p>Make sure the following header is included in the <code>php</code>&lsquo;s <code>nginx</code> location block described in <a href="#nginx">YOURLS: Nginx</a>:</p>
+<pre><code class="language-nginx">add_header Access-Control-Allow-Origin $http_origin;
+</code></pre>
+<h4 id="ssl-certificate">SSL certificate<a class="headerlink" href="#ssl-certificate" title="Permanent link">&para;</a></h4>
+<p>Create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>Restart the <code>nginx</code> service for changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+<h2 id="privatebin">PrivateBin<a class="headerlink" href="#privatebin" title="Permanent link">&para;</a></h2>
+<p><a href="https://privatebin.info/">PrivateBin</a> is a minimalist self-hosted alternative to <a href="https://pastebin.com/">pastebin</a>.</p>
+<p>Install from the AUR with <code>yay</code>:</p>
+<pre><code class="language-sh">yay -S privatebin
+</code></pre>
+<p>Create a new user and database as described in <a href="#create-usersdatabases">MariaDB: Create users/databases</a>.</p>
+<h3 id="configuration_2">Configuration<a class="headerlink" href="#configuration_2" title="Permanent link">&para;</a></h3>
+<p>This heavily depends on personal preference, all defaults are fine. Make a copy of the sample config template:</p>
+<pre><code class="language-sh">cp /etc/webapps/privatebin/conf.sample.php /etc/webapps/privatebin/conf.php
+</code></pre>
+<p>The most important changes needed are <code>basepath</code> according to the <code>privatebin</code> URL and the <code>[model]</code> and <code>[model_options]</code> to use MySQL instead of plain filesystem files:</p>
+<pre><code class="language-php">[model]
+; example of DB configuration for MySQL
+class = Database
+[model_options]
+dsn = &quot;mysql:host=localhost;dbname=privatebin;charset=UTF8&quot;
+tbl = &quot;privatebin_&quot;     ; table prefix
+usr = &quot;privatebin&quot;
+pwd = &quot;&lt;password&gt;&quot;
+opt[12] = true    ; PDO::ATTR_PERSISTENT
+</code></pre>
+<p>Any other <code>[model]</code> or <code>[model_options]</code> needs to be commented out (for example, the default filesystem setting).</p>
+<h4 id="yourls-integration">YOURLS integration<a class="headerlink" href="#yourls-integration" title="Permanent link">&para;</a></h4>
+<p>I recommend creating a separate user for <code>privatebin</code> in <code>yourls</code> by modifying the <code>$yours_user_passwords</code> variable in <code>yourls</code> config file. Then login with this user and get the <code>signature</code> from the &ldquo;Tools&rdquo; section in the admin page, for more: <a href="https://yourls.org/docs/guide/advanced/passwordless-api">YOURLS: Passwordless API</a>.</p>
+<p>For a &ldquo;private&rdquo; <code>yourls</code> installation (that needs username/pasword), set <code>urlshortener</code>:</p>
+<pre><code class="language-php">urlshortener = &quot;https://short.example.com/yourls-api.php?signature=xxxxxxxxxx&amp;action=shorturl&amp;format=json&amp;url=&quot;
+</code></pre>
+<p><mark>Note that this will expose the <code>signature</code> in the HTTP requests and anybody with the signature can use it to shorten external URLs.</mark></p>
+<h3 id="nginx_2">Nginx<a class="headerlink" href="#nginx_2" title="Permanent link">&para;</a></h3>
+<p>To deny access to some bots/crawlers, PrivateBin provides a sample <code>.htaccess</code>, which is used in Apache. We need an Nginx version, which I found <a href="https://gist.github.com/benediktg/948a70136e2104c8601da7d355061323">here</a>.</p>
+<p>Add the following at the beginning of the <code>http</code> block of the <code>/etc/nginx/nginx.conf</code> file:</p>
+<pre><code class="language-nginx">http {
+    map $http_user_agent $pastebin_badagent {
+        ~*bot 1;
+        ~*spider 1;
+        ~*crawl 1;
+        ~https?:// 1;
+        WhatsApp 1;
+        SkypeUriPreview 1;
+        facebookexternalhit 1;
+    }
+
+    #...
+}
+</code></pre>
+<p>Create a <code>privatebin.conf</code> at the usual <code>sites-&lt;available/enabled&gt;</code> path for <code>nginx</code>:</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    root //usr/share/webapps/privatebin/;
+    server_name bin.yourdomain.com;
+    index index.php;
+
+    if ($pastebin_badagent) {
+       return 403;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    include /etc/nginx/php_fastcgi.conf;
+}
+</code></pre>
+<h4 id="ssl-certificate_1">SSL certificate<a class="headerlink" href="#ssl-certificate_1" title="Permanent link">&para;</a></h4>
+<p>Create/extend the certificate by running:</p>
+<pre><code class="language-sh">certbot --nginx
+</code></pre>
+<p>Restart the <code>nginx</code> service for changes to take effect:</p>
+<pre><code class="language-sh">systemctl restart nginx.service
+</code></pre>
+
+  <div class="page-nav">
+
+    <span class="index">
+      <a href="https://blog.luevano.xyz" alt="Index">
+        <i class="fas fa-home" alt="Home"></i>
+        <span>Index</span>
+      </a>
+    </span>
+
+    <span class="previous">
+      <a href="https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html" alt="Previous">
+        <i class="fas fa-arrow-right" alt="Arrow right"></i>
+        <span>Previous</span>
+      </a>
+    </span>
+</div>
+
+
+  <hr>
+  <div class="article-info">
+    <p>By David Luévano</p>
+    <p>Created: Sun, Aug 20, 2023 @ 09:46 UTC</p>
+      <p>Modified: Sun, Aug 20, 2023 @ 09:56 UTC</p>
+    <div class="article-tags">
+  <p>Tags:
+<a href="https://blog.luevano.xyz/tag/@code.html">code</a>, <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@server.html">server</a>, <a href="https://blog.luevano.xyz/tag/@tools.html">tools</a>, <a href="https://blog.luevano.xyz/tag/@tutorial.html">tutorial</a>  </p>
+</div>
+
+  </div>
+    </main>
+
+    <footer>
+<span>
+  <i class="fas fa-address-card" alt="Contact"></i>
+  <a href="https://blog.luevano.xyz/contact.html">Contact</a>
+</span>
+
+<span>
+  <i class="fas fa-donate" alt="Donate"></i>
+  <a href="https://blog.luevano.xyz/donate.html">Donate</a>
+</span>
+
+<span>
+  <i class="fas fa-rss" alt="RSS"></i>
+  <a target="_blank" href="https://blog.luevano.xyz/rss.xml">RSS</a>
+</span>
+
+<br>
+<span class="created-with">
+  <i class="fas fa-hammer" alt="Hammer"></i>
+  Created with <a href="https://github.com/luevano/pyssg">pyssg</a>
+</span>
+
+<br>
+<span class="copyright">
+  Copyright <i class="far fa-copyright" alt="Copyright"></i> 2023 David Luévano Alvarado
+</span>
+
+    </footer>
+  </body>
+</html>

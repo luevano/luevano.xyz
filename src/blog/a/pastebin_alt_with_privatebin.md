@@ -10,7 +10,7 @@ tags: server
 
 I learned about PrivateBin a few weeks back and ever since I've been looking into installing it, along with a URL shortener (a service I wanted to self host since forever). It took me a while as I ran into some problems while experimenting and documenting all the necessary bits in here.
 
-My setup is exposed to the public, and as always is heavily based on previous entries as described in [Prerequisites](#Prerequisites). Descriptions on setting up MariaDB (preferred MySQL replacement for Arch) and PHP are written in this entry as this is the first time I've needed them.
+My setup is exposed to the public, and as always is heavily based on previous entries as described in [Prerequisites](#prerequisites). Descriptions on setting up MariaDB (preferred MySQL replacement for Arch) and PHP are written in this entry as this is the first time I've needed them.
 
 Everything here is performed in ==arch btw== and all commands should be run as root unless stated otherwise.
 
@@ -66,7 +66,7 @@ bind-address = localhost
 
 ## Create users/databases
 
-To use `mariadb` simply run the command and it will try to login with the corresponding linux user running it, for example for root. Else the general login command is:
+To use `mariadb` simply run the command and it will try to login with the corresponding linux user running it. The general login command is:
 
 ```sh
 mariadb -u <username> -p <database_name>
@@ -160,7 +160,7 @@ Install from the AUR with `yay`:
 yay -S yourls
 ```
 
-Create a new user and database as described in [MariaDB: Create users/databases](#Create users/databases).
+Create a new user and database as described in [MariaDB: Create users/databases](#create-usersdatabases).
 
 ## Configuration
 
@@ -199,7 +199,7 @@ server {
 }
 ```
 
-Make sure the following header is included in the `php`'s nginx location block described in [YOURLS: Nginx](#Nginx):
+Make sure the following header is included in the `php`'s `nginx` location block described in [YOURLS: Nginx](#nginx):
 
 ```nginx
 add_header Access-Control-Allow-Origin $http_origin;
@@ -229,7 +229,7 @@ Install from the AUR with `yay`:
 yay -S privatebin
 ```
 
-Create a new user and database as described in [MariaDB: Create users/databases](#Create users/databases).
+Create a new user and database as described in [MariaDB: Create users/databases](#create-usersdatabases).
 
 ## Configuration
 

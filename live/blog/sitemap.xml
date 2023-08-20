@@ -46,6 +46,12 @@
 </url>
 
     <url>
+      <loc>https://blog.luevano.xyz/a/pastebin_alt_with_privatebin.html</loc>
+      <lastmod>2023-08-20</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
       <loc>https://blog.luevano.xyz/a/jellyfin_server_with_sonarr_radarr.html</loc>
       <lastmod>2023-07-24</lastmod>
       <changefreq>weekly</changefreq>
