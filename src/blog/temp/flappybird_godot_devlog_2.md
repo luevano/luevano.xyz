@@ -44,6 +44,8 @@ Initially modify all conflicting code:
 
 1. For pixel art the [default import settings](https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html#default-import-settings) no longer affect much, but it's worth to double check as they changed from `Texture` importer to a `Texture2D` and the imported textures could be messed up. The important parameter to change is the *Filter* for the textures in the *Inspector* of each node but since all nodes inherit parameters by default, changing on the parent nodes (or just once in the root such as `Main.tscn`) will suffice: Change *Inspector -> CanvasItem -> Texture -> Filter* from "inherit" to "Nearest".
 
+== TODO == update this to this setting https://ask.godotengine.org/122518/how-to-import-pixel-art-in-godot-4
+
 # Player
 
 Now that the game at least runs, next thing is to make it "playable". I did the following changes:
@@ -85,7 +87,41 @@ This will enable physics properties on the tiles when selecting them (by selecti
 
 Notice that the polygon is drawn in *Physics Layer 0*. Using the grid option to either `1` or `2` is useful when drawing the polygon, make sure the polygon closes itself or it wont be drawn.
 
-8. For the scripting part, I basically merged all 3 scripts (`world_tiles.gd`, `pipe_tile_map.gd`, `ground_tile_map.gd`) into one (`world_tile_map.gd`) and immediatly was able to delete a lot of signal calls between those 3 scripts and redundant code.
+8. == TODO == specifications on pattern creation for pipes.
+
+9. For the scripting part, I basically merged all 3 scripts (`world_tiles.gd`, `pipe_tile_map.gd`, `ground_tile_map.gd`) into one (`world_tile_map.gd`) and immediatly was able to delete a lot of signal calls between those 3 scripts and redundant code.
+
+The biggest change in the scripting side are the functions to place tiles. For *Godot 3*:
+
+```gdscript
+# place single tile in specific cell
+void set_cell(x: int, y: int, tile: int, flip_x: bool = false, flip_y: bool = false, transpose: bool = false, autotile_coord: Vector2 = Vector2( 0, 0 ))
+void set_cellv(position: Vector2, tile: int, flip_x: bool = false, flip_y: bool = false, transpose: bool = false, autotile_coord: Vector2 = Vector2( 0, 0 ))
+```
+
+Whereas in *Godot 4*:
+
+```gdscript
+# place single tile in specific cell
+void set_cell(layer: int, coords: Vector2i, source_id: int = -1, atlas_coords: Vector2i = Vector2i(-1, -1), alternative_tile: int = 0)
+# erase tile at specific cell
+void erase_cell(layer: int, coords: Vector2i)
+# place pattern
+void set_pattern(layer: int, position: Vector2i, pattern: TileMapPattern)
+```
+
+So the main differences: `layer` needs to be specified, `source_id` which specifies which atlas to use (ground or pipe in our case), and instead of providing an index for a tile an `atlas_coords` is required. `alternative_tile` is used in case of tiles that have alternatives such as mirrored or rotated tile, not required in my case. Setting `source_id=-1`, `atlas_coords=Vector21(-1,-1)` or `alternative_tile=-1` will delete the tile from the `coords`.
+
+As for the pattern, a pattern can be obtained from calling the `get_pattern` method on the `tile_set` property of the `TileMap`. Something like:
+
+```gdscript
+var pattern: TileMapPattern = tile_set.get_pattern(index)
+```
+
+For the changes needed:
+
+1. Change most of the `Vector2` to `Vector2i`.
+2. Instead of placing a bunch of tiles for a pipe pattern use the native `set_pattern` function.
 
 # Event bus
 
@@ -115,6 +151,7 @@ Double clicking on the `.ttf` file and disabling antialiasing and compression is
 
 # Other
 
-1. Change `String(int)` to `int as String`. Doing `"%s" % int` should also work.
+1. Change `String(int)` to `str(int)`.
 2. Change `version` from `1.0.0` to `2.0.0`.
+3. Update `@export` to `@export_range`. The auto conversion didn't use the correct annotation and instead used a comment.
 
