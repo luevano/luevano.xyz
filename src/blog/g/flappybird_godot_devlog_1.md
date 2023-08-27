@@ -1,7 +1,7 @@
 title: Creating a FlappyBird clone in Godot 3.5 devlog 1
 author: David Luévano
 lang: en
-summary: Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff.
+summary: Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to stay consistent.
 tags: gamedev
 	godot
 	gdscript
@@ -16,11 +16,13 @@ I just have a bit of experience with *Godot* and with gamedev in general, so I s
 
 The game was originally developed with *Godot 4.0 alpha 8*, but it didn't support HTML5 (webassembly) export... so I backported to *Godot 3.5 rc1*.
 
+^^==Note:== I've updated the game to *Godot 4* and documented it on my [FlappyBird devlog 2](https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html) entry.^^
+
 Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of *Godot* in general. Usually when I mention that a set/change of something it usually it's a property and it can be found under the *Inspector* on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in *snake_case* (scenes/nodes in *PascalCase*).
 
 One thing to note, is that I started writing this when I finished the game, so it's hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I'll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.
 
-The source code can be found at [luevano/flappybird_godot#godot-3.5](https://github.com/luevano/flappybird_godot/tree/godot-3.5), it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added), or you could also go to the [itch.io](https://lorentzeus.itch.io/flappybirdgodot) page I setup where it's playable in the browser:
+The source code can be found at [luevano/flappybirdgodot#godot-3.5](https://github.com/luevano/flappybirdgodot/tree/godot-3.5) (`godot-3.5` branch), it also contains the exported versions for HTML5, Windows and Linux (~~be aware that the sound might be too high and I'm too lazy to make it configurable, it was the last thing I added~~ ^^on the latest version this is fixed and audio level is configurable now^^). Playable on [itch.io](https://lorentzeus.itch.io/flappybirdgodot) (*Godot 4* version):
 
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
