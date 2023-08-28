@@ -23,6 +23,205 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Porting the FlappyBird clone to Godot 4.1 devlog 2</title>
+      <link>https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html</guid>
+      <pubDate>Sun, 27 Aug 2023 23:28:10 GMT</pubDate>
+      <category>English</category>
+      <category>Gamedev</category>
+      <category>Gdscript</category>
+      <category>Godot</category>
+      <description>Notes on porting my FlappyBird clone to Godot 4.1, as well as notes on the improvements and changes made overall.</description>
+      <content:encoded><![CDATA[<p>As stated in my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html">FlappyBird devlog 1</a> entry I originally started the clone in <em>Godot 4</em>, then backported back to <em>Godot 3</em> because of HTML5 support, and now I&rsquo;m porting it back again to <em>Godot 4</em> as there is support again and I want to start getting familiar with it for future projects.</p>
+<p>The source code can be found at <a href="https://github.com/luevano/flappybirdgodot">luevano/flappybirdgodot</a> (<code>main</code> branch). Playable at <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a>:</p>
+<p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
+
+<h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#porting-to-godot-4">Porting to Godot 4</a><ul>
+<li><a href="#general-changes">General changes</a></li>
+<li><a href="#player">Player</a></li>
+<li><a href="#world">World</a><ul>
+<li><a href="#scene">Scene</a></li>
+<li><a href="#script">Script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#changes-and-improvements">Changes and improvements</a><ul>
+<li><a href="#audio">Audio</a></li>
+<li><a href="#event-bus">Event bus</a></li>
+<li><a href="#ui">UI</a></li>
+<li><a href="#misc">Misc</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="porting-to-godot-4">Porting to Godot 4<a class="headerlink" href="#porting-to-godot-4" title="Permanent link">&para;</a></h2>
+<p><strong>Disclaimer:</strong> I started the port back in <em>Godot 4.0</em> something and left the project for a while, then opened the project again in <em>Godot 4.1</em>, and it didn&rsquo;t ask to convert anything so probably nowadays the conversion is better.</p>
+<h3 id="general-changes">General changes<a class="headerlink" href="#general-changes" title="Permanent link">&para;</a></h3>
+<p>These include the first changes for fixing some of the conflicting code to at least make it run (no gameplay) as well as project settings adjustments.</p>
+<ul>
+<li>Changing the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html#default-import-settings">default import settings</a> for pixel art no longer works (though it&rsquo;s worth to double check as they changed from <code>Texture</code> to a <code>Texture2D</code>). The important parameter to <a href="https://ask.godotengine.org/122518/how-to-import-pixel-art-in-godot-4">change is the <em>Filter</em> for the textures</a>.<ul>
+<li>Since all nodes inherit parameters by default, changing on the parent nodes (or just once in the root such as <code>Main.tscn</code>) will suffice: Go to <em>Inspector -&gt; CanvasItem -&gt; Texture</em> and change <em>Filter</em> from &ldquo;Inherit&rdquo; to &ldquo;Nearest&rdquo;.</li>
+</ul>
+</li>
+<li>Re-set the <em>InputMap</em> as the system probably changed from <em>Godot 3</em> to <em>Godot 4</em>.</li>
+<li>For <code>SavedData</code> singleton, change from <code>File</code> to <code>ConfigFile</code> and refactor. This is really not needed for making it run, but I changed this right away.</li>
+<li>Remove <code>velocity</code> property of <code>Player</code> which is already included in <code>CharacterBody2D</code>.</li>
+<li>Disable all <code>TileMap</code> related code as tile maps have changed drastically, they need more effort to covnert.</li>
+<li>Change <code>String(int)</code> to <code>str(int)</code>.</li>
+</ul>
+<h3 id="player">Player<a class="headerlink" href="#player" title="Permanent link">&para;</a></h3>
+<p>Now that the game at least runs, next thing is to make it &ldquo;playable&rdquo;:</p>
+<ul>
+<li><code>AnimatedSprite</code> changed to <code>AnimatedSprite2D</code> (with the inclusion of <code>AnimatedSprite3D</code>). This node type changed with the automatic conversion.<ul>
+<li>Instead of checking if an animation is playing with the the <code>playing</code> property, the method <code>is_playing()</code> needs to be used.</li>
+</ul>
+</li>
+<li>The <code>default_gravity</code> from the <code>ProjectSettings</code> no longer needs to be multiplied by <code>10</code> to have reasonable numbers. The default is now <code>980</code> instead of <code>98</code>. I later changed this when refactoring the code and fine-tuning the feel of the movement.</li>
+<li>The <em>Collision mask</em> can be changed programatically with the <code>set_collision_mask_value</code> (and similar with the layer). Before, the mask/layer was specified by the <code>bit</code> which started from <code>0</code>, but now it is accessed by the <code>layer_number</code> which starts from <code>1</code>.</li>
+</ul>
+<h3 id="world">World<a class="headerlink" href="#world" title="Permanent link">&para;</a></h3>
+<p>This is the most challenging part as the <code>TileMap</code> system changed drastically, it is basically a <em>from the ground up redesign</em>, luckily the <code>TileMap</code>s I use are really simple. Since this is not intuitive from the get-go, I took some notes on the steps I took to set up the world <code>TileMap</code>.</p>
+<h4 id="scene">Scene<a class="headerlink" href="#scene" title="Permanent link">&para;</a></h4>
+<p>Instead of using one scene per <code>TileMap</code> only one <code>TileMap</code> can be used with multiple <em>Atlas</em> in the <code>TileSet</code>. Multiple physics layers can now be used per <code>TileSet</code> so you can separate the physics collisions on a per <em>Atlas</em> or <em>Tile</em> basis. The inclusion of <em>Tile patterns</em> also helps when working with multiple <em>Tiles</em> for a single cell &ldquo;placement&rdquo;. How I did it:</p>
+<ol>
+<li>Created one scene with one <code>TileMap</code> node, called <code>WorldTileMap.tscn</code>, with only one <code>TileSet</code> as multiple <em>Atlas</em>&lsquo; can be used (this would be a single <code>TileSet</code> in <em>Godot 3</em>).<ul>
+<li>To add a <code>TileSet</code>, select the <code>WorldTileMap</code> and go to <em>Inspector -&gt; TileMap -&gt; TileSet</em> then click on &ldquo;<empty>&rdquo; and then &ldquo;New TileSet&rdquo; button.</li>
+<li>To manipulate a <code>TileSet</code>, it needs to be selected, either by clicking in the <em>Inspector</em> section or on the bottom of the screen (by default) to the left of <em>TileMap</em>, as shown in the image below.</li>
+</ul>
+</li>
+</ol>
+<figure id="__yafg-figure-48">
+<img alt="TileMap's TileSet selection highlighted in red, &quot;Add&quot; button in green." src="https://static.luevano.xyz/images/g/flappybird_godot4/godot4_tileset_selected_add_atlas.png.png &quot;TileMap's TileSet selection highlighted in red, &quot;Add&quot; button in green&quot;.">
+<figcaption></figcaption>
+</figure>
+<ol start="2">
+<li>Add two <em>Atlas</em> to the <code>TileSet</code> (one for the ground tiles and another for the pipes) by clicking on the &ldquo;Add&rdquo; button (as shown in the image above) and then on &ldquo;Atlas&rdquo;.</li>
+<li>By selecting an atlas and having the &ldquo;Setup&rdquo; selected, change the <em>Name</em> to something recognizable like <code>ground</code> and add the texture atlas (the spritesheet) by dragging and dropping in the &ldquo;<empty>&rdquo; <em>Texture</em> field, as shown in the image below. Take a not of the <em>ID</em>, they start from <code>0</code> and increment for each atlas, but if they&rsquo;re not <code>0</code> and <code>1</code> change them.</li>
+</ol>
+<figure id="__yafg-figure-49">
+<img alt="TileSet atlas setup selection highlighted in red, atlas name and id in green." src="https://static.luevano.xyz/images/g/flappybird_godot4/godot4_atlas_setup_selection.png" title="TileSet atlas setup selection highlighted in red, atlas name and id in green.">
+<figcaption>TileSet atlas setup selection highlighted in red, atlas name and id in green.</figcaption>
+</figure>
+<ol start="4">
+<li>I also like to delete unnecessary tiles (for now) by selecting the atlas &ldquo;Setup&rdquo; and the &ldquo;Eraser&rdquo; tool, as shown in the image below. Then to erase tiles just select them and they&rsquo;ll be highlighted in black, once deleted they will be grayed out. If you want to activate tiles again just deselect the &ldquo;Eraser&rdquo; tool and select wanted tiles.</li>
+</ol>
+<figure id="__yafg-figure-50">
+<img alt="Atlas setup erase tiles. &quot;Setup&quot; selection and &quot;Eraser&quot; tool highlighted in red and green, respectively." src="https://static.luevano.xyz/images/g/flappybird_godot4/godot4_atlas_setup_selection.png" title="Atlas setup erase tiles. &quot;Setup&quot; selection and &quot;Eraser&quot; tool highlighted in red and green, respectively.">
+<figcaption>Atlas setup erase tiles. &ldquo;Setup&rdquo; selection and &ldquo;Eraser&rdquo; tool highlighted in red and green, respectively.</figcaption>
+</figure>
+<ol start="5">
+<li>For the pipes it is a good idea to modify the &ldquo;tile width&rdquo; for horizontal <code>1x2</code> tiles. This can be acomplished by removing all tiles except for one, then going to the &ldquo;Select&rdquo; section of the atlas, selecting a tile and extending it either graphically by using the yellow circles or by using the properties, as shown in the image below.</li>
+</ol>
+<figure id="__yafg-figure-51">
+<img alt="Atlas resize tile. &quot;Select&quot; selection and &quot;Size in Atlas&quot; highlighted in red and green, respectively." src="https://static.luevano.xyz/images/g/flappybird_godot4/godot4_atlas_pipe_wide.png" title="Atlas resize tile. &quot;Select&quot; selection and &quot;Size in Atlas&quot; highlighted in red and green, respectively.">
+<figcaption>Atlas resize tile. &ldquo;Select&rdquo; selection and &ldquo;Size in Atlas&rdquo; highlighted in red and green, respectively.</figcaption>
+</figure>
+<ol start="6">
+<li>Add physics (collisions) by selecting the <code>WorldTileMap</code>&lsquo;s <code>TileSet</code> and clicking on &ldquo;Add Element&rdquo; at the <em>TileMap -&gt; TileSet -&gt; Physics Layer</em> twice, one physics layer per atlas. Then set the collision&rsquo;s layers and masks accordingly (ground on layer 2, pipe on 3). In my case, based on my already set <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html#layers">layers</a>.<ul>
+<li>This will enable physics properties on the tiles when selecting them (by selecting the atlas, being in the correct &ldquo;Select&rdquo; section and selecting a tile) and start drawing a polygon with the tools provided. This part is hard to explain in text, but below is an image of how it looks once the polygon is set.</li>
+</ul>
+</li>
+</ol>
+<figure id="__yafg-figure-52">
+<img alt="Tile add physics polygon in Physics Layer 0." src="https://static.luevano.xyz/images/g/flappybird_godot4/godot4_tileset_selected_add_atlas.png" title="Tile add physics polygon on physics layer 0.">
+<figcaption>Tile add physics polygon on physics layer 0.</figcaption>
+</figure>
+<pre><code>- Notice that the polygon is drawn in *Physics Layer 0*. Using the grid option to either `1` or `2` is useful when drawing the polygon, make sure the polygon closes itself or it wont be drawn.
+</code></pre>
+<ol start="8">
+<li>Create a tile pattern by drawing the tiles wanted in the editor and then going to the <em>Patterns</em> tab (to the right of <em>Tiles</em>) in the <em>TileMap</em>, selecting all tiles wanted in the pattern and dragging the tiles to the <em>Patterns</em> window. Added patterns will show in this window as shown in the image below, and assigned with IDs starting from <code>0</code>.</li>
+</ol>
+<figure id="__yafg-figure-53">
+<img alt="Tileset pattern." src="https://static.luevano.xyz/images/g/flappybird_godot4/godot4_tileset_pattern.png" title="Tileset pattern.">
+<figcaption>Tileset pattern.</figcaption>
+</figure>
+<h4 id="script">Script<a class="headerlink" href="#script" title="Permanent link">&para;</a></h4>
+<p>Basically merged all 3 scripts (<code>ground_tile_map.gd</code>, <code>pipe_tile_map.gd</code> and <code>world_tiles.gd</code>) into one (<code>world_tile_map.gd</code>) and immediatly was able to delete a lot of signal calls between those 3 scripts and redundant code.</p>
+<p>The biggest change in the scripting side are the functions to place tiles. For <em>Godot 3</em>:</p>
+<pre><code class="language-gdscript"># place single tile in specific cell
+void set_cell(x: int, y: int, tile: int, flip_x: bool = false, flip_y: bool = false, transpose: bool = false, autotile_coord: Vector2 = Vector2( 0, 0 ))
+void set_cellv(position: Vector2, tile: int, flip_x: bool = false, flip_y: bool = false, transpose: bool = false, autotile_coord: Vector2 = Vector2( 0, 0 ))
+</code></pre>
+<p>Whereas in <em>Godot 4</em>:</p>
+<pre><code class="language-gdscript"># place single tile in specific cell
+void set_cell(layer: int, coords: Vector2i, source_id: int = -1, atlas_coords: Vector2i = Vector2i(-1, -1), alternative_tile: int = 0)
+# erase tile at specific cell
+void erase_cell(layer: int, coords: Vector2i)
+</code></pre>
+<p>How to use these functions in <em>Godot 4</em> (new properties or differences/changes):</p>
+<ul>
+<li><code>layer</code>: for my case I only use 1 layer so it is always set to <code>0</code>.</li>
+<li><code>coords</code>: would be the equivalent to <code>position</code> for <code>set_cellv</code> in <em>Godot 3</em>.</li>
+<li><code>source_id</code>: which atlas to use (ground: <code>0</code> or pipe <code>1</code>).</li>
+<li><code>atlas_coords</code>: tile to use in the atlas. This would be the equivalent to <code>tile</code> in <em>Godot 3</em>.</li>
+<li><code>alternative_tile</code>: for tiles that have alternatives such as mirrored or rotated tiles, not required in my case.</li>
+</ul>
+<p>Setting <code>source_id=-1</code>, <code>atlas_coords=Vector21(-1,-1)</code> or <code>alternative_tile=-1</code> will delete the tile at <code>coords</code>, similar to just using <code>erase_cell</code>.</p>
+<p>With the addition to <em>Tile patterns</em> (to place multiple tiles), there is a new function:</p>
+<pre><code class="language-gdscript"># place pattern
+void set_pattern(layer: int, position: Vector2i, pattern: TileMapPattern)
+</code></pre>
+<p>Where <code>position</code> has the same meaning as <code>coords</code> in <code>set_cell</code>/<code>erase_cell</code>, not sure why it has a different name. The <code>pattern</code> can be obtained by using <code>get_pattern</code> method on the <code>tile_set</code> property of the <code>TileMap</code>. Something like:</p>
+<pre><code class="language-gdscript">var pattern: TileMapPattern = tile_set.get_pattern(index)
+</code></pre>
+<p>Other than that, <code>Vector2</code> needs to be changed to <code>Vector2i</code>.</p>
+<h2 id="changes-and-improvements">Changes and improvements<a class="headerlink" href="#changes-and-improvements" title="Permanent link">&para;</a></h2>
+<p>General changes and additions that have nothing to do with porting to <em>Godot 4</em>, things I wanted to add regardless of the version.</p>
+<h3 id="audio">Audio<a class="headerlink" href="#audio" title="Permanent link">&para;</a></h3>
+<p>The audio in the <em>Godot 3</em> version was added in the last minute and it was blasting by default with no option to decrease the volume or mute it. To deal with this:</p>
+<ol>
+<li>Refactored the code into a single scene/script to have better control.</li>
+<li>Added a volume control slider by following <a href="https://www.gdquest.com/tutorial/godot/audio/volume-slider/">this GDQuest guide</a>.</li>
+<li>Added a mute button, following the same principle as with the volume control.</li>
+</ol>
+<p>The basic code required for these features is the following:</p>
+<pre><code class="language-gdscript"># get audio bus index
+var audio_bus_name: String = &quot;Master&quot;
+var _bus: int = AudioServer.get_bus_index(audio_bus_name)
+
+# change the volume
+var linear_volume: float = 0.5 # 50%, needs to be between 0.0 and 1.0
+var db_volume: float = linear_to_db(linear_volume)
+AudioServer.set_bus_volume_db(_bus, db_volume)
+
+# mute
+AudioServer.set_bus_mute(_bus, true) # false to unmute
+</code></pre>
+<p>Just be careful with how the <code>linear_volume</code> is set (from a button or slider) as it has to be between <code>0.0</code> and <code>1.0</code>.</p>
+<h3 id="event-bus">Event bus<a class="headerlink" href="#event-bus" title="Permanent link">&para;</a></h3>
+<p>Moved all the signal logic into an event bus to get rid of the coupling I had. This is accomplished by:</p>
+<ol>
+<li>Creating a singleton (autoload) script which I called <code>event.gd</code> and can be accessed with <code>Event</code>.</li>
+<li>All the signals are now defined in <code>event.gd</code>.</li>
+<li>When a signal needs to be emited instead of emitting the signal from any particular script, emit it from the event bus with <code>Event.&lt;signal_name&gt;.emit(&lt;optional_args&gt;)</code>.</li>
+<li>When connecting to a signal instead of taking a reference to where the signal is defined, simply connect it with with <code>Event.&lt;signal_name&gt;.connect(&lt;callable&gt;[.bind(&lt;optional_args&gt;)])</code><ul>
+<li>For signals that already send arguments to the callable, they do not need to be specified in <code>bind</code>, only extras are needed here.</li>
+</ul>
+</li>
+</ol>
+<h3 id="ui">UI<a class="headerlink" href="#ui" title="Permanent link">&para;</a></h3>
+<p>Really the only UI I had before was for rendering fonts, and the way fonts work changed a bit. Before, 3 resources were needed as <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html#fonts">noted in my previous entry</a>:</p>
+<ol>
+<li>Font file itself (<code>.ttf</code> for example).</li>
+<li><code>DynamicFontData</code>: used to point to a font file (<code>.ttf</code>) and then used as base resource.</li>
+<li><code>DynamicFont</code>: usable in godot control nodes which holds the <code>DynamicFontData</code> and configuration such as size.</li>
+</ol>
+<p>Now only 1 resource is needed: <code>FontFile</code> which is the <code>.ttf</code> file itself or a godot-created resource. There is also a <code>FontVariation</code> option, which takes a <code>FontFile</code> and looks like its used to create fallback options for fonts. The configuration (such as size) is no longer held in the font resource, but rather in the parent control node (like a <code>Label</code>). Double clicking on the <code>.ttf</code> file and disabling antialiasing and compression is something that might be needed. Optionally create a <code>FontLabelSettings</code> which will hold the <code>.ttf</code> file and used as base for <code>Label</code>s. Use &ldquo;Make Unique&rdquo; for different sizes. Another option is to use <em>Themes</em> and <em>Variations</em>.</p>
+<p>I also created the respective volume button and slider UI for the added audio functionality as well as creating a base <code>Label</code> to avoid repeating configuration on each <code>Label</code> node.</p>
+<h3 id="misc">Misc<a class="headerlink" href="#misc" title="Permanent link">&para;</a></h3>
+<p>Small changes that don&rsquo;t affect much:</p>
+<ul>
+<li>Updated <code>@export</code> to <code>@export_range</code>. The auto conversion didn&rsquo;t use the correct annotation and instead used a comment.</li>
+<li>Refactored the <code>game_scale</code> methodolgy as it was inconsistent. Now only one size is used as base and everything else is just scaled with the <code>root</code> <code>Window</code>.</li>
+<li>Got rid of the FPS monitoring, was only using it for debugging purposes back then.</li>
+</ul>]]></content:encoded>
+    </item>
+    <item>
       <title>Set up a pastebin alternative with PrivateBin and YOURLS</title>
       <link>https://blog.luevano.xyz/a/pastebin_alt_with_privatebin.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/a/pastebin_alt_with_privatebin.html</guid>
@@ -2246,7 +2445,7 @@ func physics_process(delta: float) -&gt; void:
       <category>Gamedev</category>
       <category>Gdscript</category>
       <category>Godot</category>
-      <description>Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff.</description>
+      <description>Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to stay consistent.</description>
       <content:encoded><![CDATA[<p>I just have a bit of experience with <em>Godot</em> and with gamedev in general, so I started with this game as it is pretty straight forward. On a high level the main characteristics of the game are:</p>
 <ul>
 <li>Literally just one sprite going up and down.</li>
@@ -2255,9 +2454,10 @@ func physics_process(delta: float) -&gt; void:
 <li>If you touch the pipes, the ground or go past the &ldquo;ceiling&rdquo; you lose.</li>
 </ul>
 <p>The game was originally developed with <em>Godot 4.0 alpha 8</em>, but it didn&rsquo;t support HTML5 (webassembly) export&hellip; so I backported to <em>Godot 3.5 rc1</em>.</p>
+<p><ins><mark>Note:</mark> I&rsquo;ve updated the game to <em>Godot 4</em> and documented it on my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html">FlappyBird devlog 2</a> entry.</ins></p>
 <p>Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of <em>Godot</em> in general. Usually when I mention that a set/change of something it usually it&rsquo;s a property and it can be found under the <em>Inspector</em> on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in <em>snake_case</em> (scenes/nodes in <em>PascalCase</em>).</p>
 <p>One thing to note, is that I started writing this when I finished the game, so it&rsquo;s hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I&rsquo;ll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.</p>
-<p>The source code can be found at <a href="https://github.com/luevano/flappybird_godot/tree/godot-3.5">luevano/flappybird_godot#godot-3.5</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
+<p>The source code can be found at <a href="https://github.com/luevano/flappybirdgodot/tree/godot-3.5">luevano/flappybirdgodot#godot-3.5</a> (<code>godot-3.5</code> branch), it also contains the exported versions for HTML5, Windows and Linux (<del>be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added</del> <ins>on the latest version this is fixed and audio level is configurable now</ins>). Playable on <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> (<em>Godot 4</em> version):</p>
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>

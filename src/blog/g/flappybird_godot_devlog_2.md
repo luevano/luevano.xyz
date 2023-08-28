@@ -1,7 +1,7 @@
-title: Porting the FlappyBird clone to Godot 4 devlog 2
+title: Porting the FlappyBird clone to Godot 4.1 devlog 2
 author: David Luévano
 lang: en
-summary: Notes on porting my FlappyBird clone to Godot 4, as well as notes on the improvements and changes made overall.
+summary: Notes on porting my FlappyBird clone to Godot 4.1, as well as notes on the improvements and changes made overall.
 tags: gamedev
 	godot
 	gdscript

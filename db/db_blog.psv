@@ -15,7 +15,7 @@ a/devs_android_me_trozaron.md|1652608264.4901433|1652609027.0201497|41c897ac0c6e
 a/password_manager_authenticator_setup.md|1652654434.4686146|1683172189.1237748|ee21642502116ac50d2ef437e69b306c|english,short,tools
 g/starting_gamedev_blogging.md|1652764794.9016073|1683275869.3270695|dad847b856598f6c6eab2f7ec94efac9|english,gamedev,godot,short,update
 g/godot_project_structure.md|1653182170.4395845|1683275847.2870727|8b04f0ba5c8afb92d19c1898f4f9186b|english,gamedev,godot,short
-g/flappybird_godot_devlog_1.md|1653795523.5988536|1683620894.9660125|e6b798f0be638f29c242195bd75b797c|english,gamedev,gdscript,godot
+g/flappybird_godot_devlog_1.md|1653795523.5988536|1693025139.62647|09fece4c350f4eb1575d12dc60c5b52a|english,gamedev,gdscript,godot
 g/gogodot_jam3_devlog_1.md|1654852625.58801|1683219939.7152278|89b18f87b523d721bdf8b7fd752e47a6|english,gamedev,gamejam,gdscript,godot
 a/rewrote_pyssg_again.md|1671510665.5266156|1683375981.802067|e7d3dc8a4a2cd2abda2f653c9cbd3049|english,short,tools,update
 a/updated_pyssg_pymdvar_and_website.md|1683376754.7018104|0.0|442ad5da7342439101abcc076a73cb22|english,short,tools,update
@@ -27,3 +27,4 @@ a/arch_logs_flooding_disk.md|1686824540.5338242|1686824666.933781|261eeee98ecbb2
 a/torrenting_with_qbittorrent.md|1690164384.3800702|1690170668.4089742|413b7f2764a40fea97f2a22a942ff305|code,english,server,tools,tutorial
 a/jellyfin_server_with_sonarr_radarr.md|1690173014.2185652|1690173137.3785434|831c3b7c4183648dbc3be4547fe50686|code,english,server,tools,tutorial
 a/pastebin_alt_with_privatebin.md|1692524793.86829|1692527331.9501805|7605e02fc2b613617be56fdf43471664|code,english,server,tools,tutorial
+g/flappybird_godot_devlog_2.md|1693178890.8924305|1693183054.9629443|f4e75adc747b9bf150a7126667185039|english,gamedev,gdscript,godot

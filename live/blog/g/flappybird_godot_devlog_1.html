@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="https://static.luevano.xyz/images/icons/favicon.ico">
 <title>Creating a FlappyBird clone in Godot 3.5 devlog 1 -- Luévano's Blog</title>
-  <meta name="description" content="Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff."/>
+  <meta name="description" content="Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to stay consistent."/>
 <link rel="alternate" type="application/rss+xml" href="https://blog.luevano.xyz/rss.xml" title="Luévano's Blog RSS">
     <!-- general style -->
     <link rel="stylesheet" type="text/css" href="https://static.luevano.xyz/css/style.css">
@@ -37,7 +37,7 @@
   <meta property="og:type" content="article"/>
   <meta property="og:url" content="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.md"/>
   <meta property="og:image" content="https://static.luevano.xyz/images/b/default.png"/>
-  <meta property="og:description" content="Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to keep consistent. This shows as "devlog 1" just in case I want to include more parts for extra stuff."/>
+  <meta property="og:description" content="Since I'm starting to get more into gamedev stuff, I'll start blogging about it just to stay consistent."/>
   <meta property="og:locale" content="en"/>
   <meta property="og:site_name" content="Luévano's Blog"/>
   </head>
@@ -96,9 +96,10 @@
 <li>If you touch the pipes, the ground or go past the &ldquo;ceiling&rdquo; you lose.</li>
 </ul>
 <p>The game was originally developed with <em>Godot 4.0 alpha 8</em>, but it didn&rsquo;t support HTML5 (webassembly) export&hellip; so I backported to <em>Godot 3.5 rc1</em>.</p>
+<p><ins><mark>Note:</mark> I&rsquo;ve updated the game to <em>Godot 4</em> and documented it on my <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html">FlappyBird devlog 2</a> entry.</ins></p>
 <p>Not going to specify all the details, only the needed parts and what could be confusing, as the source code is available and can be inspected; also this assumes minimal knowledge of <em>Godot</em> in general. Usually when I mention that a set/change of something it usually it&rsquo;s a property and it can be found under the <em>Inspector</em> on the relevant node, unless stated otherwise; also, all scripts attached have the same name as the scenes, but in <em>snake_case</em> (scenes/nodes in <em>PascalCase</em>).</p>
 <p>One thing to note, is that I started writing this when I finished the game, so it&rsquo;s hard to go part by part, and it will be hard to test individual parts when going through this as everything is depending on each other. For the next devlog, I&rsquo;ll do it as I go and it will include all the changes to the nodes/scripts as I was finding them, probably better idea and easier to follow.</p>
-<p>The source code can be found at <a href="https://github.com/luevano/flappybird_godot/tree/godot-3.5">luevano/flappybird_godot#godot-3.5</a>, it also contains the exported versions for HTML5, Windows and Linux (be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added), or you could also go to the <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> page I setup where it&rsquo;s playable in the browser:</p>
+<p>The source code can be found at <a href="https://github.com/luevano/flappybirdgodot/tree/godot-3.5">luevano/flappybirdgodot#godot-3.5</a> (<code>godot-3.5</code> branch), it also contains the exported versions for HTML5, Windows and Linux (<del>be aware that the sound might be too high and I&rsquo;m too lazy to make it configurable, it was the last thing I added</del> <ins>on the latest version this is fixed and audio level is configurable now</ins>). Playable on <a href="https://lorentzeus.itch.io/flappybirdgodot">itch.io</a> (<em>Godot 4</em> version):</p>
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
@@ -750,7 +751,7 @@ func _ready() -&gt; void:
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, May 29, 2022 @ 03:38 UTC</p>
-      <p>Modified: Tue, May 09, 2023 @ 08:28 UTC</p>
+      <p>Modified: Sat, Aug 26, 2023 @ 04:45 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gdscript.html">gdscript</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>
