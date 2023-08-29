@@ -27,4 +27,5 @@ a/arch_logs_flooding_disk.md|1686824540.5338242|1686824666.933781|261eeee98ecbb2
 a/torrenting_with_qbittorrent.md|1690164384.3800702|1690170668.4089742|413b7f2764a40fea97f2a22a942ff305|code,english,server,tools,tutorial
 a/jellyfin_server_with_sonarr_radarr.md|1690173014.2185652|1690173137.3785434|831c3b7c4183648dbc3be4547fe50686|code,english,server,tools,tutorial
 a/pastebin_alt_with_privatebin.md|1692524793.86829|1692527331.9501805|7605e02fc2b613617be56fdf43471664|code,english,server,tools,tutorial
-g/flappybird_godot_devlog_2.md|1693178890.8924305|1693183054.9629443|f4e75adc747b9bf150a7126667185039|english,gamedev,gdscript,godot
+g/flappybird_godot_devlog_2.md|1693178890.8924305|1693304066.9573946|a1b0a6483829aea59a6251b47da210c6|english,gamedev,gdscript,godot
+g/godot_layers_and_masks_notes.md|1693303806.3574584|0.0|407b8f66cdde17ac2f8c113921805d98|english,gamedev,gdscript,godot

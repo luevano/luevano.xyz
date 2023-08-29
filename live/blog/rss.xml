@@ -23,6 +23,30 @@
       <link>https://blog.luevano.xyz</link>
     </image>
     <item>
+      <title>Godot layers and masks notes</title>
+      <link>https://blog.luevano.xyz/g/godot_layers_and_masks_notes.html</link>
+      <guid isPermaLink="true">https://blog.luevano.xyz/g/godot_layers_and_masks_notes.html</guid>
+      <pubDate>Tue, 29 Aug 2023 10:10:06 GMT</pubDate>
+      <category>English</category>
+      <category>Gamedev</category>
+      <category>Gdscript</category>
+      <category>Godot</category>
+      <description>Some notes I took regarding Godot's confusing collision layers and masks.</description>
+      <content:encoded><![CDATA[<p>The first time I learned about Godot&rsquo;s collision layers and masks (will refer to them just as layers) I thought I understood them only to find out that they&rsquo;re a bit confusing when trying to figure out interactions between objects that are supposed to detect each other. On my last entry where I <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html">ported the FlappyBird clone to <em>Godot 4.1</em></a> I stumbled upon an issue with the bird not colliding properly with the pipes and the ceiling detector not&hellip; well, detecting.</p>
+<p>At the end of the day the issue wasn&rsquo;t that the layers weren&rsquo;t properly setup but rather that the API to change the state of the collision layers changed between <em>Godot 3</em> and <em>Godot 4</em>: when calling <code>set_collision_layer_value</code> (or <code>.._mask</code>) instead of specifying the <code>bit</code> which starts at <code>0</code>, the <code>layer_number</code> is required that happens to start at <code>1</code>. This was a headache for like an hour and made me realise that I didn&rsquo;t understand layers that well or else I would&rsquo;ve picked the error almost instantly.</p>
+<p>While researching I found two really good short explainations that helped me grasp the concepts better in the same <a href="https://ask.godotengine.org/4010/whats-difference-between-collision-layers-collision-masks">post</a>, the first a bit technical (by <a href="https://ask.godotengine.org/user/Bojidar+Marinov">Bojidar Marinov</a>):</p>
+<ul>
+<li>If enemy&rsquo;s mask and object&rsquo;s mask are set to <code>0</code> (i.e. no layers), they will still collide with the player, because the player&rsquo;s mask still includes their respective layers.</li>
+<li>Overall, if the objects are <code>A</code> and <code>B</code>, the check for collision is <code>A.mask &amp; B.layers || B.mask &amp; A.layers</code>, where <code>&amp;</code> is bitwise-and, and <code>||</code> is the or operator. I.e. it takes the layers that correspond to the other object&rsquo;s mask, and checks if any of them is on in both places. It will then proceed to check it the other way around, and if any of the two tests passes, it would report the collision.</li>
+</ul>
+<p>And the second, shorter and less technical but still powerful (in the same post linking back to <a href="https://kidscancode.org/blog/2018/02/godot3_kinematic2d/">Godot 3.0: Using KinematicBody2D</a>):</p>
+<ul>
+<li><code>collision_layer</code> describes the layers that the object appears in. By default, all bodies are on layer <code>1</code>.</li>
+<li><code>collision_mask</code> describes what layers the body will scan for collisions. If an object isn’t in one of the mask layers, the body will ignore it. By default, all bodies scan layer <code>1</code>.</li>
+</ul>
+<p>While the complete answer is the first, as that is how layers work, the second can be used like a rule: 1) the <code>layer</code> is where the object lives, while 2) the <code>mask</code> is what the object will detect.</p>]]></content:encoded>
+    </item>
+    <item>
       <title>Porting the FlappyBird clone to Godot 4.1 devlog 2</title>
       <link>https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html</link>
       <guid isPermaLink="true">https://blog.luevano.xyz/g/flappybird_godot_devlog_2.html</guid>
@@ -60,7 +84,7 @@
 </ul>
 </div>
 <h2 id="porting-to-godot-4">Porting to Godot 4<a class="headerlink" href="#porting-to-godot-4" title="Permanent link">&para;</a></h2>
-<p><strong>Disclaimer:</strong> I started the port back in <em>Godot 4.0</em> something and left the project for a while, then opened the project again in <em>Godot 4.1</em>, and it didn&rsquo;t ask to convert anything so probably nowadays the conversion is better.</p>
+<p><strong>Disclaimer:</strong> I started the port back in <em>Godot 4.0</em> something and left the project for a while, then opened the project again in <em>Godot 4.1</em>, and it didn&rsquo;t ask to convert anything so probably nowadays the conversion is better. Godot&rsquo;s documentation is pretty useful, I looked at the <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html">GDScript reference</a> and <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html">GDScript exports</a> and that helped a lot.</p>
 <h3 id="general-changes">General changes<a class="headerlink" href="#general-changes" title="Permanent link">&para;</a></h3>
 <p>These include the first changes for fixing some of the conflicting code to at least make it run (no gameplay) as well as project settings adjustments.</p>
 <ul>

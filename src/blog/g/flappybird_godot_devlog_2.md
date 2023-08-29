@@ -19,7 +19,7 @@ The source code can be found at [luevano/flappybirdgodot](https://github.com/lue
 
 # Porting to Godot 4
 
-**Disclaimer:** I started the port back in *Godot 4.0* something and left the project for a while, then opened the project again in *Godot 4.1*, and it didn't ask to convert anything so probably nowadays the conversion is better.
+**Disclaimer:** I started the port back in *Godot 4.0* something and left the project for a while, then opened the project again in *Godot 4.1*, and it didn't ask to convert anything so probably nowadays the conversion is better. Godot's documentation is pretty useful, I looked at the [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html) and [GDScript exports](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_exports.html) and that helped a lot.
 
 ## General changes
 
