@@ -26,7 +26,7 @@ The source code can be found at [luevano/flappybirdgodot](https://github.com/lue
 These include the first changes for fixing some of the conflicting code to at least make it run (no gameplay) as well as project settings adjustments.
 
 - Changing the [default import settings](https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html#default-import-settings) for pixel art no longer works (though it's worth to double check as they changed from `Texture` to a `Texture2D`). The important parameter to [change is the *Filter* for the textures](https://ask.godotengine.org/122518/how-to-import-pixel-art-in-godot-4).
-	- Since all nodes inherit parameters by default, changing on the parent nodes (or just once in the root such as `Main.tscn`) will suffice: Go to *Inspector -> CanvasItem -> Texture* and change *Filter* from "Inherit" to "Nearest".
+	- Change by going to the *Project Settings* at *General -> Rendering -> Textures* and set the *Canvas Textures -> Default Texture Filter* to "Nearest".
 - Re-set the *InputMap* as the system probably changed from *Godot 3* to *Godot 4*.
 - For `SavedData` singleton, change from `File` to `ConfigFile` and refactor. This is really not needed for making it run, but I changed this right away.
 - Remove `velocity` property of `Player` which is already included in `CharacterBody2D`.

@@ -121,7 +121,7 @@
 <p>These include the first changes for fixing some of the conflicting code to at least make it run (no gameplay) as well as project settings adjustments.</p>
 <ul>
 <li>Changing the <a href="https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html#default-import-settings">default import settings</a> for pixel art no longer works (though it&rsquo;s worth to double check as they changed from <code>Texture</code> to a <code>Texture2D</code>). The important parameter to <a href="https://ask.godotengine.org/122518/how-to-import-pixel-art-in-godot-4">change is the <em>Filter</em> for the textures</a>.<ul>
-<li>Since all nodes inherit parameters by default, changing on the parent nodes (or just once in the root such as <code>Main.tscn</code>) will suffice: Go to <em>Inspector -&gt; CanvasItem -&gt; Texture</em> and change <em>Filter</em> from &ldquo;Inherit&rdquo; to &ldquo;Nearest&rdquo;.</li>
+<li>Change by going to the <em>Project Settings</em> at <em>General -&gt; Rendering -&gt; Textures</em> and set the <em>Canvas Textures -&gt; Default Texture Filter</em> to &ldquo;Nearest&rdquo;.</li>
 </ul>
 </li>
 <li>Re-set the <em>InputMap</em> as the system probably changed from <em>Godot 3</em> to <em>Godot 4</em>.</li>
@@ -305,7 +305,7 @@ AudioServer.set_bus_mute(_bus, true) # false to unmute
   <div class="article-info">
     <p>By David Luévano</p>
     <p>Created: Sun, Aug 27, 2023 @ 23:28 UTC</p>
-      <p>Modified: Tue, Aug 29, 2023 @ 10:14 UTC</p>
+      <p>Modified: Fri, Sep 01, 2023 @ 15:29 UTC</p>
     <div class="article-tags">
   <p>Tags:
 <a href="https://blog.luevano.xyz/tag/@english.html">english</a>, <a href="https://blog.luevano.xyz/tag/@gamedev.html">gamedev</a>, <a href="https://blog.luevano.xyz/tag/@gdscript.html">gdscript</a>, <a href="https://blog.luevano.xyz/tag/@godot.html">godot</a>  </p>
