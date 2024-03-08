@@ -9,7 +9,9 @@ tags: gamedev
 
 As stated in my [FlappyBird devlog 1](https://blog.luevano.xyz/g/flappybird_godot_devlog_1.html) entry I originally started the clone in *Godot 4*, then backported back to *Godot 3* because of HTML5 support, and now I'm porting it back again to *Godot 4* as there is support again and I want to start getting familiar with it for future projects.
 
-The source code can be found at [luevano/flappybirdgodot](https://github.com/luevano/flappybirdgodot) (`main` branch). Playable at [itch.io](https://lorentzeus.itch.io/flappybirdgodot):
+^^==Note:== I've updated the game and documented it on my [FlappyBird devlog 3](https://blog.luevano.xyz/g/flappybird_godot_devlog_3.html) entry.^^
+
+The source code can be found at [luevano/flappybirdgodot](https://github.com/luevano/flappybirdgodot). Playable at [itch.io](https://lorentzeus.itch.io/flappybirdgodot):
 
 <p style="text-align:center"><iframe src="https://itch.io/embed/1551015?dark=true" width="208" height="167" frameborder="0"><a href="https://lorentzeus.itch.io/flappybirdgodot">FlappyBirdGodot by Lorentzeus</a></iframe></p>
 

@@ -679,7 +679,7 @@ At this point the game should be fully playable (if any detail missing feel free
 
 ## Preparing the files
 
-If you followed the directory structure I used, then only thing needed is to transform the icon to a native Windows `ico` format (if exporting to Windows, else ignore this part). For this you need [ImageMagick](https://imagemagick.org/index.php) or some other program that can transform `png` (or whatever file format you used for the icon) to `ico`. I used [Chocolatey][https://chocolatey.org/] to install `imagemagick`, then to convert the icon itself used: `magick convert icon.png -define icon:auto-resize=256,128,64,48,32,16 icon.ico` as detailed in *Godot*'s [Changing application icon for Windows](https://docs.godotengine.org/en/stable/tutorials/export/changing_application_icon_for_windows.html).
+If you followed the directory structure I used, then only thing needed is to transform the icon to a native Windows `ico` format (if exporting to Windows, else ignore this part). For this you need [ImageMagick](https://imagemagick.org/index.php) or some other program that can transform `png` (or whatever file format you used for the icon) to `ico`. I used [Chocolatey](https://chocolatey.org/) to install `imagemagick`, then to convert the icon itself used: `magick convert icon.png -define icon:auto-resize=256,128,64,48,32,16 icon.ico` as detailed in *Godot*'s [Changing application icon for Windows](https://docs.godotengine.org/en/stable/tutorials/export/changing_application_icon_for_windows.html).
 
 ## Exporting
 
